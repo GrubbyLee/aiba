@@ -17,8 +17,8 @@ Goal: prove that AIBA can describe and deterministically verify one capability.
 Goal: let Codex and Claude Code install `review-access` into an existing
 TypeScript project.
 
-- [ ] Define the Agent operation protocol.
-- [ ] Implement `aiba add review-access` preparation and finalization.
+- [x] Define the Agent operation protocol.
+- [x] Implement `aiba add review-access` preparation and finalization.
 - [ ] Add Codex and Claude Code skill adapters.
 - [ ] Create a native WeChat Mini Program reference adapter.
 - [ ] Add black-box HTTP and Playwright conformance tests.

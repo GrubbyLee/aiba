@@ -4,14 +4,20 @@ import { validRange } from "semver";
 import { parse } from "yaml";
 import type {
   CapabilityManifest,
+  CapabilityRecipe,
   CapabilityReceipt,
+  OperationPlan,
+  ProjectLock,
   ProjectManifest,
 } from "@aiba/spec";
 import { AibaError } from "./errors.js";
 import { resolveExistingProjectPath } from "./paths.js";
 import {
   validateCapabilityManifest,
+  validateCapabilityRecipe,
   validateCapabilityReceipt,
+  validateOperationPlan,
+  validateProjectLock,
   validateProjectManifest,
 } from "./validation.js";
 
@@ -29,6 +35,25 @@ async function readYaml(path: string): Promise<unknown> {
     return parse(text, { maxAliasCount: 50 }) as unknown;
   } catch (error) {
     throw new AibaError(`Cannot parse YAML document ${path}`, "INVALID_YAML", {
+      cause: error,
+    });
+  }
+}
+
+async function readJson(path: string): Promise<unknown> {
+  let text: string;
+  try {
+    text = await readFile(path, "utf8");
+  } catch (error) {
+    throw new AibaError(`Cannot read ${path}`, "DOCUMENT_NOT_FOUND", {
+      cause: error,
+    });
+  }
+
+  try {
+    return JSON.parse(text) as unknown;
+  } catch (error) {
+    throw new AibaError(`Cannot parse JSON document ${path}`, "INVALID_JSON", {
       cause: error,
     });
   }
@@ -83,10 +108,54 @@ export async function loadProjectManifest(
   return validateProjectManifest(await readYaml(path));
 }
 
+export async function loadProjectLock(projectRoot: string): Promise<ProjectLock> {
+  const path = join(resolve(projectRoot), ".aiba", "lock.json");
+  return validateProjectLock(await readJson(path));
+}
+
 export async function loadCapabilityReceipt(
   projectRoot: string,
   receiptPath: string,
 ): Promise<CapabilityReceipt> {
   const path = await resolveExistingProjectPath(projectRoot, receiptPath);
   return validateCapabilityReceipt(await readYaml(path));
+}
+
+export async function loadCapabilityRecipe(
+  packsDirectory: string,
+  capabilityId: string,
+  recipeId: string,
+): Promise<CapabilityRecipe> {
+  if (!/^[a-z][a-z0-9-]{1,62}$/.test(capabilityId)) {
+    throw new AibaError(
+      `Invalid capability identifier: ${capabilityId}`,
+      "INVALID_CAPABILITY_ID",
+    );
+  }
+  if (!/^[a-z][a-z0-9-]{1,62}$/.test(recipeId)) {
+    throw new AibaError(`Invalid recipe identifier: ${recipeId}`, "INVALID_RECIPE_ID");
+  }
+  const path = join(resolve(packsDirectory), capabilityId, "recipes", `${recipeId}.yaml`);
+  const recipe = validateCapabilityRecipe(await readYaml(path));
+  if (recipe.metadata.id !== recipeId) {
+    throw new AibaError(
+      `Recipe file ${recipeId}.yaml contains recipe ${recipe.metadata.id}`,
+      "RECIPE_ID_MISMATCH",
+    );
+  }
+  return recipe;
+}
+
+export async function loadOperationPlan(
+  projectRoot: string,
+  capabilityId: string,
+): Promise<OperationPlan> {
+  if (!/^[a-z][a-z0-9-]{1,62}$/.test(capabilityId)) {
+    throw new AibaError(
+      `Invalid capability identifier: ${capabilityId}`,
+      "INVALID_CAPABILITY_ID",
+    );
+  }
+  const path = join(resolve(projectRoot), ".aiba", "plans", `${capabilityId}.yaml`);
+  return validateOperationPlan(await readYaml(path));
 }

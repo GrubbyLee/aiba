@@ -18,7 +18,16 @@
         "properties": {
           "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}$" },
           "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$" },
-          "manifestSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+          "manifestSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "recipe": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "sha256"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}$" },
+              "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+            }
+          }
         }
       }
     }

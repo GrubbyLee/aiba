@@ -2,7 +2,10 @@ import { Ajv2020, type ErrorObject, type ValidateFunction } from "ajv/dist/2020.
 import {
   loadProtocolSchema,
   type CapabilityManifest,
+  type CapabilityRecipe,
   type CapabilityReceipt,
+  type OperationPlan,
+  type ProjectLock,
   type ProjectManifest,
 } from "@aiba/spec";
 import { ProtocolValidationError } from "./errors.js";
@@ -21,8 +24,17 @@ const capabilityValidator = ajv.compile<CapabilityManifest>(
 const projectValidator = ajv.compile<ProjectManifest>(
   loadProtocolSchema("project.schema.json"),
 );
+const lockValidator = ajv.compile<ProjectLock>(
+  loadProtocolSchema("lock.schema.json"),
+);
 const receiptValidator = ajv.compile<CapabilityReceipt>(
   loadProtocolSchema("receipt.schema.json"),
+);
+const recipeValidator = ajv.compile<CapabilityRecipe>(
+  loadProtocolSchema("recipe.schema.json"),
+);
+const operationPlanValidator = ajv.compile<OperationPlan>(
+  loadProtocolSchema("operation-plan.schema.json"),
 );
 
 function formatErrors(errors: ErrorObject[] | null | undefined): string[] {
@@ -52,7 +64,22 @@ export function validateProjectManifest(value: unknown): ProjectManifest {
   return value as ProjectManifest;
 }
 
+export function validateProjectLock(value: unknown): ProjectLock {
+  assertValid(lockValidator, value, "project lock");
+  return value as ProjectLock;
+}
+
 export function validateCapabilityReceipt(value: unknown): CapabilityReceipt {
   assertValid(receiptValidator, value, "capability receipt");
   return value as CapabilityReceipt;
+}
+
+export function validateCapabilityRecipe(value: unknown): CapabilityRecipe {
+  assertValid(recipeValidator, value, "capability recipe");
+  return value as CapabilityRecipe;
+}
+
+export function validateOperationPlan(value: unknown): OperationPlan {
+  assertValid(operationPlanValidator, value, "operation plan");
+  return value as OperationPlan;
 }

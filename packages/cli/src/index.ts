@@ -3,7 +3,13 @@
 import process from "node:process";
 import { resolve } from "node:path";
 import { Command } from "commander";
-import { initializeProject, inspectProject, verifyProject } from "@aiba/core";
+import {
+  finalizeCapability,
+  initializeProject,
+  inspectProject,
+  prepareCapability,
+  verifyProject,
+} from "@aiba/core";
 import { renderInspection, renderVerification } from "./render.js";
 
 const program = new Command();
@@ -45,6 +51,74 @@ program
     }
     const report = await inspectProject(root, maximumFiles);
     process.stdout.write(`${options.json ? JSON.stringify(report, null, 2) : renderInspection(report)}\n`);
+  });
+
+program
+  .command("add")
+  .description("Prepare or finalize a capability installation")
+  .argument("<capability>", "capability to install")
+  .option("--root <path>", "project root", ".")
+  .option("--packs-dir <path>", "capability pack directory", "capabilities")
+  .option("--recipe <id>", "select a capability recipe")
+  .option("--agent <name>", "record the installing Agent")
+  .option("--prepare", "prepare an operation plan (default)")
+  .option("--finalize", "verify evidence and record the installation")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    capability: string,
+    options: {
+      root: string;
+      packsDir: string;
+      recipe?: string;
+      agent?: string;
+      prepare?: boolean;
+      finalize?: boolean;
+      json?: boolean;
+    },
+  ) => {
+    if (options.prepare && options.finalize) {
+      throw new Error("--prepare and --finalize cannot be used together");
+    }
+    if (options.finalize && options.recipe) {
+      throw new Error("--recipe is only valid while preparing an installation");
+    }
+
+    const projectRoot = resolve(options.root);
+    const packsDirectory = resolve(options.packsDir);
+    if (options.finalize) {
+      const result = await finalizeCapability({
+        projectRoot,
+        packsDirectory,
+        capabilityId: capability,
+        ...(options.agent ? { agent: options.agent } : {}),
+      });
+      if (options.json) {
+        process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+        return;
+      }
+      process.stdout.write([
+        `Installed ${result.capability}@${result.version}.`,
+        `Receipt: ${result.receiptPath}`,
+        `Hashed evidence entries: ${result.evidenceFiles}`,
+      ].join("\n") + "\n");
+      return;
+    }
+
+    const result = await prepareCapability({
+      projectRoot,
+      packsDirectory,
+      capabilityId: capability,
+      ...(options.recipe ? { recipeId: options.recipe } : {}),
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `Prepared ${result.plan.capability.id}@${result.plan.capability.version}.`,
+      `Recipe: ${result.plan.recipe.id}@${result.plan.recipe.version}`,
+      `Plan: ${result.planPath}`,
+    ].join("\n") + "\n");
   });
 
 program

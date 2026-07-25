@@ -32,6 +32,8 @@ pnpm install
 pnpm check
 node packages/cli/dist/index.js init /path/to/project
 node packages/cli/dist/index.js inspect .
+node packages/cli/dist/index.js add review-access --root /path/to/project
+node packages/cli/dist/index.js add review-access --finalize --root /path/to/project
 node packages/cli/dist/index.js verify review-access \
   --root fixtures/review-access-reference \
   --packs-dir capabilities

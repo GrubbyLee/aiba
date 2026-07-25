@@ -55,6 +55,8 @@ Project-owned AIBA state is text and is committed to Git:
 .aiba/
   manifest.yaml
   lock.json
+  plans/
+    review-access.yaml
   receipts/
     review-access.yaml
 ```

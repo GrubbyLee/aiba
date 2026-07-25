@@ -5,7 +5,9 @@ describe("protocol schemas", () => {
   it.each([
     "capability.schema.json",
     "lock.schema.json",
+    "operation-plan.schema.json",
     "project.schema.json",
+    "recipe.schema.json",
     "receipt.schema.json",
   ] as const)("loads %s", (name) => {
     const schema = loadProtocolSchema(name) as { $schema?: string };

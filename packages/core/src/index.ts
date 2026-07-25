@@ -1,4 +1,5 @@
 export * from "./errors.js";
+export * from "./add.js";
 export * from "./hash.js";
 export * from "./init.js";
 export * from "./inspect.js";

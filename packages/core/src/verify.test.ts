@@ -43,6 +43,9 @@ async function createFixture(): Promise<{ root: string; packs: string; evidence:
       }],
     },
   }));
+  const manifestHash = await sha256File(
+    join(packs, "review-access", "capability.yaml"),
+  );
   await writeFile(join(root, ".aiba", "manifest.yaml"), stringify({
     apiVersion: "aiba.dev/v0alpha1",
     kind: "Project",
@@ -61,6 +64,16 @@ async function createFixture(): Promise<{ root: string; packs: string; evidence:
     invariants: [{
       id: "server-authoritative-enable",
       evidence: [{ type: "source", path: "src/review.ts", sha256: hash }],
+    }],
+  }));
+  await writeFile(join(root, ".aiba", "lock.json"), JSON.stringify({
+    apiVersion: "aiba.dev/v0alpha1",
+    kind: "Lock",
+    generatedAt: "2026-07-26T00:00:00Z",
+    capabilities: [{
+      id: "review-access",
+      version: "0.1.0",
+      manifestSha256: manifestHash,
     }],
   }));
   return { root, packs, evidence };
@@ -107,5 +120,22 @@ describe("verifyProject", () => {
     });
     expect(report.ok).toBe(false);
     expect(report.issues[0]?.code).toBe("PROTOCOL_VALIDATION_FAILED");
+  });
+
+  it("rejects a capability pack changed after installation", async () => {
+    const fixture = await createFixture();
+    const manifestPath = join(fixture.packs, "review-access", "capability.yaml");
+    const source = await import("node:fs/promises")
+      .then(({ readFile }) => readFile(manifestPath, "utf8"));
+    await writeFile(manifestPath, source.replace("Review access", "Changed review access"));
+
+    const report = await verifyProject({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+    });
+    expect(report.ok).toBe(false);
+    expect(report.issues).toContainEqual(expect.objectContaining({
+      code: "CAPABILITY_MANIFEST_HASH_MISMATCH",
+    }));
   });
 });

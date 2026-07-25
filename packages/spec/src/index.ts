@@ -63,6 +63,10 @@ export interface ProjectLock {
     id: string;
     version: string;
     manifestSha256: string;
+    recipe?: {
+      id: string;
+      sha256: string;
+    };
   }>;
 }
 
@@ -85,6 +89,8 @@ export interface CapabilityReceipt {
     createdAt: string;
     agent?: string;
     recipe?: string;
+    plan?: string;
+    planSha256?: string;
   };
   invariants: Array<{
     id: string;
@@ -92,10 +98,87 @@ export interface CapabilityReceipt {
   }>;
 }
 
+export interface CapabilityRecipe {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "CapabilityRecipe";
+  metadata: {
+    id: string;
+    version: string;
+    title: string;
+    description: string;
+  };
+  spec: {
+    capability: {
+      id: string;
+      version: string;
+    };
+    compatibility: {
+      languages: string[];
+      frameworks: string[];
+    };
+    writeScope: {
+      allowedPatterns: string[];
+    };
+    operations: Array<{
+      id: string;
+      intent: string;
+      requiredInterfaces: string[];
+      invariants: string[];
+      guidance: string[];
+    }>;
+    evidence: Array<{
+      invariant: string;
+      suggestions: Array<{
+        type: EvidenceType;
+        pathPattern: string;
+        description: string;
+      }>;
+    }>;
+  };
+}
+
+export interface OperationPlan {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "OperationPlan";
+  metadata: {
+    id: string;
+    createdAt: string;
+  };
+  capability: {
+    id: string;
+    version: string;
+    manifestSha256: string;
+  };
+  recipe: {
+    id: string;
+    version: string;
+    sha256: string;
+  };
+  project: {
+    name: string;
+    stack: {
+      languages: string[];
+      frameworks: string[];
+    };
+  };
+  writeScope: {
+    allowedPatterns: string[];
+  };
+  operations: CapabilityRecipe["spec"]["operations"];
+  evidence: Array<{
+    invariant: string;
+    requirements: CapabilityInvariant["evidence"];
+    suggestions: CapabilityRecipe["spec"]["evidence"][number]["suggestions"];
+    items: Array<Omit<CapabilityEvidence, "sha256">>;
+  }>;
+}
+
 export type ProtocolSchemaName =
   | "capability.schema.json"
   | "lock.schema.json"
+  | "operation-plan.schema.json"
   | "project.schema.json"
+  | "recipe.schema.json"
   | "receipt.schema.json";
 
 export function loadProtocolSchema(name: ProtocolSchemaName): object {

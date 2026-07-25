@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/v0alpha1/recipe.schema.json",
+  "title": "AIBA Capability Recipe",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}$" },
+    "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$" },
+    "safePattern": { "type": "string", "minLength": 1, "maxLength": 300, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+" },
+    "evidenceType": { "enum": ["source", "test", "config", "document"] }
+  },
+  "properties": {
+    "apiVersion": { "const": "aiba.dev/v0alpha1" },
+    "kind": { "const": "CapabilityRecipe" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "title", "description"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "version": { "$ref": "#/$defs/version" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capability", "compatibility", "writeScope", "operations", "evidence"],
+      "properties": {
+        "capability": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "version"],
+          "properties": {
+            "id": { "$ref": "#/$defs/identifier" },
+            "version": { "$ref": "#/$defs/version" }
+          }
+        },
+        "compatibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["languages", "frameworks"],
+          "properties": {
+            "languages": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 120 } },
+            "frameworks": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 120 } }
+          }
+        },
+        "writeScope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["allowedPatterns"],
+          "properties": {
+            "allowedPatterns": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/safePattern" } }
+          }
+        },
+        "operations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "intent", "requiredInterfaces", "invariants", "guidance"],
+            "properties": {
+              "id": { "$ref": "#/$defs/identifier" },
+              "intent": { "type": "string", "minLength": 1, "maxLength": 1000 },
+              "requiredInterfaces": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)+$" } },
+              "invariants": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" } },
+              "guidance": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1, "maxLength": 1000 } }
+            }
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["invariant", "suggestions"],
+            "properties": {
+              "invariant": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+              "suggestions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["type", "pathPattern", "description"],
+                  "properties": {
+                    "type": { "$ref": "#/$defs/evidenceType" },
+                    "pathPattern": { "$ref": "#/$defs/safePattern" },
+                    "description": { "type": "string", "minLength": 1, "maxLength": 500 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

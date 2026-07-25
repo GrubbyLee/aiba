@@ -1,17 +1,20 @@
 import { stat } from "node:fs/promises";
-import { resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { satisfies } from "semver";
 import type {
   CapabilityInvariant,
   CapabilityManifest,
   CapabilityReceipt,
+  ProjectLock,
   ProjectManifest,
 } from "@aiba/spec";
 import { AibaError, ProtocolValidationError } from "./errors.js";
 import { sha256File } from "./hash.js";
 import {
   loadCapabilityManifest,
+  loadCapabilityRecipe,
   loadCapabilityReceipt,
+  loadProjectLock,
   loadProjectManifest,
 } from "./loaders.js";
 import { resolveExistingProjectPath } from "./paths.js";
@@ -72,7 +75,7 @@ function levelForInvariant(invariant: CapabilityInvariant): VerificationIssueLev
   return invariant.severity === "warning" ? "warning" : "error";
 }
 
-async function verifyEvidence(
+export async function verifyReceiptEvidence(
   root: string,
   manifest: CapabilityManifest,
   receipt: CapabilityReceipt,
@@ -203,8 +206,43 @@ async function verifyEvidence(
   return issues;
 }
 
+async function verifyInstallationProvenance(
+  root: string,
+  manifest: CapabilityManifest,
+  receipt: CapabilityReceipt,
+): Promise<VerificationIssue[]> {
+  const { plan, planSha256 } = receipt.installation;
+  if (!plan || !planSha256) return [];
+
+  try {
+    const path = await resolveExistingProjectPath(root, plan);
+    const metadata = await stat(path);
+    if (!metadata.isFile()) {
+      throw new AibaError(`${plan} is not a file`, "PLAN_NOT_FILE");
+    }
+    const actual = await sha256File(path);
+    if (actual !== planSha256) {
+      return [{
+        level: "error",
+        code: "PLAN_HASH_MISMATCH",
+        message: `Operation plan hash changed for ${plan}`,
+        capability: manifest.metadata.id,
+        path: plan,
+      }];
+    }
+    return [];
+  } catch (error) {
+    return [{
+      ...issueFromError(error, "PLAN_NOT_FOUND"),
+      capability: manifest.metadata.id,
+      path: plan,
+    }];
+  }
+}
+
 async function verifyCapability(
   project: ProjectManifest,
+  lock: ProjectLock,
   projectRoot: string,
   packsDirectory: string,
   capabilityId: string,
@@ -262,6 +300,70 @@ async function verifyCapability(
     });
   }
 
+  const locked = lock.capabilities.find((item) => item.id === capabilityId);
+  if (!locked) {
+    issues.push({
+      level: "error",
+      code: "CAPABILITY_LOCK_MISSING",
+      message: `Project lock has no source record for ${capabilityId}`,
+      capability: capabilityId,
+    });
+  } else {
+    if (locked.version !== installed.version) {
+      issues.push({
+        level: "error",
+        code: "CAPABILITY_LOCK_VERSION_MISMATCH",
+        message: `Project lock records ${capabilityId}@${locked.version}, project declares ${installed.version}`,
+        capability: capabilityId,
+      });
+    }
+    const manifestPath = join(resolve(packsDirectory), capabilityId, "capability.yaml");
+    if (await sha256File(manifestPath) !== locked.manifestSha256) {
+      issues.push({
+        level: "error",
+        code: "CAPABILITY_MANIFEST_HASH_MISMATCH",
+        message: `Capability source changed for ${capabilityId}`,
+        capability: capabilityId,
+        path: manifestPath,
+      });
+    }
+
+    if (locked.recipe) {
+      if (receipt.installation.recipe !== locked.recipe.id) {
+        issues.push({
+          level: "error",
+          code: "RECIPE_LOCK_MISMATCH",
+          message: `Receipt recipe does not match locked recipe ${locked.recipe.id}`,
+          capability: capabilityId,
+        });
+      } else {
+        try {
+          await loadCapabilityRecipe(packsDirectory, capabilityId, locked.recipe.id);
+          const recipePath = join(
+            resolve(packsDirectory),
+            capabilityId,
+            "recipes",
+            `${locked.recipe.id}.yaml`,
+          );
+          if (await sha256File(recipePath) !== locked.recipe.sha256) {
+            issues.push({
+              level: "error",
+              code: "RECIPE_HASH_MISMATCH",
+              message: `Recipe source changed for ${locked.recipe.id}`,
+              capability: capabilityId,
+              path: recipePath,
+            });
+          }
+        } catch (error) {
+          issues.push({
+            ...issueFromError(error, "RECIPE_LOAD_FAILED"),
+            capability: capabilityId,
+          });
+        }
+      }
+    }
+  }
+
   for (const dependency of manifest.spec.dependencies) {
     if (dependency.optional) continue;
     const candidate = project.capabilities.find((item) => item.id === dependency.id);
@@ -275,17 +377,25 @@ async function verifyCapability(
     }
   }
 
-  issues.push(...await verifyEvidence(projectRoot, manifest, receipt));
+  issues.push(...await verifyInstallationProvenance(projectRoot, manifest, receipt));
+  issues.push(...await verifyReceiptEvidence(projectRoot, manifest, receipt));
   return { verified: !issues.some((issue) => issue.level === "error"), issues };
 }
 
 export async function verifyProject(options: VerifyProjectOptions): Promise<VerificationReport> {
   const projectRoot = resolve(options.projectRoot);
   let project: ProjectManifest;
+  let lock: ProjectLock;
   try {
     project = await loadProjectManifest(projectRoot);
   } catch (error) {
     const issue = issueFromError(error, "PROJECT_LOAD_FAILED");
+    return { ok: false, projectRoot, verifiedCapabilities: [], issues: [issue] };
+  }
+  try {
+    lock = await loadProjectLock(projectRoot);
+  } catch (error) {
+    const issue = issueFromError(error, "PROJECT_LOCK_LOAD_FAILED");
     return { ok: false, projectRoot, verifiedCapabilities: [], issues: [issue] };
   }
 
@@ -298,6 +408,14 @@ export async function verifyProject(options: VerifyProjectOptions): Promise<Veri
       capability: id,
     });
   }
+  for (const id of duplicateValues(lock.capabilities.map((item) => item.id))) {
+    issues.push({
+      level: "error",
+      code: "DUPLICATE_LOCKED_CAPABILITY",
+      message: `Project lock records capability ${id} more than once`,
+      capability: id,
+    });
+  }
 
   const capabilityIds = options.capabilityId
     ? [options.capabilityId]
@@ -306,6 +424,7 @@ export async function verifyProject(options: VerifyProjectOptions): Promise<Veri
   for (const capabilityId of capabilityIds) {
     const result = await verifyCapability(
       project,
+      lock,
       projectRoot,
       options.packsDirectory,
       capabilityId,

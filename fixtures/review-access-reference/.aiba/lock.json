@@ -1,0 +1,16 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "Lock",
+  "generatedAt": "2026-07-26T00:00:00Z",
+  "capabilities": [
+    {
+      "id": "review-access",
+      "version": "0.1.0",
+      "manifestSha256": "92cf34a81a7e9e6a291ff1c13f659a92b504122266dc4dbe3396996472dd71a4",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "aebafb12ee94c8b719952723a90ddbc47a0db4e1f20dfe01066b138aa12da639"
+      }
+    }
+  ]
+}

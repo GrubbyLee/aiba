@@ -32,10 +32,10 @@ Exit criteria met on 2026-07-26.
 
 ## Current Milestone: M1
 
-- [ ] Finalize RFC 0003 Agent Operation Protocol.
-- [ ] Define capability recipe and operation-plan schemas.
-- [ ] Implement `aiba add review-access` prepare/finalize lifecycle.
-- [ ] Implement automatic receipt hashing after verified installation.
+- [x] Finalize RFC 0003 Agent Operation Protocol.
+- [x] Define capability recipe and operation-plan schemas.
+- [x] Implement `aiba add review-access` prepare/finalize lifecycle.
+- [x] Implement automatic receipt hashing after verified installation.
 - [ ] Add the Codex Skill adapter.
 - [ ] Add the Claude Code Skill adapter.
 - [ ] Add a native WeChat Mini Program fixture.

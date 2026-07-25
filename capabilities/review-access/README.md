@@ -7,5 +7,7 @@ another external review workflow.
 The capability does not prescribe routes, tables, authentication libraries, or
 UI. A valid implementation must satisfy every invariant in `capability.yaml`.
 
-M0 verifies receipt coverage and evidence integrity. M1 will add executable
-black-box conformance tests and the first WeChat adapter.
+M0 verifies receipt coverage and evidence integrity. The `typescript-reference`
+recipe adds non-executable semantic operations, bounded write paths, and
+evidence suggestions for Agent-assisted installation. M1 will also add
+executable black-box conformance tests and the first WeChat adapter.
