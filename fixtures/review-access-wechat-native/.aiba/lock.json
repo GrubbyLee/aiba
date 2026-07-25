@@ -1,0 +1,16 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "Lock",
+  "generatedAt": "2026-07-25T18:57:15.225Z",
+  "capabilities": [
+    {
+      "id": "review-access",
+      "version": "0.1.0",
+      "manifestSha256": "92cf34a81a7e9e6a291ff1c13f659a92b504122266dc4dbe3396996472dd71a4",
+      "recipe": {
+        "id": "wechat-native",
+        "sha256": "1cd51366403b6cea0e8279076e6c8d86acfd7ca170d49562d477977f67a72752"
+      }
+    }
+  ]
+}

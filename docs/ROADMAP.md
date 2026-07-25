@@ -19,9 +19,9 @@ TypeScript project.
 
 - [x] Define the Agent operation protocol.
 - [x] Implement `aiba add review-access` preparation and finalization.
-- [ ] Add Codex and Claude Code skill adapters.
-- [ ] Create a native WeChat Mini Program reference adapter.
-- [ ] Add black-box HTTP and Playwright conformance tests.
+- [x] Add a portable Codex and Claude Code skill adapter.
+- [x] Create a native WeChat Mini Program reference adapter.
+- [x] Add black-box HTTP and native client contract tests.
 
 ## M2: Customization-Aware Upgrade
 

@@ -76,6 +76,8 @@ from project-owned customization.
 - Playwright for later UI conformance tests.
 - TypeScript compiler APIs for the first semantic code adapter.
 - Git diffs and hashes for provenance; no project-state database.
+- Native Mini Program clients are validated with WeChat syntax checks and
+  client-contract tests; server boundaries use black-box HTTP attack tests.
 
 The protocol remains language-neutral. The first reference recipe uses a
 TypeScript application stack, but capability semantics cannot mention Next.js,

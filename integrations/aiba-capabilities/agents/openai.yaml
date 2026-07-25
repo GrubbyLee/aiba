@@ -1,0 +1,4 @@
+interface:
+  display_name: "AIBA Capabilities"
+  short_description: "Install and verify AIBA application capabilities"
+  default_prompt: "Use $aiba-capabilities to install and verify a capability in this project."

@@ -1,0 +1,61 @@
+.page-shell {
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 48rpx 32rpx;
+}
+
+.review-panel,
+.catalog {
+  background: #ffffff;
+  border: 1rpx solid #d9e0e5;
+  border-radius: 8rpx;
+  padding: 40rpx 32rpx;
+}
+
+.title,
+.subtitle,
+.error {
+  display: block;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: 600;
+}
+
+.subtitle {
+  color: #5f6b73;
+  font-size: 26rpx;
+  margin-top: 12rpx;
+}
+
+.credential-input {
+  border: 1rpx solid #b8c2c8;
+  border-radius: 6rpx;
+  box-sizing: border-box;
+  height: 88rpx;
+  margin-top: 36rpx;
+  padding: 0 24rpx;
+}
+
+.submit-button {
+  margin-top: 24rpx;
+}
+
+.error {
+  color: #b42318;
+  font-size: 24rpx;
+  margin-top: 20rpx;
+}
+
+.catalog-row {
+  align-items: center;
+  border-bottom: 1rpx solid #e7ebee;
+  display: flex;
+  justify-content: space-between;
+  min-height: 88rpx;
+}
+
+.state {
+  color: #287a45;
+}

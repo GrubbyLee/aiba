@@ -30,22 +30,41 @@ receipt with a non-zero exit code, and reproduce those checks in CI.
 
 Exit criteria met on 2026-07-26.
 
-## Current Milestone: M1
+## Completed Milestone: M1
 
 - [x] Finalize RFC 0003 Agent Operation Protocol.
 - [x] Define capability recipe and operation-plan schemas.
 - [x] Implement `aiba add review-access` prepare/finalize lifecycle.
 - [x] Implement automatic receipt hashing after verified installation.
-- [ ] Add the Codex Skill adapter.
-- [ ] Add the Claude Code Skill adapter.
-- [ ] Add a native WeChat Mini Program fixture.
-- [ ] Add black-box review-access attack tests.
+- [x] Add the Codex Skill adapter.
+- [x] Add the Claude Code Skill adapter.
+- [x] Add a native WeChat Mini Program fixture.
+- [x] Add black-box review-access attack tests.
+
+## M1 Exit Criteria
+
+M1 is complete when an Agent can prepare a bounded plan, adapt project-owned
+code, submit evidence paths without trusted hashes, finalize an installation,
+and pass deterministic verification. The same workflow must run through a
+portable Codex/Claude Code Skill and against a native WeChat Mini Program with
+HTTP and client-boundary attack tests.
+
+Exit criteria met on 2026-07-26.
+
+## Current Milestone: M2
+
+- [ ] Define generated ancestry and semantic ownership records.
+- [ ] Define migration operations and conflict classes.
+- [ ] Implement `aiba diff` for capability and project drift.
+- [ ] Implement `aiba upgrade` prepare/finalize lifecycle.
+- [ ] Add customized v1 and v2 review-access fixtures.
+- [ ] Add clean, customized, and conflicting upgrade tests.
 
 ## Known Risks
 
-- Evidence hashes prove file identity, not behavior. M1 must add executable
-  black-box conformance tests.
-- Capability package code is untrusted input. M0 does not execute pack-provided
-  commands.
+- Evidence hashes prove file identity, while capability-specific black-box tests
+  prove selected behavior. Future packs need comparable conformance suites.
+- Capability package code is untrusted input. Core does not execute
+  pack-provided commands.
 - Multi-version registries and signed packages are deferred until the local
   protocol stabilizes.

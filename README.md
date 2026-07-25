@@ -23,7 +23,8 @@ The project is in its initial implementation phase. The first capability is
 - `packages/cli`: the `aiba` command-line interface.
 - `capabilities/`: official capability packs.
 - `integrations/`: Agent-specific adapters.
-- `fixtures/`: reference projects used for conformance testing.
+- `fixtures/`: reference projects used for conformance and attack testing,
+  including a native WeChat Mini Program.
 
 ## Development
 

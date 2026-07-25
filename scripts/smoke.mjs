@@ -97,6 +97,14 @@ run("verify passing fixture", [
   "--packs-dir",
   "capabilities",
 ], 0);
+run("verify native WeChat fixture", [
+  "verify",
+  "review-access",
+  "--root",
+  "fixtures/review-access-wechat-native",
+  "--packs-dir",
+  "capabilities",
+], 0);
 run("reject broken fixture", [
   "verify",
   "review-access",

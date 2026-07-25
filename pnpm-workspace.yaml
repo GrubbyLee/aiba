@@ -1,3 +1,4 @@
 packages:
   - packages/*
   - fixtures/review-access-reference
+  - fixtures/review-access-wechat-native

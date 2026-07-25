@@ -1,0 +1,10 @@
+{
+  "appid": "touristappid",
+  "projectname": "aiba-review-access-native-fixture",
+  "compileType": "miniprogram",
+  "miniprogramRoot": "miniprogram/",
+  "setting": {
+    "es6": true,
+    "urlCheck": false
+  }
+}

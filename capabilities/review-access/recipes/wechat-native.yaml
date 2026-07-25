@@ -1,0 +1,73 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: wechat-native
+  version: 0.1.0
+  title: Native WeChat Mini Program Review Access
+  description: >-
+    Semantic guidance for a native WeChat Mini Program review entry backed by
+    a server-authoritative TypeScript security boundary.
+spec:
+  capability:
+    id: review-access
+    version: 0.1.0
+  compatibility:
+    languages: [JavaScript, TypeScript]
+    frameworks: [WeChat Mini Program]
+  writeScope:
+    allowedPatterns:
+      - miniprogram/**
+      - src/**
+  operations:
+    - id: add-review-entry
+      intent: Add a reviewer-facing Mini Program entry that submits only credential and release identity.
+      requiredInterfaces: [identity.principal]
+      invariants: [client-cannot-self-assert-reviewer, reviewer-is-distinct-principal]
+      guidance:
+        - Do not place enablement, reviewer roles, scopes, secrets, or production data rules in Mini Program code.
+        - Keep reviewer session tokens in memory and use a dedicated reviewer principal returned by the server.
+    - id: enforce-server-policy
+      intent: Enforce release binding, enablement, expiration, revocation, and rate limits in trusted server state.
+      requiredInterfaces: [identity.principal, authorization.decision]
+      invariants: [server-authoritative-enable, access-expires, access-is-revocable, attempts-are-rate-limited]
+      guidance:
+        - Derive the rate-limit key from trusted transport metadata rather than request body fields.
+        - Re-evaluate policy while authorizing an existing review session.
+    - id: isolate-review-capabilities
+      intent: Expose only fixed review operations backed by isolated or sanitized data.
+      requiredInterfaces: [authorization.decision]
+      invariants: [scope-is-least-privilege, production-data-is-isolated]
+      guidance:
+        - Map each endpoint to a server-owned scope instead of accepting arbitrary scope input.
+        - Inject an isolated review dataset without a production-data fallback.
+    - id: audit-review-boundary
+      intent: Emit attributable audit events for authentication, authorization, denial, and revocation.
+      requiredInterfaces: [audit.event]
+      invariants: [actions-are-audited]
+      guidance:
+        - Record outcomes and reason codes without logging raw credentials or session tokens.
+  evidence:
+    - invariant: reviewer-is-distinct-principal
+      suggestions: &wechatEvidence
+        - type: source
+          pathPattern: src/server/**/*.ts
+          description: Server-authoritative review access implementation.
+        - type: test
+          pathPattern: src/**/*.test.ts
+          description: Black-box review access attack tests.
+    - invariant: server-authoritative-enable
+      suggestions: *wechatEvidence
+    - invariant: scope-is-least-privilege
+      suggestions: *wechatEvidence
+    - invariant: access-expires
+      suggestions: *wechatEvidence
+    - invariant: access-is-revocable
+      suggestions: *wechatEvidence
+    - invariant: production-data-is-isolated
+      suggestions: *wechatEvidence
+    - invariant: attempts-are-rate-limited
+      suggestions: *wechatEvidence
+    - invariant: actions-are-audited
+      suggestions: *wechatEvidence
+    - invariant: client-cannot-self-assert-reviewer
+      suggestions: *wechatEvidence

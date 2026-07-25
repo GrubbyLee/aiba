@@ -1,0 +1,30 @@
+<view class="page-shell">
+  <view class="review-panel" wx:if="{{status !== 'authorized'}}">
+    <text class="title">审核访问</text>
+    <text class="subtitle">请输入本次审核提供的临时访问码</text>
+    <input
+      class="credential-input"
+      password
+      maxlength="64"
+      value="{{credential}}"
+      bindinput="onCredentialInput"
+      placeholder="临时访问码"
+    />
+    <button
+      class="submit-button"
+      type="primary"
+      loading="{{pending}}"
+      disabled="{{pending || !credential}}"
+      bindtap="submitReviewAccess"
+    >进入审核环境</button>
+    <text class="error" wx:if="{{status === 'denied'}}">访问未通过，请核对审核信息</text>
+  </view>
+
+  <view class="catalog" wx:else>
+    <text class="title">审核数据</text>
+    <view class="catalog-row" wx:for="{{catalog}}" wx:key="id">
+      <text>{{item.name}}</text>
+      <text class="state">{{item.state}}</text>
+    </view>
+  </view>
+</view>

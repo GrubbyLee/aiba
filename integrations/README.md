@@ -18,5 +18,16 @@ Adapters may not:
 - Modify receipts after evidence changes without re-hashing.
 - Send project files to a hosted service without explicit user policy.
 
-The initial Codex and Claude Code adapters are planned in M1 after the Agent
-Operation Protocol is accepted.
+## Portable Skill
+
+`aiba-capabilities/` is the canonical Agent Skill for both Codex and Claude
+Code. Install the same directory into the host's project or user skill location:
+
+```text
+.codex/skills/aiba-capabilities/    # Codex
+.claude/skills/aiba-capabilities/   # Claude Code
+```
+
+Codex also reads `agents/openai.yaml` for UI metadata. Claude Code ignores that
+optional file and follows the shared `SKILL.md`. Keeping one workflow prevents
+provider adapters from redefining AIBA contracts differently.

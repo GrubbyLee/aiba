@@ -1,0 +1,16 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Project
+project:
+  name: "@aiba/fixture-review-access-wechat-native"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+      - WeChat WXSS
+      - WeChat WXML
+    frameworks:
+      - WeChat Mini Program
+capabilities:
+  - id: review-access
+    version: 0.1.0
+    receipt: .aiba/receipts/review-access.yaml

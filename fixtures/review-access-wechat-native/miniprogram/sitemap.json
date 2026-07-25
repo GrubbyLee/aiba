@@ -1,0 +1,9 @@
+{
+  "desc": "AIBA native review access fixture",
+  "rules": [
+    {
+      "action": "disallow",
+      "page": "*"
+    }
+  ]
+}

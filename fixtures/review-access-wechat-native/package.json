@@ -1,0 +1,15 @@
+{
+  "name": "@aiba/fixture-review-access-wechat-native",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check:miniprogram": "node --check miniprogram/app.js && node --check miniprogram/pages/review/index.js && node --check miniprogram/services/review-api.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run && pnpm check:miniprogram"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0"
+  }
+}
