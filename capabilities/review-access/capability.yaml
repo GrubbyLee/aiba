@@ -1,0 +1,65 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: review-access
+  version: 0.1.0
+  title: Review Access
+  description: >-
+    Time-bound, least-privilege access for application-store and external
+    reviewers who cannot use normal account onboarding.
+spec:
+  interfaces:
+    - identity.principal
+    - authorization.decision
+    - audit.event
+  dependencies: []
+  invariants:
+    - id: reviewer-is-distinct-principal
+      title: Reviewer is a distinct principal
+      description: Reviewer sessions never impersonate an internal user or administrator.
+      severity: critical
+      evidence: &sourceAndTest
+        acceptedTypes: [source, test, document]
+        requiredTypes: [source, test]
+        minimum: 2
+        requireHash: true
+    - id: server-authoritative-enable
+      title: Enablement is server authoritative
+      description: Trusted server-side state decides whether review access is enabled.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: scope-is-least-privilege
+      title: Scope follows least privilege
+      description: Reviewer permissions are explicitly constrained to review-only actions and data.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: access-expires
+      title: Access expires automatically
+      description: Reviewer credentials and sessions have a server-enforced expiration time.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: access-is-revocable
+      title: Access can be revoked
+      description: Authorized operators can invalidate reviewer access before its normal expiration.
+      severity: error
+      evidence: *sourceAndTest
+    - id: production-data-is-isolated
+      title: Production data is isolated
+      description: Reviewer flows expose isolated or explicitly sanitized data, never unrestricted production data.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: attempts-are-rate-limited
+      title: Attempts are rate limited
+      description: Repeated failed reviewer authentication attempts are limited by trusted server state.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: actions-are-audited
+      title: Actions are audited
+      description: Authentication, denial, session creation, revocation, and reviewer actions are attributable.
+      severity: error
+      evidence: *sourceAndTest
+    - id: client-cannot-self-assert-reviewer
+      title: Client cannot self-assert reviewer identity
+      description: Client input cannot select reviewer identity, permissions, data scope, or enablement.
+      severity: critical
+      evidence: *sourceAndTest

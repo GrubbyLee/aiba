@@ -1,0 +1,11 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Project
+project:
+  name: review-access-reference
+  stack:
+    languages: [TypeScript]
+    frameworks: []
+capabilities:
+  - id: review-access
+    version: 0.1.0
+    receipt: .aiba/receipts/review-access.yaml

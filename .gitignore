@@ -1,0 +1,16 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+
+# Local contributor and agent instructions
+/AGENTS.md
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Local package-manager state
+.pnpm-store/

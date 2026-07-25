@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/v0alpha1/capability.schema.json",
+  "title": "AIBA Capability Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "spec"],
+  "properties": {
+    "apiVersion": { "const": "aiba.dev/v0alpha1" },
+    "kind": { "const": "Capability" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "version", "title", "description"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}$" },
+        "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "description": { "type": "string", "minLength": 1, "maxLength": 1000 }
+      }
+    },
+    "spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["interfaces", "dependencies", "invariants"],
+      "properties": {
+        "interfaces": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(?:\\.[a-z][a-z0-9-]*)+$" }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "version", "optional"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}$" },
+              "version": { "type": "string", "minLength": 1 },
+              "optional": { "type": "boolean" }
+            }
+          }
+        },
+        "invariants": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "title", "description", "severity", "evidence"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+              "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+              "description": { "type": "string", "minLength": 1, "maxLength": 1200 },
+              "severity": { "enum": ["critical", "error", "warning"] },
+              "evidence": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["acceptedTypes", "requiredTypes", "minimum", "requireHash"],
+                "properties": {
+                  "acceptedTypes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "enum": ["source", "test", "config", "document"] }
+                  },
+                  "requiredTypes": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": { "enum": ["source", "test", "config", "document"] }
+                  },
+                  "minimum": { "type": "integer", "minimum": 1, "maximum": 20 },
+                  "requireHash": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

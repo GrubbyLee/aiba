@@ -1,0 +1,34 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: review-access
+  version: 0.1.0
+installation:
+  method: manual
+  createdAt: 2026-07-26T00:00:00Z
+  recipe: typescript-reference
+invariants:
+  - id: reviewer-is-distinct-principal
+    evidence: &implementationEvidence
+      - type: source
+        path: src/reviewAccess.ts
+        sha256: c41b1b0408bcf4941c73501a94b0e6c51ff34c8df80e697cf87cb1a71079e049
+      - type: test
+        path: src/reviewAccess.test.ts
+        sha256: fd5b739dc296f27369f6ae53bca230e670e6966610681255bf2f63bcf3c4742a
+  - id: server-authoritative-enable
+    evidence: *implementationEvidence
+  - id: scope-is-least-privilege
+    evidence: *implementationEvidence
+  - id: access-expires
+    evidence: *implementationEvidence
+  - id: access-is-revocable
+    evidence: *implementationEvidence
+  - id: production-data-is-isolated
+    evidence: *implementationEvidence
+  - id: attempts-are-rate-limited
+    evidence: *implementationEvidence
+  - id: actions-are-audited
+    evidence: *implementationEvidence
+  - id: client-cannot-self-assert-reviewer
+    evidence: *implementationEvidence

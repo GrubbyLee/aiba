@@ -1,0 +1,14 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: review-access
+  version: 0.1.0
+installation:
+  method: manual
+  createdAt: 2026-07-26T00:00:00Z
+invariants:
+  - id: server-authoritative-enable
+    evidence:
+      - type: source
+        path: src/missing.ts
+        sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
