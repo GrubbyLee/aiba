@@ -328,8 +328,41 @@ export interface UpgradePlan {
   evidence: OperationPlan["evidence"];
 }
 
+export interface CapabilityBundle {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "CapabilityBundle";
+  metadata: { createdAt: string };
+  capability: { id: string; version: string };
+  publisher: { id: string; keyId: string };
+  files: Array<{ path: string; size: number; sha256: string }>;
+}
+
+export interface CapabilityBundleSignature {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "CapabilityBundleSignature";
+  algorithm: "Ed25519";
+  keyId: string;
+  manifestSha256: string;
+  signature: string;
+}
+
+export interface PublisherTrustPolicy {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "PublisherTrustPolicy";
+  metadata: { id: string };
+  publishers: Array<{
+    publisher: string;
+    keyId: string;
+    algorithm: "Ed25519";
+    publicKey: string;
+    capabilities: string[];
+  }>;
+}
+
 export type ProtocolSchemaName =
   | "ancestry.schema.json"
+  | "bundle.schema.json"
+  | "bundle-signature.schema.json"
   | "capability.schema.json"
   | "lock.schema.json"
   | "migration.schema.json"
@@ -337,6 +370,7 @@ export type ProtocolSchemaName =
   | "project.schema.json"
   | "recipe.schema.json"
   | "receipt.schema.json"
+  | "trust-policy.schema.json"
   | "upgrade-plan.schema.json";
 
 export type InterfaceSchemaName =

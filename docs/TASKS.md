@@ -95,8 +95,13 @@ Exit criteria met on 2026-07-26.
 
 ## Current Milestone: M4
 
-- [ ] Define signed capability bundle and registry index protocols.
-- [ ] Verify bundle integrity, publisher identity, and anti-rollback metadata.
+- [x] Define signed capability bundle and publisher trust-policy protocols.
+- [x] Add Ed25519 key generation and RFC 8785 manifest signing.
+- [x] Verify exact file integrity, publisher identity, and capability allowlists.
+- [x] Reject symlinks, scripts, binaries, extra files, traversal, and semantic drift.
+- [x] Add compiled CLI smoke coverage for keygen, pack, verify, and tamper rejection.
+- [ ] Define signed registry index and anti-rollback protocols.
+- [ ] Verify registry index integrity, publisher delegation, and anti-rollback metadata.
 - [ ] Add local and private registry resolution without executing packages.
 - [ ] Define team policy, approval, and upgrade-governance records.
 - [ ] Add commercial-boundary architecture for private registries and hosted controls.
@@ -107,5 +112,5 @@ Exit criteria met on 2026-07-26.
   prove selected behavior. Future packs need comparable conformance suites.
 - Capability package code is untrusted input. Core does not execute
   pack-provided commands.
-- Multi-version registries and signed packages are deferred until the local
-  protocol stabilizes.
+- Multi-version registry resolution and cached anti-rollback state remain M4.2
+  work; signed bundle verification is complete.

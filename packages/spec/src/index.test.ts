@@ -4,6 +4,8 @@ import { loadInterfaceSchema, loadProtocolSchema } from "./index.js";
 describe("protocol schemas", () => {
   it.each([
     "ancestry.schema.json",
+    "bundle.schema.json",
+    "bundle-signature.schema.json",
     "capability.schema.json",
     "lock.schema.json",
     "migration.schema.json",
@@ -11,6 +13,7 @@ describe("protocol schemas", () => {
     "project.schema.json",
     "recipe.schema.json",
     "receipt.schema.json",
+    "trust-policy.schema.json",
     "upgrade-plan.schema.json",
   ] as const)("loads %s", (name) => {
     const schema = loadProtocolSchema(name) as { $schema?: string };

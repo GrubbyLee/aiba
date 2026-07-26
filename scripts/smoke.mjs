@@ -32,6 +32,64 @@ function run(name, args, expectedStatus) {
 }
 
 run("inspect", ["inspect", "fixtures/review-access-reference", "--json"], 0);
+
+const bundleFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-bundle-"));
+const keyDirectory = join(bundleFixture, "keys");
+const bundleDirectory = join(bundleFixture, "identity-bundle");
+const trustPolicyPath = join(bundleFixture, "trust-policy.json");
+run("publisher keygen", [
+  "keygen",
+  "aiba-official",
+  "--key-id",
+  "root-1",
+  "--out",
+  keyDirectory,
+  "--json",
+], 0);
+run("pack signed capability", [
+  "pack",
+  "identity",
+  "--publisher",
+  "aiba-official",
+  "--key-id",
+  "root-1",
+  "--private-key",
+  join(keyDirectory, "private.pem"),
+  "--out",
+  bundleDirectory,
+  "--packs-dir",
+  join(workspace, "capabilities"),
+  "--json",
+], 0);
+writeFileSync(trustPolicyPath, `${JSON.stringify({
+  apiVersion: "aiba.dev/v0alpha1",
+  kind: "PublisherTrustPolicy",
+  metadata: { id: "smoke-policy" },
+  publishers: [{
+    publisher: "aiba-official",
+    keyId: "root-1",
+    algorithm: "Ed25519",
+    publicKey: readFileSync(join(keyDirectory, "public.pem"), "utf8"),
+    capabilities: ["identity"],
+  }],
+}, null, 2)}\n`);
+run("verify signed capability bundle", [
+  "verify-bundle",
+  bundleDirectory,
+  "--trust",
+  trustPolicyPath,
+  "--json",
+], 0);
+writeFileSync(join(bundleDirectory, "pack", "README.md"), "tampered\n");
+run("reject tampered capability bundle", [
+  "verify-bundle",
+  bundleDirectory,
+  "--trust",
+  trustPolicyPath,
+  "--json",
+], 1);
+rmSync(bundleFixture, { recursive: true, force: true });
+
 const initFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-init-"));
 writeFileSync(join(initFixture, "package.json"), '{"name":"smoke-init"}\n');
 run("init", ["init", initFixture, "--json"], 0);

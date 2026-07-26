@@ -5,6 +5,8 @@ import {
   type AuditEvent,
   type AuthorizationDecision,
   type CapabilityAncestry,
+  type CapabilityBundle,
+  type CapabilityBundleSignature,
   type CapabilityManifest,
   type CapabilityMigration,
   type CapabilityRecipe,
@@ -13,6 +15,7 @@ import {
   type NotificationCommand,
   type NotificationReceipt,
   type Principal,
+  type PublisherTrustPolicy,
   type ProjectLock,
   type ProjectManifest,
   type UpgradePlan,
@@ -46,6 +49,15 @@ const notificationReceiptValidator = ajv.compile<NotificationReceipt>(
 
 const capabilityValidator = ajv.compile<CapabilityManifest>(
   loadProtocolSchema("capability.schema.json"),
+);
+const bundleValidator = ajv.compile<CapabilityBundle>(
+  loadProtocolSchema("bundle.schema.json"),
+);
+const bundleSignatureValidator = ajv.compile<CapabilityBundleSignature>(
+  loadProtocolSchema("bundle-signature.schema.json"),
+);
+const trustPolicyValidator = ajv.compile<PublisherTrustPolicy>(
+  loadProtocolSchema("trust-policy.schema.json"),
 );
 const ancestryValidator = ajv.compile<CapabilityAncestry>(
   loadProtocolSchema("ancestry.schema.json"),
@@ -92,6 +104,23 @@ function assertValid<T>(
 export function validateCapabilityManifest(value: unknown): CapabilityManifest {
   assertValid(capabilityValidator, value, "capability manifest");
   return value as CapabilityManifest;
+}
+
+export function validateCapabilityBundle(value: unknown): CapabilityBundle {
+  assertValid(bundleValidator, value, "capability bundle");
+  return value as CapabilityBundle;
+}
+
+export function validateCapabilityBundleSignature(
+  value: unknown,
+): CapabilityBundleSignature {
+  assertValid(bundleSignatureValidator, value, "capability bundle signature");
+  return value as CapabilityBundleSignature;
+}
+
+export function validatePublisherTrustPolicy(value: unknown): PublisherTrustPolicy {
+  assertValid(trustPolicyValidator, value, "publisher trust policy");
+  return value as PublisherTrustPolicy;
 }
 
 export function validatePrincipal(value: unknown): Principal {

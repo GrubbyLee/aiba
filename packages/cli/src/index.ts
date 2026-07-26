@@ -6,11 +6,14 @@ import { Command } from "commander";
 import {
   finalizeCapability,
   finalizeUpgrade,
+  createCapabilityBundle,
   diffProject,
+  generatePublisherKeyPair,
   initializeProject,
   inspectProject,
   prepareCapability,
   prepareUpgrade,
+  verifyCapabilityBundle,
   verifyProject,
 } from "@aiba/core";
 import { renderDiff, renderInspection, renderVerification } from "./render.js";
@@ -21,6 +24,101 @@ program
   .name("aiba")
   .description("Install, verify, trace, and upgrade application capabilities")
   .version("0.1.0");
+
+program
+  .command("keygen")
+  .description("Generate an Ed25519 capability publisher key pair")
+  .argument("<publisher>", "publisher identifier")
+  .requiredOption("--out <path>", "new key output directory")
+  .option("--key-id <id>", "publisher key identifier", "root-1")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    publisher: string,
+    options: { out: string; keyId: string; json?: boolean },
+  ) => {
+    const result = await generatePublisherKeyPair({
+      publisherId: publisher,
+      keyId: options.keyId,
+      outputDirectory: resolve(options.out),
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `Generated Ed25519 key ${result.publisherId}/${result.keyId}.`,
+      `Private key: ${result.privateKeyPath}`,
+      `Public key: ${result.publicKeyPath}`,
+    ].join("\n") + "\n");
+  });
+
+program
+  .command("pack")
+  .description("Create and sign a capability bundle")
+  .argument("<capability>", "capability to package")
+  .requiredOption("--publisher <id>", "publisher identifier")
+  .requiredOption("--key-id <id>", "publisher key identifier")
+  .requiredOption("--private-key <path>", "Ed25519 PKCS#8 private key")
+  .requiredOption("--out <path>", "new bundle output directory")
+  .option("--packs-dir <path>", "capability pack directory", "capabilities")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    capability: string,
+    options: {
+      publisher: string;
+      keyId: string;
+      privateKey: string;
+      out: string;
+      packsDir: string;
+      json?: boolean;
+    },
+  ) => {
+    const result = await createCapabilityBundle({
+      packsDirectory: resolve(options.packsDir),
+      capabilityId: capability,
+      outputDirectory: resolve(options.out),
+      publisherId: options.publisher,
+      keyId: options.keyId,
+      privateKeyPath: resolve(options.privateKey),
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `Packed ${result.capability}@${result.version}.`,
+      `Publisher: ${result.publisher}/${result.keyId}`,
+      `Files: ${result.files}`,
+      `Bundle: ${result.bundleDirectory}`,
+      `Manifest SHA-256: ${result.manifestSha256}`,
+    ].join("\n") + "\n");
+  });
+
+program
+  .command("verify-bundle")
+  .description("Verify a signed capability bundle against a local trust policy")
+  .argument("<bundle>", "bundle directory")
+  .requiredOption("--trust <path>", "publisher trust policy JSON")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    bundle: string,
+    options: { trust: string; json?: boolean },
+  ) => {
+    const result = await verifyCapabilityBundle({
+      bundleDirectory: resolve(bundle),
+      trustPolicyPath: resolve(options.trust),
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `Verified ${result.capability}@${result.version}.`,
+      `Publisher: ${result.publisher}/${result.keyId}`,
+      `Files: ${result.files}`,
+      `Manifest SHA-256: ${result.manifestSha256}`,
+    ].join("\n") + "\n");
+  });
 
 program
   .command("init")

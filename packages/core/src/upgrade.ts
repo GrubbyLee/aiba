@@ -83,7 +83,7 @@ function conflictFor(file: Pick<FileDrift, "status" | "ownership">): UpgradeConf
   return file.ownership === "generated" ? "missing-generated" : "missing-shared";
 }
 
-function assertMigrationSemantics(
+export function assertMigrationSemantics(
   migration: CapabilityMigration,
   installedVersion: string,
   target: CapabilityManifest,

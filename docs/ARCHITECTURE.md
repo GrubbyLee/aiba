@@ -33,7 +33,8 @@ carry roles or permissions; policy produces a separate explicit decision.
 
 The core loads and validates manifests, inspects projects, resolves capability
 packs, validates evidence, computes hashes, and produces structured diagnostic
-results.
+results. It also creates and verifies signed bundle envelopes without importing
+or executing pack content.
 
 ### CLI
 
@@ -46,6 +47,13 @@ exit codes.
 A capability pack contains stable semantics and verification requirements, not
 a fixed UI implementation. A pack may later include stack-specific recipes,
 migrations, fixtures, and Agent guidance.
+
+Signed bundles authenticate an exact, size-bounded file set with Ed25519 and
+RFC 8785 canonical JSON. Local trust policy authorizes an exact publisher/key
+pair for an explicit capability allowlist. Bundle verification rejects
+symlinks, executable payloads, extra files, traversal paths, source tampering,
+and invalid recipe or migration semantics. A valid signature proves publisher
+identity and byte integrity; it never turns pack data into executable code.
 
 ### Agent Adapters
 
@@ -87,6 +95,8 @@ accepted only after target verification succeeds.
 - Playwright for later UI conformance tests.
 - TypeScript compiler APIs for the first semantic code adapter.
 - Git diffs and hashes for provenance; no project-state database.
+- Ed25519, RFC 8785 canonical JSON, and local publisher allowlists for signed
+  capability distribution.
 - Native Mini Program clients are validated with WeChat syntax checks and
   client-contract tests; server boundaries use black-box HTTP attack tests.
 - Core security capability references use injected stores/provider adapters,

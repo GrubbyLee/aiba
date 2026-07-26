@@ -43,7 +43,8 @@ Goal: upgrade a deeply customized capability from v1 to v2 safely.
 
 ## M4: Ecosystem And Commercial Layer
 
-- [ ] Signed capability packages and registry protocol.
+- [x] Signed capability bundles, publisher keys, and local trust policy.
+- [ ] Signed registry indexes, resolution, and anti-rollback state.
 - [ ] Private capability registries.
 - [ ] Team policy, approvals, and upgrade governance.
 - [ ] Hosted signed review switches and enterprise integrations.

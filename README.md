@@ -6,8 +6,8 @@ forcing projects into a fixed application framework or visual system.
 
 The initial capability set covers `review-access`, `identity`, `audit`,
 `authorization`, `users`, and `notification`. AIBA currently supports
-Agent-assisted install, deterministic verification, drift inspection, and
-customization-aware upgrade.
+Agent-assisted install, deterministic verification, drift inspection,
+customization-aware upgrade, and locally enforced signed capability bundles.
 
 ## Principles
 
@@ -46,6 +46,10 @@ node packages/cli/dist/index.js upgrade review-access --finalize \
 node packages/cli/dist/index.js verify review-access \
   --root fixtures/review-access-reference \
   --packs-dir capabilities
+aiba keygen aiba-official --out ../aiba-publisher-keys
+aiba pack identity --publisher aiba-official --key-id root-1 \
+  --private-key ../aiba-publisher-keys/private.pem --out identity.aiba
+aiba verify-bundle identity.aiba --trust trust-policy.json
 ```
 
 The concise product workflow remains:

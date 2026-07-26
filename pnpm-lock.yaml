@@ -61,6 +61,9 @@ importers:
       ajv:
         specifier: ^8.17.1
         version: 8.20.0
+      canonicalize:
+        specifier: 2.1.0
+        version: 2.1.0
       minimatch:
         specifier: ^10.2.5
         version: 10.2.5
@@ -445,6 +448,10 @@ packages:
   cac@6.7.14:
     resolution: {integrity: sha512-b6Ilus+c3RrdDk+JhLKUAQfzzgLEPy6wcXqS7f/xe1EETvsDP6GORG7SFuOs6cID5YkqchW/LXZbX5bc8j7ZcQ==}
     engines: {node: '>=8'}
+
+  canonicalize@2.1.0:
+    resolution: {integrity: sha512-F705O3xrsUtgt98j7leetNhTWPe+5S72rlL5O4jA1pKqBVQ/dT1O1D6PFxmSXvc0SUOinWS57DKx0I3CHrXJHQ==}
+    hasBin: true
 
   chai@5.3.3:
     resolution: {integrity: sha512-4zNhdJD/iOjSH0A05ea+Ke6MU5mmpQcbQsSOkgdaUMJ9zTlDTD/GYlwohmIE2u0gaxHYiVHEn1Fw9mZ/ktJWgw==}
@@ -921,6 +928,8 @@ snapshots:
       balanced-match: 4.0.4
 
   cac@6.7.14: {}
+
+  canonicalize@2.1.0: {}
 
   chai@5.3.3:
     dependencies:

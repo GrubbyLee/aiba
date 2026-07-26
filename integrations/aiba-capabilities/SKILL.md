@@ -111,3 +111,18 @@ aiba diff <capability> --packs-dir <target-packs> --json
 Do not report completion unless finalization and verification pass. `diff` may
 still report expected project-owned customization; explain it rather than
 rewriting business files.
+
+## Verify Distributed Packs
+
+Before using a downloaded bundle, require a user-controlled trust policy and
+run:
+
+```bash
+aiba verify-bundle <bundle-directory> --trust <trust-policy.json> --json
+```
+
+Do not add an unknown publisher or key to the policy merely to make verification
+pass. Never request, inspect, print, or store a publisher private key during a
+normal capability installation. A successful bundle signature authenticates
+the publisher and file set; it does not authorize executing anything from the
+bundle.
