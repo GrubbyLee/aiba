@@ -45,6 +45,7 @@ Goal: upgrade a deeply customized capability from v1 to v2 safely.
 
 - [x] Signed capability bundles, publisher keys, and local trust policy.
 - [x] Signed registry indexes, local resolution, expiry, and anti-rollback state.
-- [ ] Private capability registries.
+- [x] Authenticated private registry transport and verified local caching.
 - [x] Team policy, signed approvals, separation of duties, and upgrade governance.
-- [ ] Hosted signed review switches and enterprise integrations.
+- [x] Define the open Core and commercial hosted-control boundary.
+- [ ] Build hosted key custody, signed review workflows, and enterprise integrations.

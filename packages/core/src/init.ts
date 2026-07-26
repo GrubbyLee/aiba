@@ -39,6 +39,7 @@ export async function initializeProject(
 
   const manifestPath = join(stateDirectory, "manifest.yaml");
   const lockPath = join(stateDirectory, "lock.json");
+  const ignorePath = join(stateDirectory, ".gitignore");
   const receiptsPath = join(stateDirectory, "receipts");
   const manifest: ProjectManifest = {
     apiVersion: AIBA_API_VERSION,
@@ -61,6 +62,7 @@ export async function initializeProject(
 
   try {
     await mkdir(receiptsPath);
+    await writeFile(ignorePath, "/registry-cache/\n", { encoding: "utf8", flag: "wx" });
     await writeFile(manifestPath, stringify(manifest), { encoding: "utf8", flag: "wx" });
     await writeFile(lockPath, `${JSON.stringify(lock, null, 2)}\n`, { encoding: "utf8", flag: "wx" });
   } catch (error) {

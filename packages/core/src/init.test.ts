@@ -32,6 +32,8 @@ describe("initializeProject", () => {
       kind: "Lock",
       capabilities: [],
     });
+    await expect(readFile(join(root, ".aiba", ".gitignore"), "utf8"))
+      .resolves.toBe("/registry-cache/\n");
   });
 
   it("does not overwrite existing AIBA state", async () => {

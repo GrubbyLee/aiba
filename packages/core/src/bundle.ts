@@ -93,6 +93,22 @@ export interface VerifyCapabilityBundleOptions {
   trustPolicyPath: string;
 }
 
+export interface VerifyCapabilityBundleEnvelopeOptions {
+  bundleManifestPath: string;
+  bundleSignaturePath: string;
+  trustPolicyPath: string;
+}
+
+export interface VerifyCapabilityBundleEnvelopeResult {
+  bundle: CapabilityBundle;
+  capability: string;
+  version: string;
+  publisher: string;
+  keyId: string;
+  files: number;
+  manifestSha256: string;
+}
+
 export interface VerifyCapabilityBundleResult {
   ok: true;
   capability: string;
@@ -214,17 +230,25 @@ async function collectSourceFiles(packDirectory: string): Promise<SourceFile[]> 
 }
 
 async function parseJsonDocument(path: string, label: string): Promise<unknown> {
-  const bytes = await readFile(path).catch((error: unknown) => {
+  const info = await lstat(path).catch((error: unknown) => {
     throw new AibaError(`Cannot read ${label}: ${path}`, "DOCUMENT_NOT_FOUND", {
       cause: error,
     });
   });
-  if (bytes.length > MAX_DOCUMENT_SIZE) {
+  if (!info.isFile() || info.isSymbolicLink()) {
+    throw new AibaError(`${label} must be a regular file`, "INVALID_DOCUMENT_PATH");
+  }
+  if (info.size > MAX_DOCUMENT_SIZE) {
     throw new AibaError(`${label} exceeds size limit`, "DOCUMENT_TOO_LARGE");
   }
   try {
+    const bytes = await readFile(path);
+    if (bytes.length !== info.size) {
+      throw new AibaError(`${label} changed while reading`, "DOCUMENT_CHANGED");
+    }
     return JSON.parse(bytes.toString("utf8")) as unknown;
   } catch (error) {
+    if (error instanceof AibaError) throw error;
     throw new AibaError(`Cannot parse ${label}: ${path}`, "INVALID_JSON", { cause: error });
   }
 }
@@ -273,6 +297,10 @@ function assertUniqueAndSortedFiles(bundle: CapabilityBundle): void {
   }
   if (!paths.includes("pack/capability.yaml") || !paths.includes("pack/README.md")) {
     throw new AibaError("Bundle manifest is missing required files", "BUNDLE_REQUIRED_FILE_MISSING");
+  }
+  const totalSize = bundle.files.reduce((sum, file) => sum + file.size, 0);
+  if (totalSize > MAX_TOTAL_SIZE) {
+    throw new AibaError("Bundle exceeds total size limit", "BUNDLE_TOO_LARGE");
   }
 }
 
@@ -473,16 +501,14 @@ export async function createCapabilityBundle(
   };
 }
 
-export async function verifyCapabilityBundle(
-  options: VerifyCapabilityBundleOptions,
-): Promise<VerifyCapabilityBundleResult> {
-  const root = resolve(options.bundleDirectory);
-  await assertBundleLayout(root);
+export async function verifyCapabilityBundleEnvelope(
+  options: VerifyCapabilityBundleEnvelopeOptions,
+): Promise<VerifyCapabilityBundleEnvelopeResult> {
   const bundle = validateCapabilityBundle(
-    await parseJsonDocument(join(root, "bundle.json"), "bundle manifest"),
+    await parseJsonDocument(resolve(options.bundleManifestPath), "bundle manifest"),
   );
   const signature = validateCapabilityBundleSignature(
-    await parseJsonDocument(join(root, "bundle.sig.json"), "bundle signature"),
+    await parseJsonDocument(resolve(options.bundleSignaturePath), "bundle signature"),
   );
   const policy = validatePublisherTrustPolicy(
     await parseJsonDocument(resolve(options.trustPolicyPath), "trust policy"),
@@ -527,6 +553,29 @@ export async function verifyCapabilityBundle(
     throw new AibaError("Bundle signature is invalid", "BUNDLE_SIGNATURE_INVALID");
   }
 
+  return {
+    bundle,
+    capability: bundle.capability.id,
+    version: bundle.capability.version,
+    publisher: bundle.publisher.id,
+    keyId: bundle.publisher.keyId,
+    files: bundle.files.length,
+    manifestSha256,
+  };
+}
+
+export async function verifyCapabilityBundle(
+  options: VerifyCapabilityBundleOptions,
+): Promise<VerifyCapabilityBundleResult> {
+  const root = resolve(options.bundleDirectory);
+  await assertBundleLayout(root);
+  const envelope = await verifyCapabilityBundleEnvelope({
+    bundleManifestPath: join(root, "bundle.json"),
+    bundleSignaturePath: join(root, "bundle.sig.json"),
+    trustPolicyPath: options.trustPolicyPath,
+  });
+  const { bundle } = envelope;
+
   const actualFiles = await collectSourceFiles(join(root, "pack"));
   const expectedPaths = bundle.files.map((file) => file.path);
   const actualPaths = actualFiles.map((file) => file.path);
@@ -551,6 +600,6 @@ export async function verifyCapabilityBundle(
     publisher: bundle.publisher.id,
     keyId: bundle.publisher.keyId,
     files: bundle.files.length,
-    manifestSha256,
+    manifestSha256: envelope.manifestSha256,
   };
 }

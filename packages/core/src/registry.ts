@@ -80,6 +80,8 @@ export interface ResolveRegistryCapabilityResult {
   statePath: string;
 }
 
+export type CapabilityRegistryEntry = CapabilityRegistryIndex["entries"][number];
+
 function compareText(left: string, right: string): number {
   return left < right ? -1 : left > right ? 1 : 0;
 }
@@ -374,23 +376,31 @@ export async function createRegistryIndex(
   };
 }
 
-interface VerifiedIndex {
+export interface VerifiedRegistryIndex {
   index: CapabilityRegistryIndex;
   sequence: number;
   indexSha256: string;
 }
 
-async function verifyLatestIndex(
-  registryRoot: string,
-  trustPolicyPath: string,
-  now: Date,
-): Promise<VerifiedIndex> {
-  const sequences = await listIndexSequences(registryRoot);
-  const sequence = sequences.at(-1);
-  if (sequence === undefined) {
-    throw new AibaError("Registry has no index snapshots", "REGISTRY_INDEX_NOT_FOUND");
+export interface VerifyRegistryIndexSnapshotOptions {
+  snapshotDirectory: string;
+  sequence: number;
+  registryTrustPolicyPath: string;
+  now?: () => Date;
+}
+
+export async function verifyRegistryIndexSnapshot(
+  options: VerifyRegistryIndexSnapshotOptions,
+): Promise<VerifiedRegistryIndex> {
+  if (!Number.isSafeInteger(options.sequence) || options.sequence < 1) {
+    throw new AibaError("Registry sequence must be a positive safe integer", "INVALID_REGISTRY_SEQUENCE");
   }
-  const snapshot = join(registryRoot, "indexes", String(sequence));
+  const now = (options.now ?? (() => new Date()))();
+  if (Number.isNaN(now.getTime())) {
+    throw new AibaError("Registry verification time must be a valid date", "INVALID_REGISTRY_TIME");
+  }
+  const sequence = options.sequence;
+  const snapshot = resolve(options.snapshotDirectory);
   await assertSnapshotLayout(snapshot);
   const index = validateCapabilityRegistryIndex(
     await readJson(join(snapshot, "index.json"), "registry index"),
@@ -399,7 +409,7 @@ async function verifyLatestIndex(
     await readJson(join(snapshot, "index.sig.json"), "registry index signature"),
   );
   const policy = validateCapabilityRegistryTrustPolicy(
-    await readJson(resolve(trustPolicyPath), "registry trust policy"),
+    await readJson(resolve(options.registryTrustPolicyPath), "registry trust policy"),
   );
   if (index.metadata.sequence !== sequence) {
     throw new AibaError("Registry snapshot sequence does not match index", "REGISTRY_SEQUENCE_MISMATCH");
@@ -445,6 +455,24 @@ async function verifyLatestIndex(
   return { index, sequence, indexSha256 };
 }
 
+async function verifyLatestIndex(
+  registryRoot: string,
+  trustPolicyPath: string,
+  now: Date,
+): Promise<VerifiedRegistryIndex> {
+  const sequences = await listIndexSequences(registryRoot);
+  const sequence = sequences.at(-1);
+  if (sequence === undefined) {
+    throw new AibaError("Registry has no index snapshots", "REGISTRY_INDEX_NOT_FOUND");
+  }
+  return verifyRegistryIndexSnapshot({
+    snapshotDirectory: join(registryRoot, "indexes", String(sequence)),
+    sequence,
+    registryTrustPolicyPath: trustPolicyPath,
+    now: () => now,
+  });
+}
+
 async function loadRegistryState(path: string): Promise<CapabilityRegistryState | undefined> {
   const resolvedPath = resolve(path);
   if (!(await pathExists(resolvedPath))) return undefined;
@@ -453,7 +481,7 @@ async function loadRegistryState(path: string): Promise<CapabilityRegistryState 
 
 function assertNoRollback(
   state: CapabilityRegistryState | undefined,
-  verified: VerifiedIndex,
+  verified: VerifiedRegistryIndex,
 ): void {
   if (!state) return;
   if (state.registry.id !== verified.index.metadata.id) {
@@ -474,6 +502,44 @@ function assertNoRollback(
       "REGISTRY_EQUIVOCATION_DETECTED",
     );
   }
+}
+
+export async function assertRegistryIndexNotRolledBack(
+  verified: VerifiedRegistryIndex,
+  statePath: string,
+): Promise<void> {
+  assertNoRollback(await loadRegistryState(statePath), verified);
+}
+
+export function selectRegistryCapability(
+  index: CapabilityRegistryIndex,
+  capabilityId: string,
+  version?: string,
+): CapabilityRegistryEntry {
+  if (!CAPABILITY_ID.test(capabilityId)) {
+    throw new AibaError(
+      `Invalid capability identifier: ${capabilityId}`,
+      "INVALID_CAPABILITY_ID",
+    );
+  }
+  if (version !== undefined && valid(version) !== version) {
+    throw new AibaError(`Invalid capability version: ${version}`, "INVALID_CAPABILITY_VERSION");
+  }
+  const candidates = index.entries.filter(
+    (entry) => entry.capability === capabilityId
+      && (version === undefined || entry.version === version),
+  );
+  candidates.sort((left, right) => rcompare(left.version, right.version));
+  const selected = candidates[0];
+  if (!selected) {
+    throw new AibaError(
+      version
+        ? `Registry does not contain ${capabilityId}@${version}`
+        : `Registry does not contain ${capabilityId}`,
+      "REGISTRY_CAPABILITY_NOT_FOUND",
+    );
+  }
+  return selected;
 }
 
 async function writeRegistryState(path: string, state: CapabilityRegistryState): Promise<void> {
@@ -531,20 +597,11 @@ export async function resolveRegistryCapability(
   );
   const state = await loadRegistryState(options.statePath);
   assertNoRollback(state, verified);
-  const candidates = verified.index.entries.filter(
-    (entry) => entry.capability === options.capabilityId
-      && (options.version === undefined || entry.version === options.version),
+  const selected = selectRegistryCapability(
+    verified.index,
+    options.capabilityId,
+    options.version,
   );
-  candidates.sort((left, right) => rcompare(left.version, right.version));
-  const selected = candidates[0];
-  if (!selected) {
-    throw new AibaError(
-      options.version
-        ? `Registry does not contain ${options.capabilityId}@${options.version}`
-        : `Registry does not contain ${options.capabilityId}`,
-      "REGISTRY_CAPABILITY_NOT_FOUND",
-    );
-  }
   const bundleDirectory = join(root, ...selected.path.split("/"));
   const bundle = await verifyCapabilityBundle({
     bundleDirectory,

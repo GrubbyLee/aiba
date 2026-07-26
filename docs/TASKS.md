@@ -105,12 +105,12 @@ Exit criteria met on 2026-07-26.
 - [x] Add immutable sequence snapshots, expiry, rollback, and equivocation checks.
 - [x] Add local registry resolution without copying, installing, or executing packages.
 - [x] Resolve the highest semantic version or an explicit exact version.
-- [ ] Add authenticated private registry transport and verified local caching.
+- [x] Add authenticated private registry transport and verified local caching.
 - [x] Define project-owned team policy and signed approval records.
 - [x] Bind approvals to plan, policy, versions, conflicts, and evidence-file hashes.
 - [x] Enforce approval thresholds and optional separation of duties in finalization.
 - [x] Record policy and approval hashes in receipts for later verification.
-- [ ] Add commercial-boundary architecture for private registries and hosted controls.
+- [x] Add commercial-boundary architecture for private registries and hosted controls.
 
 ## M4.2 Exit Criteria
 
@@ -135,12 +135,25 @@ rejection, approval, checking, and separate install/upgrade finalization.
 
 Exit criteria met on 2026-07-26.
 
+## M4.4 Exit Criteria
+
+M4.4 is complete when `aiba fetch` authenticates through an environment-provided
+bearer token, verifies the signed registry index and bundle envelope before pack
+download, fetches only signed size-bounded files, atomically publishes a fully
+verified cache entry, and advances anti-rollback state only after cached
+resolution succeeds. Missing credentials, redirects, oversized or interrupted
+responses, tampered indexes, envelopes, and files, stale sequences, and cache
+conflicts must fail closed without persisting secrets or false trusted state.
+The AGPL Core and commercial hosted-control boundary must be explicit.
+
+Exit criteria met on 2026-07-26.
+
 ## Known Risks
 
 - Evidence hashes prove file identity, while capability-specific black-box tests
   prove selected behavior. Future packs need comparable conformance suites.
 - Capability package code is untrusted input. Core does not execute
   pack-provided commands.
-- Remote transport authentication, availability policy, and cache lifecycle
-  remain M4.4 work; local multi-version resolution and anti-rollback state are
+- Cache garbage collection and offline retention policy remain future work;
+  authenticated fetch, verified atomic caching, and anti-rollback state are
   complete.

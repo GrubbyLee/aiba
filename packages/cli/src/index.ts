@@ -17,6 +17,7 @@ import {
   prepareCapability,
   prepareUpgrade,
   evaluateGovernance,
+  fetchRegistryCapability,
   resolveRegistryCapability,
   verifyCapabilityBundle,
   verifyProject,
@@ -225,6 +226,65 @@ program
       `Sequence: ${result.sequence}`,
       `Snapshot: ${result.snapshotDirectory}`,
       `Index SHA-256: ${result.indexSha256}`,
+    ].join("\n") + "\n");
+  });
+
+program
+  .command("fetch")
+  .description("Fetch a verified capability from an authenticated private registry")
+  .argument("<capability>", "capability to fetch")
+  .requiredOption("--registry-url <url>", "private registry base URL")
+  .requiredOption("--registry-trust <path>", "registry signer trust policy JSON")
+  .requiredOption("--publisher-trust <path>", "capability publisher trust policy JSON")
+  .option("--cache <path>", "verified registry cache", ".aiba/registry-cache")
+  .option("--state <path>", "trusted anti-rollback state", ".aiba/registry-state.json")
+  .option("--token-env <name>", "environment variable containing the bearer token", "AIBA_REGISTRY_TOKEN")
+  .option("--timeout-ms <number>", "request timeout in milliseconds", "15000")
+  .option("--version <version>", "fetch an exact semantic version")
+  .option("--allow-insecure-localhost", "allow HTTP only for a localhost registry")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    capability: string,
+    options: {
+      registryUrl: string;
+      registryTrust: string;
+      publisherTrust: string;
+      cache: string;
+      state: string;
+      tokenEnv: string;
+      timeoutMs: string;
+      version?: string;
+      allowInsecureLocalhost?: boolean;
+      json?: boolean;
+    },
+  ) => {
+    const timeoutMs = Number(options.timeoutMs);
+    if (!Number.isSafeInteger(timeoutMs) || timeoutMs < 1 || timeoutMs > 120_000) {
+      throw new Error("--timeout-ms must be an integer between 1 and 120000");
+    }
+    const result = await fetchRegistryCapability({
+      registryUrl: options.registryUrl,
+      cacheDirectory: resolve(options.cache),
+      registryTrustPolicyPath: resolve(options.registryTrust),
+      publisherTrustPolicyPath: resolve(options.publisherTrust),
+      statePath: resolve(options.state),
+      capabilityId: capability,
+      tokenEnvironmentVariable: options.tokenEnv,
+      timeoutMs,
+      allowInsecureLocalhost: options.allowInsecureLocalhost ?? false,
+      ...(options.version ? { version: options.version } : {}),
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `Fetched ${result.capability}@${result.version}.`,
+      `Registry: ${result.registry} sequence ${result.sequence}`,
+      `Publisher: ${result.publisher}/${result.keyId}`,
+      `Cache: ${result.cacheDirectory}`,
+      `Pack: ${result.packDirectory}`,
+      `Anti-rollback state: ${result.statePath}`,
     ].join("\n") + "\n");
   });
 

@@ -63,6 +63,20 @@ older snapshots and same-sequence equivocation. State advances only after the
 selected bundle verifies. Resolution returns paths and never installs or
 executes pack content.
 
+Private registry transport treats the network and cache as untrusted. `fetch`
+reads bearer credentials only from an environment variable, requires HTTPS,
+rejects redirects, and enforces request timeouts and streaming size limits. It
+verifies the signed index before bundle selection, verifies the bundle envelope
+before pack download, and fetches only signed paths at exact declared sizes.
+Core publishes a cache entry atomically only after full local verification, then
+reuses normal local resolution to advance anti-rollback state.
+
+The hosted commercial layer provides operations: tenant isolation, SSO/SCIM,
+key custody, publishing and approval workflow, audit retention, integrations,
+SLA, and support. It is not a verification authority. The AGPL Core remains a
+complete offline verifier, and hosted output must reduce to signed artifacts and
+policies that Core can reject locally. See RFC 0009.
+
 ### Team Governance
 
 Projects opt into governance with `.aiba/governance-policy.json`. Policy limits
@@ -118,6 +132,11 @@ Registry state is a mutable trust checkpoint rather than provenance evidence.
 Keep it in persistent trusted project or CI storage and review sequence changes;
 deleting it resets anti-rollback protection to first use.
 
+The default `.aiba/registry-cache/` is derived local data, not project
+provenance. Exclude it from Git and rebuild it only through `aiba fetch` or a
+separately verified local registry. Do not delete trusted anti-rollback state
+when clearing cached bundles.
+
 Governance policy and approvals are committed review inputs. Approver private
 keys remain outside the project. Policy removal or replacement is itself a
 repository governance change that CI and branch protection must review.
@@ -136,6 +155,8 @@ repository governance change that CI and branch protection must review.
   capability distribution.
 - Immutable registry snapshots with expiry and persistent sequence/digest state
   for rollback and equivocation detection.
+- Authenticated HTTPS registry fetch with environment-only bearer tokens,
+  redirect rejection, bounded streaming, and atomically published verified cache.
 - Project-owned team policy and domain-separated Ed25519 approvals bound to plan,
   policy, versions, conflicts, and evidence hashes.
 - Native Mini Program clients are validated with WeChat syntax checks and

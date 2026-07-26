@@ -1,4 +1,4 @@
-import { spawnSync } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import {
   cpSync,
   copyFileSync,
@@ -18,10 +18,11 @@ const cli = join(workspace, "packages", "cli", "dist", "index.js");
 const requireFromCore = createRequire(join(workspace, "packages", "core", "package.json"));
 const { parse, stringify } = requireFromCore("yaml");
 
-function run(name, args, expectedStatus) {
+function run(name, args, expectedStatus, environment = {}) {
   const result = spawnSync(process.execPath, [cli, ...args], {
     cwd: workspace,
     encoding: "utf8",
+    env: { ...process.env, ...environment },
   });
   if (result.status !== expectedStatus) {
     process.stderr.write(`${name} failed with status ${result.status}\n`);
@@ -42,6 +43,8 @@ const registryDirectory = join(bundleFixture, "registry");
 const registryKeys = join(bundleFixture, "registry-keys");
 const registryTrustPath = join(bundleFixture, "registry-trust.json");
 const registryStatePath = join(bundleFixture, "registry-state.json");
+const remoteCachePath = join(bundleFixture, "remote-cache");
+const remoteStatePath = join(bundleFixture, "remote-state.json");
 run("publisher keygen", [
   "keygen",
   "aiba-official",
@@ -151,6 +154,66 @@ createRegistrySnapshot(1);
 resolveRegistry(0);
 createRegistrySnapshot(2);
 resolveRegistry(0);
+const serverScript = join(bundleFixture, "registry-server.mjs");
+writeFileSync(serverScript, `
+import { createServer } from "node:http";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+const root = process.argv[2];
+const token = process.env.SMOKE_REGISTRY_TOKEN;
+const server = createServer((request, response) => {
+  if (request.headers.authorization !== \`Bearer \${token}\`) {
+    response.writeHead(401);
+    response.end();
+    return;
+  }
+  const pathname = new URL(request.url, "http://localhost").pathname;
+  if (pathname === "/v0/indexes/latest.json") {
+    response.end(JSON.stringify({ sequence: 2 }));
+    return;
+  }
+  const index = /^\\/v0\\/indexes\\/(\\d+)\\/(index(?:\\.sig)?\\.json)$/.exec(pathname);
+  if (index) {
+    response.end(readFileSync(join(root, "indexes", index[1], index[2])));
+    return;
+  }
+  const prefix = "/v0/bundles/identity/0.1.0/";
+  if (pathname.startsWith(prefix)) {
+    response.end(readFileSync(join(root, "bundles", "identity", "0.1.0", ...pathname.slice(prefix.length).split("/"))));
+    return;
+  }
+  response.writeHead(404);
+  response.end();
+});
+server.listen(0, "127.0.0.1", () => process.stdout.write(String(server.address().port) + "\\n"));
+process.on("SIGTERM", () => server.close(() => process.exit(0)));
+`);
+const registryServer = spawn(process.execPath, [serverScript, registryDirectory], {
+  env: { ...process.env, SMOKE_REGISTRY_TOKEN: "smoke-private-token" },
+  stdio: ["ignore", "pipe", "inherit"],
+});
+const registryPort = await new Promise((resolvePort, reject) => {
+  registryServer.once("error", reject);
+  registryServer.stdout.once("data", (chunk) => resolvePort(String(chunk).trim()));
+});
+run("fetch authenticated registry capability", [
+  "fetch",
+  "identity",
+  "--registry-url",
+  `http://127.0.0.1:${registryPort}`,
+  "--registry-trust",
+  registryTrustPath,
+  "--publisher-trust",
+  trustPolicyPath,
+  "--cache",
+  remoteCachePath,
+  "--state",
+  remoteStatePath,
+  "--allow-insecure-localhost",
+  "--json",
+], 0, { AIBA_REGISTRY_TOKEN: "smoke-private-token" });
+registryServer.kill("SIGTERM");
+await new Promise((resolveExit) => registryServer.once("exit", resolveExit));
 rmSync(join(registryDirectory, "indexes", "2"), { recursive: true, force: true });
 resolveRegistry(1);
 writeFileSync(join(bundleDirectory, "pack", "README.md"), "tampered\n");

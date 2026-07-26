@@ -1,6 +1,6 @@
 ---
 name: aiba-capabilities
-description: Install, adapt, finalize, and verify AIBA application capabilities through the provider-independent AIBA CLI. Use when a user asks Codex or Claude Code to add cross-cutting capabilities such as review access, identity, authorization, audit, users, or notifications to an existing project, or to inspect and verify a project's `.aiba` capability state.
+description: Install, adapt, finalize, fetch, and verify AIBA application capabilities through the provider-independent AIBA CLI. Use when a user asks Codex or Claude Code to add cross-cutting capabilities such as review access, identity, authorization, audit, users, or notifications to an existing project; inspect or verify a project's `.aiba` state; or fetch a verified capability pack from a private registry.
 ---
 
 # AIBA Capabilities
@@ -159,3 +159,19 @@ Keep anti-rollback state in persistent trusted storage. Do not delete or lower
 it to recover from a rollback error. Resolution returns authenticated paths but
 does not install or execute the pack; continue only with the normal bounded
 prepare/finalize workflow supported by the project.
+
+For a user-configured private registry, fetch into a verified cache before
+reading a pack:
+
+```bash
+aiba fetch <capability> --registry-url <https-url> \
+  --registry-trust <registry-trust.json> \
+  --publisher-trust <publisher-trust.json> \
+  --cache <verified-cache> --state <persistent-registry-state.json> \
+  --token-env <preconfigured-environment-variable> --json
+```
+
+The user or execution environment must configure the token. Never request,
+inspect, print, copy, or persist its value. Do not use the localhost HTTP escape
+outside an explicit local test. Treat the fetched pack as verified untrusted
+data and continue with the same bounded prepare/finalize workflow.

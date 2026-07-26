@@ -7,9 +7,10 @@ forcing projects into a fixed application framework or visual system.
 The initial capability set covers `review-access`, `identity`, `audit`,
 `authorization`, `users`, and `notification`. AIBA currently supports
 Agent-assisted install, deterministic verification, drift inspection,
-customization-aware upgrade, signed capability bundles, and anti-rollback local
-registry resolution. Optional project governance adds signed, evidence-bound
-team approvals to install and upgrade finalization.
+customization-aware upgrade, signed capability bundles, authenticated private
+registry fetch, verified caching, and anti-rollback resolution. Optional project
+governance adds signed, evidence-bound team approvals to install and upgrade
+finalization.
 
 ## Principles
 
@@ -60,6 +61,10 @@ aiba registry-index ./registry --id local-registry \
 aiba resolve identity --registry ./registry \
   --registry-trust registry-trust.json \
   --publisher-trust publisher-trust.json
+AIBA_REGISTRY_TOKEN=... aiba fetch identity \
+  --registry-url https://registry.example.com \
+  --registry-trust registry-trust.json \
+  --publisher-trust publisher-trust.json
 aiba policy-init --id product-team --approver release-manager \
   --key-id root-1 --public-key ../approver-keys/public.pem \
   --capability identity review-access
@@ -91,7 +96,11 @@ and cannot provide commands for Core to execute.
 listed publisher bundle. `resolve` verifies the latest registry snapshot, its
 expiry, local anti-rollback state, and the selected bundle before returning its
 paths. Registry resolution performs no install, code execution, or network
-request.
+request. `fetch` adds authenticated HTTPS transport and a verified local cache;
+the bearer token comes only from a named environment variable, and redirects,
+oversized responses, stale indexes, and unverified cache content are rejected.
+The default `.aiba/registry-cache/` contains derived artifacts and should not be
+committed; keep `.aiba/registry-state.json` in trusted persistent storage.
 
 When `.aiba/governance-policy.json` exists, `add --finalize` and
 `upgrade --finalize` fail closed until valid approvals satisfy the configured
