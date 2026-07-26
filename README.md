@@ -26,6 +26,7 @@ finalization.
 - `packages/spec`: language-neutral schemas and TypeScript protocol types.
 - `packages/core`: inspection, capability loading, provenance, and verification.
 - `packages/cli`: the `aiba` command-line interface.
+- `packages/registry-server`: authenticated read-only reference registry.
 - `capabilities/`: official capability packs.
 - `integrations/`: Agent-specific adapters.
 - `fixtures/`: reference projects used for conformance and attack testing,
@@ -53,6 +54,8 @@ aiba keygen aiba-official --out ../aiba-publisher-keys
 aiba pack identity --publisher aiba-official --key-id root-1 \
   --private-key ../aiba-publisher-keys/private.pem --out identity.aiba
 aiba verify-bundle identity.aiba --trust trust-policy.json
+aiba registry-add identity.aiba --registry ./registry \
+  --publisher-trust publisher-trust.json
 aiba registry-index ./registry --id local-registry \
   --publisher registry-operator --key-id root-1 \
   --private-key ../registry-keys/private.pem \
@@ -61,6 +64,10 @@ aiba registry-index ./registry --id local-registry \
 aiba resolve identity --registry ./registry \
   --registry-trust registry-trust.json \
   --publisher-trust publisher-trust.json
+AIBA_REGISTRY_TOKEN=... aiba registry-serve ./registry \
+  --registry-trust registry-trust.json \
+  --publisher-trust publisher-trust.json \
+  --tls-cert fullchain.pem --tls-key private.pem
 AIBA_REGISTRY_TOKEN=... aiba fetch identity \
   --registry-url https://registry.example.com \
   --registry-trust registry-trust.json \
@@ -101,6 +108,12 @@ the bearer token comes only from a named environment variable, and redirects,
 oversized responses, stale indexes, and unverified cache content are rejected.
 The default `.aiba/registry-cache/` contains derived artifacts and should not be
 committed; keep `.aiba/registry-state.json` in trusted persistent storage.
+
+`registry-add` imports only fully publisher-verified bundles and never replaces
+conflicting versions. `registry-serve` verifies the latest signed index and all
+indexed bundles before listening, then exposes only authenticated `GET`/`HEAD`
+routes. It has no remote mutation or signing API. See
+[docs/SELF_HOSTING.md](docs/SELF_HOSTING.md) for the operating workflow.
 
 When `.aiba/governance-policy.json` exists, `add --finalize` and
 `upgrade --finalize` fail closed until valid approvals satisfy the configured

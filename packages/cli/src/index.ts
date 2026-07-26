@@ -13,6 +13,7 @@ import {
   generatePublisherKeyPair,
   initializeProject,
   initializeGovernancePolicy,
+  importRegistryBundle,
   inspectProject,
   prepareCapability,
   prepareUpgrade,
@@ -22,6 +23,7 @@ import {
   verifyCapabilityBundle,
   verifyProject,
 } from "@aiba/core";
+import { createRegistryServer } from "@aiba/registry-server";
 import { renderDiff, renderInspection, renderVerification } from "./render.js";
 
 const program = new Command();
@@ -175,6 +177,34 @@ program
   });
 
 program
+  .command("registry-add")
+  .description("Import a verified signed bundle into a local registry")
+  .argument("<bundle-directory>", "signed capability bundle directory")
+  .requiredOption("--registry <path>", "local registry directory")
+  .requiredOption("--publisher-trust <path>", "capability publisher trust policy JSON")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    bundleDirectory: string,
+    options: { registry: string; publisherTrust: string; json?: boolean },
+  ) => {
+    const result = await importRegistryBundle({
+      registryDirectory: resolve(options.registry),
+      bundleDirectory: resolve(bundleDirectory),
+      publisherTrustPolicyPath: resolve(options.publisherTrust),
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `${result.imported ? "Imported" : "Already present"}: ${result.capability}@${result.version}.`,
+      `Publisher: ${result.publisher}/${result.keyId}`,
+      `Bundle: ${result.bundleDirectory}`,
+      `Manifest SHA-256: ${result.manifestSha256}`,
+    ].join("\n") + "\n");
+  });
+
+program
   .command("registry-index")
   .description("Create an immutable signed registry index snapshot")
   .argument("<registry-directory>", "local registry directory")
@@ -227,6 +257,83 @@ program
       `Snapshot: ${result.snapshotDirectory}`,
       `Index SHA-256: ${result.indexSha256}`,
     ].join("\n") + "\n");
+  });
+
+program
+  .command("registry-serve")
+  .description("Serve a verified registry through the authenticated v0 read API")
+  .argument("<registry-directory>", "local registry directory")
+  .requiredOption("--registry-trust <path>", "registry signer trust policy JSON")
+  .requiredOption("--publisher-trust <path>", "capability publisher trust policy JSON")
+  .option("--token-env <name>", "environment variable containing the read token", "AIBA_REGISTRY_TOKEN")
+  .option("--host <host>", "listen host", "127.0.0.1")
+  .option("--port <number>", "listen port", "7331")
+  .option("--tls-cert <path>", "TLS certificate PEM")
+  .option("--tls-key <path>", "TLS private key PEM")
+  .option("--allow-insecure-localhost", "allow HTTP on a loopback host")
+  .option("--json", "print machine-readable startup state")
+  .action(async (
+    registryDirectory: string,
+    options: {
+      registryTrust: string;
+      publisherTrust: string;
+      tokenEnv: string;
+      host: string;
+      port: string;
+      tlsCert?: string;
+      tlsKey?: string;
+      allowInsecureLocalhost?: boolean;
+      json?: boolean;
+    },
+  ) => {
+    if (!/^[A-Z_][A-Z0-9_]*$/.test(options.tokenEnv)) {
+      throw new Error("--token-env must be an uppercase environment variable name");
+    }
+    const token = process.env[options.tokenEnv];
+    if (!token) throw new Error(`registry token is missing in ${options.tokenEnv}`);
+    const port = Number(options.port);
+    if (!Number.isSafeInteger(port) || port < 0 || port > 65535) {
+      throw new Error("--port must be an integer between 0 and 65535");
+    }
+    const hasTls = options.tlsCert !== undefined || options.tlsKey !== undefined;
+    const loopback = ["127.0.0.1", "::1", "localhost"].includes(options.host);
+    if (!hasTls && !(options.allowInsecureLocalhost && loopback)) {
+      throw new Error("HTTP requires --allow-insecure-localhost and a loopback --host");
+    }
+    const created = await createRegistryServer({
+      registryDirectory: resolve(registryDirectory),
+      registryTrustPolicyPath: resolve(options.registryTrust),
+      publisherTrustPolicyPath: resolve(options.publisherTrust),
+      token,
+      ...(options.tlsCert ? { tlsCertificatePath: resolve(options.tlsCert) } : {}),
+      ...(options.tlsKey ? { tlsPrivateKeyPath: resolve(options.tlsKey) } : {}),
+    });
+    await new Promise<void>((resolvePromise, reject) => {
+      created.server.once("error", reject);
+      created.server.listen(port, options.host, resolvePromise);
+    });
+    const address = created.server.address();
+    const actualPort = address && typeof address !== "string" ? address.port : port;
+    const started = {
+      ...created.snapshot,
+      secure: created.secure,
+      host: options.host,
+      port: actualPort,
+    };
+    process.stdout.write(`${options.json
+      ? JSON.stringify(started)
+      : `Serving ${started.registry} sequence ${started.sequence} on ${created.secure ? "https" : "http"}://${options.host}:${actualPort}`
+    }\n`);
+    await new Promise<void>((resolvePromise) => {
+      let closing = false;
+      const close = (): void => {
+        if (closing) return;
+        closing = true;
+        created.server.close(() => resolvePromise());
+      };
+      process.once("SIGINT", close);
+      process.once("SIGTERM", close);
+    });
   });
 
 program

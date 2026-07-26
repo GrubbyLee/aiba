@@ -93,7 +93,7 @@ verify all five receipts and report no drift.
 
 Exit criteria met on 2026-07-26.
 
-## Current Milestone: M4
+## Completed Milestone: M4
 
 - [x] Define signed capability bundle and publisher trust-policy protocols.
 - [x] Add Ed25519 key generation and RFC 8785 manifest signing.
@@ -145,6 +145,29 @@ resolution succeeds. Missing credentials, redirects, oversized or interrupted
 responses, tampered indexes, envelopes, and files, stale sequences, and cache
 conflicts must fail closed without persisting secrets or false trusted state.
 The AGPL Core and commercial hosted-control boundary must be explicit.
+
+Exit criteria met on 2026-07-26.
+
+## Completed Milestone: M5
+
+- [x] Define the reference registry server and operator publication boundary.
+- [x] Add verified, atomic, idempotent bundle import.
+- [x] Add authenticated exact-path `GET` and `HEAD` distribution.
+- [x] Add constant-time bearer authentication and environment-only secrets.
+- [x] Add direct TLS and explicit localhost-only HTTP mode.
+- [x] Verify the signed latest index and every indexed bundle before startup.
+- [x] Reject traversal, encoded paths, queries, unsupported methods, and symlinks.
+- [x] Add compiled CLI publish/serve/fetch smoke coverage.
+- [x] Document the self-hosted workflow and operational limitations.
+
+## M5 Exit Criteria
+
+M5 is complete when an operator can import a publisher-verified bundle, create a
+new signed immutable index, start a read-only authenticated registry, and fetch
+the capability through the compiled CLI. Import conflicts, invalid registry
+content, missing credentials, unsupported methods, queries, encoded traversal,
+symlinks, and insecure non-local HTTP must fail closed. The server must expose no
+mutation API, persist no token, and pass the full Node 22/24 CI matrix.
 
 Exit criteria met on 2026-07-26.
 

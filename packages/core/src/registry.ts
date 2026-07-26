@@ -1,6 +1,7 @@
 import { randomUUID, sign, verify } from "node:crypto";
 import {
   chmod,
+  cp,
   lstat,
   mkdir,
   readFile,
@@ -57,6 +58,22 @@ export interface CreateRegistryIndexResult {
   indexSha256: string;
 }
 
+export interface ImportRegistryBundleOptions {
+  registryDirectory: string;
+  bundleDirectory: string;
+  publisherTrustPolicyPath: string;
+}
+
+export interface ImportRegistryBundleResult {
+  imported: boolean;
+  capability: string;
+  version: string;
+  publisher: string;
+  keyId: string;
+  manifestSha256: string;
+  bundleDirectory: string;
+}
+
 export interface ResolveRegistryCapabilityOptions {
   registryDirectory: string;
   registryTrustPolicyPath: string;
@@ -107,6 +124,91 @@ async function pathExists(path: string): Promise<boolean> {
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === "ENOENT") return false;
     throw error;
+  }
+}
+
+export async function importRegistryBundle(
+  options: ImportRegistryBundleOptions,
+): Promise<ImportRegistryBundleResult> {
+  const root = resolve(options.registryDirectory);
+  const rootInfo = await lstat(root).catch((error: unknown) => {
+    throw new AibaError("Registry root does not exist", "INVALID_REGISTRY_LAYOUT", {
+      cause: error,
+    });
+  });
+  if (!rootInfo.isDirectory() || rootInfo.isSymbolicLink()) {
+    throw new AibaError("Registry root must be a regular directory", "INVALID_REGISTRY_LAYOUT");
+  }
+  const trustPolicyPath = resolve(options.publisherTrustPolicyPath);
+  const source = await verifyCapabilityBundle({
+    bundleDirectory: resolve(options.bundleDirectory),
+    trustPolicyPath,
+  });
+  const bundlesRoot = join(root, "bundles");
+  await mkdir(bundlesRoot, { recursive: true });
+  const bundlesInfo = await lstat(bundlesRoot);
+  if (!bundlesInfo.isDirectory() || bundlesInfo.isSymbolicLink()) {
+    throw new AibaError("Registry bundles root must be a regular directory", "INVALID_REGISTRY_LAYOUT");
+  }
+  const capabilityRoot = join(bundlesRoot, source.capability);
+  await mkdir(capabilityRoot, { recursive: true });
+  const capabilityInfo = await lstat(capabilityRoot);
+  if (!capabilityInfo.isDirectory() || capabilityInfo.isSymbolicLink()) {
+    throw new AibaError("Registry capability root must be a regular directory", "INVALID_REGISTRY_LAYOUT");
+  }
+  const destination = join(capabilityRoot, source.version);
+  const result = (imported: boolean): ImportRegistryBundleResult => ({
+    imported,
+    capability: source.capability,
+    version: source.version,
+    publisher: source.publisher,
+    keyId: source.keyId,
+    manifestSha256: source.manifestSha256,
+    bundleDirectory: destination,
+  });
+  const assertExistingMatches = async (): Promise<void> => {
+    const existing = await verifyCapabilityBundle({
+      bundleDirectory: destination,
+      trustPolicyPath,
+    });
+    if (existing.manifestSha256 !== source.manifestSha256) {
+      throw new AibaError(
+        `Registry already contains conflicting ${source.capability}@${source.version}`,
+        "REGISTRY_BUNDLE_CONFLICT",
+      );
+    }
+  };
+  if (await pathExists(destination)) {
+    await assertExistingMatches();
+    return result(false);
+  }
+
+  const staging = join(capabilityRoot, `.${randomUUID()}.bundle.tmp`);
+  try {
+    await cp(resolve(options.bundleDirectory), staging, {
+      recursive: true,
+      errorOnExist: true,
+      force: false,
+    });
+    const copied = await verifyCapabilityBundle({
+      bundleDirectory: staging,
+      trustPolicyPath,
+    });
+    if (copied.manifestSha256 !== source.manifestSha256) {
+      throw new AibaError("Bundle changed while importing", "BUNDLE_SOURCE_CHANGED");
+    }
+    try {
+      await rename(staging, destination);
+    } catch (error) {
+      if (!["EEXIST", "ENOTEMPTY"].includes((error as NodeJS.ErrnoException).code ?? "")) {
+        throw error;
+      }
+      await assertExistingMatches();
+      return result(false);
+    }
+    return result(true);
+  } finally {
+    await rm(staging, { recursive: true, force: true });
   }
 }
 

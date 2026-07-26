@@ -1,6 +1,5 @@
 import { spawn, spawnSync } from "node:child_process";
 import {
-  cpSync,
   copyFileSync,
   mkdirSync,
   mkdtempSync,
@@ -88,12 +87,16 @@ run("verify signed capability bundle", [
   trustPolicyPath,
   "--json",
 ], 0);
-mkdirSync(join(registryDirectory, "bundles", "identity"), { recursive: true });
-cpSync(
+mkdirSync(registryDirectory);
+run("import verified registry bundle", [
+  "registry-add",
   bundleDirectory,
-  join(registryDirectory, "bundles", "identity", "0.1.0"),
-  { recursive: true },
-);
+  "--registry",
+  registryDirectory,
+  "--publisher-trust",
+  trustPolicyPath,
+  "--json",
+], 0);
 run("registry keygen", [
   "keygen",
   "registry-operator",
@@ -154,47 +157,50 @@ createRegistrySnapshot(1);
 resolveRegistry(0);
 createRegistrySnapshot(2);
 resolveRegistry(0);
-const serverScript = join(bundleFixture, "registry-server.mjs");
-writeFileSync(serverScript, `
-import { createServer } from "node:http";
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-const root = process.argv[2];
-const token = process.env.SMOKE_REGISTRY_TOKEN;
-const server = createServer((request, response) => {
-  if (request.headers.authorization !== \`Bearer \${token}\`) {
-    response.writeHead(401);
-    response.end();
-    return;
-  }
-  const pathname = new URL(request.url, "http://localhost").pathname;
-  if (pathname === "/v0/indexes/latest.json") {
-    response.end(JSON.stringify({ sequence: 2 }));
-    return;
-  }
-  const index = /^\\/v0\\/indexes\\/(\\d+)\\/(index(?:\\.sig)?\\.json)$/.exec(pathname);
-  if (index) {
-    response.end(readFileSync(join(root, "indexes", index[1], index[2])));
-    return;
-  }
-  const prefix = "/v0/bundles/identity/0.1.0/";
-  if (pathname.startsWith(prefix)) {
-    response.end(readFileSync(join(root, "bundles", "identity", "0.1.0", ...pathname.slice(prefix.length).split("/"))));
-    return;
-  }
-  response.writeHead(404);
-  response.end();
-});
-server.listen(0, "127.0.0.1", () => process.stdout.write(String(server.address().port) + "\\n"));
-process.on("SIGTERM", () => server.close(() => process.exit(0)));
-`);
-const registryServer = spawn(process.execPath, [serverScript, registryDirectory], {
-  env: { ...process.env, SMOKE_REGISTRY_TOKEN: "smoke-private-token" },
+run("reject missing registry server token", [
+  "registry-serve",
+  registryDirectory,
+  "--registry-trust",
+  registryTrustPath,
+  "--publisher-trust",
+  trustPolicyPath,
+  "--token-env",
+  "SMOKE_MISSING_REGISTRY_TOKEN",
+  "--allow-insecure-localhost",
+], 1);
+run("reject insecure non-loopback registry server", [
+  "registry-serve",
+  registryDirectory,
+  "--registry-trust",
+  registryTrustPath,
+  "--publisher-trust",
+  trustPolicyPath,
+  "--host",
+  "0.0.0.0",
+], 1, { AIBA_REGISTRY_TOKEN: "smoke-private-token" });
+const registryServer = spawn(process.execPath, [
+  cli,
+  "registry-serve",
+  registryDirectory,
+  "--registry-trust",
+  registryTrustPath,
+  "--publisher-trust",
+  trustPolicyPath,
+  "--port",
+  "0",
+  "--allow-insecure-localhost",
+  "--json",
+], {
+  env: { ...process.env, AIBA_REGISTRY_TOKEN: "smoke-private-token" },
   stdio: ["ignore", "pipe", "inherit"],
 });
 const registryPort = await new Promise((resolvePort, reject) => {
   registryServer.once("error", reject);
-  registryServer.stdout.once("data", (chunk) => resolvePort(String(chunk).trim()));
+  registryServer.once("exit", (code) => reject(new Error(`registry server exited early: ${code}`)));
+  registryServer.stdout.once("data", (chunk) => {
+    const started = JSON.parse(String(chunk).trim());
+    resolvePort(started.port);
+  });
 });
 run("fetch authenticated registry capability", [
   "fetch",

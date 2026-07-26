@@ -49,3 +49,12 @@ Goal: upgrade a deeply customized capability from v1 to v2 safely.
 - [x] Team policy, signed approvals, separation of duties, and upgrade governance.
 - [x] Define the open Core and commercial hosted-control boundary.
 - [ ] Build hosted key custody, signed review workflows, and enterprise integrations.
+
+## M5: Self-Hosted Registry MVP
+
+- [x] Add verified, atomic bundle import for registry operators.
+- [x] Add an authenticated read-only v0 reference server.
+- [x] Support direct TLS and explicit localhost HTTP development mode.
+- [x] Validate the full registry before accepting traffic.
+- [x] Exercise publish, serve, fetch, rollback, and attack paths end to end.
+- [x] Document self-hosting and first-release operation.

@@ -9,6 +9,10 @@ Other Agent Adapter -+          |
                                 +--> Inspect / Verify / Record / Upgrade
                                            |
                                            +--> CI
+
+Signed Publisher --> registry-add --> Signed Index --> Registry Server
+                                                        |
+                                                        +--> aiba fetch
 ```
 
 AIBA is agent-native but agent-independent. The core does not depend on a model
@@ -91,6 +95,16 @@ Core can enforce only the Agent identity recorded by the local caller. Hosted
 runner attestation, SSO identity, protected policy branches, and organizational
 key custody remain control-plane concerns; they may strengthen but cannot bypass
 local plan, evidence, signature, or threshold checks.
+
+### Reference Registry Server
+
+The server is a separate package over Core verification. Operators import
+publisher-signed bundles through verified atomic staging, then explicitly sign a
+new immutable index. At startup the server verifies that index and every listed
+bundle and builds an exact read-only route allowlist. Bearer authentication,
+constant-time token comparison, direct TLS, strict methods and paths, and
+symlink rejection protect transport, while clients still independently verify
+all artifacts. There is no remote mutation or signing endpoint.
 
 ### Agent Adapters
 

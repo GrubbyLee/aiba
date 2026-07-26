@@ -1,11 +1,15 @@
 {
-  "name": "@aiba/cli",
+  "name": "@aiba/registry-server",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "files": ["dist"],
-  "bin": {
-    "aiba": "dist/index.js"
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "development": "./src/index.ts",
+      "default": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -13,11 +17,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@aiba/core": "workspace:*",
-    "@aiba/registry-server": "workspace:*",
-    "commander": "^14.0.0"
+    "@aiba/core": "workspace:*"
   },
   "devDependencies": {
+    "@aiba/spec": "workspace:*",
     "@types/node": "^24.0.0"
   }
 }
