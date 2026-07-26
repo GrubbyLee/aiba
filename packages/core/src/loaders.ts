@@ -4,21 +4,27 @@ import { validRange } from "semver";
 import { parse } from "yaml";
 import type {
   CapabilityManifest,
+  CapabilityAncestry,
+  CapabilityMigration,
   CapabilityRecipe,
   CapabilityReceipt,
   OperationPlan,
   ProjectLock,
   ProjectManifest,
+  UpgradePlan,
 } from "@aiba/spec";
 import { AibaError } from "./errors.js";
 import { resolveExistingProjectPath } from "./paths.js";
 import {
   validateCapabilityManifest,
+  validateCapabilityAncestry,
+  validateCapabilityMigration,
   validateCapabilityRecipe,
   validateCapabilityReceipt,
   validateOperationPlan,
   validateProjectLock,
   validateProjectManifest,
+  validateUpgradePlan,
 } from "./validation.js";
 
 async function readYaml(path: string): Promise<unknown> {
@@ -121,6 +127,14 @@ export async function loadCapabilityReceipt(
   return validateCapabilityReceipt(await readYaml(path));
 }
 
+export async function loadCapabilityAncestry(
+  projectRoot: string,
+  ancestryPath: string,
+): Promise<CapabilityAncestry> {
+  const path = await resolveExistingProjectPath(projectRoot, ancestryPath);
+  return validateCapabilityAncestry(await readJson(path));
+}
+
 export async function loadCapabilityRecipe(
   packsDirectory: string,
   capabilityId: string,
@@ -158,4 +172,48 @@ export async function loadOperationPlan(
   }
   const path = join(resolve(projectRoot), ".aiba", "plans", `${capabilityId}.yaml`);
   return validateOperationPlan(await readYaml(path));
+}
+
+export async function loadCapabilityMigration(
+  packsDirectory: string,
+  capabilityId: string,
+  fromVersion: string,
+  toVersion: string,
+): Promise<CapabilityMigration> {
+  if (!/^[a-z][a-z0-9-]{1,62}$/.test(capabilityId)) {
+    throw new AibaError(
+      `Invalid capability identifier: ${capabilityId}`,
+      "INVALID_CAPABILITY_ID",
+    );
+  }
+  const versionPattern = /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$/;
+  if (!versionPattern.test(fromVersion) || !versionPattern.test(toVersion)) {
+    throw new AibaError("Invalid migration version", "INVALID_MIGRATION_VERSION");
+  }
+  const path = join(
+    resolve(packsDirectory),
+    capabilityId,
+    "migrations",
+    `${fromVersion}-to-${toVersion}.yaml`,
+  );
+  return validateCapabilityMigration(await readYaml(path));
+}
+
+export async function loadUpgradePlan(
+  projectRoot: string,
+  capabilityId: string,
+): Promise<UpgradePlan> {
+  if (!/^[a-z][a-z0-9-]{1,62}$/.test(capabilityId)) {
+    throw new AibaError(
+      `Invalid capability identifier: ${capabilityId}`,
+      "INVALID_CAPABILITY_ID",
+    );
+  }
+  const path = join(
+    resolve(projectRoot),
+    ".aiba",
+    "plans",
+    `${capabilityId}.upgrade.yaml`,
+  );
+  return validateUpgradePlan(await readYaml(path));
 }

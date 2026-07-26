@@ -27,10 +27,10 @@ TypeScript project.
 
 Goal: upgrade a deeply customized capability from v1 to v2 safely.
 
-- [ ] Record generated ancestry and semantic ownership.
-- [ ] Define migration operations and conflict classes.
-- [ ] Implement `aiba diff` and `aiba upgrade`.
-- [ ] Demonstrate v1-to-v2 review-access migration on two fixtures.
+- [x] Record generated ancestry and semantic ownership.
+- [x] Define migration operations and conflict classes.
+- [x] Implement `aiba diff` and `aiba upgrade`.
+- [x] Demonstrate v1-to-v2 review-access migration on clean and customized fixtures.
 
 ## M3: Core Capability Set
 

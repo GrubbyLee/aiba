@@ -1,0 +1,22 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityMigration
+metadata:
+  id: bind-review-access-to-release
+  version: 0.2.0
+  title: Bind review access to an approved release
+  description: >-
+    Makes release binding an explicit, verifiable capability invariant while
+    preserving project-specific authentication and authorization design.
+spec:
+  capability:
+    id: review-access
+    fromVersion: 0.1.0
+    toVersion: 0.2.0
+  operations:
+    - id: enforce-release-binding
+      intent: Reject credentials and sessions outside the explicitly approved application release.
+      affectedInvariants: [review-is-release-bound, server-authoritative-enable]
+      guidance:
+        - Keep the approved release identifier in trusted server state.
+        - Check release binding during authentication and every later authorization decision.
+        - Add negative tests for an unapproved release and for policy changes after session creation.

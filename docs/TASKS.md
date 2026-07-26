@@ -51,14 +51,35 @@ HTTP and client-boundary attack tests.
 
 Exit criteria met on 2026-07-26.
 
-## Current Milestone: M2
+## Completed Milestone: M2
 
-- [ ] Define generated ancestry and semantic ownership records.
-- [ ] Define migration operations and conflict classes.
-- [ ] Implement `aiba diff` for capability and project drift.
-- [ ] Implement `aiba upgrade` prepare/finalize lifecycle.
-- [ ] Add customized v1 and v2 review-access fixtures.
-- [ ] Add clean, customized, and conflicting upgrade tests.
+- [x] Define generated ancestry and semantic ownership records.
+- [x] Define migration operations and conflict classes.
+- [x] Implement `aiba diff` for capability and project drift.
+- [x] Implement `aiba upgrade` prepare/finalize lifecycle.
+- [x] Add a v2 review-access pack and dynamic customized v1 fixtures.
+- [x] Add clean, customized, missing, project-owned, and conflicting upgrade tests.
+- [x] Reject changed target sources and immutable migration-plan fields.
+- [x] Verify recoverable replacement of manifest, lock, receipt, and ancestry.
+
+## M2 Exit Criteria
+
+M2 is complete when a compiled CLI can install v1, classify file drift, prepare
+a v2 migration, require truthful conflict resolutions, finalize new provenance,
+and verify the upgraded capability without overwriting project business files.
+Source tampering and failed final verification must leave prior state intact.
+
+Exit criteria met on 2026-07-26.
+
+## Current Milestone: M3
+
+- [ ] Define shared principal, authorization-decision, and audit-event interfaces.
+- [ ] Implement the `identity` capability contract and reference recipe.
+- [ ] Implement the `users` lifecycle capability contract and reference recipe.
+- [ ] Implement the `authorization` capability contract and reference recipe.
+- [ ] Implement the `audit` capability contract and reference recipe.
+- [ ] Implement the `notification` capability contract and reference recipe.
+- [ ] Add dependency, composition, and cross-capability security tests.
 
 ## Known Risks
 

@@ -78,3 +78,36 @@ aiba verify --json
 
 Treat stale evidence, plan drift, capability source drift, and recipe source drift
 as security failures that require investigation.
+
+## Upgrade Existing Capability
+
+Inspect customization before upgrading:
+
+```bash
+aiba diff <capability> --json
+aiba upgrade <capability> --packs-dir <target-packs> --json
+```
+
+Read `.aiba/plans/<capability>.upgrade.yaml`. Keep capability, recipe,
+migration, operation, drift ancestry, and evidence requirement fields
+unchanged. Adapt project code according to the migration operations. Add a
+truthful `resolution` only to generated/shared drift entries that need it, and
+update only `evidence[].items` with target evidence.
+
+Ownership has semantic consequences: use `project` for pre-existing project
+code, `shared` for project code adapted by the capability, and `generated` only
+for capability-specific files whose lifecycle is actually generated. Do not
+label customized project code as generated to make replacement easier.
+
+Run project and security tests, then finalize:
+
+```bash
+aiba upgrade <capability> --finalize --packs-dir <target-packs> \
+  --agent <codex-or-claude-code> --json
+aiba verify <capability> --packs-dir <target-packs> --json
+aiba diff <capability> --packs-dir <target-packs> --json
+```
+
+Do not report completion unless finalization and verification pass. `diff` may
+still report expected project-owned customization; explain it rather than
+rewriting business files.

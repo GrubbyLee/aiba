@@ -1,4 +1,4 @@
-import type { ProjectInspection, VerificationReport } from "@aiba/core";
+import type { ProjectDiffReport, ProjectInspection, VerificationReport } from "@aiba/core";
 
 export function renderInspection(report: ProjectInspection): string {
   const lines = [
@@ -36,6 +36,27 @@ export function renderVerification(report: VerificationReport): string {
         + `${context ? ` [${context}]` : ""}: ${issue.message}`,
       );
     }
+  }
+  return lines.join("\n");
+}
+
+export function renderDiff(report: ProjectDiffReport): string {
+  const lines = [
+    report.hasDrift ? "Capability drift detected." : "No capability drift detected.",
+    `Project: ${report.projectRoot}`,
+  ];
+  for (const capability of report.capabilities) {
+    lines.push(
+      `${capability.id}@${capability.version} (${capability.ancestry} ancestry)`,
+      `  sources: capability=${capability.sources.capability}`
+        + `${capability.sources.recipe ? ` recipe=${capability.sources.recipe}` : ""}`,
+    );
+    for (const file of capability.files) {
+      lines.push(`  ${file.status.toUpperCase()} [${file.ownership}] ${file.path}`);
+    }
+  }
+  for (const issue of report.issues) {
+    lines.push(`ERROR ${issue.code}${issue.capability ? ` [${issue.capability}]` : ""}: ${issue.message}`);
   }
   return lines.join("\n");
 }

@@ -87,6 +87,71 @@ run("verify added capability", [
   "--packs-dir",
   join(workspace, "capabilities"),
 ], 0);
+run("diff clean capability", [
+  "diff",
+  "review-access",
+  "--root",
+  addFixture,
+  "--packs-dir",
+  join(workspace, "capabilities"),
+], 0);
+const targetPacks = join(
+  workspace,
+  "fixtures",
+  "capability-packs",
+  "review-access-v2",
+);
+run("upgrade prepare", [
+  "upgrade",
+  "review-access",
+  "--root",
+  addFixture,
+  "--packs-dir",
+  targetPacks,
+  "--json",
+], 0);
+const upgradePlanPath = join(
+  addFixture,
+  ".aiba",
+  "plans",
+  "review-access.upgrade.yaml",
+);
+const upgradePlan = parse(readFileSync(upgradePlanPath, "utf8"));
+for (const invariant of upgradePlan.evidence) {
+  invariant.items = [
+    { type: "source", path: "src/reviewAccess.ts", ownership: "shared" },
+    { type: "test", path: "src/reviewAccess.test.ts", ownership: "shared" },
+  ];
+}
+writeFileSync(upgradePlanPath, stringify(upgradePlan));
+run("upgrade finalize", [
+  "upgrade",
+  "review-access",
+  "--finalize",
+  "--agent",
+  "smoke-agent",
+  "--root",
+  addFixture,
+  "--packs-dir",
+  targetPacks,
+  "--json",
+], 0);
+run("verify upgraded capability", [
+  "verify",
+  "review-access",
+  "--root",
+  addFixture,
+  "--packs-dir",
+  targetPacks,
+], 0);
+run("diff upgraded capability", [
+  "diff",
+  "review-access",
+  "--root",
+  addFixture,
+  "--packs-dir",
+  targetPacks,
+], 0);
 rmSync(addFixture, { recursive: true, force: true });
 
 run("verify passing fixture", [

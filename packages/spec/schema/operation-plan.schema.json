@@ -122,7 +122,9 @@
               "properties": {
                 "type": { "$ref": "#/$defs/evidenceType" },
                 "path": { "$ref": "#/$defs/safePath" },
-                "description": { "type": "string", "minLength": 1, "maxLength": 500 }
+                "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+                "ownership": { "enum": ["generated", "shared", "project"] },
+                "operation": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}$" }
               }
             }
           }

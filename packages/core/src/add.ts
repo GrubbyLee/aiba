@@ -15,6 +15,7 @@ import { satisfies } from "semver";
 import { stringify } from "yaml";
 import {
   AIBA_API_VERSION,
+  type CapabilityAncestry,
   type CapabilityManifest,
   type CapabilityRecipe,
   type CapabilityReceipt,
@@ -23,7 +24,7 @@ import {
   type ProjectManifest,
 } from "@aiba/spec";
 import { AibaError } from "./errors.js";
-import { sha256File } from "./hash.js";
+import { sha256File, sha256Text } from "./hash.js";
 import { inspectProject } from "./inspect.js";
 import {
   loadCapabilityManifest,
@@ -98,7 +99,7 @@ function boundedPatternRoot(pattern: string): string | undefined {
   return root;
 }
 
-function assertRecipeSemantics(
+export function assertRecipeSemantics(
   recipe: CapabilityRecipe,
   manifest: CapabilityManifest,
 ): void {
@@ -176,7 +177,7 @@ function recipeMatchesProject(
     && recipe.spec.compatibility.frameworks.every((item) => frameworks.includes(item));
 }
 
-async function selectRecipe(
+export async function selectCapabilityRecipe(
   packsDirectory: string,
   manifest: CapabilityManifest,
   languages: string[],
@@ -225,7 +226,7 @@ async function selectRecipe(
   return matches[0] as { recipe: CapabilityRecipe; path: string };
 }
 
-function assertDependenciesInstalled(
+export function assertDependenciesInstalled(
   project: ProjectManifest,
   manifest: CapabilityManifest,
 ): void {
@@ -263,7 +264,7 @@ export async function prepareCapability(
   const inspection = await inspectProject(root);
   const languages = inspection.languages.map((item) => item.name);
   const frameworks = inspection.frameworks;
-  const { recipe, path: recipePath } = await selectRecipe(
+  const { recipe, path: recipePath } = await selectCapabilityRecipe(
     options.packsDirectory,
     manifest,
     languages,
@@ -384,9 +385,9 @@ function assertPlanMatchesSources(
   }
 }
 
-async function createReceipt(
+export async function createCapabilityReceipt(
   root: string,
-  plan: OperationPlan,
+  plan: Pick<OperationPlan, "evidence">,
   manifest: CapabilityManifest,
   recipe: CapabilityRecipe,
   planPath: string,
@@ -400,6 +401,17 @@ async function createReceipt(
   for (const planned of plan.evidence) {
     const evidence: CapabilityReceipt["invariants"][number]["evidence"] = [];
     for (const item of planned.items) {
+      if (item.operation) {
+        const operation = recipe.spec.operations.find((candidate) =>
+          candidate.id === item.operation,
+        );
+        if (!operation || !operation.invariants.includes(planned.invariant)) {
+          throw new AibaError(
+            `Evidence operation ${item.operation} does not cover ${planned.invariant}`,
+            "EVIDENCE_OPERATION_MISMATCH",
+          );
+        }
+      }
       const normalized = normalizeProjectPath(item.path);
       if (normalized === ".aiba" || normalized.startsWith(".aiba/")) {
         throw new AibaError(
@@ -455,6 +467,64 @@ async function createReceipt(
   return { receipt, evidenceFiles };
 }
 
+export function createCapabilityAncestry(
+  receipt: CapabilityReceipt,
+  recipe: CapabilityRecipe,
+  createdAt: string,
+): CapabilityAncestry {
+  const files = new Map<string, CapabilityAncestry["files"][number]>();
+  for (const attestation of receipt.invariants) {
+    const relatedOperations = recipe.spec.operations
+      .filter((operation) => operation.invariants.includes(attestation.id))
+      .map((operation) => operation.id);
+    for (const evidence of attestation.evidence) {
+      if (!evidence.sha256) {
+        throw new AibaError(
+          `Ancestry requires hashed evidence: ${evidence.path}`,
+          "ANCESTRY_HASH_REQUIRED",
+        );
+      }
+      const ownership = evidence.ownership ?? "shared";
+      const operations = evidence.operation ? [evidence.operation] : relatedOperations;
+      const current = files.get(evidence.path);
+      if (!current) {
+        files.set(evidence.path, {
+          path: evidence.path,
+          installedSha256: evidence.sha256,
+          ownership,
+          evidenceTypes: [evidence.type],
+          invariants: [attestation.id],
+          operations: [...operations],
+        });
+        continue;
+      }
+      if (current.installedSha256 !== evidence.sha256 || current.ownership !== ownership) {
+        throw new AibaError(
+          `Evidence assigns conflicting ancestry to ${evidence.path}`,
+          "CONFLICTING_FILE_ANCESTRY",
+        );
+      }
+      if (!current.evidenceTypes.includes(evidence.type)) current.evidenceTypes.push(evidence.type);
+      if (!current.invariants.includes(attestation.id)) current.invariants.push(attestation.id);
+      for (const operation of operations) {
+        if (!current.operations.includes(operation)) current.operations.push(operation);
+      }
+    }
+  }
+
+  return {
+    apiVersion: AIBA_API_VERSION,
+    kind: "CapabilityAncestry",
+    capability: { ...receipt.capability },
+    recipe: {
+      id: recipe.metadata.id,
+      version: recipe.metadata.version,
+    },
+    createdAt,
+    files: [...files.values()].sort((left, right) => left.path.localeCompare(right.path)),
+  };
+}
+
 async function pathExists(path: string): Promise<boolean> {
   try {
     await stat(path);
@@ -466,39 +536,73 @@ async function pathExists(path: string): Promise<boolean> {
   }
 }
 
-async function commitProjectState(options: {
+export async function writeCapabilityState(options: {
   root: string;
   manifest: ProjectManifest;
   lock: ProjectLock;
   receipt: CapabilityReceipt;
   receiptPath: string;
+  ancestry: CapabilityAncestry;
+  ancestryPath: string;
   packsDirectory: string;
   capabilityId: string;
+  replaceExisting?: boolean;
 }): Promise<void> {
   const stateDirectory = await resolveExistingProjectPath(options.root, ".aiba");
   const manifestPath = join(stateDirectory, "manifest.yaml");
   const lockPath = join(stateDirectory, "lock.json");
-  if (await pathExists(options.receiptPath)) {
+  const receiptExists = await pathExists(options.receiptPath);
+  const ancestryExists = await pathExists(options.ancestryPath);
+  if (!options.replaceExisting && receiptExists) {
     throw new AibaError(
       `Receipt already exists at ${options.receiptPath}`,
       "CAPABILITY_RECEIPT_EXISTS",
     );
   }
+  if (!options.replaceExisting && ancestryExists) {
+    throw new AibaError(
+      `Ancestry already exists at ${options.ancestryPath}`,
+      "CAPABILITY_ANCESTRY_EXISTS",
+    );
+  }
 
   const originalManifest = await readFile(manifestPath, "utf8");
   const originalLock = await readFile(lockPath, "utf8");
+  const originalReceipt = receiptExists
+    ? await readFile(options.receiptPath, "utf8")
+    : undefined;
+  const originalAncestry = ancestryExists
+    ? await readFile(options.ancestryPath, "utf8")
+    : undefined;
   const suffix = randomUUID();
   const temporaryManifest = join(stateDirectory, `.manifest-${suffix}.tmp`);
   const temporaryLock = join(stateDirectory, `.lock-${suffix}.tmp`);
   const temporaryReceipt = join(stateDirectory, `.receipt-${suffix}.tmp`);
+  const temporaryAncestry = join(stateDirectory, `.ancestry-${suffix}.tmp`);
   let receiptLinked = false;
+  let ancestryLinked = false;
   try {
     await writeFile(temporaryManifest, stringify(options.manifest), { flag: "wx" });
     await writeFile(temporaryLock, `${JSON.stringify(options.lock, null, 2)}\n`, { flag: "wx" });
     await writeFile(temporaryReceipt, stringify(options.receipt), { flag: "wx" });
-    await link(temporaryReceipt, options.receiptPath);
-    receiptLinked = true;
-    await rm(temporaryReceipt);
+    await writeFile(
+      temporaryAncestry,
+      `${JSON.stringify(options.ancestry, null, 2)}\n`,
+      { flag: "wx" },
+    );
+    if (options.replaceExisting) {
+      await rename(temporaryAncestry, options.ancestryPath);
+      ancestryLinked = true;
+      await rename(temporaryReceipt, options.receiptPath);
+      receiptLinked = true;
+    } else {
+      await link(temporaryAncestry, options.ancestryPath);
+      ancestryLinked = true;
+      await rm(temporaryAncestry);
+      await link(temporaryReceipt, options.receiptPath);
+      receiptLinked = true;
+      await rm(temporaryReceipt);
+    }
     await rename(temporaryManifest, manifestPath);
     await rename(temporaryLock, lockPath);
 
@@ -516,12 +620,26 @@ async function commitProjectState(options: {
   } catch (error) {
     await writeFile(manifestPath, originalManifest);
     await writeFile(lockPath, originalLock);
-    if (receiptLinked) await rm(options.receiptPath, { force: true });
+    if (receiptLinked) {
+      if (originalReceipt !== undefined) {
+        await writeFile(options.receiptPath, originalReceipt);
+      } else {
+        await rm(options.receiptPath, { force: true });
+      }
+    }
+    if (ancestryLinked) {
+      if (originalAncestry !== undefined) {
+        await writeFile(options.ancestryPath, originalAncestry);
+      } else {
+        await rm(options.ancestryPath, { force: true });
+      }
+    }
     throw error;
   } finally {
     await rm(temporaryManifest, { force: true });
     await rm(temporaryLock, { force: true });
     await rm(temporaryReceipt, { force: true });
+    await rm(temporaryAncestry, { force: true });
   }
 }
 
@@ -572,8 +690,11 @@ export async function finalizeCapability(
     `.aiba/plans/${options.capabilityId}.yaml`,
   );
   const receiptPath = join(stateDirectory, "receipts", `${options.capabilityId}.yaml`);
+  const ancestryDirectory = join(stateDirectory, "ancestry");
+  await mkdir(ancestryDirectory, { recursive: true });
+  const ancestryPath = join(ancestryDirectory, `${options.capabilityId}.json`);
   const createdAt = (options.now ?? (() => new Date()))().toISOString();
-  const { receipt, evidenceFiles } = await createReceipt(
+  const created = await createCapabilityReceipt(
     root,
     plan,
     manifest,
@@ -582,6 +703,16 @@ export async function finalizeCapability(
     options.agent,
     createdAt,
   );
+  const ancestry = createCapabilityAncestry(created.receipt, recipe, createdAt);
+  const ancestryText = `${JSON.stringify(ancestry, null, 2)}\n`;
+  const receipt: CapabilityReceipt = {
+    ...created.receipt,
+    installation: {
+      ...created.receipt.installation,
+      ancestry: normalizeProjectPath(relative(root, ancestryPath)),
+      ancestrySha256: sha256Text(ancestryText),
+    },
+  };
   const receiptProjectPath = normalizeProjectPath(relative(root, receiptPath));
   const nextProject: ProjectManifest = {
     ...project,
@@ -602,12 +733,14 @@ export async function finalizeCapability(
     }],
   };
 
-  await commitProjectState({
+  await writeCapabilityState({
     root,
     manifest: nextProject,
     lock: nextLock,
     receipt,
     receiptPath,
+    ancestry,
+    ancestryPath,
     packsDirectory: options.packsDirectory,
     capabilityId: options.capabilityId,
   });
@@ -615,6 +748,6 @@ export async function finalizeCapability(
     capability: options.capabilityId,
     version: manifest.metadata.version,
     receiptPath: receiptProjectPath,
-    evidenceFiles,
+    evidenceFiles: created.evidenceFiles,
   };
 }

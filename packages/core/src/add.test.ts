@@ -1,10 +1,17 @@
-import { mkdtemp, mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parse, stringify } from "yaml";
 import { describe, expect, it } from "vitest";
-import type { CapabilityReceipt, OperationPlan, ProjectManifest } from "@aiba/spec";
-import { finalizeCapability, prepareCapability } from "./add.js";
+import type {
+  CapabilityAncestry,
+  CapabilityReceipt,
+  OperationPlan,
+  ProjectLock,
+  ProjectManifest,
+} from "@aiba/spec";
+import { finalizeCapability, prepareCapability, writeCapabilityState } from "./add.js";
+import { diffProject } from "./diff.js";
 import { sha256File } from "./hash.js";
 import { initializeProject } from "./init.js";
 import { verifyProject } from "./verify.js";
@@ -146,11 +153,23 @@ describe("capability add lifecycle", () => {
       agent: "codex",
       recipe: "typescript-reference",
       plan: ".aiba/plans/review-access.yaml",
+      ancestry: ".aiba/ancestry/review-access.json",
     });
     expect(receipt.installation.planSha256).toBe(await sha256File(fixture.planPath));
     expect(receipt.invariants[0]?.evidence[0]?.sha256).toBe(
       await sha256File(fixture.sourcePath),
     );
+    const ancestry = JSON.parse(await readFile(
+      join(fixture.root, receipt.installation.ancestry as string),
+      "utf8",
+    )) as CapabilityAncestry;
+    expect(ancestry.files).toEqual([expect.objectContaining({
+      path: "src/review.ts",
+      ownership: "shared",
+      installedSha256: await sha256File(fixture.sourcePath),
+      invariants: ["reviewer-is-distinct-principal"],
+      operations: ["implement-review-access"],
+    })]);
     expect(verification.ok).toBe(true);
   });
 
@@ -232,6 +251,162 @@ describe("capability add lifecycle", () => {
     expect(report.ok).toBe(false);
     expect(report.issues).toContainEqual(expect.objectContaining({
       code: "RECIPE_HASH_MISMATCH",
+    }));
+  });
+
+  it("classifies customization, missing files, and source drift", async () => {
+    const fixture = await createFixture();
+    await setEvidence(fixture.planPath, "src/review.ts");
+    await finalizeCapability({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+    });
+
+    const clean = await diffProject({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+    });
+    expect(clean).toMatchObject({
+      ok: true,
+      hasDrift: false,
+      capabilities: [{
+        ancestry: "recorded",
+        files: [{ status: "unchanged", ownership: "shared" }],
+        sources: { capability: "locked", recipe: "locked" },
+      }],
+    });
+
+    await writeFile(fixture.sourcePath, "export const reviewer = 'customized';\n");
+    const customized = await diffProject({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+    });
+    expect(customized.hasDrift).toBe(true);
+    expect(customized.capabilities[0]?.files[0]).toMatchObject({ status: "customized" });
+
+    await rm(fixture.sourcePath);
+    const missing = await diffProject({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+    });
+    expect(missing.capabilities[0]?.files[0]).toMatchObject({ status: "missing" });
+
+    const recipePath = join(
+      fixture.packs,
+      "review-access",
+      "recipes",
+      "typescript-reference.yaml",
+    );
+    const recipe = await readFile(recipePath, "utf8");
+    await writeFile(recipePath, recipe.replace("Test recipe.", "Changed recipe."));
+    const sourceDrift = await diffProject({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+    });
+    expect(sourceDrift.capabilities[0]?.sources.recipe).toBe("changed");
+  });
+
+  it("rolls back every replaced state file when post-write verification fails", async () => {
+    const fixture = await createFixture();
+    await setEvidence(fixture.planPath, "src/review.ts");
+    const installed = await finalizeCapability({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+    });
+    const manifestPath = join(fixture.root, ".aiba", "manifest.yaml");
+    const lockPath = join(fixture.root, ".aiba", "lock.json");
+    const receiptPath = join(fixture.root, installed.receiptPath);
+    const ancestryPath = join(fixture.root, ".aiba", "ancestry", "review-access.json");
+    const before = await Promise.all([
+      readFile(manifestPath, "utf8"),
+      readFile(lockPath, "utf8"),
+      readFile(receiptPath, "utf8"),
+      readFile(ancestryPath, "utf8"),
+    ]);
+    const manifest = parse(before[0]) as ProjectManifest;
+    const lock = JSON.parse(before[1]) as ProjectLock;
+    const receipt = parse(before[2]) as CapabilityReceipt;
+    const ancestry = JSON.parse(before[3]) as CapabilityAncestry;
+    const evidence = receipt.invariants[0]?.evidence[0];
+    if (!evidence) throw new Error("Fixture receipt has no evidence");
+    evidence.sha256 = "0".repeat(64);
+
+    await expect(writeCapabilityState({
+      root: fixture.root,
+      manifest,
+      lock,
+      receipt,
+      receiptPath,
+      ancestry,
+      ancestryPath,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+      replaceExisting: true,
+    })).rejects.toMatchObject({ code: "FINALIZED_CAPABILITY_INVALID" });
+    expect(await Promise.all([
+      readFile(manifestPath, "utf8"),
+      readFile(lockPath, "utf8"),
+      readFile(receiptPath, "utf8"),
+      readFile(ancestryPath, "utf8"),
+    ])).toEqual(before);
+  });
+
+  it("rejects ancestry recipe provenance that disagrees with the loaded pack", async () => {
+    const fixture = await createFixture();
+    await setEvidence(fixture.planPath, "src/review.ts");
+    const installed = await finalizeCapability({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+    });
+    const receiptPath = join(fixture.root, installed.receiptPath);
+    const ancestryPath = join(fixture.root, ".aiba", "ancestry", "review-access.json");
+    const ancestry = JSON.parse(await readFile(ancestryPath, "utf8")) as CapabilityAncestry;
+    ancestry.recipe.version = "9.9.9";
+    await writeFile(ancestryPath, `${JSON.stringify(ancestry, null, 2)}\n`);
+    const receipt = parse(await readFile(receiptPath, "utf8")) as CapabilityReceipt;
+    receipt.installation.ancestrySha256 = await sha256File(ancestryPath);
+    await writeFile(receiptPath, stringify(receipt));
+
+    const report = await verifyProject({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+    });
+    expect(report.ok).toBe(false);
+    expect(report.issues).toContainEqual(expect.objectContaining({
+      code: "ANCESTRY_RECIPE_VERSION_MISMATCH",
+    }));
+  });
+
+  it("refuses to classify drift from a tampered ancestry baseline", async () => {
+    const fixture = await createFixture();
+    await setEvidence(fixture.planPath, "src/review.ts");
+    await finalizeCapability({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+    });
+    const ancestryPath = join(fixture.root, ".aiba", "ancestry", "review-access.json");
+    const ancestry = JSON.parse(await readFile(ancestryPath, "utf8")) as CapabilityAncestry;
+    const file = ancestry.files[0];
+    if (!file) throw new Error("Fixture ancestry has no files");
+    file.ownership = "project";
+    await writeFile(ancestryPath, `${JSON.stringify(ancestry, null, 2)}\n`);
+
+    const report = await diffProject({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+    });
+    expect(report.ok).toBe(false);
+    expect(report.capabilities).toEqual([]);
+    expect(report.issues).toContainEqual(expect.objectContaining({
+      code: "CAPABILITY_DIFF_FAILED",
+      message: expect.stringContaining("provenance changed"),
     }));
   });
 });

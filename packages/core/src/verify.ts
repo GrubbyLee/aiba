@@ -12,6 +12,7 @@ import { AibaError, ProtocolValidationError } from "./errors.js";
 import { sha256File } from "./hash.js";
 import {
   loadCapabilityManifest,
+  loadCapabilityAncestry,
   loadCapabilityRecipe,
   loadCapabilityReceipt,
   loadProjectLock,
@@ -208,36 +209,115 @@ export async function verifyReceiptEvidence(
 
 async function verifyInstallationProvenance(
   root: string,
+  packsDirectory: string,
   manifest: CapabilityManifest,
   receipt: CapabilityReceipt,
 ): Promise<VerificationIssue[]> {
-  const { plan, planSha256 } = receipt.installation;
-  if (!plan || !planSha256) return [];
-
-  try {
-    const path = await resolveExistingProjectPath(root, plan);
-    const metadata = await stat(path);
-    if (!metadata.isFile()) {
-      throw new AibaError(`${plan} is not a file`, "PLAN_NOT_FILE");
-    }
-    const actual = await sha256File(path);
-    if (actual !== planSha256) {
-      return [{
-        level: "error",
-        code: "PLAN_HASH_MISMATCH",
-        message: `Operation plan hash changed for ${plan}`,
+  const tracked = [
+    receipt.installation.plan && receipt.installation.planSha256
+      ? {
+        path: receipt.installation.plan,
+        sha256: receipt.installation.planSha256,
+        mismatchCode: "PLAN_HASH_MISMATCH",
+        missingCode: "PLAN_NOT_FOUND",
+        label: "Operation plan",
+      }
+      : undefined,
+    receipt.installation.ancestry && receipt.installation.ancestrySha256
+      ? {
+        path: receipt.installation.ancestry,
+        sha256: receipt.installation.ancestrySha256,
+        mismatchCode: "ANCESTRY_HASH_MISMATCH",
+        missingCode: "ANCESTRY_NOT_FOUND",
+        label: "Capability ancestry",
+      }
+      : undefined,
+  ].filter((item): item is NonNullable<typeof item> => Boolean(item));
+  const issues: VerificationIssue[] = [];
+  for (const item of tracked) {
+    try {
+      const path = await resolveExistingProjectPath(root, item.path);
+      const metadata = await stat(path);
+      if (!metadata.isFile()) {
+        throw new AibaError(`${item.path} is not a file`, "PROVENANCE_NOT_FILE");
+      }
+      const actual = await sha256File(path);
+      if (actual !== item.sha256) {
+        issues.push({
+          level: "error",
+          code: item.mismatchCode,
+          message: `${item.label} hash changed for ${item.path}`,
+          capability: manifest.metadata.id,
+          path: item.path,
+        });
+      }
+    } catch (error) {
+      issues.push({
+        ...issueFromError(error, item.missingCode),
         capability: manifest.metadata.id,
-        path: plan,
-      }];
+        path: item.path,
+      });
     }
-    return [];
-  } catch (error) {
-    return [{
-      ...issueFromError(error, "PLAN_NOT_FOUND"),
-      capability: manifest.metadata.id,
-      path: plan,
-    }];
   }
+
+  if (receipt.installation.ancestry) {
+    try {
+      const ancestry = await loadCapabilityAncestry(root, receipt.installation.ancestry);
+      if (
+        ancestry.capability.id !== receipt.capability.id
+        || ancestry.capability.version !== receipt.capability.version
+      ) {
+        issues.push({
+          level: "error",
+          code: "ANCESTRY_CAPABILITY_MISMATCH",
+          message: `Ancestry identifies ${ancestry.capability.id}@${ancestry.capability.version}`,
+          capability: manifest.metadata.id,
+          path: receipt.installation.ancestry,
+        });
+      }
+      if (ancestry.recipe.id !== receipt.installation.recipe) {
+        issues.push({
+          level: "error",
+          code: "ANCESTRY_RECIPE_MISMATCH",
+          message: `Ancestry recipe ${ancestry.recipe.id} does not match the receipt recipe`,
+          capability: manifest.metadata.id,
+          path: receipt.installation.ancestry,
+        });
+      } else {
+        try {
+          const recipe = await loadCapabilityRecipe(
+            packsDirectory,
+            manifest.metadata.id,
+            ancestry.recipe.id,
+          );
+          if (ancestry.recipe.version !== recipe.metadata.version) {
+            issues.push({
+              level: "error",
+              code: "ANCESTRY_RECIPE_VERSION_MISMATCH",
+              message: `Ancestry records recipe ${ancestry.recipe.id}@${ancestry.recipe.version}, pack provides ${recipe.metadata.version}`,
+              capability: manifest.metadata.id,
+              path: receipt.installation.ancestry,
+            });
+          }
+        } catch (error) {
+          issues.push({
+            ...issueFromError(error, "ANCESTRY_RECIPE_LOAD_FAILED"),
+            capability: manifest.metadata.id,
+            path: receipt.installation.ancestry,
+          });
+        }
+      }
+    } catch (error) {
+      if (!issues.some((issue) => issue.path === receipt.installation.ancestry)) {
+        issues.push({
+          ...issueFromError(error, "ANCESTRY_LOAD_FAILED"),
+          capability: manifest.metadata.id,
+          path: receipt.installation.ancestry,
+        });
+      }
+    }
+  }
+  return issues;
 }
 
 async function verifyCapability(
@@ -377,7 +457,12 @@ async function verifyCapability(
     }
   }
 
-  issues.push(...await verifyInstallationProvenance(projectRoot, manifest, receipt));
+  issues.push(...await verifyInstallationProvenance(
+    projectRoot,
+    packsDirectory,
+    manifest,
+    receipt,
+  ));
   issues.push(...await verifyReceiptEvidence(projectRoot, manifest, receipt));
   return { verified: !issues.some((issue) => issue.level === "error"), issues };
 }

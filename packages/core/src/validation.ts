@@ -1,12 +1,15 @@
 import { Ajv2020, type ErrorObject, type ValidateFunction } from "ajv/dist/2020.js";
 import {
   loadProtocolSchema,
+  type CapabilityAncestry,
   type CapabilityManifest,
+  type CapabilityMigration,
   type CapabilityRecipe,
   type CapabilityReceipt,
   type OperationPlan,
   type ProjectLock,
   type ProjectManifest,
+  type UpgradePlan,
 } from "@aiba/spec";
 import { ProtocolValidationError } from "./errors.js";
 
@@ -20,6 +23,12 @@ ajv.addFormat("date-time", {
 
 const capabilityValidator = ajv.compile<CapabilityManifest>(
   loadProtocolSchema("capability.schema.json"),
+);
+const ancestryValidator = ajv.compile<CapabilityAncestry>(
+  loadProtocolSchema("ancestry.schema.json"),
+);
+const migrationValidator = ajv.compile<CapabilityMigration>(
+  loadProtocolSchema("migration.schema.json"),
 );
 const projectValidator = ajv.compile<ProjectManifest>(
   loadProtocolSchema("project.schema.json"),
@@ -35,6 +44,9 @@ const recipeValidator = ajv.compile<CapabilityRecipe>(
 );
 const operationPlanValidator = ajv.compile<OperationPlan>(
   loadProtocolSchema("operation-plan.schema.json"),
+);
+const upgradePlanValidator = ajv.compile<UpgradePlan>(
+  loadProtocolSchema("upgrade-plan.schema.json"),
 );
 
 function formatErrors(errors: ErrorObject[] | null | undefined): string[] {
@@ -57,6 +69,16 @@ function assertValid<T>(
 export function validateCapabilityManifest(value: unknown): CapabilityManifest {
   assertValid(capabilityValidator, value, "capability manifest");
   return value as CapabilityManifest;
+}
+
+export function validateCapabilityAncestry(value: unknown): CapabilityAncestry {
+  assertValid(ancestryValidator, value, "capability ancestry");
+  return value as CapabilityAncestry;
+}
+
+export function validateCapabilityMigration(value: unknown): CapabilityMigration {
+  assertValid(migrationValidator, value, "capability migration");
+  return value as CapabilityMigration;
 }
 
 export function validateProjectManifest(value: unknown): ProjectManifest {
@@ -82,4 +104,9 @@ export function validateCapabilityRecipe(value: unknown): CapabilityRecipe {
 export function validateOperationPlan(value: unknown): OperationPlan {
   assertValid(operationPlanValidator, value, "operation plan");
   return value as OperationPlan;
+}
+
+export function validateUpgradePlan(value: unknown): UpgradePlan {
+  assertValid(upgradePlanValidator, value, "upgrade plan");
+  return value as UpgradePlan;
 }

@@ -4,6 +4,7 @@ export const AIBA_API_VERSION = "aiba.dev/v0alpha1" as const;
 
 export type InvariantSeverity = "critical" | "error" | "warning";
 export type EvidenceType = "source" | "test" | "config" | "document";
+export type SemanticOwnership = "generated" | "shared" | "project";
 
 export interface CapabilityInvariant {
   id: string;
@@ -75,6 +76,8 @@ export interface CapabilityEvidence {
   path: string;
   sha256?: string;
   description?: string;
+  ownership?: SemanticOwnership;
+  operation?: string;
 }
 
 export interface CapabilityReceipt {
@@ -91,6 +94,8 @@ export interface CapabilityReceipt {
     recipe?: string;
     plan?: string;
     planSha256?: string;
+    ancestry?: string;
+    ancestrySha256?: string;
   };
   invariants: Array<{
     id: string;
@@ -173,13 +178,110 @@ export interface OperationPlan {
   }>;
 }
 
+export interface CapabilityAncestry {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "CapabilityAncestry";
+  capability: {
+    id: string;
+    version: string;
+  };
+  recipe: {
+    id: string;
+    version: string;
+  };
+  createdAt: string;
+  files: Array<{
+    path: string;
+    installedSha256: string;
+    ownership: SemanticOwnership;
+    evidenceTypes: EvidenceType[];
+    invariants: string[];
+    operations: string[];
+  }>;
+}
+
+export interface CapabilityMigration {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "CapabilityMigration";
+  metadata: {
+    id: string;
+    version: string;
+    title: string;
+    description: string;
+  };
+  spec: {
+    capability: {
+      id: string;
+      fromVersion: string;
+      toVersion: string;
+    };
+    operations: Array<{
+      id: string;
+      intent: string;
+      affectedInvariants: string[];
+      guidance: string[];
+    }>;
+  };
+}
+
+export type UpgradeConflict =
+  | "none"
+  | "customized-generated"
+  | "customized-shared"
+  | "missing-generated"
+  | "missing-shared";
+
+export interface UpgradePlan {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "UpgradePlan";
+  metadata: {
+    id: string;
+    createdAt: string;
+  };
+  capability: {
+    id: string;
+    fromVersion: string;
+    toVersion: string;
+    fromManifestSha256: string;
+    targetManifestSha256: string;
+  };
+  recipe: {
+    id: string;
+    fromVersion?: string;
+    toVersion: string;
+    targetSha256: string;
+  };
+  migration: {
+    id: string;
+    version: string;
+    sha256: string;
+  };
+  project: {
+    name: string;
+  };
+  drift: Array<CapabilityAncestry["files"][number] & {
+    status: "unchanged" | "customized" | "missing";
+    actualSha256?: string;
+    conflict: UpgradeConflict;
+    resolution?: {
+      action: "adapt" | "preserve" | "replace" | "remove";
+      rationale: string;
+    };
+  }>;
+  operations: CapabilityMigration["spec"]["operations"];
+  evidence: OperationPlan["evidence"];
+}
+
 export type ProtocolSchemaName =
+  | "ancestry.schema.json"
   | "capability.schema.json"
   | "lock.schema.json"
+  | "migration.schema.json"
   | "operation-plan.schema.json"
   | "project.schema.json"
   | "recipe.schema.json"
-  | "receipt.schema.json";
+  | "receipt.schema.json"
+  | "upgrade-plan.schema.json";
 
 export function loadProtocolSchema(name: ProtocolSchemaName): object {
   const url = new URL(`../schema/${name}`, import.meta.url);

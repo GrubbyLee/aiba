@@ -55,16 +55,21 @@ Project-owned AIBA state is text and is committed to Git:
 .aiba/
   manifest.yaml
   lock.json
+  ancestry/
+    review-access.json
   plans/
     review-access.yaml
+    review-access.upgrade.yaml
   receipts/
     review-access.yaml
 ```
 
-Receipts map capability invariants to implementation evidence. Evidence paths
-must remain inside the project root and may carry SHA-256 hashes. Future upgrade
-operations will use receipts plus Git history to distinguish generated ancestry
-from project-owned customization.
+Receipts map capability invariants to hashed implementation evidence. Evidence
+paths must remain inside the project root. Ancestry records the installation
+hash and semantic ownership of each evidence file, allowing `aiba diff` and
+`aiba upgrade` to distinguish unchanged, customized, missing, and project-owned
+code without storing source contents. State replacement is recoverable and is
+accepted only after target verification succeeds.
 
 ## Technology Decisions
 

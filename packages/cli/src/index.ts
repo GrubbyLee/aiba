@@ -5,12 +5,15 @@ import { resolve } from "node:path";
 import { Command } from "commander";
 import {
   finalizeCapability,
+  finalizeUpgrade,
+  diffProject,
   initializeProject,
   inspectProject,
   prepareCapability,
+  prepareUpgrade,
   verifyProject,
 } from "@aiba/core";
-import { renderInspection, renderVerification } from "./render.js";
+import { renderDiff, renderInspection, renderVerification } from "./render.js";
 
 const program = new Command();
 
@@ -119,6 +122,97 @@ program
       `Recipe: ${result.plan.recipe.id}@${result.plan.recipe.version}`,
       `Plan: ${result.planPath}`,
     ].join("\n") + "\n");
+  });
+
+program
+  .command("upgrade")
+  .description("Prepare or finalize a customization-aware capability upgrade")
+  .argument("<capability>", "capability to upgrade")
+  .option("--root <path>", "project root", ".")
+  .option("--packs-dir <path>", "target capability pack directory", "capabilities")
+  .option("--recipe <id>", "select a target capability recipe")
+  .option("--agent <name>", "record the upgrading Agent")
+  .option("--prepare", "prepare an upgrade plan (default)")
+  .option("--finalize", "verify resolutions and record the upgrade")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    capability: string,
+    options: {
+      root: string;
+      packsDir: string;
+      recipe?: string;
+      agent?: string;
+      prepare?: boolean;
+      finalize?: boolean;
+      json?: boolean;
+    },
+  ) => {
+    if (options.prepare && options.finalize) {
+      throw new Error("--prepare and --finalize cannot be used together");
+    }
+    if (options.finalize && options.recipe) {
+      throw new Error("--recipe is only valid while preparing an upgrade");
+    }
+
+    const projectRoot = resolve(options.root);
+    const targetPacksDirectory = resolve(options.packsDir);
+    if (options.finalize) {
+      const result = await finalizeUpgrade({
+        projectRoot,
+        targetPacksDirectory,
+        capabilityId: capability,
+        ...(options.agent ? { agent: options.agent } : {}),
+      });
+      if (options.json) {
+        process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+        return;
+      }
+      process.stdout.write([
+        `Upgraded ${result.capability} from ${result.fromVersion} to ${result.toVersion}.`,
+        `Receipt: ${result.receiptPath}`,
+        `Resolved conflicts: ${result.resolvedConflicts}`,
+        `Hashed evidence entries: ${result.evidenceFiles}`,
+      ].join("\n") + "\n");
+      return;
+    }
+
+    const result = await prepareUpgrade({
+      projectRoot,
+      targetPacksDirectory,
+      capabilityId: capability,
+      ...(options.recipe ? { recipeId: options.recipe } : {}),
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    const conflicts = result.plan.drift.filter((file) => file.conflict !== "none").length;
+    process.stdout.write([
+      `Prepared ${result.plan.capability.id} upgrade from ${result.plan.capability.fromVersion} to ${result.plan.capability.toVersion}.`,
+      `Migration: ${result.plan.migration.id}@${result.plan.migration.version}`,
+      `Conflicts requiring resolution: ${conflicts}`,
+      `Plan: ${result.planPath}`,
+    ].join("\n") + "\n");
+  });
+
+program
+  .command("diff")
+  .description("Classify capability customization and source drift")
+  .argument("[capability]", "inspect only one capability")
+  .option("--root <path>", "project root", ".")
+  .option("--packs-dir <path>", "capability pack directory", "capabilities")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    capability: string | undefined,
+    options: { root: string; packsDir: string; json?: boolean },
+  ) => {
+    const report = await diffProject({
+      projectRoot: resolve(options.root),
+      packsDirectory: resolve(options.packsDir),
+      ...(capability ? { capabilityId: capability } : {}),
+    });
+    process.stdout.write(`${options.json ? JSON.stringify(report, null, 2) : renderDiff(report)}\n`);
+    if (!report.ok) process.exitCode = 1;
   });
 
 program

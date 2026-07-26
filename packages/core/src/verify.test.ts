@@ -1,7 +1,8 @@
-import { mkdtemp, mkdir, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { stringify } from "yaml";
+import { parse, stringify } from "yaml";
+import type { CapabilityReceipt } from "@aiba/spec";
 import { describe, expect, it } from "vitest";
 import { sha256File } from "./hash.js";
 import { loadCapabilityManifest } from "./loaders.js";
@@ -114,6 +115,21 @@ describe("verifyProject", () => {
     const receiptPath = join(fixture.root, ".aiba", "receipts", "review-access.yaml");
     const receipt = await import("node:fs/promises").then(({ readFile }) => readFile(receiptPath, "utf8"));
     await writeFile(receiptPath, receipt.replace("src/review.ts", "../../../etc/passwd"));
+    const report = await verifyProject({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+    });
+    expect(report.ok).toBe(false);
+    expect(report.issues[0]?.code).toBe("PROTOCOL_VALIDATION_FAILED");
+  });
+
+  it("requires a provenance hash whenever a plan path is present", async () => {
+    const fixture = await createFixture();
+    const receiptPath = join(fixture.root, ".aiba", "receipts", "review-access.yaml");
+    const receipt = parse(await readFile(receiptPath, "utf8")) as CapabilityReceipt;
+    receipt.installation.plan = ".aiba/plans/review-access.yaml";
+    await writeFile(receiptPath, stringify(receipt));
+
     const report = await verifyProject({
       projectRoot: fixture.root,
       packsDirectory: fixture.packs,
