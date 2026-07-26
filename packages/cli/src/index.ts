@@ -7,12 +7,14 @@ import {
   finalizeCapability,
   finalizeUpgrade,
   createCapabilityBundle,
+  createRegistryIndex,
   diffProject,
   generatePublisherKeyPair,
   initializeProject,
   inspectProject,
   prepareCapability,
   prepareUpgrade,
+  resolveRegistryCapability,
   verifyCapabilityBundle,
   verifyProject,
 } from "@aiba/core";
@@ -24,6 +26,104 @@ program
   .name("aiba")
   .description("Install, verify, trace, and upgrade application capabilities")
   .version("0.1.0");
+
+program
+  .command("registry-index")
+  .description("Create an immutable signed registry index snapshot")
+  .argument("<registry-directory>", "local registry directory")
+  .requiredOption("--id <id>", "registry identifier")
+  .requiredOption("--publisher <id>", "registry operator publisher identifier")
+  .requiredOption("--key-id <id>", "registry signing key identifier")
+  .requiredOption("--private-key <path>", "Ed25519 PKCS#8 private key")
+  .requiredOption("--publisher-trust <path>", "capability publisher trust policy JSON")
+  .requiredOption("--sequence <number>", "new monotonically increasing sequence")
+  .requiredOption("--expires-at <date-time>", "index expiry in ISO 8601 format")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    registryDirectory: string,
+    options: {
+      id: string;
+      publisher: string;
+      keyId: string;
+      privateKey: string;
+      publisherTrust: string;
+      sequence: string;
+      expiresAt: string;
+      json?: boolean;
+    },
+  ) => {
+    const sequence = Number(options.sequence);
+    if (!Number.isSafeInteger(sequence) || sequence < 1) {
+      throw new Error("--sequence must be a positive safe integer");
+    }
+    const expiresAt = new Date(options.expiresAt);
+    if (Number.isNaN(expiresAt.getTime())) {
+      throw new Error("--expires-at must be a valid ISO 8601 date-time");
+    }
+    const result = await createRegistryIndex({
+      registryDirectory: resolve(registryDirectory),
+      registryId: options.id,
+      publisherId: options.publisher,
+      keyId: options.keyId,
+      privateKeyPath: resolve(options.privateKey),
+      publisherTrustPolicyPath: resolve(options.publisherTrust),
+      sequence,
+      expiresAt,
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `Indexed ${result.entries} bundles for ${result.registry}.`,
+      `Sequence: ${result.sequence}`,
+      `Snapshot: ${result.snapshotDirectory}`,
+      `Index SHA-256: ${result.indexSha256}`,
+    ].join("\n") + "\n");
+  });
+
+program
+  .command("resolve")
+  .description("Resolve a verified capability from a signed local registry")
+  .argument("<capability>", "capability to resolve")
+  .requiredOption("--registry <path>", "local registry directory")
+  .requiredOption("--registry-trust <path>", "registry signer trust policy JSON")
+  .requiredOption("--publisher-trust <path>", "capability publisher trust policy JSON")
+  .option("--state <path>", "trusted anti-rollback state", ".aiba/registry-state.json")
+  .option("--version <version>", "resolve an exact semantic version")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    capability: string,
+    options: {
+      registry: string;
+      registryTrust: string;
+      publisherTrust: string;
+      state: string;
+      version?: string;
+      json?: boolean;
+    },
+  ) => {
+    const result = await resolveRegistryCapability({
+      registryDirectory: resolve(options.registry),
+      registryTrustPolicyPath: resolve(options.registryTrust),
+      publisherTrustPolicyPath: resolve(options.publisherTrust),
+      statePath: resolve(options.state),
+      capabilityId: capability,
+      ...(options.version ? { version: options.version } : {}),
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `Resolved ${result.capability}@${result.version}.`,
+      `Registry: ${result.registry} sequence ${result.sequence}`,
+      `Publisher: ${result.publisher}/${result.keyId}`,
+      `Bundle: ${result.bundleDirectory}`,
+      `Pack: ${result.packDirectory}`,
+      `Anti-rollback state: ${result.statePath}`,
+    ].join("\n") + "\n");
+  });
 
 program
   .command("keygen")

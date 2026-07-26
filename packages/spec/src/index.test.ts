@@ -13,6 +13,10 @@ describe("protocol schemas", () => {
     "project.schema.json",
     "recipe.schema.json",
     "receipt.schema.json",
+    "registry-index.schema.json",
+    "registry-index-signature.schema.json",
+    "registry-state.schema.json",
+    "registry-trust-policy.schema.json",
     "trust-policy.schema.json",
     "upgrade-plan.schema.json",
   ] as const)("loads %s", (name) => {

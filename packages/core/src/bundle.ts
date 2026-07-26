@@ -1,10 +1,7 @@
 import {
-  createPrivateKey,
-  createPublicKey,
   generateKeyPair,
   sign,
   verify,
-  type KeyObject,
 } from "node:crypto";
 import {
   chmod,
@@ -15,7 +12,6 @@ import {
   rm,
   writeFile,
 } from "node:fs/promises";
-import { createRequire } from "node:module";
 import { dirname, join, posix, relative, resolve, sep } from "node:path";
 import { promisify } from "node:util";
 import {
@@ -29,6 +25,11 @@ import { parse } from "yaml";
 import { assertRecipeSemantics } from "./add.js";
 import { AibaError } from "./errors.js";
 import { sha256Text } from "./hash.js";
+import {
+  canonicalDocument,
+  loadEd25519PrivateKey,
+  loadEd25519PublicKey,
+} from "./signing.js";
 import { assertMigrationSemantics } from "./upgrade.js";
 import {
   validateCapabilityBundle,
@@ -40,8 +41,6 @@ import {
 } from "./validation.js";
 
 const generateKeyPairAsync = promisify(generateKeyPair);
-const requireFromHere = createRequire(import.meta.url);
-const canonicalizeDocument: (input: unknown) => string | undefined = requireFromHere("canonicalize");
 const IDENTIFIER = /^[a-z][a-z0-9-]{1,95}$/;
 const RECIPE_PATH = /^pack\/recipes\/([a-z][a-z0-9-]{1,62})\.yaml$/;
 const MIGRATION_PATH = /^pack\/migrations\/([^/]+)\.yaml$/;
@@ -212,50 +211,6 @@ async function collectSourceFiles(packDirectory: string): Promise<SourceFile[]> 
     throw new AibaError("Bundle is missing pack/README.md", "BUNDLE_README_MISSING");
   }
   return files;
-}
-
-function canonicalDocument(value: unknown): string {
-  const document = canonicalizeDocument(value);
-  if (document === undefined) {
-    throw new AibaError("Document cannot be canonicalized", "CANONICALIZATION_FAILED");
-  }
-  return document;
-}
-
-function assertEd25519Key(key: KeyObject, purpose: "private" | "public"): void {
-  if (key.type !== purpose || key.asymmetricKeyType !== "ed25519") {
-    throw new AibaError(
-      `Expected an Ed25519 ${purpose} key`,
-      "UNSUPPORTED_SIGNING_KEY",
-    );
-  }
-}
-
-async function loadPrivateKey(path: string): Promise<KeyObject> {
-  const info = await lstat(resolve(path)).catch((error: unknown) => {
-    throw new AibaError(`Cannot read private key ${path}`, "PRIVATE_KEY_NOT_FOUND", {
-      cause: error,
-    });
-  });
-  if (!info.isFile() || info.isSymbolicLink()) {
-    throw new AibaError("Private key must be a regular file", "INVALID_PRIVATE_KEY_PATH");
-  }
-  const key = createPrivateKey(await readFile(resolve(path)));
-  assertEd25519Key(key, "private");
-  return key;
-}
-
-function loadPublicKey(pem: string): KeyObject {
-  let key: KeyObject;
-  try {
-    key = createPublicKey(pem);
-  } catch (error) {
-    throw new AibaError("Trusted public key is invalid", "INVALID_TRUSTED_PUBLIC_KEY", {
-      cause: error,
-    });
-  }
-  assertEd25519Key(key, "public");
-  return key;
 }
 
 async function parseJsonDocument(path: string, label: string): Promise<unknown> {
@@ -430,7 +385,7 @@ export async function createCapabilityBundle(
   if (await pathExists(output)) {
     throw new AibaError(`Bundle output already exists: ${output}`, "BUNDLE_OUTPUT_EXISTS");
   }
-  const privateKey = await loadPrivateKey(options.privateKeyPath);
+  const privateKey = await loadEd25519PrivateKey(options.privateKeyPath);
   const source = join(resolve(options.packsDirectory), options.capabilityId);
   const files = await collectSourceFiles(source).catch((error: unknown) => {
     if (error instanceof AibaError) throw error;
@@ -558,7 +513,7 @@ export async function verifyCapabilityBundle(
       "CAPABILITY_NOT_TRUSTED",
     );
   }
-  const publicKey = loadPublicKey(trusted.publicKey);
+  const publicKey = loadEd25519PublicKey(trusted.publicKey);
   const canonical = canonicalDocument(bundle);
   const manifestSha256 = sha256Text(canonical);
   if (signature.manifestSha256 !== manifestSha256) {

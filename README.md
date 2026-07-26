@@ -7,7 +7,8 @@ forcing projects into a fixed application framework or visual system.
 The initial capability set covers `review-access`, `identity`, `audit`,
 `authorization`, `users`, and `notification`. AIBA currently supports
 Agent-assisted install, deterministic verification, drift inspection,
-customization-aware upgrade, and locally enforced signed capability bundles.
+customization-aware upgrade, signed capability bundles, and anti-rollback local
+registry resolution.
 
 ## Principles
 
@@ -50,6 +51,14 @@ aiba keygen aiba-official --out ../aiba-publisher-keys
 aiba pack identity --publisher aiba-official --key-id root-1 \
   --private-key ../aiba-publisher-keys/private.pem --out identity.aiba
 aiba verify-bundle identity.aiba --trust trust-policy.json
+aiba registry-index ./registry --id local-registry \
+  --publisher registry-operator --key-id root-1 \
+  --private-key ../registry-keys/private.pem \
+  --publisher-trust publisher-trust.json --sequence 1 \
+  --expires-at 2026-07-27T00:00:00Z
+aiba resolve identity --registry ./registry \
+  --registry-trust registry-trust.json \
+  --publisher-trust publisher-trust.json
 ```
 
 The concise product workflow remains:
@@ -70,6 +79,12 @@ Core-computed provenance after project tests pass.
 project and supplies evidence or conflict resolutions; Core then hashes and
 verifies the result during `--finalize`. Capability packs are treated as data
 and cannot provide commands for Core to execute.
+
+`registry-index` creates an immutable signed snapshot after verifying every
+listed publisher bundle. `resolve` verifies the latest registry snapshot, its
+expiry, local anti-rollback state, and the selected bundle before returning its
+paths. Registry resolution performs no install, code execution, or network
+request.
 
 See [docs/ROADMAP.md](docs/ROADMAP.md) and [docs/TASKS.md](docs/TASKS.md) for
 the current implementation status.

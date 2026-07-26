@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/v0alpha1/registry-state.schema.json",
+  "title": "AIBA Capability Registry Anti-Rollback State",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "registry"],
+  "properties": {
+    "apiVersion": { "const": "aiba.dev/v0alpha1" },
+    "kind": { "const": "CapabilityRegistryState" },
+    "registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sequence", "indexSha256", "verifiedAt"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+        "sequence": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "indexSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "verifiedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

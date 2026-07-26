@@ -359,6 +359,59 @@ export interface PublisherTrustPolicy {
   }>;
 }
 
+export interface CapabilityRegistryIndex {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "CapabilityRegistryIndex";
+  metadata: {
+    id: string;
+    sequence: number;
+    generatedAt: string;
+    expiresAt: string;
+  };
+  publisher: { id: string; keyId: string };
+  entries: Array<{
+    capability: string;
+    version: string;
+    path: string;
+    bundleManifestSha256: string;
+    publisher: string;
+    keyId: string;
+  }>;
+}
+
+export interface CapabilityRegistryIndexSignature {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "CapabilityRegistryIndexSignature";
+  algorithm: "Ed25519";
+  keyId: string;
+  indexSha256: string;
+  signature: string;
+}
+
+export interface CapabilityRegistryTrustPolicy {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "CapabilityRegistryTrustPolicy";
+  metadata: { id: string };
+  registries: Array<{
+    registry: string;
+    publisher: string;
+    keyId: string;
+    algorithm: "Ed25519";
+    publicKey: string;
+  }>;
+}
+
+export interface CapabilityRegistryState {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "CapabilityRegistryState";
+  registry: {
+    id: string;
+    sequence: number;
+    indexSha256: string;
+    verifiedAt: string;
+  };
+}
+
 export type ProtocolSchemaName =
   | "ancestry.schema.json"
   | "bundle.schema.json"
@@ -370,6 +423,10 @@ export type ProtocolSchemaName =
   | "project.schema.json"
   | "recipe.schema.json"
   | "receipt.schema.json"
+  | "registry-index.schema.json"
+  | "registry-index-signature.schema.json"
+  | "registry-state.schema.json"
+  | "registry-trust-policy.schema.json"
   | "trust-policy.schema.json"
   | "upgrade-plan.schema.json";
 

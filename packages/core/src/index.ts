@@ -7,6 +7,7 @@ export * from "./init.js";
 export * from "./inspect.js";
 export * from "./loaders.js";
 export * from "./paths.js";
+export * from "./registry.js";
 export * from "./upgrade.js";
 export * from "./validation.js";
 export * from "./verify.js";

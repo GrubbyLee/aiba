@@ -1,5 +1,6 @@
 import { spawnSync } from "node:child_process";
 import {
+  cpSync,
   copyFileSync,
   mkdirSync,
   mkdtempSync,
@@ -37,6 +38,10 @@ const bundleFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-bundle-"));
 const keyDirectory = join(bundleFixture, "keys");
 const bundleDirectory = join(bundleFixture, "identity-bundle");
 const trustPolicyPath = join(bundleFixture, "trust-policy.json");
+const registryDirectory = join(bundleFixture, "registry");
+const registryKeys = join(bundleFixture, "registry-keys");
+const registryTrustPath = join(bundleFixture, "registry-trust.json");
+const registryStatePath = join(bundleFixture, "registry-state.json");
 run("publisher keygen", [
   "keygen",
   "aiba-official",
@@ -80,6 +85,74 @@ run("verify signed capability bundle", [
   trustPolicyPath,
   "--json",
 ], 0);
+mkdirSync(join(registryDirectory, "bundles", "identity"), { recursive: true });
+cpSync(
+  bundleDirectory,
+  join(registryDirectory, "bundles", "identity", "0.1.0"),
+  { recursive: true },
+);
+run("registry keygen", [
+  "keygen",
+  "registry-operator",
+  "--out",
+  registryKeys,
+  "--json",
+], 0);
+writeFileSync(registryTrustPath, `${JSON.stringify({
+  apiVersion: "aiba.dev/v0alpha1",
+  kind: "CapabilityRegistryTrustPolicy",
+  metadata: { id: "smoke-registry-policy" },
+  registries: [{
+    registry: "local-registry",
+    publisher: "registry-operator",
+    keyId: "root-1",
+    algorithm: "Ed25519",
+    publicKey: readFileSync(join(registryKeys, "public.pem"), "utf8"),
+  }],
+}, null, 2)}\n`);
+const registryExpiry = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+function createRegistrySnapshot(sequence) {
+  run(`create registry index ${sequence}`, [
+    "registry-index",
+    registryDirectory,
+    "--id",
+    "local-registry",
+    "--publisher",
+    "registry-operator",
+    "--key-id",
+    "root-1",
+    "--private-key",
+    join(registryKeys, "private.pem"),
+    "--publisher-trust",
+    trustPolicyPath,
+    "--sequence",
+    String(sequence),
+    "--expires-at",
+    registryExpiry,
+    "--json",
+  ], 0);
+}
+function resolveRegistry(expectedStatus) {
+  run("resolve registry capability", [
+    "resolve",
+    "identity",
+    "--registry",
+    registryDirectory,
+    "--registry-trust",
+    registryTrustPath,
+    "--publisher-trust",
+    trustPolicyPath,
+    "--state",
+    registryStatePath,
+    "--json",
+  ], expectedStatus);
+}
+createRegistrySnapshot(1);
+resolveRegistry(0);
+createRegistrySnapshot(2);
+resolveRegistry(0);
+rmSync(join(registryDirectory, "indexes", "2"), { recursive: true, force: true });
+resolveRegistry(1);
 writeFileSync(join(bundleDirectory, "pack", "README.md"), "tampered\n");
 run("reject tampered capability bundle", [
   "verify-bundle",

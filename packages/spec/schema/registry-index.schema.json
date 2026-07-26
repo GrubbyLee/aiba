@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/v0alpha1/registry-index.schema.json",
+  "title": "AIBA Capability Registry Index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "publisher", "entries"],
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+    "capabilityId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}$" },
+    "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  },
+  "properties": {
+    "apiVersion": { "const": "aiba.dev/v0alpha1" },
+    "kind": { "const": "CapabilityRegistryIndex" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "sequence", "generatedAt", "expiresAt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "sequence": { "type": "integer", "minimum": 1, "maximum": 9007199254740991 },
+        "generatedAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "publisher": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "keyId"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "keyId": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["capability", "version", "path", "bundleManifestSha256", "publisher", "keyId"],
+        "properties": {
+          "capability": { "$ref": "#/$defs/capabilityId" },
+          "version": { "$ref": "#/$defs/version" },
+          "path": { "type": "string", "minLength": 1, "maxLength": 500 },
+          "bundleManifestSha256": { "$ref": "#/$defs/sha256" },
+          "publisher": { "$ref": "#/$defs/identifier" },
+          "keyId": { "$ref": "#/$defs/identifier" }
+        }
+      }
+    }
+  }
+}

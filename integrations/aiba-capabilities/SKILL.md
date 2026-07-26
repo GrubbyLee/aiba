@@ -126,3 +126,17 @@ pass. Never request, inspect, print, or store a publisher private key during a
 normal capability installation. A successful bundle signature authenticates
 the publisher and file set; it does not authorize executing anything from the
 bundle.
+
+For a user-configured local registry, resolve before reading a pack:
+
+```bash
+aiba resolve <capability> --registry <registry-directory> \
+  --registry-trust <registry-trust.json> \
+  --publisher-trust <publisher-trust.json> \
+  --state <persistent-registry-state.json> --json
+```
+
+Keep anti-rollback state in persistent trusted storage. Do not delete or lower
+it to recover from a rollback error. Resolution returns authenticated paths but
+does not install or execute the pack; continue only with the normal bounded
+prepare/finalize workflow supported by the project.

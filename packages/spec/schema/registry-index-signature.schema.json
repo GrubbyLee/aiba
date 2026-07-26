@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/v0alpha1/registry-index-signature.schema.json",
+  "title": "AIBA Capability Registry Index Signature",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "algorithm", "keyId", "indexSha256", "signature"],
+  "properties": {
+    "apiVersion": { "const": "aiba.dev/v0alpha1" },
+    "kind": { "const": "CapabilityRegistryIndexSignature" },
+    "algorithm": { "const": "Ed25519" },
+    "keyId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+    "indexSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "signature": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+  }
+}

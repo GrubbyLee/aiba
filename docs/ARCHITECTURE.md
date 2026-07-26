@@ -55,6 +55,14 @@ symlinks, executable payloads, extra files, traversal paths, source tampering,
 and invalid recipe or migration semantics. A valid signature proves publisher
 identity and byte integrity; it never turns pack data into executable code.
 
+Local registries store immutable signed snapshots under `indexes/<sequence>`.
+The index binds capability versions to exact bundle digests and publisher keys.
+Registry-operator trust and capability-publisher trust remain separate. A local
+state file records the highest accepted sequence and digest, rejecting both
+older snapshots and same-sequence equivocation. State advances only after the
+selected bundle verifies. Resolution returns paths and never installs or
+executes pack content.
+
 ### Agent Adapters
 
 Skills are distribution and integration channels. They translate natural
@@ -76,6 +84,7 @@ Project-owned AIBA state is text and is committed to Git:
     review-access.upgrade.yaml
   receipts/
     review-access.yaml
+  registry-state.json
 ```
 
 Receipts map capability invariants to hashed implementation evidence. Evidence
@@ -84,6 +93,10 @@ hash and semantic ownership of each evidence file, allowing `aiba diff` and
 `aiba upgrade` to distinguish unchanged, customized, missing, and project-owned
 code without storing source contents. State replacement is recoverable and is
 accepted only after target verification succeeds.
+
+Registry state is a mutable trust checkpoint rather than provenance evidence.
+Keep it in persistent trusted project or CI storage and review sequence changes;
+deleting it resets anti-rollback protection to first use.
 
 ## Technology Decisions
 
@@ -97,6 +110,8 @@ accepted only after target verification succeeds.
 - Git diffs and hashes for provenance; no project-state database.
 - Ed25519, RFC 8785 canonical JSON, and local publisher allowlists for signed
   capability distribution.
+- Immutable registry snapshots with expiry and persistent sequence/digest state
+  for rollback and equivocation detection.
 - Native Mini Program clients are validated with WeChat syntax checks and
   client-contract tests; server boundaries use black-box HTTP attack tests.
 - Core security capability references use injected stores/provider adapters,

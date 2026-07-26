@@ -11,6 +11,10 @@ import {
   type CapabilityMigration,
   type CapabilityRecipe,
   type CapabilityReceipt,
+  type CapabilityRegistryIndex,
+  type CapabilityRegistryIndexSignature,
+  type CapabilityRegistryState,
+  type CapabilityRegistryTrustPolicy,
   type OperationPlan,
   type NotificationCommand,
   type NotificationReceipt,
@@ -58,6 +62,18 @@ const bundleSignatureValidator = ajv.compile<CapabilityBundleSignature>(
 );
 const trustPolicyValidator = ajv.compile<PublisherTrustPolicy>(
   loadProtocolSchema("trust-policy.schema.json"),
+);
+const registryIndexValidator = ajv.compile<CapabilityRegistryIndex>(
+  loadProtocolSchema("registry-index.schema.json"),
+);
+const registryIndexSignatureValidator = ajv.compile<CapabilityRegistryIndexSignature>(
+  loadProtocolSchema("registry-index-signature.schema.json"),
+);
+const registryStateValidator = ajv.compile<CapabilityRegistryState>(
+  loadProtocolSchema("registry-state.schema.json"),
+);
+const registryTrustPolicyValidator = ajv.compile<CapabilityRegistryTrustPolicy>(
+  loadProtocolSchema("registry-trust-policy.schema.json"),
 );
 const ancestryValidator = ajv.compile<CapabilityAncestry>(
   loadProtocolSchema("ancestry.schema.json"),
@@ -121,6 +137,34 @@ export function validateCapabilityBundleSignature(
 export function validatePublisherTrustPolicy(value: unknown): PublisherTrustPolicy {
   assertValid(trustPolicyValidator, value, "publisher trust policy");
   return value as PublisherTrustPolicy;
+}
+
+export function validateCapabilityRegistryIndex(value: unknown): CapabilityRegistryIndex {
+  assertValid(registryIndexValidator, value, "capability registry index");
+  return value as CapabilityRegistryIndex;
+}
+
+export function validateCapabilityRegistryIndexSignature(
+  value: unknown,
+): CapabilityRegistryIndexSignature {
+  assertValid(
+    registryIndexSignatureValidator,
+    value,
+    "capability registry index signature",
+  );
+  return value as CapabilityRegistryIndexSignature;
+}
+
+export function validateCapabilityRegistryState(value: unknown): CapabilityRegistryState {
+  assertValid(registryStateValidator, value, "capability registry state");
+  return value as CapabilityRegistryState;
+}
+
+export function validateCapabilityRegistryTrustPolicy(
+  value: unknown,
+): CapabilityRegistryTrustPolicy {
+  assertValid(registryTrustPolicyValidator, value, "capability registry trust policy");
+  return value as CapabilityRegistryTrustPolicy;
 }
 
 export function validatePrincipal(value: unknown): Principal {

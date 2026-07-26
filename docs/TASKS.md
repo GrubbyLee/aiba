@@ -100,11 +100,25 @@ Exit criteria met on 2026-07-26.
 - [x] Verify exact file integrity, publisher identity, and capability allowlists.
 - [x] Reject symlinks, scripts, binaries, extra files, traversal, and semantic drift.
 - [x] Add compiled CLI smoke coverage for keygen, pack, verify, and tamper rejection.
-- [ ] Define signed registry index and anti-rollback protocols.
-- [ ] Verify registry index integrity, publisher delegation, and anti-rollback metadata.
-- [ ] Add local and private registry resolution without executing packages.
+- [x] Define signed registry index and anti-rollback protocols.
+- [x] Verify registry signatures separately from capability publisher signatures.
+- [x] Add immutable sequence snapshots, expiry, rollback, and equivocation checks.
+- [x] Add local registry resolution without copying, installing, or executing packages.
+- [x] Resolve the highest semantic version or an explicit exact version.
+- [ ] Add authenticated private registry transport and verified local caching.
 - [ ] Define team policy, approval, and upgrade-governance records.
 - [ ] Add commercial-boundary architecture for private registries and hosted controls.
+
+## M4.2 Exit Criteria
+
+M4.2 is complete when an operator can create a new immutable signed index from
+publisher-verified bundles, a client can resolve the newest or an exact version,
+and persistent state rejects rollback and same-sequence equivocation. Expired,
+future-dated, tampered, untrusted, mismatched, and symlinked inputs must fail
+without advancing state. The compiled CLI must reproduce a sequence 1 to 2
+upgrade and reject removal of sequence 2.
+
+Exit criteria met on 2026-07-26.
 
 ## Known Risks
 
@@ -112,5 +126,6 @@ Exit criteria met on 2026-07-26.
   prove selected behavior. Future packs need comparable conformance suites.
 - Capability package code is untrusted input. Core does not execute
   pack-provided commands.
-- Multi-version registry resolution and cached anti-rollback state remain M4.2
-  work; signed bundle verification is complete.
+- Remote transport authentication, availability policy, and cache lifecycle
+  remain M4.3 work; local multi-version resolution and anti-rollback state are
+  complete.
