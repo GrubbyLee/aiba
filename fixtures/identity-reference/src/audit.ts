@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { AuditEvent, AuditOutcome, AuthorizationResource, Principal } from "@aiba/spec";
+import type { AuditEvent, AuditOutcome, AuthorizationResource, Principal } from "aiba-spec";
 
 const ACTION = /^[a-z][a-z0-9-]*(?::[a-z][a-z0-9-]*)+$/;
 const REASON = /^[a-z][a-z0-9-]*$/;

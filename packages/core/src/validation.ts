@@ -25,7 +25,7 @@ import {
   type ProjectManifest,
   type TeamGovernancePolicy,
   type UpgradePlan,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { ProtocolValidationError } from "./errors.js";
 
 const ajv = new Ajv2020({ allErrors: true, strict: true });

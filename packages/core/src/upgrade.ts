@@ -12,7 +12,7 @@ import {
   type ProjectManifest,
   type UpgradeConflict,
   type UpgradePlan,
-} from "@aiba/spec";
+} from "aiba-spec";
 import {
   assertDependenciesInstalled,
   assertRecipeSemantics,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { AuditEvent } from "@aiba/spec";
+import type { AuditEvent } from "aiba-spec";
 import { AuditError, createAuditService, type AuditStore } from "./audit.js";
 
 class MemoryAuditStore implements AuditStore {

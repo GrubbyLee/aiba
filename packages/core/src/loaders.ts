@@ -12,7 +12,7 @@ import type {
   ProjectLock,
   ProjectManifest,
   UpgradePlan,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { AibaError } from "./errors.js";
 import { resolveExistingProjectPath } from "./paths.js";
 import {

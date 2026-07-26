@@ -1,7 +1,7 @@
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
-import type { ProjectManifest } from "@aiba/spec";
+import type { ProjectManifest } from "aiba-spec";
 import { assertDependenciesInstalled } from "./add.js";
 import { loadCapabilityManifest } from "./loaders.js";
 

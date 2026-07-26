@@ -2,7 +2,7 @@ import { mkdtemp, mkdir, readFile, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parse, stringify } from "yaml";
-import type { CapabilityReceipt } from "@aiba/spec";
+import type { CapabilityReceipt } from "aiba-spec";
 import { describe, expect, it } from "vitest";
 import { sha256File } from "./hash.js";
 import { loadCapabilityManifest } from "./loaders.js";

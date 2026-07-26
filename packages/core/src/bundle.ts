@@ -19,7 +19,7 @@ import {
   type CapabilityBundle,
   type CapabilityBundleSignature,
   type CapabilityManifest,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { validRange } from "semver";
 import { parse } from "yaml";
 import { assertRecipeSemantics } from "./add.js";

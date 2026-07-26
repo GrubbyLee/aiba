@@ -11,95 +11,95 @@ installation:
   plan: .aiba/plans/users.yaml
   planSha256: bdd796a13731b5ca23c75c10e7e695af7b7087627169766118d37c05a4b33bb6
   ancestry: .aiba/ancestry/users.json
-  ancestrySha256: 0c05845435788e6fd2c41ebd7d28a1569e8551d0f1e045f478bca773a7dc09dc
+  ancestrySha256: bb8a1c4e10d7152f6b60ce338fc66638c1833a8c0d52bb789902097452e6b969
 invariants:
   - id: tenant-and-id-are-server-derived
     evidence:
       - type: source
         path: src/users.ts
         ownership: shared
-        sha256: c4f2035ec55bb71da842596d82de44858825fe700b5c937de3cea1c27d2aa2b9
+        sha256: b758a18f9e50e4e6f8b36fcb409b81bb9d01d68722eb42c0b45097032f5ec2f6
       - type: test
         path: src/users.test.ts
         ownership: shared
-        sha256: a6ea698402c478343212860d2d14262245dc29efae2ce57eaad71735a4ea1351
+        sha256: c5cb1adee48319bc43d0423c7ea0e574d5d19e37f21a81a8296e0671f17e8ec3
   - id: every-operation-is-authorized
     evidence:
       - type: source
         path: src/users.ts
         ownership: shared
-        sha256: c4f2035ec55bb71da842596d82de44858825fe700b5c937de3cea1c27d2aa2b9
+        sha256: b758a18f9e50e4e6f8b36fcb409b81bb9d01d68722eb42c0b45097032f5ec2f6
       - type: test
         path: src/users.test.ts
         ownership: shared
-        sha256: a6ea698402c478343212860d2d14262245dc29efae2ce57eaad71735a4ea1351
+        sha256: c5cb1adee48319bc43d0423c7ea0e574d5d19e37f21a81a8296e0671f17e8ec3
   - id: tenant-boundaries-hide-records
     evidence:
       - type: source
         path: src/users.ts
         ownership: shared
-        sha256: c4f2035ec55bb71da842596d82de44858825fe700b5c937de3cea1c27d2aa2b9
+        sha256: b758a18f9e50e4e6f8b36fcb409b81bb9d01d68722eb42c0b45097032f5ec2f6
       - type: test
         path: src/users.test.ts
         ownership: shared
-        sha256: a6ea698402c478343212860d2d14262245dc29efae2ce57eaad71735a4ea1351
+        sha256: c5cb1adee48319bc43d0423c7ea0e574d5d19e37f21a81a8296e0671f17e8ec3
   - id: roles-and-credentials-are-separate
     evidence:
       - type: source
         path: src/users.ts
         ownership: shared
-        sha256: c4f2035ec55bb71da842596d82de44858825fe700b5c937de3cea1c27d2aa2b9
+        sha256: b758a18f9e50e4e6f8b36fcb409b81bb9d01d68722eb42c0b45097032f5ec2f6
       - type: test
         path: src/users.test.ts
         ownership: shared
-        sha256: a6ea698402c478343212860d2d14262245dc29efae2ce57eaad71735a4ea1351
+        sha256: c5cb1adee48319bc43d0423c7ea0e574d5d19e37f21a81a8296e0671f17e8ec3
   - id: lifecycle-transitions-are-explicit
     evidence:
       - type: source
         path: src/users.ts
         ownership: shared
-        sha256: c4f2035ec55bb71da842596d82de44858825fe700b5c937de3cea1c27d2aa2b9
+        sha256: b758a18f9e50e4e6f8b36fcb409b81bb9d01d68722eb42c0b45097032f5ec2f6
       - type: test
         path: src/users.test.ts
         ownership: shared
-        sha256: a6ea698402c478343212860d2d14262245dc29efae2ce57eaad71735a4ea1351
+        sha256: c5cb1adee48319bc43d0423c7ea0e574d5d19e37f21a81a8296e0671f17e8ec3
   - id: identifiers-are-unique-per-tenant
     evidence:
       - type: source
         path: src/users.ts
         ownership: shared
-        sha256: c4f2035ec55bb71da842596d82de44858825fe700b5c937de3cea1c27d2aa2b9
+        sha256: b758a18f9e50e4e6f8b36fcb409b81bb9d01d68722eb42c0b45097032f5ec2f6
       - type: test
         path: src/users.test.ts
         ownership: shared
-        sha256: a6ea698402c478343212860d2d14262245dc29efae2ce57eaad71735a4ea1351
+        sha256: c5cb1adee48319bc43d0423c7ea0e574d5d19e37f21a81a8296e0671f17e8ec3
   - id: disable-and-delete-revoke-sessions
     evidence:
       - type: source
         path: src/users.ts
         ownership: shared
-        sha256: c4f2035ec55bb71da842596d82de44858825fe700b5c937de3cea1c27d2aa2b9
+        sha256: b758a18f9e50e4e6f8b36fcb409b81bb9d01d68722eb42c0b45097032f5ec2f6
       - type: test
         path: src/users.test.ts
         ownership: shared
-        sha256: a6ea698402c478343212860d2d14262245dc29efae2ce57eaad71735a4ea1351
+        sha256: c5cb1adee48319bc43d0423c7ea0e574d5d19e37f21a81a8296e0671f17e8ec3
   - id: mutations-and-audit-commit-together
     evidence:
       - type: source
         path: src/users.ts
         ownership: shared
-        sha256: c4f2035ec55bb71da842596d82de44858825fe700b5c937de3cea1c27d2aa2b9
+        sha256: b758a18f9e50e4e6f8b36fcb409b81bb9d01d68722eb42c0b45097032f5ec2f6
       - type: test
         path: src/users.test.ts
         ownership: shared
-        sha256: a6ea698402c478343212860d2d14262245dc29efae2ce57eaad71735a4ea1351
+        sha256: c5cb1adee48319bc43d0423c7ea0e574d5d19e37f21a81a8296e0671f17e8ec3
   - id: returned-profile-is-minimized
     evidence:
       - type: source
         path: src/users.ts
         ownership: shared
-        sha256: c4f2035ec55bb71da842596d82de44858825fe700b5c937de3cea1c27d2aa2b9
+        sha256: b758a18f9e50e4e6f8b36fcb409b81bb9d01d68722eb42c0b45097032f5ec2f6
       - type: test
         path: src/users.test.ts
         ownership: shared
-        sha256: a6ea698402c478343212860d2d14262245dc29efae2ce57eaad71735a4ea1351
+        sha256: c5cb1adee48319bc43d0423c7ea0e574d5d19e37f21a81a8296e0671f17e8ec3

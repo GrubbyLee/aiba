@@ -20,8 +20,8 @@ importers:
 
   fixtures/identity-reference:
     dependencies:
-      '@aiba/spec':
-        specifier: workspace:*
+      aiba-spec:
+        specifier: workspace:^
         version: link:../../packages/spec
     devDependencies:
       '@types/node':
@@ -42,11 +42,11 @@ importers:
 
   packages/cli:
     dependencies:
-      '@aiba/core':
-        specifier: workspace:*
+      aiba-core:
+        specifier: workspace:^
         version: link:../core
-      '@aiba/registry-server':
-        specifier: workspace:*
+      aiba-registry-server:
+        specifier: workspace:^
         version: link:../registry-server
       commander:
         specifier: ^14.0.0
@@ -58,8 +58,8 @@ importers:
 
   packages/core:
     dependencies:
-      '@aiba/spec':
-        specifier: workspace:*
+      aiba-spec:
+        specifier: workspace:^
         version: link:../spec
       ajv:
         specifier: ^8.17.1
@@ -86,16 +86,16 @@ importers:
 
   packages/registry-server:
     dependencies:
-      '@aiba/core':
-        specifier: workspace:*
+      aiba-core:
+        specifier: workspace:^
         version: link:../core
     devDependencies:
-      '@aiba/spec':
-        specifier: workspace:*
-        version: link:../spec
       '@types/node':
         specifier: ^24.0.0
         version: 24.13.3
+      aiba-spec:
+        specifier: workspace:^
+        version: link:../spec
 
   packages/spec:
     devDependencies:

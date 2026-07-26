@@ -22,7 +22,7 @@ import {
   type OperationPlan,
   type ProjectLock,
   type ProjectManifest,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { AibaError } from "./errors.js";
 import { requireGovernance } from "./governance.js";
 import { sha256File, sha256Text } from "./hash.js";

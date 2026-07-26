@@ -7,7 +7,7 @@ import type {
   CapabilityReceipt,
   ProjectLock,
   ProjectManifest,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { AibaError, ProtocolValidationError } from "./errors.js";
 import { sha256File } from "./hash.js";
 import {

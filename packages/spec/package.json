@@ -1,8 +1,25 @@
 {
-  "name": "@aiba/spec",
+  "name": "aiba-spec",
   "version": "0.1.0",
-  "private": true,
+  "description": "Language-neutral protocol schemas and TypeScript bindings for AIBA",
   "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GrubbyLee/ai-base.git",
+    "directory": "packages/spec"
+  },
+  "homepage": "https://github.com/GrubbyLee/ai-base#readme",
+  "bugs": "https://github.com/GrubbyLee/ai-base/issues",
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "keywords": ["aiba", "ai-agent", "json-schema", "capability", "provenance"],
+  "sideEffects": false,
   "files": [
     "dist",
     "schema"
@@ -17,6 +34,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "node ../../scripts/release/reject-direct-publish.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },

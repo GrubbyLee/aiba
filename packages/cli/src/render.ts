@@ -1,4 +1,4 @@
-import type { ProjectDiffReport, ProjectInspection, VerificationReport } from "@aiba/core";
+import type { ProjectDiffReport, ProjectInspection, VerificationReport } from "aiba-core";
 
 export function renderInspection(report: ProjectInspection): string {
   const lines = [

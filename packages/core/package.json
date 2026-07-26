@@ -1,8 +1,25 @@
 {
-  "name": "@aiba/core",
+  "name": "aiba-core",
   "version": "0.1.0",
-  "private": true,
+  "description": "Deterministic capability verification, provenance, and upgrade engine for AIBA",
   "type": "module",
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GrubbyLee/ai-base.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/GrubbyLee/ai-base#readme",
+  "bugs": "https://github.com/GrubbyLee/ai-base/issues",
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "keywords": ["aiba", "ai-agent", "verification", "provenance", "security"],
+  "sideEffects": false,
   "files": ["dist"],
   "exports": {
     ".": {
@@ -13,11 +30,12 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "node ../../scripts/release/reject-direct-publish.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
-    "@aiba/spec": "workspace:*",
+    "aiba-spec": "workspace:^",
     "ajv": "^8.17.1",
     "canonicalize": "2.1.0",
     "minimatch": "^10.2.5",

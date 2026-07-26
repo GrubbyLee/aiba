@@ -13,7 +13,7 @@
   "files": [
     {
       "path": "src/notification.test.ts",
-      "installedSha256": "f58782a6a4dbd53f9418d97882fc4e571b9126ca49f78247c44ce37625eefe5a",
+      "installedSha256": "d878d126a41d180aee6e2a9b83eff767dd3a6d40601b01b76f67b07a441c9465",
       "ownership": "shared",
       "evidenceTypes": [
         "test"
@@ -37,7 +37,7 @@
     },
     {
       "path": "src/notification.ts",
-      "installedSha256": "f03c8ecc9ab85baf7c91bb0aa7d11929c3ae542e37c20e9e0b0ace403a3edb24",
+      "installedSha256": "52b4939f6f58e8cbfdcdddcb61e8cbd221b17ec62c131c5baa728d27be796b2f",
       "ownership": "shared",
       "evidenceTypes": [
         "source"

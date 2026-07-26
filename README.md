@@ -80,6 +80,28 @@ aiba approve identity --approver release-manager --key-id root-1 \
 aiba policy-check identity --agent codex
 ```
 
+## Install
+
+After the first npm release:
+
+```bash
+npm install --global aiba
+aiba init
+aiba add identity
+aiba inspect
+```
+
+The npm distribution includes the official capability packs. Library consumers
+can install `aiba-core`, `aiba-spec`, or `aiba-registry-server` independently.
+
+## License
+
+The CLI, Core, Registry Server, capability contracts, recipes, and migrations
+are AGPL-3.0-only. The protocol package is Apache-2.0. Some application output
+may use the additional permission in
+[GENERATED_OUTPUT_EXCEPTION.md](GENERATED_OUTPUT_EXCEPTION.md); this exception
+does not relicense AIBA itself or third-party material.
+
 The concise product workflow remains:
 
 ```bash
@@ -122,4 +144,6 @@ current evidence-file hashes. Final receipts retain policy and approval hashes
 for later verification.
 
 See [docs/ROADMAP.md](docs/ROADMAP.md) and [docs/TASKS.md](docs/TASKS.md) for
-the current implementation status.
+the current implementation status. Compatibility and release details live in
+[docs/VERSIONING.md](docs/VERSIONING.md) and
+[docs/RELEASING.md](docs/RELEASING.md).

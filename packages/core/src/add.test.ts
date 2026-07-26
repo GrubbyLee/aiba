@@ -10,7 +10,7 @@ import type {
   OperationPlan,
   ProjectLock,
   ProjectManifest,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { finalizeCapability, prepareCapability, writeCapabilityState } from "./add.js";
 import { generatePublisherKeyPair } from "./bundle.js";
 import { diffProject } from "./diff.js";

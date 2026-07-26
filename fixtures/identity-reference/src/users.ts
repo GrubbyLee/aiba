@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import type { AuditEvent, AuthorizationDecision, Principal } from "@aiba/spec";
+import type { AuditEvent, AuthorizationDecision, Principal } from "aiba-spec";
 
 export type UserStatus = "pending" | "active" | "disabled" | "deleted";
 

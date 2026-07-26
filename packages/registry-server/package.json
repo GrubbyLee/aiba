@@ -1,8 +1,25 @@
 {
-  "name": "@aiba/registry-server",
+  "name": "aiba-registry-server",
   "version": "0.1.0",
-  "private": true,
+  "description": "Authenticated read-only reference registry server for AIBA",
   "type": "module",
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GrubbyLee/ai-base.git",
+    "directory": "packages/registry-server"
+  },
+  "homepage": "https://github.com/GrubbyLee/ai-base#readme",
+  "bugs": "https://github.com/GrubbyLee/ai-base/issues",
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "keywords": ["aiba", "ai-agent", "registry", "capability", "security"],
+  "sideEffects": false,
   "files": ["dist"],
   "exports": {
     ".": {
@@ -13,14 +30,15 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "node ../../scripts/release/reject-direct-publish.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
-    "@aiba/core": "workspace:*"
+    "aiba-core": "workspace:^"
   },
   "devDependencies": {
-    "@aiba/spec": "workspace:*",
+    "aiba-spec": "workspace:^",
     "@types/node": "^24.0.0"
   }
 }

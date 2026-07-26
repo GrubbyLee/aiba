@@ -11,85 +11,85 @@ installation:
   plan: .aiba/plans/identity.yaml
   planSha256: 5cf7a1e125afec720e668620ae6654cf49ca29ec32a2945f1272a52f6f2f40eb
   ancestry: .aiba/ancestry/identity.json
-  ancestrySha256: d6b4cb0cde52c13f6b540458b3bd009231cdbe381e9e0f20abf25d38dde6fa5c
+  ancestrySha256: 752ebe00fc97f91c99a950e6f03ef381983490e6728b10968afde9151fc77d4b
 invariants:
   - id: credentials-are-one-way
     evidence:
       - type: source
         path: src/identity.ts
         ownership: shared
-        sha256: 6caa2d100e23c1c99ece132d11f1d9d2133e1a3fa2026e103f0382c4971ac5cf
+        sha256: 7f1d406495f01d3e72ff49d5700e9f56688fef8bd8cbc04205d959780155ffa3
       - type: test
         path: src/identity.test.ts
         ownership: shared
-        sha256: 5769ae4d2ccb614f7bf98a4a1ffa64e63caa43ca77bae533568f7c5532ab4059
+        sha256: 98e93afa64afb2e089415ed99e433f37e29c4d3c4301d12f7f0e6d561a55fe70
   - id: principal-is-server-derived
     evidence:
       - type: source
         path: src/identity.ts
         ownership: shared
-        sha256: 6caa2d100e23c1c99ece132d11f1d9d2133e1a3fa2026e103f0382c4971ac5cf
+        sha256: 7f1d406495f01d3e72ff49d5700e9f56688fef8bd8cbc04205d959780155ffa3
       - type: test
         path: src/identity.test.ts
         ownership: shared
-        sha256: 5769ae4d2ccb614f7bf98a4a1ffa64e63caa43ca77bae533568f7c5532ab4059
+        sha256: 98e93afa64afb2e089415ed99e433f37e29c4d3c4301d12f7f0e6d561a55fe70
   - id: failures-do-not-enumerate-accounts
     evidence:
       - type: source
         path: src/identity.ts
         ownership: shared
-        sha256: 6caa2d100e23c1c99ece132d11f1d9d2133e1a3fa2026e103f0382c4971ac5cf
+        sha256: 7f1d406495f01d3e72ff49d5700e9f56688fef8bd8cbc04205d959780155ffa3
       - type: test
         path: src/identity.test.ts
         ownership: shared
-        sha256: 5769ae4d2ccb614f7bf98a4a1ffa64e63caa43ca77bae533568f7c5532ab4059
+        sha256: 98e93afa64afb2e089415ed99e433f37e29c4d3c4301d12f7f0e6d561a55fe70
   - id: sessions-are-opaque-and-expiring
     evidence:
       - type: source
         path: src/identity.ts
         ownership: shared
-        sha256: 6caa2d100e23c1c99ece132d11f1d9d2133e1a3fa2026e103f0382c4971ac5cf
+        sha256: 7f1d406495f01d3e72ff49d5700e9f56688fef8bd8cbc04205d959780155ffa3
       - type: test
         path: src/identity.test.ts
         ownership: shared
-        sha256: 5769ae4d2ccb614f7bf98a4a1ffa64e63caa43ca77bae533568f7c5532ab4059
+        sha256: 98e93afa64afb2e089415ed99e433f37e29c4d3c4301d12f7f0e6d561a55fe70
   - id: sessions-are-revocable
     evidence:
       - type: source
         path: src/identity.ts
         ownership: shared
-        sha256: 6caa2d100e23c1c99ece132d11f1d9d2133e1a3fa2026e103f0382c4971ac5cf
+        sha256: 7f1d406495f01d3e72ff49d5700e9f56688fef8bd8cbc04205d959780155ffa3
       - type: test
         path: src/identity.test.ts
         ownership: shared
-        sha256: 5769ae4d2ccb614f7bf98a4a1ffa64e63caa43ca77bae533568f7c5532ab4059
+        sha256: 98e93afa64afb2e089415ed99e433f37e29c4d3c4301d12f7f0e6d561a55fe70
   - id: attempts-use-trusted-rate-limits
     evidence:
       - type: source
         path: src/identity.ts
         ownership: shared
-        sha256: 6caa2d100e23c1c99ece132d11f1d9d2133e1a3fa2026e103f0382c4971ac5cf
+        sha256: 7f1d406495f01d3e72ff49d5700e9f56688fef8bd8cbc04205d959780155ffa3
       - type: test
         path: src/identity.test.ts
         ownership: shared
-        sha256: 5769ae4d2ccb614f7bf98a4a1ffa64e63caa43ca77bae533568f7c5532ab4059
+        sha256: 98e93afa64afb2e089415ed99e433f37e29c4d3c4301d12f7f0e6d561a55fe70
   - id: authentication-is-audited
     evidence:
       - type: source
         path: src/identity.ts
         ownership: shared
-        sha256: 6caa2d100e23c1c99ece132d11f1d9d2133e1a3fa2026e103f0382c4971ac5cf
+        sha256: 7f1d406495f01d3e72ff49d5700e9f56688fef8bd8cbc04205d959780155ffa3
       - type: test
         path: src/identity.test.ts
         ownership: shared
-        sha256: 5769ae4d2ccb614f7bf98a4a1ffa64e63caa43ca77bae533568f7c5532ab4059
+        sha256: 98e93afa64afb2e089415ed99e433f37e29c4d3c4301d12f7f0e6d561a55fe70
   - id: audit-excludes-reusable-secrets
     evidence:
       - type: source
         path: src/identity.ts
         ownership: shared
-        sha256: 6caa2d100e23c1c99ece132d11f1d9d2133e1a3fa2026e103f0382c4971ac5cf
+        sha256: 7f1d406495f01d3e72ff49d5700e9f56688fef8bd8cbc04205d959780155ffa3
       - type: test
         path: src/identity.test.ts
         ownership: shared
-        sha256: 5769ae4d2ccb614f7bf98a4a1ffa64e63caa43ca77bae533568f7c5532ab4059
+        sha256: 98e93afa64afb2e089415ed99e433f37e29c4d3c4301d12f7f0e6d561a55fe70

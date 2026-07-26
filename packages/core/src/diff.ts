@@ -5,7 +5,7 @@ import type {
   CapabilityReceipt,
   EvidenceType,
   SemanticOwnership,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { AibaError } from "./errors.js";
 import { sha256File } from "./hash.js";
 import {

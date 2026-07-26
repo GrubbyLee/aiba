@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { AuditEvent, AuthorizationDecision, Principal } from "@aiba/spec";
+import type { AuditEvent, AuthorizationDecision, Principal } from "aiba-spec";
 import {
   createUsersService,
   type UserDirectory,

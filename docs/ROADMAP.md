@@ -58,3 +58,14 @@ Goal: upgrade a deeply customized capability from v1 to v2 safely.
 - [x] Validate the full registry before accepting traffic.
 - [x] Exercise publish, serve, fetch, rollback, and attack paths end to end.
 - [x] Document self-hosting and first-release operation.
+
+## M6: Installable Distribution
+
+- [x] Define the four-package npm topology and lockstep SemVer policy.
+- [x] Package official capabilities with the installed CLI.
+- [x] Define protocol compatibility and deprecation policy.
+- [x] Add the generated-output exception and Apache-2.0 protocol boundary.
+- [x] Build deterministic tarballs and a clean external-consumer trial.
+- [x] Add a protected tag-driven npm provenance and GitHub Release workflow.
+- [ ] Publish and install the first private beta after explicit release approval.
+- [ ] Complete qualified legal review before broad public launch.

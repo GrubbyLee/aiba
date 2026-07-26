@@ -5,7 +5,7 @@ import {
   AIBA_API_VERSION,
   type ProjectLock,
   type ProjectManifest,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { AibaError } from "./errors.js";
 import { inspectProject } from "./inspect.js";
 

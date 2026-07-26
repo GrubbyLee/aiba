@@ -12,8 +12,11 @@
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "smoke": "node scripts/smoke.mjs",
+    "release:check": "node scripts/release/check-version.mjs",
+    "pack:artifacts": "node scripts/release/pack.mjs --out artifacts",
+    "pack:check": "pnpm build && node scripts/release/verify-packages.mjs",
     "fixture:core-state": "node scripts/generate-core-fixture-state.mjs",
-    "check": "pnpm typecheck && pnpm test && pnpm build && pnpm smoke",
+    "check": "pnpm typecheck && pnpm test && pnpm build && pnpm smoke && pnpm release:check && node scripts/release/verify-packages.mjs",
     "aiba": "node packages/cli/dist/index.js"
   },
   "devDependencies": {

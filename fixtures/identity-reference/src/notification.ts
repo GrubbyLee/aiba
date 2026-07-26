@@ -5,7 +5,7 @@ import type {
   NotificationCommand,
   NotificationReceipt,
   Principal,
-} from "@aiba/spec";
+} from "aiba-spec";
 import type { AuditContext } from "./audit.js";
 
 export interface NotificationTemplate {

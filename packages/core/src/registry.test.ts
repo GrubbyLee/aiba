@@ -17,7 +17,7 @@ import type {
   CapabilityRegistryState,
   CapabilityRegistryTrustPolicy,
   PublisherTrustPolicy,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { createCapabilityBundle, generatePublisherKeyPair } from "./bundle.js";
 import { createRegistryIndex, resolveRegistryCapability } from "./registry.js";
 

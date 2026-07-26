@@ -5,7 +5,7 @@ import {
   scrypt,
   timingSafeEqual,
 } from "node:crypto";
-import type { AuditEvent, Principal } from "@aiba/spec";
+import type { AuditEvent, Principal } from "aiba-spec";
 
 const KEY_BYTES = 32;
 const SCRYPT_OPTIONS = {

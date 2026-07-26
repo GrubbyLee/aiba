@@ -4,7 +4,7 @@ import type {
   AuditEvent,
   NotificationReceipt,
   Principal,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { createAuditService, type AuditStore } from "./audit.js";
 import { createAuthorizationService, type PolicySnapshot } from "./authorization.js";
 import {

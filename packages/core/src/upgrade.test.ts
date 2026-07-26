@@ -19,7 +19,7 @@ import type {
   ProjectManifest,
   SemanticOwnership,
   UpgradePlan,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { finalizeCapability, prepareCapability } from "./add.js";
 import { generatePublisherKeyPair } from "./bundle.js";
 import {

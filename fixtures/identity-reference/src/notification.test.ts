@@ -5,7 +5,7 @@ import type {
   NotificationCommand,
   NotificationReceipt,
   Principal,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { createAuditService, type AuditStore } from "./audit.js";
 import {
   createNotificationService,

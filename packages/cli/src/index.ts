@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
 import process from "node:process";
+import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { Command } from "commander";
 import {
   finalizeCapability,
@@ -22,16 +24,36 @@ import {
   resolveRegistryCapability,
   verifyCapabilityBundle,
   verifyProject,
-} from "@aiba/core";
-import { createRegistryServer } from "@aiba/registry-server";
+} from "aiba-core";
+import { createRegistryServer } from "aiba-registry-server";
 import { renderDiff, renderInspection, renderVerification } from "./render.js";
 
 const program = new Command();
+const installedPacksDirectory = fileURLToPath(new URL("../capabilities", import.meta.url));
+
+function packageVersion(): string {
+  const value = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")) as unknown;
+  if (
+    typeof value !== "object"
+    || value === null
+    || !("version" in value)
+    || typeof value.version !== "string"
+  ) {
+    throw new Error("AIBA package metadata has no valid version");
+  }
+  return value.version;
+}
+
+function defaultPacksDirectory(): string {
+  return existsSync(installedPacksDirectory)
+    ? installedPacksDirectory
+    : resolve("capabilities");
+}
 
 program
   .name("aiba")
   .description("Install, verify, trace, and upgrade application capabilities")
-  .version("0.1.0");
+  .version(packageVersion());
 
 program
   .command("policy-init")
@@ -473,7 +495,7 @@ program
   .requiredOption("--key-id <id>", "publisher key identifier")
   .requiredOption("--private-key <path>", "Ed25519 PKCS#8 private key")
   .requiredOption("--out <path>", "new bundle output directory")
-  .option("--packs-dir <path>", "capability pack directory", "capabilities")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
   .option("--json", "print machine-readable JSON")
   .action(async (
     capability: string,
@@ -572,7 +594,7 @@ program
   .description("Prepare or finalize a capability installation")
   .argument("<capability>", "capability to install")
   .option("--root <path>", "project root", ".")
-  .option("--packs-dir <path>", "capability pack directory", "capabilities")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
   .option("--recipe <id>", "select a capability recipe")
   .option("--agent <name>", "record the installing Agent")
   .option("--prepare", "prepare an operation plan (default)")
@@ -640,7 +662,7 @@ program
   .description("Prepare or finalize a customization-aware capability upgrade")
   .argument("<capability>", "capability to upgrade")
   .option("--root <path>", "project root", ".")
-  .option("--packs-dir <path>", "target capability pack directory", "capabilities")
+  .option("--packs-dir <path>", "target capability pack directory", defaultPacksDirectory())
   .option("--recipe <id>", "select a target capability recipe")
   .option("--agent <name>", "record the upgrading Agent")
   .option("--prepare", "prepare an upgrade plan (default)")
@@ -711,7 +733,7 @@ program
   .description("Classify capability customization and source drift")
   .argument("[capability]", "inspect only one capability")
   .option("--root <path>", "project root", ".")
-  .option("--packs-dir <path>", "capability pack directory", "capabilities")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
   .option("--json", "print machine-readable JSON")
   .action(async (
     capability: string | undefined,
@@ -731,7 +753,7 @@ program
   .description("Verify declared capabilities and provenance evidence")
   .argument("[capability]", "verify only one capability")
   .option("--root <path>", "project root", ".")
-  .option("--packs-dir <path>", "capability pack directory", "capabilities")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
   .option("--json", "print machine-readable JSON")
   .action(async (
     capability: string | undefined,

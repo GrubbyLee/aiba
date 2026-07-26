@@ -3,7 +3,7 @@ import type {
   AuthorizationDecision,
   AuthorizationResource,
   Principal,
-} from "@aiba/spec";
+} from "aiba-spec";
 import type { AuditContext } from "./audit.js";
 
 const ACTION = /^[a-z][a-z0-9-]*(?::[a-z][a-z0-9-]*)+$/;

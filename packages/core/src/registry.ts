@@ -16,7 +16,7 @@ import {
   type CapabilityRegistryIndex,
   type CapabilityRegistryIndexSignature,
   type CapabilityRegistryState,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { rcompare, valid } from "semver";
 import { verifyCapabilityBundle } from "./bundle.js";
 import { AibaError } from "./errors.js";

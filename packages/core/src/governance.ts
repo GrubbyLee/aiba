@@ -18,7 +18,7 @@ import {
   type OperationPlan,
   type TeamGovernancePolicy,
   type UpgradePlan,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { satisfies, validRange } from "semver";
 import { AibaError } from "./errors.js";
 import { sha256File } from "./hash.js";

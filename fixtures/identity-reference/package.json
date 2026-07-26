@@ -9,7 +9,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@aiba/spec": "workspace:*"
+    "aiba-spec": "workspace:^"
   },
   "devDependencies": {
     "@types/node": "^24.0.0"

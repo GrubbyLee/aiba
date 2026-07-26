@@ -1,13 +1,16 @@
 # Licensing Strategy
 
-The intended model is AGPLv3 plus a commercial license for AIBA Core and the
-hosted control plane. The public protocol should use Apache-2.0.
+The AIBA CLI, Core, Registry Server, capability contracts, recipes, and
+migrations are licensed under AGPL-3.0-only. Their copyright holders may also
+offer a separate commercial license. The `aiba-spec` protocol package is
+Apache-2.0 so independent implementations can interoperate.
 
 Generated application code must not force user applications to adopt AGPL.
-Before the first public release, AIBA needs an explicit generated-output license
-or exception covering copied recipes and generated source.
+`GENERATED_OUTPUT_EXCEPTION.md` is an additional AGPL section 7 permission for
+application output identified in AIBA operation plans or ancestry records. It
+does not relicense AIBA, third-party material, prompts, or user-owned code.
 
 External contributions that may be included in a commercial dual-license build
-will require a contributor agreement. The exact license texts and contributor
-process are a pre-release legal task; this document records product intent and
-is not legal advice.
+will require a contributor agreement before acceptance. Qualified counsel must
+review the generated-output exception and contributor agreement before broad
+public launch. This document records product intent and is not legal advice.

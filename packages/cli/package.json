@@ -1,20 +1,37 @@
 {
-  "name": "@aiba/cli",
+  "name": "aiba",
   "version": "0.1.0",
-  "private": true,
+  "description": "Agent-native CLI for verifiable, traceable, and upgradeable application capabilities",
   "type": "module",
-  "files": ["dist"],
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GrubbyLee/ai-base.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://github.com/GrubbyLee/ai-base#readme",
+  "bugs": "https://github.com/GrubbyLee/ai-base/issues",
+  "engines": {
+    "node": ">=22"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "keywords": ["aiba", "ai-agent", "cli", "capability", "miniprogram"],
+  "files": ["dist", "capabilities", "GENERATED_OUTPUT_EXCEPTION.md"],
   "bin": {
     "aiba": "dist/index.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepublishOnly": "node ../../scripts/release/reject-direct-publish.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
-    "@aiba/core": "workspace:*",
-    "@aiba/registry-server": "workspace:*",
+    "aiba-core": "workspace:^",
+    "aiba-registry-server": "workspace:^",
     "commander": "^14.0.0"
   },
   "devDependencies": {

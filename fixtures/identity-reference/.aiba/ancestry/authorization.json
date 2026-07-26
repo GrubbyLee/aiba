@@ -13,7 +13,7 @@
   "files": [
     {
       "path": "src/authorization.test.ts",
-      "installedSha256": "76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc",
+      "installedSha256": "8b2fd21d6079e269e3443881348e4d01dc542f4c5305c241df7bd1d69710b43a",
       "ownership": "shared",
       "evidenceTypes": [
         "test"
@@ -37,7 +37,7 @@
     },
     {
       "path": "src/authorization.ts",
-      "installedSha256": "fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8",
+      "installedSha256": "4d39ef042e4d567999ebf4ed3eb6a453aa81c39b2f37f6cf0055a996f70c1975",
       "ownership": "shared",
       "evidenceTypes": [
         "source"

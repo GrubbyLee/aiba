@@ -17,7 +17,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import type {
   CapabilityRegistryTrustPolicy,
   PublisherTrustPolicy,
-} from "@aiba/spec";
+} from "aiba-spec";
 import { createCapabilityBundle, generatePublisherKeyPair } from "./bundle.js";
 import { createRegistryIndex } from "./registry.js";
 import { fetchRegistryCapability } from "./transport.js";

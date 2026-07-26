@@ -171,6 +171,31 @@ mutation API, persist no token, and pass the full Node 22/24 CI matrix.
 
 Exit criteria met on 2026-07-26.
 
+## Milestone: M6 Release Readiness
+
+- [x] Select unscoped npm names that do not require an unowned organization.
+- [x] Make all public package exports resolve only to shipped files.
+- [x] Include official capability packs in the installed `aiba` CLI.
+- [x] Define lockstep package SemVer and independent protocol versioning.
+- [x] License `aiba-spec` under Apache-2.0 for interoperability.
+- [x] Add an explicit generated-output exception for application projects.
+- [x] Build allowlisted release tarballs with ordinary SemVer dependencies.
+- [x] Reject sources, tests, source maps, secrets, and workspace ranges in packs.
+- [x] Install and exercise all tarballs in a clean external npm project.
+- [x] Add resumable integrity-checked publishing with npm provenance.
+- [x] Add annotated-tag release notes and protected GitHub environment guidance.
+- [ ] Publish npm v0.1.0 and create its GitHub Release after explicit approval.
+- [ ] Run an invited human beta in a real Mini Program project.
+- [ ] Obtain qualified review of the exception and contributor agreement.
+
+## M6 Exit Criteria
+
+M6 release engineering is complete when a clean checkout produces four minimal
+tarballs, installs them without workspace links, imports every public package,
+uses the installed CLI and bundled capabilities, and reproduces the process in
+CI. The first publication additionally requires explicit version, tag-push, and
+GitHub Release approval plus npm publisher authentication.
+
 ## Known Risks
 
 - Evidence hashes prove file identity, while capability-specific black-box tests
@@ -180,3 +205,6 @@ Exit criteria met on 2026-07-26.
 - Cache garbage collection and offline retention policy remain future work;
   authenticated fetch, verified atomic caching, and anti-rollback state are
   complete.
+- The npm names are available but not reserved until first publication.
+- The generated-output exception and future contributor agreement require
+  qualified legal review before broad public launch.

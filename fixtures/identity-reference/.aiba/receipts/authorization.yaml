@@ -11,85 +11,85 @@ installation:
   plan: .aiba/plans/authorization.yaml
   planSha256: 57eeee1da8d429d9eeb8f6574192299f8b625fa3aa06f18be407d8178d1a77cd
   ancestry: .aiba/ancestry/authorization.json
-  ancestrySha256: 87e9d4cc7c2561a6bcdaf41b828817285b72f9fc03ff2ab623cc8c3b55abb86a
+  ancestrySha256: f85bc76d676da4b88bad9d80c633db8e3ef89b5b27fb28a020045680f2364094
 invariants:
   - id: principal-comes-from-trusted-context
     evidence:
       - type: source
         path: src/authorization.ts
         ownership: shared
-        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+        sha256: 4d39ef042e4d567999ebf4ed3eb6a453aa81c39b2f37f6cf0055a996f70c1975
       - type: test
         path: src/authorization.test.ts
         ownership: shared
-        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+        sha256: 8b2fd21d6079e269e3443881348e4d01dc542f4c5305c241df7bd1d69710b43a
   - id: decisions-default-to-deny
     evidence:
       - type: source
         path: src/authorization.ts
         ownership: shared
-        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+        sha256: 4d39ef042e4d567999ebf4ed3eb6a453aa81c39b2f37f6cf0055a996f70c1975
       - type: test
         path: src/authorization.test.ts
         ownership: shared
-        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+        sha256: 8b2fd21d6079e269e3443881348e4d01dc542f4c5305c241df7bd1d69710b43a
   - id: action-and-resource-are-explicit
     evidence:
       - type: source
         path: src/authorization.ts
         ownership: shared
-        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+        sha256: 4d39ef042e4d567999ebf4ed3eb6a453aa81c39b2f37f6cf0055a996f70c1975
       - type: test
         path: src/authorization.test.ts
         ownership: shared
-        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+        sha256: 8b2fd21d6079e269e3443881348e4d01dc542f4c5305c241df7bd1d69710b43a
   - id: deny-takes-precedence
     evidence:
       - type: source
         path: src/authorization.ts
         ownership: shared
-        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+        sha256: 4d39ef042e4d567999ebf4ed3eb6a453aa81c39b2f37f6cf0055a996f70c1975
       - type: test
         path: src/authorization.test.ts
         ownership: shared
-        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+        sha256: 8b2fd21d6079e269e3443881348e4d01dc542f4c5305c241df7bd1d69710b43a
   - id: tenant-boundaries-are-enforced
     evidence:
       - type: source
         path: src/authorization.ts
         ownership: shared
-        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+        sha256: 4d39ef042e4d567999ebf4ed3eb6a453aa81c39b2f37f6cf0055a996f70c1975
       - type: test
         path: src/authorization.test.ts
         ownership: shared
-        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+        sha256: 8b2fd21d6079e269e3443881348e4d01dc542f4c5305c241df7bd1d69710b43a
   - id: policy-is-server-authoritative
     evidence:
       - type: source
         path: src/authorization.ts
         ownership: shared
-        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+        sha256: 4d39ef042e4d567999ebf4ed3eb6a453aa81c39b2f37f6cf0055a996f70c1975
       - type: test
         path: src/authorization.test.ts
         ownership: shared
-        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+        sha256: 8b2fd21d6079e269e3443881348e4d01dc542f4c5305c241df7bd1d69710b43a
   - id: decisions-are-attributable
     evidence:
       - type: source
         path: src/authorization.ts
         ownership: shared
-        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+        sha256: 4d39ef042e4d567999ebf4ed3eb6a453aa81c39b2f37f6cf0055a996f70c1975
       - type: test
         path: src/authorization.test.ts
         ownership: shared
-        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+        sha256: 8b2fd21d6079e269e3443881348e4d01dc542f4c5305c241df7bd1d69710b43a
   - id: decisions-are-audited
     evidence:
       - type: source
         path: src/authorization.ts
         ownership: shared
-        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+        sha256: 4d39ef042e4d567999ebf4ed3eb6a453aa81c39b2f37f6cf0055a996f70c1975
       - type: test
         path: src/authorization.test.ts
         ownership: shared
-        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+        sha256: 8b2fd21d6079e269e3443881348e4d01dc542f4c5305c241df7bd1d69710b43a

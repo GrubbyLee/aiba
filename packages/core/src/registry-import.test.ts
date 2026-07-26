@@ -10,7 +10,7 @@ import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
-import type { PublisherTrustPolicy } from "@aiba/spec";
+import type { PublisherTrustPolicy } from "aiba-spec";
 import { createCapabilityBundle, generatePublisherKeyPair } from "./bundle.js";
 import { importRegistryBundle } from "./registry.js";
 

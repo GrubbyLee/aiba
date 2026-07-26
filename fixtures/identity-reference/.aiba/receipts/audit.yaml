@@ -11,75 +11,75 @@ installation:
   plan: .aiba/plans/audit.yaml
   planSha256: 7795292dc4bca70d557b1a79a631297fd9c75eb76884d16ad232e37888893c3e
   ancestry: .aiba/ancestry/audit.json
-  ancestrySha256: d5c81d09a7a722d024e8c0fb10eb3168e068f5fd48248f0bd39bec191a2eff08
+  ancestrySha256: 2c6989015adb995b4ed7fa66ccc3457cea3c2b7917c4479cd0a2218eb91e747c
 invariants:
   - id: actor-is-trusted-and-attributable
     evidence:
       - type: source
         path: src/audit.ts
         ownership: shared
-        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+        sha256: 2f0f2c4a50b7742a259a5e0447809e392a18deb375469c3d43496a8e7648ea7f
       - type: test
         path: src/audit.test.ts
         ownership: shared
-        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+        sha256: adfeabbe8b8905a1b16086a46c27ec5dc98ca2389ec67e1305353df9f9f1f31d
   - id: event-identity-and-time-are-server-derived
     evidence:
       - type: source
         path: src/audit.ts
         ownership: shared
-        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+        sha256: 2f0f2c4a50b7742a259a5e0447809e392a18deb375469c3d43496a8e7648ea7f
       - type: test
         path: src/audit.test.ts
         ownership: shared
-        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+        sha256: adfeabbe8b8905a1b16086a46c27ec5dc98ca2389ec67e1305353df9f9f1f31d
   - id: events-are-append-only
     evidence:
       - type: source
         path: src/audit.ts
         ownership: shared
-        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+        sha256: 2f0f2c4a50b7742a259a5e0447809e392a18deb375469c3d43496a8e7648ea7f
       - type: test
         path: src/audit.test.ts
         ownership: shared
-        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+        sha256: adfeabbe8b8905a1b16086a46c27ec5dc98ca2389ec67e1305353df9f9f1f31d
   - id: outcomes-are-explicit
     evidence:
       - type: source
         path: src/audit.ts
         ownership: shared
-        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+        sha256: 2f0f2c4a50b7742a259a5e0447809e392a18deb375469c3d43496a8e7648ea7f
       - type: test
         path: src/audit.test.ts
         ownership: shared
-        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+        sha256: adfeabbe8b8905a1b16086a46c27ec5dc98ca2389ec67e1305353df9f9f1f31d
   - id: events-are-correlated
     evidence:
       - type: source
         path: src/audit.ts
         ownership: shared
-        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+        sha256: 2f0f2c4a50b7742a259a5e0447809e392a18deb375469c3d43496a8e7648ea7f
       - type: test
         path: src/audit.test.ts
         ownership: shared
-        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+        sha256: adfeabbe8b8905a1b16086a46c27ec5dc98ca2389ec67e1305353df9f9f1f31d
   - id: reusable-secrets-are-rejected
     evidence:
       - type: source
         path: src/audit.ts
         ownership: shared
-        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+        sha256: 2f0f2c4a50b7742a259a5e0447809e392a18deb375469c3d43496a8e7648ea7f
       - type: test
         path: src/audit.test.ts
         ownership: shared
-        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+        sha256: adfeabbe8b8905a1b16086a46c27ec5dc98ca2389ec67e1305353df9f9f1f31d
   - id: delivery-failure-is-visible
     evidence:
       - type: source
         path: src/audit.ts
         ownership: shared
-        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+        sha256: 2f0f2c4a50b7742a259a5e0447809e392a18deb375469c3d43496a8e7648ea7f
       - type: test
         path: src/audit.test.ts
         ownership: shared
-        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+        sha256: adfeabbe8b8905a1b16086a46c27ec5dc98ca2389ec67e1305353df9f9f1f31d

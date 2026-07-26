@@ -19,13 +19,13 @@ import { afterEach, describe, expect, it } from "vitest";
 import type {
   CapabilityRegistryTrustPolicy,
   PublisherTrustPolicy,
-} from "@aiba/spec";
+} from "aiba-spec";
 import {
   createCapabilityBundle,
   createRegistryIndex,
   fetchRegistryCapability,
   generatePublisherKeyPair,
-} from "@aiba/core";
+} from "aiba-core";
 import { createRegistryServer, type RegistryServerOptions } from "./index.js";
 
 const workspace = dirname(dirname(dirname(dirname(fileURLToPath(import.meta.url)))));

@@ -15,7 +15,7 @@ import {
   verifyCapabilityBundle,
   verifyCapabilityBundleEnvelope,
   verifyRegistryIndexSnapshot,
-} from "@aiba/core";
+} from "aiba-core";
 
 const MAX_TOKEN_SIZE = 8 * 1024;
 const MAX_TLS_FILE_SIZE = 1024 * 1024;
