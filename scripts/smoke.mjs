@@ -170,6 +170,20 @@ run("verify native WeChat fixture", [
   "--packs-dir",
   "capabilities",
 ], 0);
+run("verify core capabilities fixture", [
+  "verify",
+  "--root",
+  "fixtures/identity-reference",
+  "--packs-dir",
+  "capabilities",
+], 0);
+run("diff core capabilities fixture", [
+  "diff",
+  "--root",
+  "fixtures/identity-reference",
+  "--packs-dir",
+  "capabilities",
+], 0);
 run("reject broken fixture", [
   "verify",
   "review-access",

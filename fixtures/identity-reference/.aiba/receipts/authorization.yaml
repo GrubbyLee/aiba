@@ -1,0 +1,95 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: authorization
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:06:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/authorization.yaml
+  planSha256: 57eeee1da8d429d9eeb8f6574192299f8b625fa3aa06f18be407d8178d1a77cd
+  ancestry: .aiba/ancestry/authorization.json
+  ancestrySha256: 87e9d4cc7c2561a6bcdaf41b828817285b72f9fc03ff2ab623cc8c3b55abb86a
+invariants:
+  - id: principal-comes-from-trusted-context
+    evidence:
+      - type: source
+        path: src/authorization.ts
+        ownership: shared
+        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+      - type: test
+        path: src/authorization.test.ts
+        ownership: shared
+        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+  - id: decisions-default-to-deny
+    evidence:
+      - type: source
+        path: src/authorization.ts
+        ownership: shared
+        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+      - type: test
+        path: src/authorization.test.ts
+        ownership: shared
+        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+  - id: action-and-resource-are-explicit
+    evidence:
+      - type: source
+        path: src/authorization.ts
+        ownership: shared
+        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+      - type: test
+        path: src/authorization.test.ts
+        ownership: shared
+        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+  - id: deny-takes-precedence
+    evidence:
+      - type: source
+        path: src/authorization.ts
+        ownership: shared
+        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+      - type: test
+        path: src/authorization.test.ts
+        ownership: shared
+        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+  - id: tenant-boundaries-are-enforced
+    evidence:
+      - type: source
+        path: src/authorization.ts
+        ownership: shared
+        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+      - type: test
+        path: src/authorization.test.ts
+        ownership: shared
+        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+  - id: policy-is-server-authoritative
+    evidence:
+      - type: source
+        path: src/authorization.ts
+        ownership: shared
+        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+      - type: test
+        path: src/authorization.test.ts
+        ownership: shared
+        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+  - id: decisions-are-attributable
+    evidence:
+      - type: source
+        path: src/authorization.ts
+        ownership: shared
+        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+      - type: test
+        path: src/authorization.test.ts
+        ownership: shared
+        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc
+  - id: decisions-are-audited
+    evidence:
+      - type: source
+        path: src/authorization.ts
+        ownership: shared
+        sha256: fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8
+      - type: test
+        path: src/authorization.test.ts
+        ownership: shared
+        sha256: 76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc

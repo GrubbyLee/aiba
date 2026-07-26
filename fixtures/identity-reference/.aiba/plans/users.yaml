@@ -1,0 +1,188 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: users-install
+  createdAt: 2026-07-26T00:07:00.000Z
+capability:
+  id: users
+  version: 0.1.0
+  manifestSha256: e824c50cd80f86ba48116a4d09281a65386658d146859e89ad7c56f53e6b26fb
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: edd4375b56821cc5784475baa806ff82b0a82e7aedc2b1e23d45904b4971ed50
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+    - cloudfunctions/**
+operations:
+  - id: establish-user-record-boundary
+    intent: Derive user identity and tenant ownership on the server while keeping
+      roles and credentials separate.
+    requiredInterfaces:
+      - identity.principal
+      - users.lifecycle
+    invariants:
+      - tenant-and-id-are-server-derived
+      - roles-and-credentials-are-separate
+      - identifiers-are-unique-per-tenant
+      - returned-profile-is-minimized
+    guidance:
+      - Take tenant ownership from trusted principal context and generate opaque
+        user IDs inside the service.
+      - Reject role, permission, status, tenant, ID, password, and credential
+        fields in create/profile inputs.
+  - id: authorize-user-operations
+    intent: Evaluate an explicit user resource decision for every read and mutation.
+    requiredInterfaces:
+      - authorization.decision
+    invariants:
+      - every-operation-is-authorized
+      - tenant-boundaries-hide-records
+    guidance:
+      - Bind object-level checks to the actual record tenant and user ID before
+        returning data.
+      - Return the same public not-found result for missing and cross-tenant
+        records.
+  - id: enforce-user-lifecycle
+    intent: Apply a bounded state graph and revoke sessions for disabled or deleted
+      users.
+    requiredInterfaces:
+      - identity.session
+      - users.lifecycle
+    invariants:
+      - lifecycle-transitions-are-explicit
+      - disable-and-delete-revoke-sessions
+    guidance:
+      - Keep deleted users terminal and represent deletion without silently
+        reusing identity.
+      - Coordinate disable/delete with a session-revocation command through
+        trusted infrastructure.
+  - id: commit-user-audit
+    intent: Commit each user mutation with an audit outbox event and optimistic
+      version check.
+    requiredInterfaces:
+      - audit.event
+    invariants:
+      - mutations-and-audit-commit-together
+    guidance:
+      - Use a database transaction or equivalent outbox boundary for the user
+        state and audit event.
+      - Reject concurrent stale writes instead of overwriting a newer lifecycle
+        state.
+evidence:
+  - invariant: tenant-and-id-are-server-derived
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Authorized user lifecycle implementation.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Tenant, lifecycle, and mutation tests.
+    items:
+      - type: source
+        path: src/users.ts
+        ownership: shared
+      - type: test
+        path: src/users.test.ts
+        ownership: shared
+  - invariant: every-operation-is-authorized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/users.ts
+        ownership: shared
+      - type: test
+        path: src/users.test.ts
+        ownership: shared
+  - invariant: tenant-boundaries-hide-records
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/users.ts
+        ownership: shared
+      - type: test
+        path: src/users.test.ts
+        ownership: shared
+  - invariant: roles-and-credentials-are-separate
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/users.ts
+        ownership: shared
+      - type: test
+        path: src/users.test.ts
+        ownership: shared
+  - invariant: lifecycle-transitions-are-explicit
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/users.ts
+        ownership: shared
+      - type: test
+        path: src/users.test.ts
+        ownership: shared
+  - invariant: identifiers-are-unique-per-tenant
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/users.ts
+        ownership: shared
+      - type: test
+        path: src/users.test.ts
+        ownership: shared
+  - invariant: disable-and-delete-revoke-sessions
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/users.ts
+        ownership: shared
+      - type: test
+        path: src/users.test.ts
+        ownership: shared
+  - invariant: mutations-and-audit-commit-together
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/users.ts
+        ownership: shared
+      - type: test
+        path: src/users.test.ts
+        ownership: shared
+  - invariant: returned-profile-is-minimized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/users.ts
+        ownership: shared
+      - type: test
+        path: src/users.test.ts
+        ownership: shared

@@ -1,0 +1,54 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: audit
+  version: 0.1.0
+  title: Audit
+  description: >-
+    Attributable, append-only security events with trusted timestamps,
+    correlation, redaction, and explicit delivery outcomes.
+spec:
+  interfaces:
+    - identity.principal
+    - audit.event
+  dependencies: []
+  invariants:
+    - id: actor-is-trusted-and-attributable
+      title: Actor is trusted and attributable
+      description: Event actors come from trusted execution context rather than event payload claims.
+      severity: critical
+      evidence: &sourceAndTest
+        acceptedTypes: [source, test, config, document]
+        requiredTypes: [source, test]
+        minimum: 2
+        requireHash: true
+    - id: event-identity-and-time-are-server-derived
+      title: Event identity and time are server derived
+      description: Unique event identifiers and occurrence timestamps are assigned inside the trusted audit boundary.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: events-are-append-only
+      title: Events are append-only
+      description: The application-facing audit interface cannot update or delete previously accepted events.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: outcomes-are-explicit
+      title: Outcomes are explicit
+      description: Allowed, denied, succeeded, and failed security outcomes are distinguishable.
+      severity: error
+      evidence: *sourceAndTest
+    - id: events-are-correlated
+      title: Events are correlated
+      description: Every event carries a trusted correlation identifier for request or workflow attribution.
+      severity: error
+      evidence: *sourceAndTest
+    - id: reusable-secrets-are-rejected
+      title: Reusable secrets are rejected
+      description: Passwords, credential material, session tokens, reset tokens, and transport secrets are not accepted event fields.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: delivery-failure-is-visible
+      title: Delivery failure is visible
+      description: An event storage failure is returned to the caller and is never silently treated as recorded.
+      severity: critical
+      evidence: *sourceAndTest

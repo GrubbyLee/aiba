@@ -1,0 +1,85 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: audit
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:04:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/audit.yaml
+  planSha256: 7795292dc4bca70d557b1a79a631297fd9c75eb76884d16ad232e37888893c3e
+  ancestry: .aiba/ancestry/audit.json
+  ancestrySha256: d5c81d09a7a722d024e8c0fb10eb3168e068f5fd48248f0bd39bec191a2eff08
+invariants:
+  - id: actor-is-trusted-and-attributable
+    evidence:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+  - id: event-identity-and-time-are-server-derived
+    evidence:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+  - id: events-are-append-only
+    evidence:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+  - id: outcomes-are-explicit
+    evidence:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+  - id: events-are-correlated
+    evidence:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+  - id: reusable-secrets-are-rejected
+    evidence:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6
+  - id: delivery-failure-is-visible
+    evidence:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+        sha256: 026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+        sha256: 15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6

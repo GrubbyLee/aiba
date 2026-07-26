@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/notification-command.schema.json",
+  "title": "AIBA Notification Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["recipientId", "channel", "templateId", "parameters", "idempotencyKey"],
+  "properties": {
+    "recipientId": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "channel": { "enum": ["in-app", "email", "sms", "wechat-template"] },
+    "templateId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+    "parameters": {
+      "type": "object",
+      "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$" },
+      "additionalProperties": { "type": "string", "maxLength": 1000 },
+      "maxProperties": 30
+    },
+    "idempotencyKey": { "type": "string", "minLength": 16, "maxLength": 255 }
+  }
+}

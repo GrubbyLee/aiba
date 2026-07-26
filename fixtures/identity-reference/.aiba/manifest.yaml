@@ -1,0 +1,24 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Project
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+    frameworks: []
+capabilities:
+  - id: identity
+    version: 0.1.0
+    receipt: .aiba/receipts/identity.yaml
+  - id: audit
+    version: 0.1.0
+    receipt: .aiba/receipts/audit.yaml
+  - id: authorization
+    version: 0.1.0
+    receipt: .aiba/receipts/authorization.yaml
+  - id: users
+    version: 0.1.0
+    receipt: .aiba/receipts/users.yaml
+  - id: notification
+    version: 0.1.0
+    receipt: .aiba/receipts/notification.yaml

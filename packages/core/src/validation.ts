@@ -1,12 +1,18 @@
 import { Ajv2020, type ErrorObject, type ValidateFunction } from "ajv/dist/2020.js";
 import {
+  loadInterfaceSchema,
   loadProtocolSchema,
+  type AuditEvent,
+  type AuthorizationDecision,
   type CapabilityAncestry,
   type CapabilityManifest,
   type CapabilityMigration,
   type CapabilityRecipe,
   type CapabilityReceipt,
   type OperationPlan,
+  type NotificationCommand,
+  type NotificationReceipt,
+  type Principal,
   type ProjectLock,
   type ProjectManifest,
   type UpgradePlan,
@@ -20,6 +26,23 @@ ajv.addFormat("date-time", {
     /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$/.test(value)
     && !Number.isNaN(Date.parse(value)),
 });
+
+const principalSchema = loadInterfaceSchema("principal.schema.json");
+const principalValidator = ajv.compile<Principal>(
+  principalSchema,
+);
+const authorizationDecisionValidator = ajv.compile<AuthorizationDecision>(
+  loadInterfaceSchema("authorization-decision.schema.json"),
+);
+const auditEventValidator = ajv.compile<AuditEvent>(
+  loadInterfaceSchema("audit-event.schema.json"),
+);
+const notificationCommandValidator = ajv.compile<NotificationCommand>(
+  loadInterfaceSchema("notification-command.schema.json"),
+);
+const notificationReceiptValidator = ajv.compile<NotificationReceipt>(
+  loadInterfaceSchema("notification-receipt.schema.json"),
+);
 
 const capabilityValidator = ajv.compile<CapabilityManifest>(
   loadProtocolSchema("capability.schema.json"),
@@ -69,6 +92,31 @@ function assertValid<T>(
 export function validateCapabilityManifest(value: unknown): CapabilityManifest {
   assertValid(capabilityValidator, value, "capability manifest");
   return value as CapabilityManifest;
+}
+
+export function validatePrincipal(value: unknown): Principal {
+  assertValid(principalValidator, value, "principal interface");
+  return value as Principal;
+}
+
+export function validateAuthorizationDecision(value: unknown): AuthorizationDecision {
+  assertValid(authorizationDecisionValidator, value, "authorization decision interface");
+  return value as AuthorizationDecision;
+}
+
+export function validateAuditEvent(value: unknown): AuditEvent {
+  assertValid(auditEventValidator, value, "audit event interface");
+  return value as AuditEvent;
+}
+
+export function validateNotificationCommand(value: unknown): NotificationCommand {
+  assertValid(notificationCommandValidator, value, "notification command interface");
+  return value as NotificationCommand;
+}
+
+export function validateNotificationReceipt(value: unknown): NotificationReceipt {
+  assertValid(notificationReceiptValidator, value, "notification receipt interface");
+  return value as NotificationReceipt;
 }
 
 export function validateCapabilityAncestry(value: unknown): CapabilityAncestry {

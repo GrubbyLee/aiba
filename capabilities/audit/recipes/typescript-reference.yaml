@@ -1,0 +1,64 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Audit Boundary
+  description: Semantic guidance for a strict, append-only TypeScript audit recorder.
+spec:
+  capability:
+    id: audit
+    version: 0.1.0
+  compatibility:
+    languages: [TypeScript]
+    frameworks: []
+  writeScope:
+    allowedPatterns:
+      - src/**
+      - server/**
+      - test/**
+      - tests/**
+      - cloudfunctions/**
+  operations:
+    - id: establish-audit-envelope
+      intent: Derive actor, event identity, timestamp, and correlation inside the trusted boundary.
+      requiredInterfaces: [identity.principal, audit.event]
+      invariants: [actor-is-trusted-and-attributable, event-identity-and-time-are-server-derived, events-are-correlated]
+      guidance:
+        - Accept the actor and correlation identifier only from authenticated server context.
+        - Reject payload fields that attempt to replace trusted envelope values.
+    - id: constrain-audit-content
+      intent: Record explicit outcomes and stable reason codes without reusable secret material.
+      requiredInterfaces: [audit.event]
+      invariants: [outcomes-are-explicit, reusable-secrets-are-rejected]
+      guidance:
+        - Use bounded action and reason-code vocabularies rather than arbitrary messages.
+        - Keep passwords, hashes, tokens, cookies, authorization headers, and provider credentials out of events.
+    - id: establish-audit-delivery
+      intent: Append each accepted event durably and expose failed delivery to the caller.
+      requiredInterfaces: [audit.event]
+      invariants: [events-are-append-only, delivery-failure-is-visible]
+      guidance:
+        - Expose append but no update or delete operation through the application recorder.
+        - Propagate or explicitly queue storage failures; never report an unpersisted event as recorded.
+  evidence:
+    - invariant: actor-is-trusted-and-attributable
+      suggestions: &auditEvidence
+        - type: source
+          pathPattern: src/**/*.ts
+          description: Trusted audit recorder implementation.
+        - type: test
+          pathPattern: src/**/*.test.ts
+          description: Audit envelope, redaction, and delivery tests.
+    - invariant: event-identity-and-time-are-server-derived
+      suggestions: *auditEvidence
+    - invariant: events-are-append-only
+      suggestions: *auditEvidence
+    - invariant: outcomes-are-explicit
+      suggestions: *auditEvidence
+    - invariant: events-are-correlated
+      suggestions: *auditEvidence
+    - invariant: reusable-secrets-are-rejected
+      suggestions: *auditEvidence
+    - invariant: delivery-failure-is-visible
+      suggestions: *auditEvidence

@@ -1,0 +1,73 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Authorization Boundary
+  description: Semantic guidance for an explicit, fail-closed TypeScript policy evaluator.
+spec:
+  capability:
+    id: authorization
+    version: 0.1.0
+  compatibility:
+    languages: [TypeScript]
+    frameworks: []
+  writeScope:
+    allowedPatterns:
+      - src/**
+      - server/**
+      - test/**
+      - tests/**
+      - cloudfunctions/**
+  operations:
+    - id: establish-decision-boundary
+      intent: Separate trusted principal context from a bounded action and resource request.
+      requiredInterfaces: [identity.principal, authorization.decision]
+      invariants: [principal-comes-from-trusted-context, action-and-resource-are-explicit, decisions-are-attributable]
+      guidance:
+        - Reject payload fields for principal, tenant context, role, permission, policy, or decision outcome.
+        - Return one explicit decision with a server-derived identifier, reason, policy version, and timestamp.
+    - id: evaluate-policy-fail-closed
+      intent: Evaluate trusted policy with default deny and explicit deny precedence.
+      requiredInterfaces: [authorization.decision]
+      invariants: [decisions-default-to-deny, deny-takes-precedence, policy-is-server-authoritative]
+      guidance:
+        - Treat missing, malformed, unavailable, or ambiguous policy as denial.
+        - Avoid implicit wildcard grants; make broad access explicit and independently reviewable.
+    - id: enforce-tenant-boundary
+      intent: Deny object access across tenant boundaries before evaluating allow grants.
+      requiredInterfaces: [authorization.decision]
+      invariants: [tenant-boundaries-are-enforced]
+      guidance:
+        - Compare trusted principal and resource tenant identifiers before policy grant matching.
+        - Add object-level authorization tests for attacker-selected resource identifiers.
+    - id: audit-policy-decisions
+      intent: Record every allow and deny outcome without permitting audit failure to become access.
+      requiredInterfaces: [audit.event]
+      invariants: [decisions-are-audited]
+      guidance:
+        - Record stable decision and reason identifiers without sensitive resource contents.
+        - Fail closed when required decision auditing cannot be completed.
+  evidence:
+    - invariant: principal-comes-from-trusted-context
+      suggestions: &authorizationEvidence
+        - type: source
+          pathPattern: src/**/*.ts
+          description: Server-side authorization implementation.
+        - type: test
+          pathPattern: src/**/*.test.ts
+          description: Policy, tenant-isolation, and fail-closed tests.
+    - invariant: decisions-default-to-deny
+      suggestions: *authorizationEvidence
+    - invariant: action-and-resource-are-explicit
+      suggestions: *authorizationEvidence
+    - invariant: deny-takes-precedence
+      suggestions: *authorizationEvidence
+    - invariant: tenant-boundaries-are-enforced
+      suggestions: *authorizationEvidence
+    - invariant: policy-is-server-authoritative
+      suggestions: *authorizationEvidence
+    - invariant: decisions-are-attributable
+      suggestions: *authorizationEvidence
+    - invariant: decisions-are-audited
+      suggestions: *authorizationEvidence

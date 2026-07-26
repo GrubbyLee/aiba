@@ -19,9 +19,15 @@ but correctness is decided by deterministic AIBA commands.
 
 ### Protocol
 
-Language-neutral JSON Schemas define capability packs, project manifests, and
-installation receipts. YAML is the human-authored representation. JSON Schema
-is the public source of truth; TypeScript types are convenience bindings.
+Language-neutral JSON Schemas define capability packs, project manifests,
+installation receipts, and portable security interfaces. YAML is the
+human-authored representation. JSON Schema is the public source of truth;
+TypeScript types are convenience bindings.
+
+M3 interface schemas define `Principal`, `AuthorizationDecision`, `AuditEvent`,
+`NotificationCommand`, and `NotificationReceipt`. They are semantic mapping
+targets rather than mandatory public API DTOs. In particular, principals do not
+carry roles or permissions; policy produces a separate explicit decision.
 
 ### Core
 
@@ -83,6 +89,9 @@ accepted only after target verification succeeds.
 - Git diffs and hashes for provenance; no project-state database.
 - Native Mini Program clients are validated with WeChat syntax checks and
   client-contract tests; server boundaries use black-box HTTP attack tests.
+- Core security capability references use injected stores/provider adapters,
+  standard Node cryptography, and cross-capability attack tests without a
+  database or application-framework dependency.
 
 The protocol remains language-neutral. The first reference recipe uses a
 TypeScript application stack, but capability semantics cannot mention Next.js,

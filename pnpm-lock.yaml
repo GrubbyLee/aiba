@@ -18,6 +18,16 @@ importers:
         specifier: ^3.2.0
         version: 3.2.7(@types/node@24.13.3)(yaml@2.9.0)
 
+  fixtures/identity-reference:
+    dependencies:
+      '@aiba/spec':
+        specifier: workspace:*
+        version: link:../../packages/spec
+    devDependencies:
+      '@types/node':
+        specifier: ^24.0.0
+        version: 24.13.3
+
   fixtures/review-access-reference:
     devDependencies:
       '@types/node':

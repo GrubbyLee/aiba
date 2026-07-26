@@ -1,0 +1,154 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: audit-install
+  createdAt: 2026-07-26T00:03:00.000Z
+capability:
+  id: audit
+  version: 0.1.0
+  manifestSha256: 43a8acbea8d28248e160a39140ffb4f75b3d916cfd5144ce68af3d1b1ba2dc1c
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: 87c5d240d41d5f66b92c9be33c2df529f598dfd50a4923e38ab2cd668578cf24
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+    - cloudfunctions/**
+operations:
+  - id: establish-audit-envelope
+    intent: Derive actor, event identity, timestamp, and correlation inside the
+      trusted boundary.
+    requiredInterfaces:
+      - identity.principal
+      - audit.event
+    invariants:
+      - actor-is-trusted-and-attributable
+      - event-identity-and-time-are-server-derived
+      - events-are-correlated
+    guidance:
+      - Accept the actor and correlation identifier only from authenticated
+        server context.
+      - Reject payload fields that attempt to replace trusted envelope values.
+  - id: constrain-audit-content
+    intent: Record explicit outcomes and stable reason codes without reusable secret
+      material.
+    requiredInterfaces:
+      - audit.event
+    invariants:
+      - outcomes-are-explicit
+      - reusable-secrets-are-rejected
+    guidance:
+      - Use bounded action and reason-code vocabularies rather than arbitrary
+        messages.
+      - Keep passwords, hashes, tokens, cookies, authorization headers, and
+        provider credentials out of events.
+  - id: establish-audit-delivery
+    intent: Append each accepted event durably and expose failed delivery to the
+      caller.
+    requiredInterfaces:
+      - audit.event
+    invariants:
+      - events-are-append-only
+      - delivery-failure-is-visible
+    guidance:
+      - Expose append but no update or delete operation through the application
+        recorder.
+      - Propagate or explicitly queue storage failures; never report an
+        unpersisted event as recorded.
+evidence:
+  - invariant: actor-is-trusted-and-attributable
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Trusted audit recorder implementation.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Audit envelope, redaction, and delivery tests.
+    items:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+  - invariant: event-identity-and-time-are-server-derived
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+  - invariant: events-are-append-only
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+  - invariant: outcomes-are-explicit
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+  - invariant: events-are-correlated
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+  - invariant: reusable-secrets-are-rejected
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared
+  - invariant: delivery-failure-is-visible
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/audit.ts
+        ownership: shared
+      - type: test
+        path: src/audit.test.ts
+        ownership: shared

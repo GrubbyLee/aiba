@@ -1,0 +1,63 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "authorization",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:06:00.000Z",
+  "files": [
+    {
+      "path": "src/authorization.test.ts",
+      "installedSha256": "76a37881d1f455e50eca4aec36db4ec47fe258e523481974e9f3368d7f7b18bc",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "principal-comes-from-trusted-context",
+        "decisions-default-to-deny",
+        "action-and-resource-are-explicit",
+        "deny-takes-precedence",
+        "tenant-boundaries-are-enforced",
+        "policy-is-server-authoritative",
+        "decisions-are-attributable",
+        "decisions-are-audited"
+      ],
+      "operations": [
+        "establish-decision-boundary",
+        "evaluate-policy-fail-closed",
+        "enforce-tenant-boundary",
+        "audit-policy-decisions"
+      ]
+    },
+    {
+      "path": "src/authorization.ts",
+      "installedSha256": "fdd22e07f7c53e690262d556bd9ea665d225d4ceecff7e2c09818bf99c51f3b8",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "principal-comes-from-trusted-context",
+        "decisions-default-to-deny",
+        "action-and-resource-are-explicit",
+        "deny-takes-precedence",
+        "tenant-boundaries-are-enforced",
+        "policy-is-server-authoritative",
+        "decisions-are-attributable",
+        "decisions-are-audited"
+      ],
+      "operations": [
+        "establish-decision-boundary",
+        "evaluate-policy-fail-closed",
+        "enforce-tenant-boundary",
+        "audit-policy-decisions"
+      ]
+    }
+  ]
+}

@@ -71,15 +71,35 @@ Source tampering and failed final verification must leave prior state intact.
 
 Exit criteria met on 2026-07-26.
 
-## Current Milestone: M3
+## Completed Milestone: M3
 
-- [ ] Define shared principal, authorization-decision, and audit-event interfaces.
-- [ ] Implement the `identity` capability contract and reference recipe.
-- [ ] Implement the `users` lifecycle capability contract and reference recipe.
-- [ ] Implement the `authorization` capability contract and reference recipe.
-- [ ] Implement the `audit` capability contract and reference recipe.
-- [ ] Implement the `notification` capability contract and reference recipe.
-- [ ] Add dependency, composition, and cross-capability security tests.
+- [x] Define principal, authorization-decision, audit-event, and notification interfaces.
+- [x] Implement the `identity` capability contract and reference recipe.
+- [x] Implement the `users` lifecycle capability contract and reference recipe.
+- [x] Implement the `authorization` capability contract and reference recipe.
+- [x] Implement the `audit` capability contract and reference recipe.
+- [x] Implement the `notification` capability contract and reference recipe.
+- [x] Add dependency, composition, and cross-capability security tests.
+- [x] Install all five capabilities into one provenance-verified fixture.
+
+## M3 Exit Criteria
+
+M3 is complete when the five capability contracts remain framework-neutral,
+their portable interfaces validate deterministically, each reference boundary
+passes positive and adversarial tests, required dependency order is enforced,
+and one authenticated principal can traverse authorization, users,
+notification, and audit without tenant or secret leakage. The compiled CLI must
+verify all five receipts and report no drift.
+
+Exit criteria met on 2026-07-26.
+
+## Current Milestone: M4
+
+- [ ] Define signed capability bundle and registry index protocols.
+- [ ] Verify bundle integrity, publisher identity, and anti-rollback metadata.
+- [ ] Add local and private registry resolution without executing packages.
+- [ ] Define team policy, approval, and upgrade-governance records.
+- [ ] Add commercial-boundary architecture for private registries and hosted controls.
 
 ## Known Risks
 

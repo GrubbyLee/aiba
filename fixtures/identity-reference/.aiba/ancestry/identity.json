@@ -1,0 +1,63 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "identity",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:02:00.000Z",
+  "files": [
+    {
+      "path": "src/identity.test.ts",
+      "installedSha256": "5769ae4d2ccb614f7bf98a4a1ffa64e63caa43ca77bae533568f7c5532ab4059",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "credentials-are-one-way",
+        "principal-is-server-derived",
+        "failures-do-not-enumerate-accounts",
+        "sessions-are-opaque-and-expiring",
+        "sessions-are-revocable",
+        "attempts-use-trusted-rate-limits",
+        "authentication-is-audited",
+        "audit-excludes-reusable-secrets"
+      ],
+      "operations": [
+        "establish-credential-boundary",
+        "derive-principal",
+        "establish-session-boundary",
+        "defend-authentication"
+      ]
+    },
+    {
+      "path": "src/identity.ts",
+      "installedSha256": "6caa2d100e23c1c99ece132d11f1d9d2133e1a3fa2026e103f0382c4971ac5cf",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "credentials-are-one-way",
+        "principal-is-server-derived",
+        "failures-do-not-enumerate-accounts",
+        "sessions-are-opaque-and-expiring",
+        "sessions-are-revocable",
+        "attempts-use-trusted-rate-limits",
+        "authentication-is-audited",
+        "audit-excludes-reusable-secrets"
+      ],
+      "operations": [
+        "establish-credential-boundary",
+        "derive-principal",
+        "establish-session-boundary",
+        "defend-authentication"
+      ]
+    }
+  ]
+}

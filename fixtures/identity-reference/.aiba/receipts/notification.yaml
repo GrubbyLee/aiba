@@ -1,0 +1,95 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: notification
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:10:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/notification.yaml
+  planSha256: 9781475551d0ea3758b23f07f09c5f1bcb8f8790279bd8d0c0cf0ffaa9549090
+  ancestry: .aiba/ancestry/notification.json
+  ancestrySha256: 9a5574fa41df71b3e77686c0815c1d1a225b765b12f043d4a77586efa02146cf
+invariants:
+  - id: send-is-authorized
+    evidence:
+      - type: source
+        path: src/notification.ts
+        ownership: shared
+        sha256: f03c8ecc9ab85baf7c91bb0aa7d11929c3ae542e37c20e9e0b0ace403a3edb24
+      - type: test
+        path: src/notification.test.ts
+        ownership: shared
+        sha256: f58782a6a4dbd53f9418d97882fc4e571b9126ca49f78247c44ce37625eefe5a
+  - id: tenant-comes-from-trusted-context
+    evidence:
+      - type: source
+        path: src/notification.ts
+        ownership: shared
+        sha256: f03c8ecc9ab85baf7c91bb0aa7d11929c3ae542e37c20e9e0b0ace403a3edb24
+      - type: test
+        path: src/notification.test.ts
+        ownership: shared
+        sha256: f58782a6a4dbd53f9418d97882fc4e571b9126ca49f78247c44ce37625eefe5a
+  - id: content-uses-trusted-templates
+    evidence:
+      - type: source
+        path: src/notification.ts
+        ownership: shared
+        sha256: f03c8ecc9ab85baf7c91bb0aa7d11929c3ae542e37c20e9e0b0ace403a3edb24
+      - type: test
+        path: src/notification.test.ts
+        ownership: shared
+        sha256: f58782a6a4dbd53f9418d97882fc4e571b9126ca49f78247c44ce37625eefe5a
+  - id: recipient-destination-is-server-resolved
+    evidence:
+      - type: source
+        path: src/notification.ts
+        ownership: shared
+        sha256: f03c8ecc9ab85baf7c91bb0aa7d11929c3ae542e37c20e9e0b0ace403a3edb24
+      - type: test
+        path: src/notification.test.ts
+        ownership: shared
+        sha256: f58782a6a4dbd53f9418d97882fc4e571b9126ca49f78247c44ce37625eefe5a
+  - id: consent-is-enforced
+    evidence:
+      - type: source
+        path: src/notification.ts
+        ownership: shared
+        sha256: f03c8ecc9ab85baf7c91bb0aa7d11929c3ae542e37c20e9e0b0ace403a3edb24
+      - type: test
+        path: src/notification.test.ts
+        ownership: shared
+        sha256: f58782a6a4dbd53f9418d97882fc4e571b9126ca49f78247c44ce37625eefe5a
+  - id: delivery-is-idempotent
+    evidence:
+      - type: source
+        path: src/notification.ts
+        ownership: shared
+        sha256: f03c8ecc9ab85baf7c91bb0aa7d11929c3ae542e37c20e9e0b0ace403a3edb24
+      - type: test
+        path: src/notification.test.ts
+        ownership: shared
+        sha256: f58782a6a4dbd53f9418d97882fc4e571b9126ca49f78247c44ce37625eefe5a
+  - id: delivery-failure-is-visible
+    evidence:
+      - type: source
+        path: src/notification.ts
+        ownership: shared
+        sha256: f03c8ecc9ab85baf7c91bb0aa7d11929c3ae542e37c20e9e0b0ace403a3edb24
+      - type: test
+        path: src/notification.test.ts
+        ownership: shared
+        sha256: f58782a6a4dbd53f9418d97882fc4e571b9126ca49f78247c44ce37625eefe5a
+  - id: receipts-and-audit-are-minimized
+    evidence:
+      - type: source
+        path: src/notification.ts
+        ownership: shared
+        sha256: f03c8ecc9ab85baf7c91bb0aa7d11929c3ae542e37c20e9e0b0ace403a3edb24
+      - type: test
+        path: src/notification.test.ts
+        ownership: shared
+        sha256: f58782a6a4dbd53f9418d97882fc4e571b9126ca49f78247c44ce37625eefe5a

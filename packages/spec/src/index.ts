@@ -6,6 +6,62 @@ export type InvariantSeverity = "critical" | "error" | "warning";
 export type EvidenceType = "source" | "test" | "config" | "document";
 export type SemanticOwnership = "generated" | "shared" | "project";
 
+export type PrincipalType = "user" | "service" | "reviewer" | "anonymous";
+
+export interface Principal {
+  type: PrincipalType;
+  subject: string;
+  tenantId?: string;
+}
+
+export interface AuthorizationResource {
+  type: string;
+  id?: string;
+  tenantId?: string;
+}
+
+export interface AuthorizationDecision {
+  decisionId: string;
+  principal: Principal;
+  action: string;
+  resource: AuthorizationResource;
+  allowed: boolean;
+  reasonCode: string;
+  policyVersion: string;
+  evaluatedAt: string;
+}
+
+export type AuditOutcome = "allowed" | "denied" | "succeeded" | "failed";
+
+export interface AuditEvent {
+  eventId: string;
+  action: string;
+  outcome: AuditOutcome;
+  actor: Principal;
+  target?: AuthorizationResource;
+  reasonCode?: string;
+  occurredAt: string;
+  correlationId: string;
+}
+
+export type NotificationChannel = "in-app" | "email" | "sms" | "wechat-template";
+
+export interface NotificationCommand {
+  recipientId: string;
+  channel: NotificationChannel;
+  templateId: string;
+  parameters: Record<string, string>;
+  idempotencyKey: string;
+}
+
+export interface NotificationReceipt {
+  notificationId: string;
+  status: "sent" | "suppressed";
+  channel: NotificationChannel;
+  templateId: string;
+  createdAt: string;
+}
+
 export interface CapabilityInvariant {
   id: string;
   title: string;
@@ -283,7 +339,19 @@ export type ProtocolSchemaName =
   | "receipt.schema.json"
   | "upgrade-plan.schema.json";
 
+export type InterfaceSchemaName =
+  | "audit-event.schema.json"
+  | "authorization-decision.schema.json"
+  | "notification-command.schema.json"
+  | "notification-receipt.schema.json"
+  | "principal.schema.json";
+
 export function loadProtocolSchema(name: ProtocolSchemaName): object {
   const url = new URL(`../schema/${name}`, import.meta.url);
+  return JSON.parse(readFileSync(url, "utf8")) as object;
+}
+
+export function loadInterfaceSchema(name: InterfaceSchemaName): object {
+  const url = new URL(`../schema/interfaces/${name}`, import.meta.url);
   return JSON.parse(readFileSync(url, "utf8")) as object;
 }

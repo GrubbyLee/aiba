@@ -1,0 +1,63 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: identity
+  version: 0.1.0
+  title: Identity
+  description: >-
+    Server-authoritative credential verification and session management that
+    produces stable principals without granting permissions.
+spec:
+  interfaces:
+    - identity.principal
+    - identity.session
+    - audit.event
+  dependencies:
+    - id: audit
+      version: ^0.1.0
+      optional: true
+  invariants:
+    - id: credentials-are-one-way
+      title: Credentials are one-way
+      description: Recoverable passwords and reusable raw credentials are never stored.
+      severity: critical
+      evidence: &sourceAndTest
+        acceptedTypes: [source, test, config, document]
+        requiredTypes: [source, test]
+        minimum: 2
+        requireHash: true
+    - id: principal-is-server-derived
+      title: Principal is server derived
+      description: Principal type, subject, and tenant are derived from trusted identity state, never client claims.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: failures-do-not-enumerate-accounts
+      title: Failures do not enumerate accounts
+      description: Unknown, disabled, and invalid-credential accounts expose the same public authentication failure.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: sessions-are-opaque-and-expiring
+      title: Sessions are opaque and expiring
+      description: Session credentials have strong entropy, are stored one-way, and expire in trusted server state.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: sessions-are-revocable
+      title: Sessions are revocable
+      description: Trusted callers can invalidate a session before its normal expiration.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: attempts-use-trusted-rate-limits
+      title: Attempts use trusted rate limits
+      description: Authentication attempts are limited by trusted transport context even when request fields change.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: authentication-is-audited
+      title: Authentication is audited
+      description: Authentication, session validation, and revocation outcomes emit attributable audit events.
+      severity: error
+      evidence: *sourceAndTest
+    - id: audit-excludes-reusable-secrets
+      title: Audit excludes reusable secrets
+      description: Audit events never contain passwords, credential hashes, session tokens, or reset tokens.
+      severity: critical
+      evidence: *sourceAndTest

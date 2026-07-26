@@ -1,0 +1,76 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: users
+  version: 0.1.0
+  title: Users
+  description: >-
+    Authorized, tenant-scoped user lifecycle management with server-derived
+    identity, explicit states, session revocation, and attributable changes.
+spec:
+  interfaces:
+    - identity.principal
+    - identity.session
+    - authorization.decision
+    - audit.event
+    - users.lifecycle
+  dependencies:
+    - id: identity
+      version: ^0.1.0
+      optional: false
+    - id: authorization
+      version: ^0.1.0
+      optional: false
+    - id: audit
+      version: ^0.1.0
+      optional: false
+  invariants:
+    - id: tenant-and-id-are-server-derived
+      title: Tenant and ID are server derived
+      description: User identifiers and tenant ownership cannot be selected through lifecycle request fields.
+      severity: critical
+      evidence: &sourceAndTest
+        acceptedTypes: [source, test, config, document]
+        requiredTypes: [source, test]
+        minimum: 2
+        requireHash: true
+    - id: every-operation-is-authorized
+      title: Every operation is authorized
+      description: Read and mutation operations require an explicit authorization decision over the target user.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: tenant-boundaries-hide-records
+      title: Tenant boundaries hide records
+      description: Cross-tenant records are neither returned nor distinguishable from missing records.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: roles-and-credentials-are-separate
+      title: Roles and credentials are separate
+      description: Profile and lifecycle inputs cannot assign roles, permissions, passwords, or credential material.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: lifecycle-transitions-are-explicit
+      title: Lifecycle transitions are explicit
+      description: Pending, active, disabled, and deleted states follow a bounded transition graph and deleted users cannot be revived.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: identifiers-are-unique-per-tenant
+      title: Identifiers are unique per tenant
+      description: Normalized login identifiers cannot create duplicate active user identity inside one tenant.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: disable-and-delete-revoke-sessions
+      title: Disable and delete revoke sessions
+      description: Disabling or deleting a user triggers trusted revocation of all reusable sessions.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: mutations-and-audit-commit-together
+      title: Mutations and audit commit together
+      description: User state and its audit outbox record are committed atomically or the mutation fails visibly.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: returned-profile-is-minimized
+      title: Returned profile is minimized
+      description: Lifecycle responses exclude credential material, roles, permissions, and unnecessary identifiers.
+      severity: error
+      evidence: *sourceAndTest

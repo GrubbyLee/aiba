@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/audit-event.schema.json",
+  "title": "AIBA Audit Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["eventId", "action", "outcome", "actor", "occurredAt", "correlationId"],
+  "properties": {
+    "eventId": { "type": "string", "minLength": 16, "maxLength": 255 },
+    "action": { "type": "string", "pattern": "^[a-z][a-z0-9-]*(?::[a-z][a-z0-9-]*)+$", "maxLength": 255 },
+    "outcome": { "enum": ["allowed", "denied", "succeeded", "failed"] },
+    "actor": { "$ref": "principal.schema.json" },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type"],
+      "properties": {
+        "type": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "maxLength": 120 },
+        "id": { "type": "string", "minLength": 1, "maxLength": 255 },
+        "tenantId": { "type": "string", "minLength": 1, "maxLength": 255 }
+      }
+    },
+    "reasonCode": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$", "maxLength": 120 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "correlationId": { "type": "string", "minLength": 8, "maxLength": 255 }
+  }
+}

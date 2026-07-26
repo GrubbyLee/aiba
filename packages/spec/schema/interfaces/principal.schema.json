@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/principal.schema.json",
+  "title": "AIBA Principal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type", "subject"],
+  "properties": {
+    "type": { "enum": ["user", "service", "reviewer", "anonymous"] },
+    "subject": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "tenantId": { "type": "string", "minLength": 1, "maxLength": 255 }
+  }
+}

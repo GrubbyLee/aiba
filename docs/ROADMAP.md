@@ -34,11 +34,12 @@ Goal: upgrade a deeply customized capability from v1 to v2 safely.
 
 ## M3: Core Capability Set
 
-- [ ] Identity contract and adapters.
-- [ ] Users lifecycle contract.
-- [ ] Authorization contract and adapters.
-- [ ] Audit contract and adapters.
-- [ ] Notification contract.
+- [x] Identity contract and reference adapter.
+- [x] Users lifecycle contract and reference adapter.
+- [x] Authorization contract and reference adapter.
+- [x] Audit contract and reference adapter.
+- [x] Notification contract and reference adapter.
+- [x] Shared security interface schemas and cross-capability attack tests.
 
 ## M4: Ecosystem And Commercial Layer
 

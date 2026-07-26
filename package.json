@@ -12,6 +12,7 @@
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "smoke": "node scripts/smoke.mjs",
+    "fixture:core-state": "node scripts/generate-core-fixture-state.mjs",
     "check": "pnpm typecheck && pnpm test && pnpm build && pnpm smoke",
     "aiba": "node packages/cli/dist/index.js"
   },

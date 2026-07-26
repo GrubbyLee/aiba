@@ -1,0 +1,175 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: identity-install
+  createdAt: 2026-07-26T00:01:00.000Z
+capability:
+  id: identity
+  version: 0.1.0
+  manifestSha256: 683b7789a650ca13493854fe552bf8120535491fea125d84f5ca172da38a362a
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: 20aaf49fbac386d31df1808440bcf5ab9a289b5b725170b6e79145fd5b17f50d
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+    - cloudfunctions/**
+operations:
+  - id: establish-credential-boundary
+    intent: Verify credentials with a memory-hard one-way function and a
+      non-enumerating public failure.
+    requiredInterfaces:
+      - identity.principal
+    invariants:
+      - credentials-are-one-way
+      - failures-do-not-enumerate-accounts
+    guidance:
+      - Use a maintained identity provider or a standard memory-hard primitive
+        such as Argon2id or scrypt.
+      - Perform equivalent credential work for unknown and known accounts before
+        returning one generic failure.
+  - id: derive-principal
+    intent: Produce principal identity only from trusted user and tenant records.
+    requiredInterfaces:
+      - identity.principal
+    invariants:
+      - principal-is-server-derived
+    guidance:
+      - Reject extra request fields that try to select subject, tenant, role, or
+        permission.
+      - Keep roles and permissions outside the principal and evaluate them in
+        authorization policy.
+  - id: establish-session-boundary
+    intent: Issue opaque, expiring, revocable sessions whose reusable tokens are
+      never stored in raw form.
+    requiredInterfaces:
+      - identity.session
+    invariants:
+      - sessions-are-opaque-and-expiring
+      - sessions-are-revocable
+    guidance:
+      - Generate at least 256 bits of cryptographic randomness and store only a
+        token digest.
+      - Enforce expiry and revocation through shared trusted storage on every
+        session validation.
+  - id: defend-authentication
+    intent: Apply trusted abuse controls and emit redacted security events for every
+      boundary outcome.
+    requiredInterfaces:
+      - audit.event
+    invariants:
+      - attempts-use-trusted-rate-limits
+      - authentication-is-audited
+      - audit-excludes-reusable-secrets
+    guidance:
+      - Derive rate-limit keys from trusted transport context rather than
+        request identifiers.
+      - Emit stable reason codes and correlation identifiers without credential
+        or token material.
+evidence:
+  - invariant: credentials-are-one-way
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Server-side identity implementation.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Identity boundary and attack tests.
+    items:
+      - type: source
+        path: src/identity.ts
+        ownership: shared
+      - type: test
+        path: src/identity.test.ts
+        ownership: shared
+  - invariant: principal-is-server-derived
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/identity.ts
+        ownership: shared
+      - type: test
+        path: src/identity.test.ts
+        ownership: shared
+  - invariant: failures-do-not-enumerate-accounts
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/identity.ts
+        ownership: shared
+      - type: test
+        path: src/identity.test.ts
+        ownership: shared
+  - invariant: sessions-are-opaque-and-expiring
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/identity.ts
+        ownership: shared
+      - type: test
+        path: src/identity.test.ts
+        ownership: shared
+  - invariant: sessions-are-revocable
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/identity.ts
+        ownership: shared
+      - type: test
+        path: src/identity.test.ts
+        ownership: shared
+  - invariant: attempts-use-trusted-rate-limits
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/identity.ts
+        ownership: shared
+      - type: test
+        path: src/identity.test.ts
+        ownership: shared
+  - invariant: authentication-is-audited
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/identity.ts
+        ownership: shared
+      - type: test
+        path: src/identity.test.ts
+        ownership: shared
+  - invariant: audit-excludes-reusable-secrets
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/identity.ts
+        ownership: shared
+      - type: test
+        path: src/identity.test.ts
+        ownership: shared

@@ -1,0 +1,73 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Notification Boundary
+  description: Semantic guidance for authorized, idempotent template delivery in TypeScript.
+spec:
+  capability:
+    id: notification
+    version: 0.1.0
+  compatibility:
+    languages: [TypeScript]
+    frameworks: []
+  writeScope:
+    allowedPatterns:
+      - src/**
+      - server/**
+      - test/**
+      - tests/**
+      - cloudfunctions/**
+  operations:
+    - id: establish-notification-command
+      intent: Accept a bounded template command while deriving tenant and recipient destination from trusted state.
+      requiredInterfaces: [identity.principal, notification.command]
+      invariants: [tenant-comes-from-trusted-context, content-uses-trusted-templates, recipient-destination-is-server-resolved]
+      guidance:
+        - Reject tenant, address, body, provider, credential, and provider-options fields.
+        - Resolve an enabled server template and allow only its declared parameter keys.
+    - id: authorize-and-check-consent
+      intent: Authorize the recipient resource and enforce channel consent before provider invocation.
+      requiredInterfaces: [authorization.decision]
+      invariants: [send-is-authorized, consent-is-enforced]
+      guidance:
+        - Evaluate notification send permission over the trusted tenant and recipient reference.
+        - Suppress delivery without exposing raw destination or preference records.
+    - id: establish-idempotent-delivery
+      intent: Bind one command fingerprint to a durable tenant-scoped key and an idempotent provider call.
+      requiredInterfaces: [notification.receipt]
+      invariants: [delivery-is-idempotent, delivery-failure-is-visible]
+      guidance:
+        - Persist key, command fingerprint, and final receipt through a shared single-flight boundary.
+        - Propagate the same opaque idempotency key to a provider that guarantees duplicate suppression.
+    - id: minimize-notification-provenance
+      intent: Return and audit only delivery metadata that cannot be reused as a destination or secret.
+      requiredInterfaces: [audit.event, notification.receipt]
+      invariants: [receipts-and-audit-are-minimized]
+      guidance:
+        - Exclude destination, parameters, provider request/response, and credentials from receipts and events.
+        - Record sent, suppressed, and failed outcomes with template and recipient references only where policy permits.
+  evidence:
+    - invariant: send-is-authorized
+      suggestions: &notificationEvidence
+        - type: source
+          pathPattern: src/**/*.ts
+          description: Notification command and delivery implementation.
+        - type: test
+          pathPattern: src/**/*.test.ts
+          description: Authorization, consent, idempotency, and redaction tests.
+    - invariant: tenant-comes-from-trusted-context
+      suggestions: *notificationEvidence
+    - invariant: content-uses-trusted-templates
+      suggestions: *notificationEvidence
+    - invariant: recipient-destination-is-server-resolved
+      suggestions: *notificationEvidence
+    - invariant: consent-is-enforced
+      suggestions: *notificationEvidence
+    - invariant: delivery-is-idempotent
+      suggestions: *notificationEvidence
+    - invariant: delivery-failure-is-visible
+      suggestions: *notificationEvidence
+    - invariant: receipts-and-audit-are-minimized
+      suggestions: *notificationEvidence

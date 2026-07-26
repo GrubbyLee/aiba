@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/notification-receipt.schema.json",
+  "title": "AIBA Notification Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["notificationId", "status", "channel", "templateId", "createdAt"],
+  "properties": {
+    "notificationId": { "type": "string", "minLength": 16, "maxLength": 255 },
+    "status": { "enum": ["sent", "suppressed"] },
+    "channel": { "enum": ["in-app", "email", "sms", "wechat-template"] },
+    "templateId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+    "createdAt": { "type": "string", "format": "date-time" }
+  }
+}

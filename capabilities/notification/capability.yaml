@@ -1,0 +1,71 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: notification
+  version: 0.1.0
+  title: Notification
+  description: >-
+    Authorized, tenant-scoped template delivery with trusted recipient
+    resolution, consent, durable idempotency, minimized receipts, and audit.
+spec:
+  interfaces:
+    - identity.principal
+    - authorization.decision
+    - audit.event
+    - notification.command
+    - notification.receipt
+  dependencies:
+    - id: authorization
+      version: ^0.1.0
+      optional: false
+    - id: audit
+      version: ^0.1.0
+      optional: false
+    - id: users
+      version: ^0.1.0
+      optional: true
+  invariants:
+    - id: send-is-authorized
+      title: Send is authorized
+      description: Every notification command requires an explicit decision over its trusted recipient reference.
+      severity: critical
+      evidence: &sourceAndTest
+        acceptedTypes: [source, test, config, document]
+        requiredTypes: [source, test]
+        minimum: 2
+        requireHash: true
+    - id: tenant-comes-from-trusted-context
+      title: Tenant comes from trusted context
+      description: Requests cannot select the tenant used for templates, recipient resolution, or idempotency.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: content-uses-trusted-templates
+      title: Content uses trusted templates
+      description: Commands select enabled server templates and bounded parameter keys instead of arbitrary message content.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: recipient-destination-is-server-resolved
+      title: Recipient destination is server resolved
+      description: Provider destinations and credentials are resolved in trusted adapters, never command fields.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: consent-is-enforced
+      title: Consent is enforced
+      description: A disabled channel or absent recipient consent suppresses provider delivery.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: delivery-is-idempotent
+      title: Delivery is idempotent
+      description: A tenant-scoped key is durably bound to one command and propagated to an idempotent provider adapter.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: delivery-failure-is-visible
+      title: Delivery failure is visible
+      description: Provider or required audit failure cannot produce a sent receipt.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: receipts-and-audit-are-minimized
+      title: Receipts and audit are minimized
+      description: Results and audit events exclude destinations, parameters, provider secrets, and provider payloads.
+      severity: critical
+      evidence: *sourceAndTest

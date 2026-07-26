@@ -1,0 +1,59 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "audit",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:04:00.000Z",
+  "files": [
+    {
+      "path": "src/audit.test.ts",
+      "installedSha256": "15a14d507989094df5b2732f1b2c29a991d68257a2bd30a7ee9372070a86c4c6",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "actor-is-trusted-and-attributable",
+        "event-identity-and-time-are-server-derived",
+        "events-are-append-only",
+        "outcomes-are-explicit",
+        "events-are-correlated",
+        "reusable-secrets-are-rejected",
+        "delivery-failure-is-visible"
+      ],
+      "operations": [
+        "establish-audit-envelope",
+        "establish-audit-delivery",
+        "constrain-audit-content"
+      ]
+    },
+    {
+      "path": "src/audit.ts",
+      "installedSha256": "026362f19fce09c90858b8f7ab8cc9477d711ee2a3995155665e0b546d9e7117",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "actor-is-trusted-and-attributable",
+        "event-identity-and-time-are-server-derived",
+        "events-are-append-only",
+        "outcomes-are-explicit",
+        "events-are-correlated",
+        "reusable-secrets-are-rejected",
+        "delivery-failure-is-visible"
+      ],
+      "operations": [
+        "establish-audit-envelope",
+        "establish-audit-delivery",
+        "constrain-audit-content"
+      ]
+    }
+  ]
+}

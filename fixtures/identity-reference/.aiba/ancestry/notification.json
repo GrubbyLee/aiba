@@ -1,0 +1,63 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "notification",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:10:00.000Z",
+  "files": [
+    {
+      "path": "src/notification.test.ts",
+      "installedSha256": "f58782a6a4dbd53f9418d97882fc4e571b9126ca49f78247c44ce37625eefe5a",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "send-is-authorized",
+        "tenant-comes-from-trusted-context",
+        "content-uses-trusted-templates",
+        "recipient-destination-is-server-resolved",
+        "consent-is-enforced",
+        "delivery-is-idempotent",
+        "delivery-failure-is-visible",
+        "receipts-and-audit-are-minimized"
+      ],
+      "operations": [
+        "authorize-and-check-consent",
+        "establish-notification-command",
+        "establish-idempotent-delivery",
+        "minimize-notification-provenance"
+      ]
+    },
+    {
+      "path": "src/notification.ts",
+      "installedSha256": "f03c8ecc9ab85baf7c91bb0aa7d11929c3ae542e37c20e9e0b0ace403a3edb24",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "send-is-authorized",
+        "tenant-comes-from-trusted-context",
+        "content-uses-trusted-templates",
+        "recipient-destination-is-server-resolved",
+        "consent-is-enforced",
+        "delivery-is-idempotent",
+        "delivery-failure-is-visible",
+        "receipts-and-audit-are-minimized"
+      ],
+      "operations": [
+        "authorize-and-check-consent",
+        "establish-notification-command",
+        "establish-idempotent-delivery",
+        "minimize-notification-provenance"
+      ]
+    }
+  ]
+}

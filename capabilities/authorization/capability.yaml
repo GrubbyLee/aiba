@@ -1,0 +1,66 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: authorization
+  version: 0.1.0
+  title: Authorization
+  description: >-
+    Fail-closed policy decisions over trusted principals, explicit actions,
+    resources, and tenant boundaries with attributable audit outcomes.
+spec:
+  interfaces:
+    - identity.principal
+    - authorization.decision
+    - audit.event
+  dependencies:
+    - id: identity
+      version: ^0.1.0
+      optional: false
+    - id: audit
+      version: ^0.1.0
+      optional: false
+  invariants:
+    - id: principal-comes-from-trusted-context
+      title: Principal comes from trusted context
+      description: Request payloads cannot choose principal type, subject, tenant, role, or permission.
+      severity: critical
+      evidence: &sourceAndTest
+        acceptedTypes: [source, test, config, document]
+        requiredTypes: [source, test]
+        minimum: 2
+        requireHash: true
+    - id: decisions-default-to-deny
+      title: Decisions default to deny
+      description: Missing grants, malformed requests, and policy evaluation failures never imply access.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: action-and-resource-are-explicit
+      title: Action and resource are explicit
+      description: Each decision binds one bounded action and resource instead of inferring permission from identity.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: deny-takes-precedence
+      title: Deny takes precedence
+      description: An applicable explicit denial cannot be overridden by a simultaneous allow grant.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: tenant-boundaries-are-enforced
+      title: Tenant boundaries are enforced
+      description: A tenant principal cannot access a resource assigned to a different tenant.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: policy-is-server-authoritative
+      title: Policy is server authoritative
+      description: Policy rules and versions come from trusted server state, never request claims.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: decisions-are-attributable
+      title: Decisions are attributable
+      description: Decisions contain server-derived identity, reason, policy version, time, and decision identifier.
+      severity: error
+      evidence: *sourceAndTest
+    - id: decisions-are-audited
+      title: Decisions are audited
+      description: Allowed and denied evaluations are recorded, and audit failure cannot result in allowed access.
+      severity: critical
+      evidence: *sourceAndTest
