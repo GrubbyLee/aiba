@@ -35,7 +35,33 @@
         "plan": { "type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+" },
         "planSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
         "ancestry": { "type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+" },
-        "ancestrySha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+        "ancestrySha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "governance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["operation", "policy", "policySha256", "approvals"],
+          "properties": {
+            "operation": { "enum": ["install", "upgrade"] },
+            "policy": { "type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+" },
+            "policySha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "approvals": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 20,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["path", "sha256", "approver", "keyId"],
+                "properties": {
+                  "path": { "type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+" },
+                  "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+                  "approver": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+                  "keyId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "invariants": {

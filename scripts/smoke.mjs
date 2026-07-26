@@ -198,6 +198,61 @@ for (const invariant of plan.evidence) {
   ];
 }
 writeFileSync(planPath, stringify(plan));
+const approvalKeys = join(addFixture, "approval-keys");
+run("approval keygen", [
+  "keygen",
+  "release-manager",
+  "--out",
+  approvalKeys,
+  "--json",
+], 0);
+run("initialize governance policy", [
+  "policy-init",
+  "--root",
+  addFixture,
+  "--id",
+  "smoke-policy",
+  "--approver",
+  "release-manager",
+  "--key-id",
+  "root-1",
+  "--public-key",
+  join(approvalKeys, "public.pem"),
+  "--capability",
+  "review-access",
+  "--json",
+], 0);
+run("reject unapproved installation", [
+  "policy-check",
+  "review-access",
+  "--root",
+  addFixture,
+  "--agent",
+  "smoke-agent",
+  "--json",
+], 1);
+run("approve installation", [
+  "approve",
+  "review-access",
+  "--root",
+  addFixture,
+  "--approver",
+  "release-manager",
+  "--key-id",
+  "root-1",
+  "--private-key",
+  join(approvalKeys, "private.pem"),
+  "--json",
+], 0);
+run("check approved installation", [
+  "policy-check",
+  "review-access",
+  "--root",
+  addFixture,
+  "--agent",
+  "smoke-agent",
+  "--json",
+], 0);
 run("add finalize", [
   "add",
   "review-access",
@@ -255,6 +310,30 @@ for (const invariant of upgradePlan.evidence) {
   ];
 }
 writeFileSync(upgradePlanPath, stringify(upgradePlan));
+run("approve upgrade", [
+  "approve",
+  "review-access",
+  "--upgrade",
+  "--root",
+  addFixture,
+  "--approver",
+  "release-manager",
+  "--key-id",
+  "root-1",
+  "--private-key",
+  join(approvalKeys, "private.pem"),
+  "--json",
+], 0);
+run("check approved upgrade", [
+  "policy-check",
+  "review-access",
+  "--upgrade",
+  "--root",
+  addFixture,
+  "--agent",
+  "smoke-agent",
+  "--json",
+], 0);
 run("upgrade finalize", [
   "upgrade",
   "review-access",

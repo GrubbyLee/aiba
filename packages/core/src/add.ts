@@ -24,6 +24,7 @@ import {
   type ProjectManifest,
 } from "@aiba/spec";
 import { AibaError } from "./errors.js";
+import { requireGovernance } from "./governance.js";
 import { sha256File, sha256Text } from "./hash.js";
 import { inspectProject } from "./inspect.js";
 import {
@@ -393,6 +394,7 @@ export async function createCapabilityReceipt(
   planPath: string,
   agent: string | undefined,
   createdAt: string,
+  governance?: CapabilityReceipt["installation"]["governance"],
 ): Promise<{ receipt: CapabilityReceipt; evidenceFiles: number }> {
   const allowedPatterns = recipe.spec.writeScope.allowedPatterns;
   let evidenceFiles = 0;
@@ -453,6 +455,7 @@ export async function createCapabilityReceipt(
       recipe: recipe.metadata.id,
       plan: normalizeProjectPath(relative(root, planPath)),
       planSha256: await sha256File(planPath),
+      ...(governance ? { governance } : {}),
     },
     invariants,
   };
@@ -693,7 +696,15 @@ export async function finalizeCapability(
   const ancestryDirectory = join(stateDirectory, "ancestry");
   await mkdir(ancestryDirectory, { recursive: true });
   const ancestryPath = join(ancestryDirectory, `${options.capabilityId}.json`);
-  const createdAt = (options.now ?? (() => new Date()))().toISOString();
+  const now = (options.now ?? (() => new Date()))();
+  const createdAt = now.toISOString();
+  const governance = await requireGovernance({
+    projectRoot: root,
+    capabilityId: options.capabilityId,
+    operation: "install",
+    ...(options.agent ? { agent: options.agent } : {}),
+    now: () => now,
+  });
   const created = await createCapabilityReceipt(
     root,
     plan,
@@ -702,6 +713,7 @@ export async function finalizeCapability(
     planPath,
     options.agent,
     createdAt,
+    governance,
   );
   const ancestry = createCapabilityAncestry(created.receipt, recipe, createdAt);
   const ancestryText = `${JSON.stringify(ancestry, null, 2)}\n`;

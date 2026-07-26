@@ -7,13 +7,16 @@ import {
   finalizeCapability,
   finalizeUpgrade,
   createCapabilityBundle,
+  createCapabilityApproval,
   createRegistryIndex,
   diffProject,
   generatePublisherKeyPair,
   initializeProject,
+  initializeGovernancePolicy,
   inspectProject,
   prepareCapability,
   prepareUpgrade,
+  evaluateGovernance,
   resolveRegistryCapability,
   verifyCapabilityBundle,
   verifyProject,
@@ -26,6 +29,149 @@ program
   .name("aiba")
   .description("Install, verify, trace, and upgrade application capabilities")
   .version("0.1.0");
+
+program
+  .command("policy-init")
+  .description("Initialize project-owned capability governance")
+  .option("--root <path>", "project root", ".")
+  .requiredOption("--id <id>", "policy identifier")
+  .requiredOption("--approver <id>", "initial approver identifier")
+  .requiredOption("--key-id <id>", "approver public key identifier")
+  .requiredOption("--public-key <path>", "Ed25519 SPKI public key")
+  .requiredOption("--capability <ids...>", "allowed capability identifiers")
+  .option("--install-approvals <number>", "required install approvals", "1")
+  .option("--upgrade-approvals <number>", "required upgrade approvals", "1")
+  .option("--conflict-approvals <number>", "required conflict upgrade approvals", "1")
+  .option("--ttl-hours <number>", "maximum approval lifetime in hours", "72")
+  .option("--allow-self-approval", "allow the implementing Agent to approve")
+  .option("--json", "print machine-readable JSON")
+  .action(async (options: {
+    root: string;
+    id: string;
+    approver: string;
+    keyId: string;
+    publicKey: string;
+    capability: string[];
+    installApprovals: string;
+    upgradeApprovals: string;
+    conflictApprovals: string;
+    ttlHours: string;
+    allowSelfApproval?: boolean;
+    json?: boolean;
+  }) => {
+    const installApprovals = Number(options.installApprovals);
+    const upgradeApprovals = Number(options.upgradeApprovals);
+    const conflictApprovals = Number(options.conflictApprovals);
+    const ttlHours = Number(options.ttlHours);
+    if (
+      !Number.isSafeInteger(installApprovals)
+      || !Number.isSafeInteger(upgradeApprovals)
+      || !Number.isSafeInteger(conflictApprovals)
+      || installApprovals < 1
+      || upgradeApprovals < 1
+      || conflictApprovals < 1
+    ) {
+      throw new Error("approval thresholds must be positive integers");
+    }
+    if (!Number.isFinite(ttlHours) || ttlHours < 1 / 60 || ttlHours > 720) {
+      throw new Error("--ttl-hours must be between 1/60 and 720");
+    }
+    const result = await initializeGovernancePolicy({
+      projectRoot: resolve(options.root),
+      policyId: options.id,
+      approverId: options.approver,
+      keyId: options.keyId,
+      publicKeyPath: resolve(options.publicKey),
+      capabilities: options.capability,
+      installApprovals,
+      upgradeApprovals,
+      conflictUpgradeApprovals: conflictApprovals,
+      approvalTtlSeconds: Math.round(ttlHours * 60 * 60),
+      prohibitSelfApproval: !options.allowSelfApproval,
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `Initialized governance policy ${result.policy.metadata.id}@${result.policy.metadata.version}.`,
+      `Policy: ${result.policyPath}`,
+      `Initial approver: ${options.approver}/${options.keyId}`,
+    ].join("\n") + "\n");
+  });
+
+program
+  .command("approve")
+  .description("Sign the current capability plan as a trusted approver")
+  .argument("<capability>", "capability plan to approve")
+  .option("--root <path>", "project root", ".")
+  .requiredOption("--approver <id>", "approver identifier")
+  .requiredOption("--key-id <id>", "approver key identifier")
+  .requiredOption("--private-key <path>", "Ed25519 PKCS#8 private key")
+  .option("--upgrade", "approve the current upgrade plan")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    capability: string,
+    options: {
+      root: string;
+      approver: string;
+      keyId: string;
+      privateKey: string;
+      upgrade?: boolean;
+      json?: boolean;
+    },
+  ) => {
+    const result = await createCapabilityApproval({
+      projectRoot: resolve(options.root),
+      capabilityId: capability,
+      operation: options.upgrade ? "upgrade" : "install",
+      approverId: options.approver,
+      keyId: options.keyId,
+      privateKeyPath: resolve(options.privateKey),
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `Approved ${result.approval.statement.operation.type} of ${capability}.`,
+      `Approver: ${result.approval.statement.approver.id}/${result.approval.statement.approver.keyId}`,
+      `Expires: ${result.approval.statement.expiresAt}`,
+      `Approval: ${result.approvalPath}`,
+    ].join("\n") + "\n");
+  });
+
+program
+  .command("policy-check")
+  .description("Evaluate signed approvals for the current capability plan")
+  .argument("<capability>", "capability plan to evaluate")
+  .option("--root <path>", "project root", ".")
+  .option("--upgrade", "evaluate the current upgrade plan")
+  .option("--agent <name>", "implementing Agent identity")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    capability: string,
+    options: { root: string; upgrade?: boolean; agent?: string; json?: boolean },
+  ) => {
+    const result = await evaluateGovernance({
+      projectRoot: resolve(options.root),
+      capabilityId: capability,
+      operation: options.upgrade ? "upgrade" : "install",
+      ...(options.agent ? { agent: options.agent } : {}),
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    } else if (!result.enabled) {
+      process.stdout.write("Governance is not enabled for this project.\n");
+    } else {
+      process.stdout.write([
+        `Governance: ${result.ok ? "approved" : "denied"}`,
+        `Approvals: ${result.validApprovals}/${result.requiredApprovals}`,
+        ...result.issues.map((issue) => `${issue.code}: ${issue.message}`),
+      ].join("\n") + "\n");
+    }
+    if (!result.ok) process.exitCode = 1;
+  });
 
 program
   .command("registry-index")

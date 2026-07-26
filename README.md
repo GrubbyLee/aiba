@@ -8,7 +8,8 @@ The initial capability set covers `review-access`, `identity`, `audit`,
 `authorization`, `users`, and `notification`. AIBA currently supports
 Agent-assisted install, deterministic verification, drift inspection,
 customization-aware upgrade, signed capability bundles, and anti-rollback local
-registry resolution.
+registry resolution. Optional project governance adds signed, evidence-bound
+team approvals to install and upgrade finalization.
 
 ## Principles
 
@@ -59,6 +60,12 @@ aiba registry-index ./registry --id local-registry \
 aiba resolve identity --registry ./registry \
   --registry-trust registry-trust.json \
   --publisher-trust publisher-trust.json
+aiba policy-init --id product-team --approver release-manager \
+  --key-id root-1 --public-key ../approver-keys/public.pem \
+  --capability identity review-access
+aiba approve identity --approver release-manager --key-id root-1 \
+  --private-key ../approver-keys/private.pem
+aiba policy-check identity --agent codex
 ```
 
 The concise product workflow remains:
@@ -85,6 +92,12 @@ listed publisher bundle. `resolve` verifies the latest registry snapshot, its
 expiry, local anti-rollback state, and the selected bundle before returning its
 paths. Registry resolution performs no install, code execution, or network
 request.
+
+When `.aiba/governance-policy.json` exists, `add --finalize` and
+`upgrade --finalize` fail closed until valid approvals satisfy the configured
+threshold. Each approval signs the exact plan, policy, capability versions, and
+current evidence-file hashes. Final receipts retain policy and approval hashes
+for later verification.
 
 See [docs/ROADMAP.md](docs/ROADMAP.md) and [docs/TASKS.md](docs/TASKS.md) for
 the current implementation status.

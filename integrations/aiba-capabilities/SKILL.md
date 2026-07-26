@@ -112,6 +112,25 @@ Do not report completion unless finalization and verification pass. `diff` may
 still report expected project-owned customization; explain it rather than
 rewriting business files.
 
+## Governed Projects
+
+If `.aiba/governance-policy.json` exists, finish all code, evidence items, and
+upgrade resolutions before requesting approval. Run:
+
+```bash
+aiba policy-check <capability> --agent <codex-or-claude-code> --json
+```
+
+When approval is missing, report the required count and current diagnostics to
+the user. Do not run `aiba approve`, request an approver private key, inspect one,
+or create a substitute approval. An authorized human runs approval outside the
+Agent session. Afterward rerun `policy-check`, then finalize only when it passes.
+
+Any change to the plan, policy, or evidence-file bytes invalidates approval.
+After such a change, rerun project tests and request fresh human approval. Always
+pass the truthful current Agent identity to `policy-check` and finalization; do
+not rename the Agent to bypass separation of duties.
+
 ## Verify Distributed Packs
 
 Before using a downloaded bundle, require a user-controlled trust policy and

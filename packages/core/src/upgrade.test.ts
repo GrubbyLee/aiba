@@ -21,6 +21,11 @@ import type {
   UpgradePlan,
 } from "@aiba/spec";
 import { finalizeCapability, prepareCapability } from "./add.js";
+import { generatePublisherKeyPair } from "./bundle.js";
+import {
+  createCapabilityApproval,
+  initializeGovernancePolicy,
+} from "./governance.js";
 import { sha256File } from "./hash.js";
 import { initializeProject } from "./init.js";
 import { finalizeUpgrade, prepareUpgrade } from "./upgrade.js";
@@ -202,6 +207,54 @@ describe("customization-aware capability upgrade", () => {
       recipe: { id: "typescript-reference", version: "0.2.0" },
     });
     expect(verification.ok).toBe(true);
+  });
+
+  it("enforces upgrade approval and records governance provenance", async () => {
+    const fixture = await installV1();
+    await prepare(fixture);
+    await editUpgradePlan(fixture);
+    const keys = await generatePublisherKeyPair({
+      publisherId: "alice",
+      outputDirectory: join(fixture.root, "alice-keys"),
+    });
+    await initializeGovernancePolicy({
+      projectRoot: fixture.root,
+      policyId: "upgrade-policy",
+      approverId: "alice",
+      keyId: "root-1",
+      publicKeyPath: keys.publicKeyPath,
+      capabilities: ["review-access"],
+    });
+    await expect(finalizeUpgrade({
+      projectRoot: fixture.root,
+      targetPacksDirectory: fixture.targetPacks,
+      capabilityId: "review-access",
+      agent: "codex",
+      now: () => new Date("2026-07-26T04:00:00Z"),
+    })).rejects.toMatchObject({ code: "GOVERNANCE_DENIED" });
+    const approval = await createCapabilityApproval({
+      projectRoot: fixture.root,
+      capabilityId: "review-access",
+      operation: "upgrade",
+      approverId: "alice",
+      keyId: "root-1",
+      privateKeyPath: keys.privateKeyPath,
+      now: () => new Date("2026-07-26T03:30:00Z"),
+    });
+    await finalizeUpgrade({
+      projectRoot: fixture.root,
+      targetPacksDirectory: fixture.targetPacks,
+      capabilityId: "review-access",
+      agent: "codex",
+      now: () => new Date("2026-07-26T04:00:00Z"),
+    });
+    const receipt = parse(
+      await readFile(join(fixture.root, ".aiba", "receipts", "review-access.yaml"), "utf8"),
+    ) as CapabilityReceipt;
+    expect(receipt.installation.governance).toMatchObject({
+      operation: "upgrade",
+      approvals: [{ path: approval.approvalPath, approver: "alice" }],
+    });
   });
 
   it("requires and records a resolution for customized shared code", async () => {

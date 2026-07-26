@@ -23,6 +23,7 @@ import {
 } from "./add.js";
 import { diffProject, type FileDrift } from "./diff.js";
 import { AibaError } from "./errors.js";
+import { requireGovernance } from "./governance.js";
 import { sha256File, sha256Text } from "./hash.js";
 import { inspectProject } from "./inspect.js";
 import {
@@ -438,7 +439,15 @@ export async function finalizeUpgrade(
   const ancestryDirectory = join(stateDirectory, "ancestry");
   await mkdir(ancestryDirectory, { recursive: true });
   const ancestryPath = join(ancestryDirectory, `${options.capabilityId}.json`);
-  const createdAt = (options.now ?? (() => new Date()))().toISOString();
+  const now = (options.now ?? (() => new Date()))();
+  const createdAt = now.toISOString();
+  const governance = await requireGovernance({
+    projectRoot: root,
+    capabilityId: options.capabilityId,
+    operation: "upgrade",
+    ...(options.agent ? { agent: options.agent } : {}),
+    now: () => now,
+  });
   const created = await createCapabilityReceipt(
     root,
     plan,
@@ -447,6 +456,7 @@ export async function finalizeUpgrade(
     planPath,
     options.agent,
     createdAt,
+    governance,
   );
   const ancestry = createCapabilityAncestry(created.receipt, recipe, createdAt);
   const ancestryText = `${JSON.stringify(ancestry, null, 2)}\n`;

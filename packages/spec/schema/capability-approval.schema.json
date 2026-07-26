@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/v0alpha1/capability-approval.schema.json",
+  "title": "AIBA Signed Capability Approval",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "statement", "signature"],
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+    "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "safePath": { "type": "string", "minLength": 1, "maxLength": 500, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+" }
+  },
+  "properties": {
+    "apiVersion": { "const": "aiba.dev/v0alpha1" },
+    "kind": { "const": "CapabilityApproval" },
+    "statement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "createdAt", "expiresAt", "project", "operation", "plan", "evidence", "policy", "approver"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "project": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "operation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "capability", "toVersion", "conflicts"],
+          "properties": {
+            "type": { "enum": ["install", "upgrade"] },
+            "capability": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}$" },
+            "fromVersion": { "$ref": "#/$defs/version" },
+            "toVersion": { "$ref": "#/$defs/version" },
+            "conflicts": { "type": "integer", "minimum": 0, "maximum": 5000 }
+          }
+        },
+        "plan": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256"],
+          "properties": {
+            "path": { "$ref": "#/$defs/safePath" },
+            "sha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1000,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256"],
+            "properties": {
+              "path": { "$ref": "#/$defs/safePath" },
+              "sha256": { "$ref": "#/$defs/sha256" }
+            }
+          }
+        },
+        "policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "version", "path", "sha256"],
+          "properties": {
+            "id": { "$ref": "#/$defs/identifier" },
+            "version": { "$ref": "#/$defs/version" },
+            "path": { "$ref": "#/$defs/safePath" },
+            "sha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "approver": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "keyId"],
+          "properties": {
+            "id": { "$ref": "#/$defs/identifier" },
+            "keyId": { "$ref": "#/$defs/identifier" }
+          }
+        }
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "keyId", "value"],
+      "properties": {
+        "algorithm": { "const": "Ed25519" },
+        "keyId": { "$ref": "#/$defs/identifier" },
+        "value": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" }
+      }
+    }
+  }
+}

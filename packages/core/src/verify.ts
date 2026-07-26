@@ -232,6 +232,22 @@ async function verifyInstallationProvenance(
         label: "Capability ancestry",
       }
       : undefined,
+    ...(receipt.installation.governance ? [
+      {
+        path: receipt.installation.governance.policy,
+        sha256: receipt.installation.governance.policySha256,
+        mismatchCode: "GOVERNANCE_POLICY_HASH_MISMATCH",
+        missingCode: "GOVERNANCE_POLICY_NOT_FOUND",
+        label: "Governance policy",
+      },
+      ...receipt.installation.governance.approvals.map((approval) => ({
+        path: approval.path,
+        sha256: approval.sha256,
+        mismatchCode: "GOVERNANCE_APPROVAL_HASH_MISMATCH",
+        missingCode: "GOVERNANCE_APPROVAL_NOT_FOUND",
+        label: `Governance approval from ${approval.approver}/${approval.keyId}`,
+      })),
+    ] : []),
   ].filter((item): item is NonNullable<typeof item> => Boolean(item));
   const issues: VerificationIssue[] = [];
   for (const item of tracked) {

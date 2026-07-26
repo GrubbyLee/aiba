@@ -152,6 +152,17 @@ export interface CapabilityReceipt {
     planSha256?: string;
     ancestry?: string;
     ancestrySha256?: string;
+    governance?: {
+      operation: GovernanceOperation;
+      policy: string;
+      policySha256: string;
+      approvals: Array<{
+        path: string;
+        sha256: string;
+        approver: string;
+        keyId: string;
+      }>;
+    };
   };
   invariants: Array<{
     id: string;
@@ -412,10 +423,63 @@ export interface CapabilityRegistryState {
   };
 }
 
+export type GovernanceOperation = "install" | "upgrade";
+
+export interface TeamGovernancePolicy {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "TeamGovernancePolicy";
+  metadata: { id: string; version: string };
+  spec: {
+    capabilities: Array<{ id: string; versions: string }>;
+    approvers: Array<{
+      id: string;
+      keyId: string;
+      algorithm: "Ed25519";
+      publicKey: string;
+      permissions: GovernanceOperation[];
+    }>;
+    requirements: {
+      install: number;
+      upgrade: number;
+      upgradeWithConflicts: number;
+    };
+    approvalTtlSeconds: number;
+    prohibitSelfApproval: boolean;
+  };
+}
+
+export interface CapabilityApproval {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "CapabilityApproval";
+  statement: {
+    id: string;
+    createdAt: string;
+    expiresAt: string;
+    project: string;
+    operation: {
+      type: GovernanceOperation;
+      capability: string;
+      fromVersion?: string;
+      toVersion: string;
+      conflicts: number;
+    };
+    plan: { path: string; sha256: string };
+    evidence: Array<{ path: string; sha256: string }>;
+    policy: { id: string; version: string; path: string; sha256: string };
+    approver: { id: string; keyId: string };
+  };
+  signature: {
+    algorithm: "Ed25519";
+    keyId: string;
+    value: string;
+  };
+}
+
 export type ProtocolSchemaName =
   | "ancestry.schema.json"
   | "bundle.schema.json"
   | "bundle-signature.schema.json"
+  | "capability-approval.schema.json"
   | "capability.schema.json"
   | "lock.schema.json"
   | "migration.schema.json"
@@ -423,6 +487,7 @@ export type ProtocolSchemaName =
   | "project.schema.json"
   | "recipe.schema.json"
   | "receipt.schema.json"
+  | "governance-policy.schema.json"
   | "registry-index.schema.json"
   | "registry-index-signature.schema.json"
   | "registry-state.schema.json"

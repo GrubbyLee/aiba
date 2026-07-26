@@ -63,6 +63,21 @@ older snapshots and same-sequence equivocation. State advances only after the
 selected bundle verifies. Resolution returns paths and never installs or
 executes pack content.
 
+### Team Governance
+
+Projects opt into governance with `.aiba/governance-policy.json`. Policy limits
+capabilities and versions, authorizes Ed25519 approver keys, sets operation and
+conflict thresholds, and can prohibit the recorded implementing Agent from
+self-approval. Approval signatures bind the exact plan, policy, capability
+versions, conflict count, and SHA-256 of every evidence file. Finalization fails
+closed when policy exists, and capability receipts pin the accepted governance
+files for later provenance verification.
+
+Core can enforce only the Agent identity recorded by the local caller. Hosted
+runner attestation, SSO identity, protected policy branches, and organizational
+key custody remain control-plane concerns; they may strengthen but cannot bypass
+local plan, evidence, signature, or threshold checks.
+
 ### Agent Adapters
 
 Skills are distribution and integration channels. They translate natural
@@ -85,6 +100,11 @@ Project-owned AIBA state is text and is committed to Git:
   receipts/
     review-access.yaml
   registry-state.json
+  governance-policy.json
+  approvals/
+    review-access/
+      install/
+      upgrade/
 ```
 
 Receipts map capability invariants to hashed implementation evidence. Evidence
@@ -97,6 +117,10 @@ accepted only after target verification succeeds.
 Registry state is a mutable trust checkpoint rather than provenance evidence.
 Keep it in persistent trusted project or CI storage and review sequence changes;
 deleting it resets anti-rollback protection to first use.
+
+Governance policy and approvals are committed review inputs. Approver private
+keys remain outside the project. Policy removal or replacement is itself a
+repository governance change that CI and branch protection must review.
 
 ## Technology Decisions
 
@@ -112,6 +136,8 @@ deleting it resets anti-rollback protection to first use.
   capability distribution.
 - Immutable registry snapshots with expiry and persistent sequence/digest state
   for rollback and equivocation detection.
+- Project-owned team policy and domain-separated Ed25519 approvals bound to plan,
+  policy, versions, conflicts, and evidence hashes.
 - Native Mini Program clients are validated with WeChat syntax checks and
   client-contract tests; server boundaries use black-box HTTP attack tests.
 - Core security capability references use injected stores/provider adapters,

@@ -5,13 +5,20 @@ import { parse, stringify } from "yaml";
 import { describe, expect, it } from "vitest";
 import type {
   CapabilityAncestry,
+  CapabilityApproval,
   CapabilityReceipt,
   OperationPlan,
   ProjectLock,
   ProjectManifest,
 } from "@aiba/spec";
 import { finalizeCapability, prepareCapability, writeCapabilityState } from "./add.js";
+import { generatePublisherKeyPair } from "./bundle.js";
 import { diffProject } from "./diff.js";
+import {
+  createCapabilityApproval,
+  evaluateGovernance,
+  initializeGovernancePolicy,
+} from "./governance.js";
 import { sha256File } from "./hash.js";
 import { initializeProject } from "./init.js";
 import { verifyProject } from "./verify.js";
@@ -171,6 +178,364 @@ describe("capability add lifecycle", () => {
       operations: ["implement-review-access"],
     })]);
     expect(verification.ok).toBe(true);
+  });
+
+  it("enforces signed governance approvals and records their provenance", async () => {
+    const fixture = await createFixture();
+    await setEvidence(fixture.planPath, "src/review.ts");
+    const keys = await generatePublisherKeyPair({
+      publisherId: "alice",
+      outputDirectory: join(fixture.root, "alice-keys"),
+    });
+    await initializeGovernancePolicy({
+      projectRoot: fixture.root,
+      policyId: "team-policy",
+      approverId: "alice",
+      keyId: "root-1",
+      publicKeyPath: keys.publicKeyPath,
+      capabilities: ["review-access"],
+    });
+
+    await expect(finalizeCapability({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+      agent: "codex",
+      now: () => new Date("2026-07-26T02:00:00Z"),
+    })).rejects.toMatchObject({ code: "GOVERNANCE_DENIED" });
+
+    const signed = await createCapabilityApproval({
+      projectRoot: fixture.root,
+      capabilityId: "review-access",
+      operation: "install",
+      approverId: "alice",
+      keyId: "root-1",
+      privateKeyPath: keys.privateKeyPath,
+      now: () => new Date("2026-07-26T01:30:00Z"),
+    });
+    const installed = await finalizeCapability({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+      agent: "codex",
+      now: () => new Date("2026-07-26T02:00:00Z"),
+    });
+    const receipt = parse(
+      await readFile(join(fixture.root, installed.receiptPath), "utf8"),
+    ) as CapabilityReceipt;
+    expect(receipt.installation.governance).toMatchObject({
+      operation: "install",
+      policy: ".aiba/governance-policy.json",
+      approvals: [{
+        path: signed.approvalPath,
+        approver: "alice",
+        keyId: "root-1",
+      }],
+    });
+    await writeFile(
+      join(fixture.root, signed.approvalPath),
+      `${await readFile(join(fixture.root, signed.approvalPath), "utf8")} `,
+    );
+    const verification = await verifyProject({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+    });
+    expect(verification.ok).toBe(false);
+    expect(verification.issues).toContainEqual(expect.objectContaining({
+      code: "GOVERNANCE_APPROVAL_HASH_MISMATCH",
+    }));
+  });
+
+  it("rejects self approval and approval made stale by a plan change", async () => {
+    const self = await createFixture();
+    await setEvidence(self.planPath, "src/review.ts");
+    const selfKeys = await generatePublisherKeyPair({
+      publisherId: "codex",
+      outputDirectory: join(self.root, "codex-keys"),
+    });
+    await initializeGovernancePolicy({
+      projectRoot: self.root,
+      policyId: "self-policy",
+      approverId: "codex",
+      keyId: "root-1",
+      publicKeyPath: selfKeys.publicKeyPath,
+      capabilities: ["review-access"],
+    });
+    await createCapabilityApproval({
+      projectRoot: self.root,
+      capabilityId: "review-access",
+      operation: "install",
+      approverId: "codex",
+      keyId: "root-1",
+      privateKeyPath: selfKeys.privateKeyPath,
+      now: () => new Date("2026-07-26T01:30:00Z"),
+    });
+    const selfEvaluation = await evaluateGovernance({
+      projectRoot: self.root,
+      capabilityId: "review-access",
+      operation: "install",
+      agent: "codex",
+      now: () => new Date("2026-07-26T02:00:00Z"),
+    });
+    expect(selfEvaluation.ok).toBe(false);
+    expect(selfEvaluation.issues).toContainEqual(expect.objectContaining({
+      code: "SELF_APPROVAL_PROHIBITED",
+    }));
+
+    const stale = await createFixture();
+    await setEvidence(stale.planPath, "src/review.ts");
+    const staleKeys = await generatePublisherKeyPair({
+      publisherId: "alice",
+      outputDirectory: join(stale.root, "alice-keys"),
+    });
+    await initializeGovernancePolicy({
+      projectRoot: stale.root,
+      policyId: "stale-policy",
+      approverId: "alice",
+      keyId: "root-1",
+      publicKeyPath: staleKeys.publicKeyPath,
+      capabilities: ["review-access"],
+    });
+    await createCapabilityApproval({
+      projectRoot: stale.root,
+      capabilityId: "review-access",
+      operation: "install",
+      approverId: "alice",
+      keyId: "root-1",
+      privateKeyPath: staleKeys.privateKeyPath,
+      now: () => new Date("2026-07-26T01:30:00Z"),
+    });
+    await writeFile(stale.sourcePath, "export const reviewer = 'changed after approval';\n");
+    const evidenceChanged = await evaluateGovernance({
+      projectRoot: stale.root,
+      capabilityId: "review-access",
+      operation: "install",
+      agent: "codex",
+      now: () => new Date("2026-07-26T02:00:00Z"),
+    });
+    expect(evidenceChanged.ok).toBe(false);
+    expect(evidenceChanged.issues).toContainEqual(expect.objectContaining({
+      code: "STALE_CAPABILITY_APPROVAL",
+    }));
+    await writeFile(stale.sourcePath, "export const reviewer = true;\n");
+    const stalePlan = parse(await readFile(stale.planPath, "utf8")) as OperationPlan;
+    stalePlan.evidence[0]!.items[0]!.description = "Changed after approval";
+    await writeFile(stale.planPath, stringify(stalePlan));
+    const staleEvaluation = await evaluateGovernance({
+      projectRoot: stale.root,
+      capabilityId: "review-access",
+      operation: "install",
+      agent: "codex",
+      now: () => new Date("2026-07-26T02:00:00Z"),
+    });
+    expect(staleEvaluation.ok).toBe(false);
+    expect(staleEvaluation.issues).toContainEqual(expect.objectContaining({
+      code: "STALE_CAPABILITY_APPROVAL",
+    }));
+  });
+
+  it("requires distinct approvers to satisfy a multi-approval threshold", async () => {
+    const fixture = await createFixture();
+    await setEvidence(fixture.planPath, "src/review.ts");
+    const alice = await generatePublisherKeyPair({
+      publisherId: "alice",
+      outputDirectory: join(fixture.root, "alice-keys"),
+    });
+    const bob = await generatePublisherKeyPair({
+      publisherId: "bob",
+      outputDirectory: join(fixture.root, "bob-keys"),
+    });
+    await initializeGovernancePolicy({
+      projectRoot: fixture.root,
+      policyId: "two-person-policy",
+      approverId: "alice",
+      keyId: "root-1",
+      publicKeyPath: alice.publicKeyPath,
+      capabilities: ["review-access"],
+    });
+    const policyPath = join(fixture.root, ".aiba", "governance-policy.json");
+    const policy = JSON.parse(await readFile(policyPath, "utf8")) as {
+      spec: {
+        approvers: Array<Record<string, unknown>>;
+        requirements: { install: number; upgrade: number; upgradeWithConflicts: number };
+      };
+    };
+    policy.spec.approvers.push({
+      id: "bob",
+      keyId: "root-1",
+      algorithm: "Ed25519",
+      publicKey: bob.publicKey,
+      permissions: ["install", "upgrade"],
+    });
+    policy.spec.requirements.install = 2;
+    await writeFile(policyPath, `${JSON.stringify(policy, null, 2)}\n`);
+    await createCapabilityApproval({
+      projectRoot: fixture.root,
+      capabilityId: "review-access",
+      operation: "install",
+      approverId: "alice",
+      keyId: "root-1",
+      privateKeyPath: alice.privateKeyPath,
+      now: () => new Date("2026-07-26T01:30:00Z"),
+    });
+    await expect(evaluateGovernance({
+      projectRoot: fixture.root,
+      capabilityId: "review-access",
+      operation: "install",
+      agent: "codex",
+      now: () => new Date("2026-07-26T02:00:00Z"),
+    })).resolves.toMatchObject({ ok: false, requiredApprovals: 2, validApprovals: 1 });
+    await createCapabilityApproval({
+      projectRoot: fixture.root,
+      capabilityId: "review-access",
+      operation: "install",
+      approverId: "bob",
+      keyId: "root-1",
+      privateKeyPath: bob.privateKeyPath,
+      now: () => new Date("2026-07-26T01:40:00Z"),
+    });
+    await expect(evaluateGovernance({
+      projectRoot: fixture.root,
+      capabilityId: "review-access",
+      operation: "install",
+      agent: "codex",
+      now: () => new Date("2026-07-26T02:00:00Z"),
+    })).resolves.toMatchObject({ ok: true, requiredApprovals: 2, validApprovals: 2 });
+  });
+
+  it("rejects mismatched approval keys and tampered signatures", async () => {
+    const fixture = await createFixture();
+    await setEvidence(fixture.planPath, "src/review.ts");
+    const alice = await generatePublisherKeyPair({
+      publisherId: "alice",
+      outputDirectory: join(fixture.root, "alice-keys"),
+    });
+    const bob = await generatePublisherKeyPair({
+      publisherId: "bob",
+      outputDirectory: join(fixture.root, "bob-keys"),
+    });
+    await initializeGovernancePolicy({
+      projectRoot: fixture.root,
+      policyId: "signature-policy",
+      approverId: "alice",
+      keyId: "root-1",
+      publicKeyPath: alice.publicKeyPath,
+      capabilities: ["review-access"],
+    });
+    await expect(createCapabilityApproval({
+      projectRoot: fixture.root,
+      capabilityId: "review-access",
+      operation: "install",
+      approverId: "alice",
+      keyId: "root-1",
+      privateKeyPath: bob.privateKeyPath,
+      now: () => new Date("2026-07-26T01:30:00Z"),
+    })).rejects.toMatchObject({ code: "APPROVER_PRIVATE_KEY_MISMATCH" });
+
+    const signed = await createCapabilityApproval({
+      projectRoot: fixture.root,
+      capabilityId: "review-access",
+      operation: "install",
+      approverId: "alice",
+      keyId: "root-1",
+      privateKeyPath: alice.privateKeyPath,
+      now: () => new Date("2026-07-26T01:30:00Z"),
+    });
+    const approvalPath = join(fixture.root, signed.approvalPath);
+    const approval = JSON.parse(await readFile(approvalPath, "utf8")) as CapabilityApproval;
+    approval.signature.value = `${approval.signature.value.startsWith("A") ? "B" : "A"}${approval.signature.value.slice(1)}`;
+    await writeFile(approvalPath, `${JSON.stringify(approval, null, 2)}\n`);
+    const evaluation = await evaluateGovernance({
+      projectRoot: fixture.root,
+      capabilityId: "review-access",
+      operation: "install",
+      agent: "codex",
+      now: () => new Date("2026-07-26T02:00:00Z"),
+    });
+    expect(evaluation.ok).toBe(false);
+    expect(evaluation.issues).toContainEqual(expect.objectContaining({
+      code: "APPROVAL_SIGNATURE_INVALID",
+    }));
+  });
+
+  it("rejects expired approvals and approvals from an older policy", async () => {
+    const expired = await createFixture();
+    await setEvidence(expired.planPath, "src/review.ts");
+    const expiredKeys = await generatePublisherKeyPair({
+      publisherId: "alice",
+      outputDirectory: join(expired.root, "alice-keys"),
+    });
+    await initializeGovernancePolicy({
+      projectRoot: expired.root,
+      policyId: "expiring-policy",
+      approverId: "alice",
+      keyId: "root-1",
+      publicKeyPath: expiredKeys.publicKeyPath,
+      capabilities: ["review-access"],
+      approvalTtlSeconds: 60,
+    });
+    await createCapabilityApproval({
+      projectRoot: expired.root,
+      capabilityId: "review-access",
+      operation: "install",
+      approverId: "alice",
+      keyId: "root-1",
+      privateKeyPath: expiredKeys.privateKeyPath,
+      now: () => new Date("2026-07-26T01:00:00Z"),
+    });
+    const expiredEvaluation = await evaluateGovernance({
+      projectRoot: expired.root,
+      capabilityId: "review-access",
+      operation: "install",
+      agent: "codex",
+      now: () => new Date("2026-07-26T01:02:00Z"),
+    });
+    expect(expiredEvaluation.ok).toBe(false);
+    expect(expiredEvaluation.issues).toContainEqual(expect.objectContaining({
+      code: "APPROVAL_EXPIRED",
+    }));
+
+    const changed = await createFixture();
+    await setEvidence(changed.planPath, "src/review.ts");
+    const changedKeys = await generatePublisherKeyPair({
+      publisherId: "alice",
+      outputDirectory: join(changed.root, "alice-keys"),
+    });
+    await initializeGovernancePolicy({
+      projectRoot: changed.root,
+      policyId: "changing-policy",
+      approverId: "alice",
+      keyId: "root-1",
+      publicKeyPath: changedKeys.publicKeyPath,
+      capabilities: ["review-access"],
+    });
+    await createCapabilityApproval({
+      projectRoot: changed.root,
+      capabilityId: "review-access",
+      operation: "install",
+      approverId: "alice",
+      keyId: "root-1",
+      privateKeyPath: changedKeys.privateKeyPath,
+      now: () => new Date("2026-07-26T01:30:00Z"),
+    });
+    const policyPath = join(changed.root, ".aiba", "governance-policy.json");
+    const policy = JSON.parse(await readFile(policyPath, "utf8")) as {
+      metadata: { version: string };
+    };
+    policy.metadata.version = "0.1.1";
+    await writeFile(policyPath, `${JSON.stringify(policy, null, 2)}\n`);
+    const changedEvaluation = await evaluateGovernance({
+      projectRoot: changed.root,
+      capabilityId: "review-access",
+      operation: "install",
+      agent: "codex",
+      now: () => new Date("2026-07-26T02:00:00Z"),
+    });
+    expect(changedEvaluation.ok).toBe(false);
+    expect(changedEvaluation.issues).toContainEqual(expect.objectContaining({
+      code: "STALE_CAPABILITY_APPROVAL",
+    }));
   });
 
   it("rejects out-of-scope evidence without partially installing", async () => {

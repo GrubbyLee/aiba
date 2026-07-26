@@ -5,6 +5,7 @@ import {
   type AuditEvent,
   type AuthorizationDecision,
   type CapabilityAncestry,
+  type CapabilityApproval,
   type CapabilityBundle,
   type CapabilityBundleSignature,
   type CapabilityManifest,
@@ -22,6 +23,7 @@ import {
   type PublisherTrustPolicy,
   type ProjectLock,
   type ProjectManifest,
+  type TeamGovernancePolicy,
   type UpgradePlan,
 } from "@aiba/spec";
 import { ProtocolValidationError } from "./errors.js";
@@ -62,6 +64,12 @@ const bundleSignatureValidator = ajv.compile<CapabilityBundleSignature>(
 );
 const trustPolicyValidator = ajv.compile<PublisherTrustPolicy>(
   loadProtocolSchema("trust-policy.schema.json"),
+);
+const governancePolicyValidator = ajv.compile<TeamGovernancePolicy>(
+  loadProtocolSchema("governance-policy.schema.json"),
+);
+const capabilityApprovalValidator = ajv.compile<CapabilityApproval>(
+  loadProtocolSchema("capability-approval.schema.json"),
 );
 const registryIndexValidator = ajv.compile<CapabilityRegistryIndex>(
   loadProtocolSchema("registry-index.schema.json"),
@@ -137,6 +145,16 @@ export function validateCapabilityBundleSignature(
 export function validatePublisherTrustPolicy(value: unknown): PublisherTrustPolicy {
   assertValid(trustPolicyValidator, value, "publisher trust policy");
   return value as PublisherTrustPolicy;
+}
+
+export function validateTeamGovernancePolicy(value: unknown): TeamGovernancePolicy {
+  assertValid(governancePolicyValidator, value, "team governance policy");
+  return value as TeamGovernancePolicy;
+}
+
+export function validateCapabilityApproval(value: unknown): CapabilityApproval {
+  assertValid(capabilityApprovalValidator, value, "capability approval");
+  return value as CapabilityApproval;
 }
 
 export function validateCapabilityRegistryIndex(value: unknown): CapabilityRegistryIndex {

@@ -3,6 +3,7 @@ export * from "./add.js";
 export * from "./bundle.js";
 export * from "./diff.js";
 export * from "./hash.js";
+export * from "./governance.js";
 export * from "./init.js";
 export * from "./inspect.js";
 export * from "./loaders.js";
