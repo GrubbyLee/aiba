@@ -5,7 +5,7 @@ Changelog, and package versions follow Semantic Versioning.
 
 ## [Unreleased]
 
-## [0.1.0] - 2026-07-26
+## [0.1.0] - 2026-07-27
 
 ### Added
 
