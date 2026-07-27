@@ -38,10 +38,11 @@ installed CLI. `pnpm pack:artifacts` creates the exact releasable tarballs in
 
 The tag workflow re-runs every gate, publishes with npm provenance, checks an
 existing version's tarball integrity before resuming a partial release, and
-creates a GitHub Release from the matching changelog section. Protect the `npm`
-GitHub environment with required reviewers. Configure npm Trusted Publishing;
-the `NPM_TOKEN` secret is only a bootstrap fallback for the first publication
-and should be removed afterward.
+creates or updates a GitHub Release from the matching changelog section. A
+failed publication can be retried without moving the tag through the workflow's
+manual `tag` input. Protect the `npm` GitHub environment with required
+reviewers. Configure npm Trusted Publishing; the `NPM_TOKEN` secret is only a
+bootstrap fallback for the first publication and should be removed afterward.
 
 Never publish from an uncommitted worktree or use mutable tags. npm versions are
 immutable; a bad release is corrected with a new version and deprecation notice.
