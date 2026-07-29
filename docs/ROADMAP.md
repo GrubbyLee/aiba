@@ -67,5 +67,6 @@ Goal: upgrade a deeply customized capability from v1 to v2 safely.
 - [x] Add the generated-output exception and Apache-2.0 protocol boundary.
 - [x] Build deterministic tarballs and a clean external-consumer trial.
 - [x] Add a protected tag-driven npm provenance and GitHub Release workflow.
-- [ ] Publish and install the first private beta after explicit release approval.
+- [x] Publish and install the first public npm release after explicit approval.
+- [ ] Configure npm Trusted Publishing for unattended provenance releases.
 - [ ] Complete qualified legal review before broad public launch.

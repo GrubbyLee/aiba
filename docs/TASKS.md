@@ -173,9 +173,10 @@ Exit criteria met on 2026-07-26.
 
 ## Milestone: M6 Release Readiness
 
-- [x] Select unscoped npm names that do not require an unowned organization.
+- [x] Select the npm package topology and scope the CLI after npm rejected the
+  unscoped `aiba` name.
 - [x] Make all public package exports resolve only to shipped files.
-- [x] Include official capability packs in the installed `aiba` CLI.
+- [x] Include official capability packs in the installed `@grubbylee/aiba` CLI.
 - [x] Define lockstep package SemVer and independent protocol versioning.
 - [x] License `aiba-spec` under Apache-2.0 for interoperability.
 - [x] Add an explicit generated-output exception for application projects.
@@ -184,7 +185,9 @@ Exit criteria met on 2026-07-26.
 - [x] Install and exercise all tarballs in a clean external npm project.
 - [x] Add resumable integrity-checked publishing with npm provenance.
 - [x] Add annotated-tag release notes and protected GitHub environment guidance.
-- [ ] Publish npm v0.1.0 and create its GitHub Release after explicit approval.
+- [x] Publish npm v0.1.1 and create its GitHub Release after explicit approval.
+- [ ] Configure npm Trusted Publishing for all four packages before the next
+  release.
 - [ ] Run an invited human beta in a real Mini Program project.
 - [ ] Obtain qualified review of the exception and contributor agreement.
 
@@ -205,6 +208,7 @@ GitHub Release approval plus npm publisher authentication.
 - Cache garbage collection and offline retention policy remain future work;
   authenticated fetch, verified atomic caching, and anti-rollback state are
   complete.
-- The npm names are available but not reserved until first publication.
+- The first release used npm's interactive 2FA bootstrap path. Future releases
+  require the documented GitHub OIDC trusted-publisher configuration.
 - The generated-output exception and future contributor agreement require
   qualified legal review before broad public launch.
