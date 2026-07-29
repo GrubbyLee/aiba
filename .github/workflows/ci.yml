@@ -28,4 +28,5 @@ jobs:
       - run: pnpm build
       - run: pnpm smoke
       - run: pnpm release:check
+      - run: pnpm release:oidc-check
       - run: node scripts/release/verify-packages.mjs
