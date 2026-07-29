@@ -54,6 +54,9 @@ Configure each npm package with this trusted publisher before the next tag:
 - Workflow filename: `release.yml`
 - Environment: `npm`
 
+All four packages were configured with this publisher on 2026-07-29. Keep the
+values below as the recovery and ownership-transfer checklist.
+
 Open the package settings while signed in as an npm package owner, select
 **Trusted Publisher**, choose **GitHub Actions**, and enter the values above:
 

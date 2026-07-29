@@ -186,7 +186,7 @@ Exit criteria met on 2026-07-26.
 - [x] Add resumable integrity-checked publishing with npm provenance.
 - [x] Add annotated-tag release notes and protected GitHub environment guidance.
 - [x] Publish npm v0.1.1 and create its GitHub Release after explicit approval.
-- [ ] Configure npm Trusted Publishing for all four packages before the next
+- [x] Configure npm Trusted Publishing for all four packages before the next
   release.
 - [ ] Run an invited human beta in a real Mini Program project.
 - [ ] Obtain qualified review of the exception and contributor agreement.
@@ -208,7 +208,8 @@ GitHub Release approval plus npm publisher authentication.
 - Cache garbage collection and offline retention policy remain future work;
   authenticated fetch, verified atomic caching, and anti-rollback state are
   complete.
-- The first release used npm's interactive 2FA bootstrap path. Future releases
-  require the documented GitHub OIDC trusted-publisher configuration.
+- The first release used npm's interactive 2FA bootstrap path. All four packages
+  now trust the documented GitHub OIDC publisher, but the next new version is
+  still required as the first end-to-end OIDC publication proof.
 - The generated-output exception and future contributor agreement require
   qualified legal review before broad public launch.
