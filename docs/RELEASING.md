@@ -54,5 +54,22 @@ Configure each npm package with this trusted publisher before the next tag:
 - Workflow filename: `release.yml`
 - Environment: `npm`
 
+Open the package settings while signed in as an npm package owner, select
+**Trusted Publisher**, choose **GitHub Actions**, and enter the values above:
+
+| Package | npm settings |
+| --- | --- |
+| `@grubbylee/aiba` | <https://www.npmjs.com/package/@grubbylee/aiba/access> |
+| `aiba-core` | <https://www.npmjs.com/package/aiba-core/access> |
+| `aiba-spec` | <https://www.npmjs.com/package/aiba-spec/access> |
+| `aiba-registry-server` | <https://www.npmjs.com/package/aiba-registry-server/access> |
+
+npm does not currently expose this package-owner operation through its CLI, so
+the four website changes are intentionally manual. Run `pnpm
+release:oidc-check` to audit the repository half of the trust relationship. A
+successful check cannot prove the npm-side bindings exist; verify each package
+settings page shows the publisher before creating the next version tag. The
+first new version published by `release.yml` is the end-to-end proof.
+
 Never publish from an uncommitted worktree or use mutable tags. npm versions are
 immutable; a bad release is corrected with a new version and deprecation notice.
