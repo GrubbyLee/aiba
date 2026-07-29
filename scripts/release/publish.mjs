@@ -1,14 +1,19 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { packageMetadata, runChecked, workspace } from "./packages.mjs";
+import {
+  packageArtifactFilename,
+  packageMetadata,
+  runChecked,
+  workspace,
+} from "./packages.mjs";
 
 const directoryIndex = process.argv.indexOf("--dir");
 if (directoryIndex < 0) throw new Error("Usage: node scripts/release/publish.mjs --dir <directory>");
 const directory = resolve(workspace, process.argv[directoryIndex + 1] ?? "");
 
 for (const { manifest } of packageMetadata()) {
-  const filename = `${manifest.name}-${manifest.version}.tgz`;
+  const filename = packageArtifactFilename(manifest.name, manifest.version);
   const artifact = join(directory, filename);
   if (!existsSync(artifact)) throw new Error(`Missing release artifact: ${artifact}`);
 

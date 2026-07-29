@@ -85,13 +85,14 @@ aiba policy-check identity --agent codex
 After the first npm release:
 
 ```bash
-npm install --global aiba
+npm install --global @grubbylee/aiba
 aiba init
 aiba add identity
 aiba inspect
 ```
 
-The npm distribution includes the official capability packs. Library consumers
+The scoped package still installs the `aiba` executable. The npm distribution
+includes the official capability packs. Library consumers
 can install `aiba-core`, `aiba-spec`, or `aiba-registry-server` independently.
 
 ## License

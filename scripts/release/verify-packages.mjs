@@ -31,7 +31,7 @@ try {
   }
 
   const spec = byName.get("aiba-spec");
-  const cli = byName.get("aiba");
+  const cli = byName.get("@grubbylee/aiba");
   if (!spec || !cli) throw new Error("Required release artifacts were not created");
   const specFiles = runChecked("tar", ["-tzf", spec.path], root);
   if (!specFiles.includes("package/schema/capability.schema.json")) {
@@ -39,13 +39,15 @@ try {
   }
   const cliFiles = runChecked("tar", ["-tzf", cli.path], root);
   if (!cliFiles.includes("package/capabilities/identity/capability.yaml")) {
-    throw new Error("aiba does not contain official capability packs");
+    throw new Error("@grubbylee/aiba does not contain official capability packs");
   }
   if (!cliFiles.includes("package/GENERATED_OUTPUT_EXCEPTION.md")) {
-    throw new Error("aiba does not contain the generated-output exception");
+    throw new Error("@grubbylee/aiba does not contain the generated-output exception");
   }
   const cliEntry = runChecked("tar", ["-xOf", cli.path, "package/dist/index.js"], root);
-  if (!cliEntry.startsWith("#!/usr/bin/env node\n")) throw new Error("aiba CLI shebang is missing");
+  if (!cliEntry.startsWith("#!/usr/bin/env node\n")) {
+    throw new Error("@grubbylee/aiba CLI shebang is missing");
+  }
 
   const repeatedDirectory = join(root, "repeated-artifacts");
   mkdirSync(repeatedDirectory);
@@ -111,7 +113,7 @@ try {
 
   process.stdout.write([
     `Package artifacts: ${artifacts.map((artifact) => basename(artifact.path)).join(", ")}`,
-    `External consumer: aiba@${installedVersion} installed and exercised`,
+    `External consumer: @grubbylee/aiba@${installedVersion} installed and exercised`,
     "Package verification: ok",
   ].join("\n") + "\n");
 } finally {

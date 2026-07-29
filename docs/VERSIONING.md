@@ -2,10 +2,10 @@
 
 ## Package Versions
 
-`aiba`, `aiba-core`, `aiba-spec`, and `aiba-registry-server` use one lockstep
-Semantic Version. Before 1.0, patch releases are backward compatible and minor
-releases may contain announced breaking changes. After 1.0, breaking public API
-or CLI changes require a major release.
+`@grubbylee/aiba`, `aiba-core`, `aiba-spec`, and `aiba-registry-server` use one
+lockstep Semantic Version. Before 1.0, patch releases are backward compatible
+and minor releases may contain announced breaking changes. After 1.0, breaking
+public API or CLI changes require a major release.
 
 The CLI's command names, exit-code meaning, and documented `--json` fields are
 public API. Fields may be added in compatible releases; consumers must ignore

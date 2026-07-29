@@ -35,14 +35,9 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-          registry-url: https://registry.npmjs.org/
       - run: npm install --global npm@11.9.0
       - run: pnpm install --frozen-lockfile
       - run: test "$(git cat-file -t "$AIBA_RELEASE_TAG")" = tag
-      - name: Verify npm publisher identity
-        run: npm whoami --registry=https://registry.npmjs.org/
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: pnpm check
       - run: pnpm pack:artifacts
       - run: node scripts/release/notes.mjs "$AIBA_RELEASE_TAG" > release-notes.md
@@ -57,7 +52,5 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
       - run: node scripts/release/publish.mjs --dir artifacts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     env:
       AIBA_RELEASE_TAG: ${{ inputs.tag || github.ref_name }}

@@ -7,11 +7,12 @@ Release artifacts are published in dependency order:
 1. `aiba-spec`: Apache-2.0 schemas and TypeScript bindings.
 2. `aiba-core`: AGPL deterministic engine.
 3. `aiba-registry-server`: AGPL reference server.
-4. `aiba`: AGPL CLI plus official capability packs.
+4. `@grubbylee/aiba`: AGPL CLI plus official capability packs. It installs the
+   unscoped `aiba` executable.
 
-All four packages use the same version. The unscoped names avoid depending on
-an npm organization that the project does not control. Name availability is not
-reservation; the first publication reserves each name.
+All four packages use the same version. The CLI is scoped because npm's package
+name similarity protection rejects the unscoped `aiba` name. The library names
+remain unscoped.
 
 ## Local Release Gate
 
@@ -42,7 +43,16 @@ creates or updates a GitHub Release from the matching changelog section. A
 failed publication can be retried without moving the tag through the workflow's
 manual `tag` input. Protect the `npm` GitHub environment with required
 reviewers. Configure npm Trusted Publishing; the `NPM_TOKEN` secret is only a
-bootstrap fallback for the first publication and should be removed afterward.
+bootstrap credential for the first publication and is not read by the release
+workflow. Remove it after bootstrap so release authentication has one source of
+truth.
+
+Configure each npm package with this trusted publisher before the next tag:
+
+- Organization or user: `GrubbyLee`
+- Repository: `ai-base`
+- Workflow filename: `release.yml`
+- Environment: `npm`
 
 Never publish from an uncommitted worktree or use mutable tags. npm versions are
 immutable; a bad release is corrected with a new version and deprecation notice.

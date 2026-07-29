@@ -19,8 +19,21 @@ export const releasePackages = [
   { directory: "packages/spec", name: "aiba-spec", license: "LICENSE-PROTOCOL" },
   { directory: "packages/core", name: "aiba-core", license: "LICENSE" },
   { directory: "packages/registry-server", name: "aiba-registry-server", license: "LICENSE" },
-  { directory: "packages/cli", name: "aiba", license: "LICENSE", capabilities: true },
+  {
+    directory: "packages/cli",
+    name: "@grubbylee/aiba",
+    license: "LICENSE",
+    capabilities: true,
+  },
 ];
+
+export function packageArtifactFilename(name, version) {
+  return `${name.replace(/^@/, "").replaceAll("/", "-")}-${version}.tgz`;
+}
+
+function packagePathSegment(name) {
+  return name.replace(/^@/, "").replaceAll("/", "-");
+}
 
 export function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
@@ -92,7 +105,7 @@ export function createPackageArtifacts(outputPath) {
   try {
     for (const definition of packages) {
       const source = join(workspace, definition.directory);
-      const staging = join(stagingRoot, definition.name);
+      const staging = join(stagingRoot, packagePathSegment(definition.name));
       mkdirSync(staging);
       for (const required of ["dist", "README.md"]) {
         const path = join(source, required);

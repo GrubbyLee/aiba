@@ -31,7 +31,7 @@ const expectedLicenses = new Map([
   ["aiba-spec", "Apache-2.0"],
   ["aiba-core", "AGPL-3.0-only"],
   ["aiba-registry-server", "AGPL-3.0-only"],
-  ["aiba", "AGPL-3.0-only"],
+  ["@grubbylee/aiba", "AGPL-3.0-only"],
 ]);
 for (const { manifest } of packages) {
   if (manifest.license !== expectedLicenses.get(manifest.name)) {
