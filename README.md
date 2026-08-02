@@ -1,3 +1,21 @@
+<p align="center">
+  <img src="docs/assets/aiba-logo.svg" width="760" alt="AIBA - Agent-native application capabilities">
+</p>
+
+<p align="center">
+  <strong>Stable capability semantics. Flexible, project-owned implementation.</strong>
+</p>
+
+<p align="center">
+  <strong>English</strong> · <a href="README.zh-CN.md">中文</a>
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/@grubbylee/aiba"><img src="https://img.shields.io/npm/v/@grubbylee/aiba?color=ff4a2b" alt="npm version"></a>
+  <a href="https://github.com/GrubbyLee/ai-base/actions/workflows/ci.yml"><img src="https://github.com/GrubbyLee/ai-base/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--only-151412" alt="AGPL-3.0-only"></a>
+</p>
+
 # AIBA
 
 AIBA is an agent-native application capability system. It helps AI agents add,
@@ -11,6 +29,10 @@ customization-aware upgrade, signed capability bundles, authenticated private
 registry fetch, verified caching, and anti-rollback resolution. Optional project
 governance adds signed, evidence-bound team approvals to install and upgrade
 finalization.
+
+[Watch the vehicle-management walkthrough](docs/introduce.mp4) to see AIBA and
+Codex move from an empty directory to a working, independently verified admin
+application.
 
 ## Principles
 

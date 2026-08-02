@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 200" role="img" aria-labelledby="title description">
+  <title id="title">AIBA</title>
+  <desc id="description">AIBA, agent-native application capabilities.</desc>
+  <rect width="840" height="200" fill="#151412"/>
+  <g transform="translate(38 36)">
+    <g fill="#ff4a2b">
+      <path d="M0 0h34v12H12v22H0z"/>
+      <path d="M78 0h34v34h-12V12H78z"/>
+      <path d="M0 78h12v22h22v12H0z"/>
+      <path d="M100 78h12v34H78v-12h22z"/>
+    </g>
+    <path fill="#f5f0e5" fill-rule="evenodd" d="M56 15l28 66H69l-6-16H49l5-13h4l-7-18-19 47H17l29-66h10z"/>
+  </g>
+  <g transform="translate(192 0)">
+    <text x="0" y="91" fill="#f5f0e5" font-family="Arial, Helvetica, sans-serif" font-size="70" font-weight="700" letter-spacing="10">AIBA</text>
+    <text x="3" y="128" fill="#9e9a92" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="600" letter-spacing="3">AGENT-NATIVE APPLICATION CAPABILITIES</text>
+    <rect x="3" y="151" width="92" height="2" fill="#3b3732"/>
+    <text x="116" y="157" fill="#ff4a2b" font-family="Courier New, monospace" font-size="14" letter-spacing="1">BUILD · VERIFY · TRACE · UPGRADE</text>
+  </g>
+</svg>

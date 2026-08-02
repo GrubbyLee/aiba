@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title description">
+  <title id="title">AIBA mark</title>
+  <desc id="description">A letter A protected by four capability boundary brackets.</desc>
+  <rect width="128" height="128" fill="#151412"/>
+  <g fill="#ff4a2b">
+    <path d="M16 16h34v12H28v22H16z"/>
+    <path d="M78 16h34v34h-12V28H78z"/>
+    <path d="M16 78h12v22h22v12H16z"/>
+    <path d="M100 78h12v34H78v-12h22z"/>
+  </g>
+  <path fill="#f5f0e5" fill-rule="evenodd" d="M64 31l28 66H77l-6-16H57l5-13h4l-7-18-19 47H25l29-66h10z"/>
+</svg>
