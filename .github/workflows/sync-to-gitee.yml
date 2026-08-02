@@ -1,0 +1,49 @@
+name: Sync to Gitee
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-to-gitee
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check required secrets
+        env:
+          GITEE_USERNAME: ${{ secrets.GITEE_USERNAME }}
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+        run: |
+          [ -n "$GITEE_USERNAME" ] || { echo "::error::Missing Secret: GITEE_USERNAME"; exit 1; }
+          [ -n "$GITEE_TOKEN" ] || { echo "::error::Missing Secret: GITEE_TOKEN"; exit 1; }
+
+      - name: Checkout full history
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Prepare Chinese Gitee landing page
+        run: |
+          cp README.md README.en.md
+          cp README.zh-CN.md README.md
+          sed -i 's#href="README.md"#href="README.en.md"#' README.md
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md README.en.md
+          git commit -m "docs: use Chinese README on Gitee [skip ci]"
+
+      - name: Push main and tags to Gitee
+        env:
+          GITEE_USERNAME: ${{ secrets.GITEE_USERNAME }}
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+        run: |
+          git remote add gitee "https://${GITEE_USERNAME}:${GITEE_TOKEN}@gitee.com/synovation/ai-base.git"
+          git push gitee HEAD:main --force
+          git push gitee --tags --force
