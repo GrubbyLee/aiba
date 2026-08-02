@@ -27,7 +27,7 @@ AIBA 是一套面向 Agent 的应用能力系统。它帮助 AI Agent 为项目�
 解析。可选的项目治理机制还能为安装和升级的最终确认增加带签名、绑定证据的团队
 审批。
 
-[观看车辆管理后台演示](docs/introduce.mp4)，了解 AIBA 和 Codex 如何从空目录
+[在线观看车辆管理后台演示](https://grubbylee.github.io/ai-base/video/)，了解 AIBA 和 Codex 如何从空目录
 开始，完成一个可操作、可独立验证的管理后台。
 
 ## 原则

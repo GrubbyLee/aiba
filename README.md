@@ -30,7 +30,7 @@ registry fetch, verified caching, and anti-rollback resolution. Optional project
 governance adds signed, evidence-bound team approvals to install and upgrade
 finalization.
 
-[Watch the vehicle-management walkthrough](docs/introduce.mp4) to see AIBA and
+[Watch the vehicle-management walkthrough](https://grubbylee.github.io/ai-base/video/) to see AIBA and
 Codex move from an empty directory to a working, independently verified admin
 application.
 
