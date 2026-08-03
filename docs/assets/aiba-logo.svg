@@ -1,20 +1,28 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 200" role="img" aria-labelledby="title description">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 220" role="img" aria-labelledby="title description">
   <title id="title">AIBA</title>
-  <desc id="description">AIBA, agent-native application capabilities.</desc>
-  <rect width="840" height="200" fill="#151412"/>
-  <g transform="translate(38 36)">
-    <g fill="#ff4a2b">
-      <path d="M0 0h34v12H12v22H0z"/>
-      <path d="M78 0h34v34h-12V12H78z"/>
-      <path d="M0 78h12v22h22v12H0z"/>
-      <path d="M100 78h12v34H78v-12h22z"/>
+  <desc id="description">AIBA delivers verified, composable, and upgradeable application capabilities for AI agents.</desc>
+  <rect width="880" height="220" fill="#151412"/>
+
+  <g transform="translate(42 38)">
+    <g fill="none" stroke-width="16" stroke-linecap="square" stroke-linejoin="bevel">
+      <path d="M65 24 31 44" stroke="#ff4a2b"/>
+      <path d="M25 57v37l33 19" stroke="#f5f0e5"/>
+      <path d="m79 116 34-20" stroke="#ff4a2b"/>
+      <path d="M119 83V50L85 30" stroke="#f5f0e5"/>
     </g>
-    <path fill="#f5f0e5" fill-rule="evenodd" d="M56 15l28 66H69l-6-16H49l5-13h4l-7-18-19 47H17l29-66h10z"/>
+    <path d="m72 51 21 21-21 21-21-21 21-21Z" fill="#58e3b1"/>
+    <path d="m72 63 9 9-9 9-9-9 9-9Z" fill="#151412"/>
   </g>
-  <g transform="translate(192 0)">
-    <text x="0" y="91" fill="#f5f0e5" font-family="Arial, Helvetica, sans-serif" font-size="70" font-weight="700" letter-spacing="10">AIBA</text>
-    <text x="3" y="128" fill="#9e9a92" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="600" letter-spacing="3">AGENT-NATIVE APPLICATION CAPABILITIES</text>
-    <rect x="3" y="151" width="92" height="2" fill="#3b3732"/>
-    <text x="116" y="157" fill="#ff4a2b" font-family="Courier New, monospace" font-size="14" letter-spacing="1">BUILD · VERIFY · TRACE · UPGRADE</text>
+
+  <path d="M215 48v124" stroke="#3b3732" stroke-width="2"/>
+
+  <g transform="translate(260 54)" fill="#f5f0e5">
+    <path fill-rule="evenodd" d="M0 92 37 0h25l37 92H74l-7-19H32l-7 19H0Zm39-40h21L49 22 39 52Z"/>
+    <path d="M119 0h23v92h-23z"/>
+    <path fill-rule="evenodd" d="M171 0h46c23 0 37 10 37 26 0 11-7 19-18 23 14 4 22 12 22 27 0 19-15 28-40 28h-47V0Zm23 18v23h20c11 0 17-4 17-12 0-7-6-11-17-11h-20Zm0 40v28h22c13 0 19-5 19-14 0-9-6-14-19-14h-22Z"/>
+    <path fill-rule="evenodd" d="m277 92 37-92h25l37 92h-25l-7-19h-35l-7 19h-25Zm39-40h21l-11-30-10 30Z"/>
   </g>
+
+  <rect x="262" y="174" width="22" height="3" fill="#58e3b1"/>
+  <text x="300" y="180" fill="#9e9a92" font-family="Inter, Arial, Helvetica, sans-serif" font-size="14" font-weight="600" letter-spacing="3.2">VERIFIED APPLICATION CAPABILITIES</text>
 </svg>

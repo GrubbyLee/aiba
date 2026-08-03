@@ -8,6 +8,7 @@
 - Text: `#f5f0e5`
 - Muted text: `#9e9a92`
 - Accent: `#ff4a2b`
+- Verified core: `#58e3b1`
 - Display type: local serif stack
 - Body type: local sans-serif stack
 - Code labels: local monospace stack
@@ -16,3 +17,7 @@
 
 The video is the primary product surface. The page must not introduce a hero,
 feature cards, fabricated metrics, or decorative imagery around it.
+
+The mark places a stable contract core inside four independent capability
+segments. The segments express composition, project-owned adaptation,
+provenance, and upgradeability; their open joints reject framework lock-in.

@@ -1,12 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title description">
-  <title id="title">AIBA mark</title>
-  <desc id="description">A letter A protected by four capability boundary brackets.</desc>
-  <rect width="128" height="128" fill="#151412"/>
-  <g fill="#ff4a2b">
-    <path d="M16 16h34v12H28v22H16z"/>
-    <path d="M78 16h34v34h-12V28H78z"/>
-    <path d="M16 78h12v22h22v12H16z"/>
-    <path d="M100 78h12v34H78v-12h22z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 144" role="img" aria-labelledby="title description">
+  <title id="title">AIBA capability core</title>
+  <desc id="description">A verified contract core surrounded by four independent, upgradeable capability modules.</desc>
+  <rect width="144" height="144" rx="18" fill="#151412"/>
+  <g fill="none" stroke-width="16" stroke-linecap="square" stroke-linejoin="bevel">
+    <path d="M65 24 31 44" stroke="#ff4a2b"/>
+    <path d="M25 57v37l33 19" stroke="#f5f0e5"/>
+    <path d="m79 116 34-20" stroke="#ff4a2b"/>
+    <path d="M119 83V50L85 30" stroke="#f5f0e5"/>
   </g>
-  <path fill="#f5f0e5" fill-rule="evenodd" d="M64 31l28 66H77l-6-16H57l5-13h4l-7-18-19 47H25l29-66h10z"/>
+  <path d="m72 51 21 21-21 21-21-21 21-21Z" fill="#58e3b1"/>
+  <path d="m72 63 9 9-9 9-9-9 9-9Z" fill="#151412"/>
 </svg>
