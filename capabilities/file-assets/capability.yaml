@@ -1,0 +1,80 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: file-assets
+  version: 0.1.0
+  title: File Assets
+  layer: application-foundation
+  description: >-
+    Authorized, tenant-scoped handling of untrusted file content with bounded
+    ingestion, byte verification, quarantine, private access, terminal deletion,
+    idempotency, and minimized records.
+spec:
+  interfaces:
+    - identity.principal
+    - authorization.decision
+    - audit.event
+    - file-assets.upload-command
+    - file-assets.record
+  dependencies:
+    - id: authorization
+      version: ^0.1.0
+      optional: false
+    - id: audit
+      version: ^0.1.0
+      optional: false
+  invariants:
+    - id: asset-operations-are-authorized
+      title: Asset operations are authorized
+      description: Upload, retrieval, and deletion each require an explicit authorization decision over a trusted asset resource.
+      severity: critical
+      evidence: &sourceAndTest
+        acceptedTypes: [source, test, config, document]
+        requiredTypes: [source, test]
+        minimum: 2
+        requireHash: true
+    - id: tenant-comes-from-trusted-context
+      title: Tenant comes from trusted context
+      description: Commands, file names, metadata, and asset identifiers cannot select or override the tenant used for storage and policy.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: content-is-bounded-and-byte-verified
+      title: Content is bounded and byte verified
+      description: Actual streamed bytes must remain within configured limits and match verified size, digest, and detected content type rather than client declarations alone.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: storage-keys-are-server-generated
+      title: Storage keys are server generated
+      description: Object keys are unpredictable server values and never derived from file names, paths, tenant input, or provider locations supplied by a caller.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: untrusted-content-is-quarantined
+      title: Untrusted content is quarantined
+      description: Uploaded bytes remain unavailable until the configured validation and scanning policy accepts them; rejected content cannot be promoted.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: assets-are-private-by-default
+      title: Assets are private by default
+      description: Storage and records do not expose reusable public or provider URLs, credentials, object keys, or bypass tokens.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: retrieval-is-tenant-isolated
+      title: Retrieval is tenant isolated
+      description: Retrieval resolves an available asset inside the trusted tenant after authorization and cannot access quarantined, rejected, deleted, or cross-tenant content.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: uploads-are-idempotent
+      title: Uploads are idempotent
+      description: A tenant-scoped idempotency key is durably bound to one command digest and cannot be replayed with different content or metadata.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: deletion-is-terminal
+      title: Deletion is terminal
+      description: Deletion removes accessible content, records terminal state, and cannot be reversed by upload retry, stale metadata, or repeated delete requests.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: records-and-audit-are-minimized
+      title: Records and audit are minimized
+      description: Portable records and audit events exclude raw content, original paths, provider keys, credentials, signed URLs, and reusable access tokens.
+      severity: critical
+      evidence: *sourceAndTest

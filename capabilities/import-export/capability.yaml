@@ -1,0 +1,95 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: import-export
+  version: 0.1.0
+  title: Import Export
+  layer: business-capability
+  description: >-
+    Authorized, tenant-scoped data exchange through server-owned profiles,
+    private file assets, bounded validation, atomic imports, policy-filtered
+    exports, formula-injection defense, idempotent jobs, and minimized results.
+spec:
+  interfaces:
+    - identity.principal
+    - authorization.decision
+    - audit.event
+    - file-assets.record
+    - import-export.import-command
+    - import-export.export-command
+    - import-export.job-record
+  dependencies:
+    - id: authorization
+      version: ^0.1.0
+      optional: false
+    - id: audit
+      version: ^0.1.0
+      optional: false
+    - id: file-assets
+      version: ^0.1.0
+      optional: false
+  invariants:
+    - id: exchange-operations-are-authorized
+      title: Exchange operations are authorized
+      description: Every import and export requires an explicit decision over a trusted profile resource in the authenticated tenant.
+      severity: critical
+      evidence: &sourceAndTest
+        acceptedTypes: [source, test, config, document]
+        requiredTypes: [source, test]
+        minimum: 2
+        requireHash: true
+    - id: tenant-comes-from-trusted-context
+      title: Tenant comes from trusted context
+      description: Commands, source assets, filters, rows, job identifiers, and output locations cannot select or override the tenant.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: profiles-are-server-owned
+      title: Profiles are server owned
+      description: Callers select only enabled profile identifiers and cannot provide tables, queries, fields, mappings, formats, destinations, or callbacks.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: import-sources-are-private-assets
+      title: Import sources are private assets
+      description: Imports read an available tenant-owned file asset through an authorized boundary and never accept provider URLs, paths, credentials, or inline remote locations.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: import-processing-is-bounded
+      title: Import processing is bounded
+      description: Source bytes, row counts, field counts, cell sizes, parser work, and retained validation errors have explicit application limits.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: imported-rows-are-schema-validated
+      title: Imported rows are schema validated
+      description: Every row is checked against the trusted profile with exact allowed fields, safe field names, types, required values, and uniqueness constraints before persistence.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: import-commit-is-atomic
+      title: Import commit is atomic
+      description: Invalid or failed jobs do not partially mutate business data; accepted rows and required audit provenance commit through one transaction or equivalent outbox boundary.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: exports-apply-trusted-data-policy
+      title: Exports apply trusted data policy
+      description: Export rows are selected inside the trusted tenant and contain only fields explicitly allowed by the server-owned profile.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: spreadsheet-formulas-are-neutralized
+      title: Spreadsheet formulas are neutralized
+      description: Text exported to spreadsheet-compatible formats cannot be interpreted as formulas, commands, or external data references when opened.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: exchange-jobs-are-idempotent
+      title: Exchange jobs are idempotent
+      description: A tenant- and operation-scoped idempotency key is durably bound to one exact command and cannot be reused for a different exchange.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: exchange-results-are-private-assets
+      title: Exchange results are private assets
+      description: Export files and bounded error reports are stored as private file assets; portable job records expose only opaque asset identifiers.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: jobs-errors-and-audit-are-minimized
+      title: Jobs, errors, and audit are minimized
+      description: Results and audit exclude row values, source bytes, file names, provider locations, queries, mappings, credentials, signed URLs, and reusable tokens.
+      severity: critical
+      evidence: *sourceAndTest

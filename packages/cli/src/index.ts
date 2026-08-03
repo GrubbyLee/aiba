@@ -11,6 +11,10 @@ import {
   createCapabilityBundle,
   createCapabilityApproval,
   createRegistryIndex,
+  checkSolution,
+  advanceSolutionInstallation,
+  describeCatalogItem,
+  discoverCatalog,
   diffProject,
   generatePublisherKeyPair,
   initializeProject,
@@ -26,10 +30,19 @@ import {
   verifyProject,
 } from "aiba-core";
 import { createRegistryServer } from "aiba-registry-server";
-import { renderDiff, renderInspection, renderVerification } from "./render.js";
+import {
+  renderDiff,
+  renderCatalog,
+  renderCatalogItem,
+  renderInspection,
+  renderSolutionCheck,
+  renderSolutionInstall,
+  renderVerification,
+} from "./render.js";
 
 const program = new Command();
 const installedPacksDirectory = fileURLToPath(new URL("../capabilities", import.meta.url));
+const installedSolutionsDirectory = fileURLToPath(new URL("../solutions", import.meta.url));
 
 function packageVersion(): string {
   const value = JSON.parse(readFileSync(new URL("../package.json", import.meta.url), "utf8")) as unknown;
@@ -48,6 +61,12 @@ function defaultPacksDirectory(): string {
   return existsSync(installedPacksDirectory)
     ? installedPacksDirectory
     : resolve("capabilities");
+}
+
+function defaultSolutionsDirectory(): string {
+  return existsSync(installedSolutionsDirectory)
+    ? installedSolutionsDirectory
+    : resolve("solutions");
 }
 
 program
@@ -556,6 +575,47 @@ program
   });
 
 program
+  .command("list")
+  .description("List verified capabilities and industry Solutions")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--solutions-dir <path>", "solution definition directory", defaultSolutionsDirectory())
+  .option("--json", "print machine-readable JSON")
+  .action(async (options: {
+    packsDir: string;
+    solutionsDir: string;
+    json?: boolean;
+  }) => {
+    const catalog = await discoverCatalog({
+      packsDirectory: resolve(options.packsDir),
+      solutionsDirectory: resolve(options.solutionsDir),
+    });
+    process.stdout.write(
+      `${options.json ? JSON.stringify(catalog, null, 2) : renderCatalog(catalog)}\n`,
+    );
+  });
+
+program
+  .command("show")
+  .description("Show a verified capability or industry Solution")
+  .argument("<id>", "capability or Solution identifier")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--solutions-dir <path>", "solution definition directory", defaultSolutionsDirectory())
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    id: string,
+    options: { packsDir: string; solutionsDir: string; json?: boolean },
+  ) => {
+    const item = await describeCatalogItem({
+      id,
+      packsDirectory: resolve(options.packsDir),
+      solutionsDirectory: resolve(options.solutionsDir),
+    });
+    process.stdout.write(
+      `${options.json ? JSON.stringify(item, null, 2) : renderCatalogItem(item)}\n`,
+    );
+  });
+
+program
   .command("init")
   .description("Initialize project-owned AIBA state")
   .argument("[root]", "project root", ".")
@@ -591,20 +651,24 @@ program
 
 program
   .command("add")
-  .description("Prepare or finalize a capability installation")
-  .argument("<capability>", "capability to install")
+  .description("Prepare or finalize a capability or guided Solution installation")
+  .argument("<target>", "capability or Solution to install")
   .option("--root <path>", "project root", ".")
   .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--solutions-dir <path>", "solution definition directory", defaultSolutionsDirectory())
+  .option("--solution", "install an exact Solution one capability at a time")
   .option("--recipe <id>", "select a capability recipe")
   .option("--agent <name>", "record the installing Agent")
   .option("--prepare", "prepare an operation plan (default)")
   .option("--finalize", "verify evidence and record the installation")
   .option("--json", "print machine-readable JSON")
   .action(async (
-    capability: string,
+    target: string,
     options: {
       root: string;
       packsDir: string;
+      solutionsDir: string;
+      solution?: boolean;
       recipe?: string;
       agent?: string;
       prepare?: boolean;
@@ -621,11 +685,26 @@ program
 
     const projectRoot = resolve(options.root);
     const packsDirectory = resolve(options.packsDir);
+    if (options.solution) {
+      const result = await advanceSolutionInstallation({
+        solutionId: target,
+        projectRoot,
+        packsDirectory,
+        solutionsDirectory: resolve(options.solutionsDir),
+        mode: options.finalize ? "finalize" : "prepare",
+        ...(options.recipe ? { recipeId: options.recipe } : {}),
+        ...(options.agent ? { agent: options.agent } : {}),
+      });
+      process.stdout.write(
+        `${options.json ? JSON.stringify(result, null, 2) : renderSolutionInstall(result)}\n`,
+      );
+      return;
+    }
     if (options.finalize) {
       const result = await finalizeCapability({
         projectRoot,
         packsDirectory,
-        capabilityId: capability,
+        capabilityId: target,
         ...(options.agent ? { agent: options.agent } : {}),
       });
       if (options.json) {
@@ -643,7 +722,7 @@ program
     const result = await prepareCapability({
       projectRoot,
       packsDirectory,
-      capabilityId: capability,
+      capabilityId: target,
       ...(options.recipe ? { recipeId: options.recipe } : {}),
     });
     if (options.json) {
@@ -745,6 +824,35 @@ program
       ...(capability ? { capabilityId: capability } : {}),
     });
     process.stdout.write(`${options.json ? JSON.stringify(report, null, 2) : renderDiff(report)}\n`);
+    if (!report.ok) process.exitCode = 1;
+  });
+
+program
+  .command("compose")
+  .description("Check whether a project satisfies an exact capability solution")
+  .argument("<solution>", "solution to check")
+  .option("--root <path>", "project root", ".")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--solutions-dir <path>", "solution definition directory", defaultSolutionsDirectory())
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    solution: string,
+    options: {
+      root: string;
+      packsDir: string;
+      solutionsDir: string;
+      json?: boolean;
+    },
+  ) => {
+    const report = await checkSolution({
+      solutionId: solution,
+      projectRoot: resolve(options.root),
+      packsDirectory: resolve(options.packsDir),
+      solutionsDirectory: resolve(options.solutionsDir),
+    });
+    process.stdout.write(
+      `${options.json ? JSON.stringify(report, null, 2) : renderSolutionCheck(report)}\n`,
+    );
     if (!report.ok) process.exitCode = 1;
   });
 

@@ -1,0 +1,205 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: vehicle-records-install
+  createdAt: 2026-07-26T00:17:00.000Z
+capability:
+  id: vehicle-records
+  version: 0.1.0
+  manifestSha256: 752e5d3507fc028244ee5c15f14afdc50238fc0c2f77fc40797d63a0ec16e741
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: 8c4ae0064814253a2644db84e9167253a7d85b03ad84d485891de48cb22a1ad8
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+    - cloudfunctions/**
+operations:
+  - id: establish-vehicle-command-boundary
+    intent: Parse bounded create and update commands without accepting tenant or
+      server-owned identifiers.
+    requiredInterfaces:
+      - vehicle-records.create-command
+      - vehicle-records.update-command
+    invariants:
+      - tenant-comes-from-trusted-context
+      - vehicle-identities-are-server-owned
+      - vehicle-input-is-bounded
+    guidance:
+      - Reject unknown fields and normalize identifiers before authorization,
+        uniqueness, hashing, or persistence.
+      - Derive tenant and actor exclusively from the trusted principal context.
+  - id: authorize-vehicle-operations
+    intent: Authorize exact create, read, list, and update actions against trusted
+      resources.
+    requiredInterfaces:
+      - identity.principal
+      - authorization.decision
+    invariants:
+      - vehicle-operations-are-authorized
+      - tenant-comes-from-trusted-context
+    guidance:
+      - Bind authorization to the authenticated tenant and server-resolved
+        vehicle identifier.
+      - Fail closed when a decision changes principal, tenant, action, or
+        resource.
+  - id: persist-unique-vehicle-identity
+    intent: Generate opaque IDs and enforce normalized identifier uniqueness inside
+      each tenant.
+    requiredInterfaces:
+      - vehicle-records.record
+    invariants:
+      - vehicle-identities-are-server-owned
+      - identifiers-are-normalized-and-tenant-unique
+      - vehicle-creation-is-idempotent
+    guidance:
+      - Enforce fleet number, plate number, and VIN uniqueness with database
+        constraints, not preflight checks alone.
+      - Bind idempotency to a normalized command fingerprint and persist the
+        result durably.
+  - id: control-vehicle-mutations
+    intent: Apply bounded mileage and lifecycle changes with compare-and-set
+      concurrency.
+    requiredInterfaces:
+      - vehicle-records.update-command
+      - vehicle-records.record
+    invariants:
+      - updates-use-optimistic-concurrency
+      - lifecycle-transitions-are-controlled
+    guidance:
+      - Reject stale expected revisions and prevent mileage rollback.
+      - Keep retired status terminal unless a future explicit capability version
+        defines a recovery workflow.
+  - id: commit-attributable-vehicle-change
+    intent: Commit a successful mutation and minimized audit outcome as one
+      reliability boundary.
+    requiredInterfaces:
+      - audit.event
+      - vehicle-records.record
+    invariants:
+      - mutations-and-audit-are-atomic-and-minimized
+    guidance:
+      - Use a database transaction or transactional outbox so vehicle state and
+        required audit cannot diverge.
+      - Audit action, actor, tenant, vehicle ID, outcome, and correlation ID
+        without plate, VIN, or full payload.
+evidence:
+  - invariant: vehicle-operations-are-authorized
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Vehicle command, authorization, lifecycle, repository, and audit
+          boundary.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Authorization, tenant isolation, validation, uniqueness,
+          concurrency, lifecycle, idempotency, and audit attacks.
+    items:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+  - invariant: tenant-comes-from-trusted-context
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+  - invariant: vehicle-identities-are-server-owned
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+  - invariant: identifiers-are-normalized-and-tenant-unique
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+  - invariant: vehicle-input-is-bounded
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+  - invariant: updates-use-optimistic-concurrency
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+  - invariant: lifecycle-transitions-are-controlled
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+  - invariant: vehicle-creation-is-idempotent
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+  - invariant: mutations-and-audit-are-atomic-and-minimized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared

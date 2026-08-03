@@ -9,12 +9,12 @@ Adapters may:
 - Translate user intent into AIBA commands.
 - Read structured project inspection and operation plans.
 - Modify project-owned code with the host Agent.
-- Re-run deterministic verification and repair failures.
+- Re-run deterministic evidence and provenance verification and repair failures.
 
 Adapters may not:
 
 - Redefine capability invariants.
-- Mark verification as successful without Core results.
+- Mark evidence/provenance verification as successful without Core results.
 - Modify receipts after evidence changes without re-hashing.
 - Send project files to a hosted service without explicit user policy.
 

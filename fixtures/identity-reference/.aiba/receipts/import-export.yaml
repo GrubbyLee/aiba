@@ -1,0 +1,135 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: import-export
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:16:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/import-export.yaml
+  planSha256: 3ab60cdd9355ee12c29c0dbc84d8c5d3c4905e0797fa46237fd39f35f205721a
+  ancestry: .aiba/ancestry/import-export.json
+  ancestrySha256: b3a9a1d1d86161b88a47ba97628a39a45590c170f22b10714eac8e25f94ea71a
+invariants:
+  - id: exchange-operations-are-authorized
+    evidence:
+      - type: source
+        path: src/import-export.ts
+        ownership: shared
+        sha256: 0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf
+      - type: test
+        path: src/import-export.test.ts
+        ownership: shared
+        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+  - id: tenant-comes-from-trusted-context
+    evidence:
+      - type: source
+        path: src/import-export.ts
+        ownership: shared
+        sha256: 0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf
+      - type: test
+        path: src/import-export.test.ts
+        ownership: shared
+        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+  - id: profiles-are-server-owned
+    evidence:
+      - type: source
+        path: src/import-export.ts
+        ownership: shared
+        sha256: 0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf
+      - type: test
+        path: src/import-export.test.ts
+        ownership: shared
+        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+  - id: import-sources-are-private-assets
+    evidence:
+      - type: source
+        path: src/import-export.ts
+        ownership: shared
+        sha256: 0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf
+      - type: test
+        path: src/import-export.test.ts
+        ownership: shared
+        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+  - id: import-processing-is-bounded
+    evidence:
+      - type: source
+        path: src/import-export.ts
+        ownership: shared
+        sha256: 0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf
+      - type: test
+        path: src/import-export.test.ts
+        ownership: shared
+        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+  - id: imported-rows-are-schema-validated
+    evidence:
+      - type: source
+        path: src/import-export.ts
+        ownership: shared
+        sha256: 0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf
+      - type: test
+        path: src/import-export.test.ts
+        ownership: shared
+        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+  - id: import-commit-is-atomic
+    evidence:
+      - type: source
+        path: src/import-export.ts
+        ownership: shared
+        sha256: 0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf
+      - type: test
+        path: src/import-export.test.ts
+        ownership: shared
+        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+  - id: exports-apply-trusted-data-policy
+    evidence:
+      - type: source
+        path: src/import-export.ts
+        ownership: shared
+        sha256: 0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf
+      - type: test
+        path: src/import-export.test.ts
+        ownership: shared
+        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+  - id: spreadsheet-formulas-are-neutralized
+    evidence:
+      - type: source
+        path: src/import-export.ts
+        ownership: shared
+        sha256: 0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf
+      - type: test
+        path: src/import-export.test.ts
+        ownership: shared
+        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+  - id: exchange-jobs-are-idempotent
+    evidence:
+      - type: source
+        path: src/import-export.ts
+        ownership: shared
+        sha256: 0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf
+      - type: test
+        path: src/import-export.test.ts
+        ownership: shared
+        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+  - id: exchange-results-are-private-assets
+    evidence:
+      - type: source
+        path: src/import-export.ts
+        ownership: shared
+        sha256: 0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf
+      - type: test
+        path: src/import-export.test.ts
+        ownership: shared
+        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+  - id: jobs-errors-and-audit-are-minimized
+    evidence:
+      - type: source
+        path: src/import-export.ts
+        ownership: shared
+        sha256: 0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf
+      - type: test
+        path: src/import-export.test.ts
+        ownership: shared
+        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd

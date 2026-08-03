@@ -1,0 +1,73 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: wechat-miniprogram-auth
+  version: 0.1.0
+  title: WeChat Mini Program Authentication
+  layer: platform-integration
+  description: >-
+    Server-side exchange of one-time WeChat Mini Program login codes into
+    stable AIBA principals without exposing provider credentials or session keys.
+spec:
+  interfaces:
+    - identity.principal
+    - audit.event
+    - wechat-miniprogram-auth.login-command
+    - wechat-miniprogram-auth.login-result
+  dependencies:
+    - id: identity
+      version: ^0.1.0
+      optional: false
+    - id: audit
+      version: ^0.1.0
+      optional: false
+  invariants:
+    - id: login-code-is-exchanged-server-side
+      title: Login code is exchanged server side
+      description: The client sends only a bounded one-time code to the application server, which calls the fixed WeChat code-exchange endpoint over verified HTTPS.
+      severity: critical
+      evidence: &wechatEvidence
+        acceptedTypes: [source, test, config, document]
+        requiredTypes: [source, test]
+        minimum: 2
+        requireHash: true
+    - id: provider-credentials-are-server-owned
+      title: Provider credentials are server owned
+      description: AppID, AppSecret, endpoint, timeout, and provider request parameters come from trusted server configuration rather than caller input.
+      severity: critical
+      evidence: *wechatEvidence
+    - id: provider-response-fails-closed
+      title: Provider response fails closed
+      description: Network errors, provider errors, malformed fields, oversized responses, and missing identity values never create a principal.
+      severity: critical
+      evidence: *wechatEvidence
+    - id: session-key-never-crosses-client-boundary
+      title: Session key never crosses client boundary
+      description: WeChat session keys remain inside the trusted integration boundary and never appear in login results, logs, audit events, URLs, or client storage.
+      severity: critical
+      evidence: *wechatEvidence
+    - id: provider-identity-is-server-bound
+      title: Provider identity is server bound
+      description: OpenID and optional UnionID are bound to an application account and tenant by trusted identity state rather than client claims.
+      severity: critical
+      evidence: *wechatEvidence
+    - id: principal-is-not-client-selectable
+      title: Principal is not client selectable
+      description: Login commands cannot supply subject, tenant, role, permission, OpenID, UnionID, or session attributes.
+      severity: critical
+      evidence: *wechatEvidence
+    - id: login-code-replay-is-rejected
+      title: Login code replay is rejected
+      description: A one-time code cannot create a second session or be rebound after its first terminal exchange attempt.
+      severity: error
+      evidence: *wechatEvidence
+    - id: integration-processing-is-bounded
+      title: Integration processing is bounded
+      description: Code length, request duration, response bytes, identifier length, and retained failure detail have explicit limits.
+      severity: error
+      evidence: *wechatEvidence
+    - id: authentication-audit-is-minimized
+      title: Authentication audit is minimized
+      description: Outcomes are attributable and correlated without recording codes, AppSecret, session keys, OpenID, UnionID, or reusable session credentials.
+      severity: critical
+      evidence: *wechatEvidence

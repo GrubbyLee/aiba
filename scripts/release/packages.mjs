@@ -24,6 +24,7 @@ export const releasePackages = [
     name: "@grubbylee/aiba",
     license: "LICENSE",
     capabilities: true,
+    solutions: true,
   },
 ];
 
@@ -121,6 +122,9 @@ export function createPackageArtifacts(outputPath) {
           join(workspace, "GENERATED_OUTPUT_EXCEPTION.md"),
           join(staging, "GENERATED_OUTPUT_EXCEPTION.md"),
         );
+      }
+      if (definition.solutions) {
+        copyReleaseTree(join(workspace, "solutions"), join(staging, "solutions"));
       }
       cpSync(join(workspace, definition.license), join(staging, "LICENSE"));
       const manifest = releaseManifest(definition.manifest, versions);

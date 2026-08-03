@@ -1,0 +1,33 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityCatalog
+capabilities:
+  - id: audit
+    version: 0.1.0
+    layer: engineering-governance
+  - id: authorization
+    version: 0.1.0
+    layer: application-foundation
+  - id: file-assets
+    version: 0.1.0
+    layer: application-foundation
+  - id: identity
+    version: 0.1.0
+    layer: application-foundation
+  - id: import-export
+    version: 0.1.0
+    layer: business-capability
+  - id: notification
+    version: 0.1.0
+    layer: application-foundation
+  - id: review-access
+    version: 0.1.0
+    layer: application-foundation
+  - id: users
+    version: 0.1.0
+    layer: application-foundation
+  - id: vehicle-records
+    version: 0.1.0
+    layer: business-capability
+  - id: wechat-miniprogram-auth
+    version: 0.1.0
+    layer: platform-integration

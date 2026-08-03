@@ -5,6 +5,7 @@ project:
   stack:
     languages:
       - TypeScript
+      - JavaScript
     frameworks: []
 capabilities:
   - id: identity
@@ -13,6 +14,9 @@ capabilities:
   - id: audit
     version: 0.1.0
     receipt: .aiba/receipts/audit.yaml
+  - id: wechat-miniprogram-auth
+    version: 0.1.0
+    receipt: .aiba/receipts/wechat-miniprogram-auth.yaml
   - id: authorization
     version: 0.1.0
     receipt: .aiba/receipts/authorization.yaml
@@ -22,3 +26,12 @@ capabilities:
   - id: notification
     version: 0.1.0
     receipt: .aiba/receipts/notification.yaml
+  - id: file-assets
+    version: 0.1.0
+    receipt: .aiba/receipts/file-assets.yaml
+  - id: import-export
+    version: 0.1.0
+    receipt: .aiba/receipts/import-export.yaml
+  - id: vehicle-records
+    version: 0.1.0
+    receipt: .aiba/receipts/vehicle-records.yaml

@@ -1,0 +1,71 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "file-assets",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:14:00.000Z",
+  "files": [
+    {
+      "path": "src/file-assets.test.ts",
+      "installedSha256": "71cfc8e2eea661127ddbc4c8d722c5a1ce735a02e2fa6249c104e24323428182",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "asset-operations-are-authorized",
+        "tenant-comes-from-trusted-context",
+        "content-is-bounded-and-byte-verified",
+        "storage-keys-are-server-generated",
+        "untrusted-content-is-quarantined",
+        "assets-are-private-by-default",
+        "retrieval-is-tenant-isolated",
+        "uploads-are-idempotent",
+        "deletion-is-terminal",
+        "records-and-audit-are-minimized"
+      ],
+      "operations": [
+        "authorize-and-deduplicate-upload",
+        "establish-private-access",
+        "establish-terminal-deletion",
+        "establish-upload-boundary",
+        "quarantine-and-promote-content",
+        "minimize-file-asset-provenance"
+      ]
+    },
+    {
+      "path": "src/file-assets.ts",
+      "installedSha256": "27dcc4691be551d79142057386ff23a51ae30b347579c3c7fcc803f7362b7f6c",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "asset-operations-are-authorized",
+        "tenant-comes-from-trusted-context",
+        "content-is-bounded-and-byte-verified",
+        "storage-keys-are-server-generated",
+        "untrusted-content-is-quarantined",
+        "assets-are-private-by-default",
+        "retrieval-is-tenant-isolated",
+        "uploads-are-idempotent",
+        "deletion-is-terminal",
+        "records-and-audit-are-minimized"
+      ],
+      "operations": [
+        "authorize-and-deduplicate-upload",
+        "establish-private-access",
+        "establish-terminal-deletion",
+        "establish-upload-boundary",
+        "quarantine-and-promote-content",
+        "minimize-file-asset-provenance"
+      ]
+    }
+  ]
+}

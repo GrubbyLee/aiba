@@ -4,6 +4,7 @@ import {
   mkdtemp,
   readFile,
   rm,
+  symlink,
   writeFile,
 } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -143,6 +144,23 @@ async function stateBytes(root: string): Promise<Record<string, string>> {
 }
 
 describe("customization-aware capability upgrade", () => {
+  it("rejects an upgrade plan symlink that resolves outside the project", async () => {
+    const fixture = await installV1();
+    await prepare(fixture);
+    const externalRoot = await mkdtemp(join(tmpdir(), "aiba-external-upgrade-plan-"));
+    roots.push(externalRoot);
+    const externalPlan = join(externalRoot, "review-access.upgrade.yaml");
+    await writeFile(externalPlan, await readFile(fixture.upgradePlanPath, "utf8"));
+    await rm(fixture.upgradePlanPath);
+    await symlink(externalPlan, fixture.upgradePlanPath);
+
+    await expect(finalizeUpgrade({
+      projectRoot: fixture.root,
+      targetPacksDirectory: fixture.targetPacks,
+      capabilityId: "review-access",
+    })).rejects.toMatchObject({ code: "UNSAFE_PROJECT_PATH" });
+  });
+
   it("upgrades a clean v1 installation and records target provenance", async () => {
     const fixture = await installV1();
     const prepared = await prepare(fixture);

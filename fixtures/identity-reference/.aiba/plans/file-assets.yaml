@@ -1,0 +1,228 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: file-assets-install
+  createdAt: 2026-07-26T00:13:00.000Z
+capability:
+  id: file-assets
+  version: 0.1.0
+  manifestSha256: 29176ec35d328b6e5fe03f9528926a035859305944dc7e5a511e6138b38d7565
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: bbd2d8bd6440d096596218682f99173ea28d381d24bf211d545dcbacc4dab1e1
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+    - cloudfunctions/**
+operations:
+  - id: establish-upload-boundary
+    intent: Accept bounded file metadata and bytes while deriving tenant and storage
+      identity from trusted state.
+    requiredInterfaces:
+      - identity.principal
+      - file-assets.upload-command
+    invariants:
+      - tenant-comes-from-trusted-context
+      - content-is-bounded-and-byte-verified
+      - storage-keys-are-server-generated
+    guidance:
+      - Validate the portable command before reading bytes and enforce a lower
+        application-specific size limit while streaming.
+      - Compute size, SHA-256, and content type from actual bytes; never use the
+        display file name as an object key.
+  - id: authorize-and-deduplicate-upload
+    intent: Authorize asset creation and bind one trusted-tenant idempotency key to
+      one command and byte digest.
+    requiredInterfaces:
+      - authorization.decision
+    invariants:
+      - asset-operations-are-authorized
+      - uploads-are-idempotent
+    guidance:
+      - Scope authorization and idempotency to the tenant derived from the
+        authenticated context.
+      - Return the prior result only when command metadata and actual bytes have
+        the same digest.
+  - id: quarantine-and-promote-content
+    intent: Keep bytes inaccessible while validation and scanning run, then
+      atomically promote only accepted content to private storage.
+    requiredInterfaces:
+      - file-assets.record
+    invariants:
+      - untrusted-content-is-quarantined
+      - assets-are-private-by-default
+    guidance:
+      - Make quarantine and private storage states explicit and clean up staged
+        content after rejection or failure.
+      - Do not place provider keys, URLs, credentials, or access tokens in the
+        portable record.
+  - id: establish-private-access
+    intent: Resolve available content only inside the trusted tenant after an
+      explicit read decision.
+    requiredInterfaces:
+      - authorization.decision
+      - file-assets.record
+    invariants:
+      - asset-operations-are-authorized
+      - retrieval-is-tenant-isolated
+    guidance:
+      - Look up records by trusted tenant plus opaque asset identifier and
+        reject every non-available state.
+      - Stream through an authorized boundary or issue a short-lived provider
+        grant only after the same checks.
+  - id: establish-terminal-deletion
+    intent: Authorize deletion, remove accessible bytes, and preserve an
+      irreversible terminal record.
+    requiredInterfaces:
+      - authorization.decision
+      - file-assets.record
+    invariants:
+      - asset-operations-are-authorized
+      - deletion-is-terminal
+    guidance:
+      - Make repeated deletion safe while preventing an upload retry from
+        restoring a deleted asset.
+      - Account for provider retention and replicas in the application deletion
+        policy.
+  - id: minimize-file-asset-provenance
+    intent: Record useful lifecycle outcomes without retaining content or reusable
+      storage access.
+    requiredInterfaces:
+      - audit.event
+      - file-assets.record
+    invariants:
+      - records-and-audit-are-minimized
+    guidance:
+      - Record action, outcome, actor, asset reference, tenant, and correlation
+        identifiers only.
+      - Exclude file names where policy does not require them and always exclude
+        bytes, provider keys, URLs, and credentials.
+evidence:
+  - invariant: asset-operations-are-authorized
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: File asset lifecycle and storage boundary implementation.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Authorization, isolation, byte validation, quarantine, idempotency,
+          and deletion attack tests.
+    items:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+  - invariant: tenant-comes-from-trusted-context
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+  - invariant: content-is-bounded-and-byte-verified
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+  - invariant: storage-keys-are-server-generated
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+  - invariant: untrusted-content-is-quarantined
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+  - invariant: assets-are-private-by-default
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+  - invariant: retrieval-is-tenant-isolated
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+  - invariant: uploads-are-idempotent
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+  - invariant: deletion-is-terminal
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+  - invariant: records-and-audit-are-minimized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared

@@ -3,11 +3,13 @@ import { join, resolve } from "node:path";
 import { validRange } from "semver";
 import { parse } from "yaml";
 import type {
+  CapabilityCatalog,
   CapabilityManifest,
   CapabilityAncestry,
   CapabilityMigration,
   CapabilityRecipe,
   CapabilityReceipt,
+  CapabilitySolution,
   OperationPlan,
   ProjectLock,
   ProjectManifest,
@@ -16,11 +18,13 @@ import type {
 import { AibaError } from "./errors.js";
 import { resolveExistingProjectPath } from "./paths.js";
 import {
+  validateCapabilityCatalog,
   validateCapabilityManifest,
   validateCapabilityAncestry,
   validateCapabilityMigration,
   validateCapabilityRecipe,
   validateCapabilityReceipt,
+  validateCapabilitySolution,
   validateOperationPlan,
   validateProjectLock,
   validateProjectManifest,
@@ -65,6 +69,19 @@ async function readJson(path: string): Promise<unknown> {
   }
 }
 
+async function resolveProjectDocumentPath(
+  projectRoot: string,
+  projectPath: string,
+): Promise<string> {
+  try {
+    return await resolveExistingProjectPath(projectRoot, projectPath);
+  } catch (error) {
+    const code = error instanceof Error && "code" in error ? error.code : undefined;
+    if (code === "ENOENT") return join(resolve(projectRoot), projectPath);
+    throw error;
+  }
+}
+
 export async function loadCapabilityManifest(
   packsDirectory: string,
   capabilityId: string,
@@ -105,6 +122,34 @@ export async function loadCapabilityManifest(
     }
   }
   return manifest;
+}
+
+export async function loadCapabilityCatalog(packsDirectory: string): Promise<CapabilityCatalog> {
+  const path = join(resolve(packsDirectory), "catalog.yaml");
+  const catalog = validateCapabilityCatalog(await readYaml(path));
+  const identities = catalog.capabilities.map(({ id, version }) => `${id}@${version}`);
+  if (new Set(identities).size !== identities.length) {
+    throw new AibaError("Capability catalog contains duplicate versions", "DUPLICATE_CAPABILITY");
+  }
+  return catalog;
+}
+
+export async function loadCapabilitySolution(
+  solutionsDirectory: string,
+  solutionId: string,
+): Promise<CapabilitySolution> {
+  if (!/^[a-z][a-z0-9-]{1,62}$/.test(solutionId)) {
+    throw new AibaError(`Invalid solution identifier: ${solutionId}`, "INVALID_SOLUTION_ID");
+  }
+  const path = join(resolve(solutionsDirectory), solutionId, "solution.yaml");
+  const solution = validateCapabilitySolution(await readYaml(path));
+  if (solution.metadata.id !== solutionId) {
+    throw new AibaError(
+      `Solution directory ${solutionId} contains ${solution.metadata.id}`,
+      "SOLUTION_ID_MISMATCH",
+    );
+  }
+  return solution;
 }
 
 export async function loadProjectManifest(
@@ -170,7 +215,10 @@ export async function loadOperationPlan(
       "INVALID_CAPABILITY_ID",
     );
   }
-  const path = join(resolve(projectRoot), ".aiba", "plans", `${capabilityId}.yaml`);
+  const path = await resolveProjectDocumentPath(
+    projectRoot,
+    `.aiba/plans/${capabilityId}.yaml`,
+  );
   return validateOperationPlan(await readYaml(path));
 }
 
@@ -209,11 +257,9 @@ export async function loadUpgradePlan(
       "INVALID_CAPABILITY_ID",
     );
   }
-  const path = join(
-    resolve(projectRoot),
-    ".aiba",
-    "plans",
-    `${capabilityId}.upgrade.yaml`,
+  const path = await resolveProjectDocumentPath(
+    projectRoot,
+    `.aiba/plans/${capabilityId}.upgrade.yaml`,
   );
   return validateUpgradePlan(await readYaml(path));
 }

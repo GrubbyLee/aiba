@@ -1,6 +1,7 @@
 {
   "pages": [
-    "pages/review/index"
+    "pages/review/index",
+    "pages/vehicles/index"
   ],
   "window": {
     "navigationBarTitleText": "Review Access",

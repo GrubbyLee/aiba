@@ -1,0 +1,96 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Import Export Boundary
+  description: Semantic guidance for bounded, profile-driven data exchange in TypeScript.
+spec:
+  capability:
+    id: import-export
+    version: 0.1.0
+  compatibility:
+    languages: [TypeScript]
+    frameworks: []
+  writeScope:
+    allowedPatterns:
+      - src/**
+      - server/**
+      - test/**
+      - tests/**
+      - cloudfunctions/**
+  operations:
+    - id: establish-trusted-exchange-profile
+      intent: Resolve an enabled import or export profile inside the authenticated tenant without accepting caller-owned execution details.
+      requiredInterfaces: [identity.principal]
+      invariants: [tenant-comes-from-trusted-context, profiles-are-server-owned]
+      guidance:
+        - Accept only the portable profile and opaque asset identifiers defined by the command interface.
+        - Keep formats, tables, queries, mappings, fields, limits, destinations, and callbacks in trusted configuration.
+    - id: authorize-and-deduplicate-exchange
+      intent: Authorize the exact profile operation and bind the tenant-scoped idempotency key to one command fingerprint.
+      requiredInterfaces: [authorization.decision]
+      invariants: [exchange-operations-are-authorized, exchange-jobs-are-idempotent]
+      guidance:
+        - Bind the authorization decision to principal, tenant, operation, and profile resource.
+        - Scope the durable idempotency key by tenant and operation before executing data work.
+    - id: validate-private-import
+      intent: Read a verified private source asset and validate all rows within trusted profile limits before persistence.
+      requiredInterfaces: [authorization.decision, file-assets.record, import-export.import-command]
+      invariants: [import-sources-are-private-assets, import-processing-is-bounded, imported-rows-are-schema-validated]
+      guidance:
+        - Require a decision bound to the exact private source asset before reading it.
+        - Stream or incrementally parse with hard byte, row, field, cell, time, and retained-error limits.
+        - Reject unknown or dangerous field names, invalid types, missing values, and duplicate trusted unique keys.
+    - id: commit-import-atomically
+      intent: Commit accepted rows and required provenance without exposing partial business mutations.
+      requiredInterfaces: [audit.event, import-export.job-record]
+      invariants: [import-commit-is-atomic, jobs-errors-and-audit-are-minimized]
+      guidance:
+        - Use one database transaction for bounded imports or durable checkpoints and an outbox for explicitly chunked jobs.
+        - Never record row values in the job, validation error, log, or audit event.
+    - id: produce-policy-filtered-export
+      intent: Select tenant-scoped allowlisted fields and encode spreadsheet-compatible output without executable cells.
+      requiredInterfaces: [import-export.export-command]
+      invariants: [exports-apply-trusted-data-policy, spreadsheet-formulas-are-neutralized]
+      guidance:
+        - Derive tenant filters from trusted context and select only profile-declared fields.
+        - Neutralize formula prefixes before ordinary CSV quoting or use an equivalent safe encoder.
+    - id: publish-private-exchange-result
+      intent: Store outputs and bounded error reports as private assets and return only minimized job metadata.
+      requiredInterfaces: [file-assets.record, import-export.job-record, audit.event]
+      invariants: [exchange-results-are-private-assets, jobs-errors-and-audit-are-minimized]
+      guidance:
+        - Return opaque private asset identifiers rather than storage keys, paths, URLs, or credentials.
+        - Clean up unpublished results when finalization or required audit delivery fails.
+  evidence:
+    - invariant: exchange-operations-are-authorized
+      suggestions: &exchangeEvidence
+        - type: source
+          pathPattern: src/**/*.ts
+          description: Profile-driven import/export lifecycle implementation.
+        - type: test
+          pathPattern: src/**/*.test.ts
+          description: Tenant, authorization, injection, limits, atomicity, idempotency, export, and redaction tests.
+    - invariant: tenant-comes-from-trusted-context
+      suggestions: *exchangeEvidence
+    - invariant: profiles-are-server-owned
+      suggestions: *exchangeEvidence
+    - invariant: import-sources-are-private-assets
+      suggestions: *exchangeEvidence
+    - invariant: import-processing-is-bounded
+      suggestions: *exchangeEvidence
+    - invariant: imported-rows-are-schema-validated
+      suggestions: *exchangeEvidence
+    - invariant: import-commit-is-atomic
+      suggestions: *exchangeEvidence
+    - invariant: exports-apply-trusted-data-policy
+      suggestions: *exchangeEvidence
+    - invariant: spreadsheet-formulas-are-neutralized
+      suggestions: *exchangeEvidence
+    - invariant: exchange-jobs-are-idempotent
+      suggestions: *exchangeEvidence
+    - invariant: exchange-results-are-private-assets
+      suggestions: *exchangeEvidence
+    - invariant: jobs-errors-and-audit-are-minimized
+      suggestions: *exchangeEvidence

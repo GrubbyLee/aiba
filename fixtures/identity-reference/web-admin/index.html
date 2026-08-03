@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Operations</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">AIBA Fleet</div>
+      <div class="operator">Operations Console</div>
+    </header>
+    <main>
+      <div class="page-heading">
+        <div>
+          <p class="eyebrow">VEHICLE MANAGEMENT</p>
+          <h1>Fleet records</h1>
+        </div>
+        <button type="button" class="refresh" data-refresh>Refresh</button>
+      </div>
+      <div class="summary-bar">
+        <span><strong data-count>0</strong> vehicles</span>
+        <span class="connection" data-status>Loading</span>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Fleet no.</th>
+              <th>Plate</th>
+              <th>Vehicle</th>
+              <th>Mileage</th>
+              <th>Status</th>
+              <th><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody data-vehicle-rows></tbody>
+        </table>
+      </div>
+    </main>
+    <script src="vehicle-api.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

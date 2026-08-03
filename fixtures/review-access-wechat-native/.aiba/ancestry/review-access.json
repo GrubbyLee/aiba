@@ -1,0 +1,65 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "review-access",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "wechat-native",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-08-03T00:02:00.000Z",
+  "files": [
+    {
+      "path": "src/reviewAccessHttp.blackbox.test.ts",
+      "installedSha256": "3cea215a5dbeb92755675e29ba54df7fb2df7793a44a79869f81c894a39d0a3a",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "reviewer-is-distinct-principal",
+        "server-authoritative-enable",
+        "scope-is-least-privilege",
+        "access-expires",
+        "access-is-revocable",
+        "production-data-is-isolated",
+        "attempts-are-rate-limited",
+        "actions-are-audited",
+        "client-cannot-self-assert-reviewer"
+      ],
+      "operations": [
+        "add-review-entry",
+        "enforce-server-policy",
+        "isolate-review-capabilities",
+        "audit-review-boundary"
+      ]
+    },
+    {
+      "path": "src/server/reviewAccessApi.ts",
+      "installedSha256": "7853273c5a018e3c9fa8e40233530f48a24f735879d452579ef96b7a8cb55de0",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "reviewer-is-distinct-principal",
+        "server-authoritative-enable",
+        "scope-is-least-privilege",
+        "access-expires",
+        "access-is-revocable",
+        "production-data-is-isolated",
+        "attempts-are-rate-limited",
+        "actions-are-audited",
+        "client-cannot-self-assert-reviewer"
+      ],
+      "operations": [
+        "add-review-entry",
+        "enforce-server-policy",
+        "isolate-review-capabilities",
+        "audit-review-boundary"
+      ]
+    }
+  ]
+}

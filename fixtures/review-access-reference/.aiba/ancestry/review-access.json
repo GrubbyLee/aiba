@@ -1,0 +1,65 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "review-access",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-08-03T00:02:00.000Z",
+  "files": [
+    {
+      "path": "src/reviewAccess.test.ts",
+      "installedSha256": "fd5b739dc296f27369f6ae53bca230e670e6966610681255bf2f63bcf3c4742a",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "reviewer-is-distinct-principal",
+        "server-authoritative-enable",
+        "scope-is-least-privilege",
+        "access-expires",
+        "access-is-revocable",
+        "production-data-is-isolated",
+        "attempts-are-rate-limited",
+        "actions-are-audited",
+        "client-cannot-self-assert-reviewer"
+      ],
+      "operations": [
+        "establish-reviewer-boundary",
+        "constrain-review-session",
+        "isolate-review-data",
+        "defend-and-audit"
+      ]
+    },
+    {
+      "path": "src/reviewAccess.ts",
+      "installedSha256": "c41b1b0408bcf4941c73501a94b0e6c51ff34c8df80e697cf87cb1a71079e049",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "reviewer-is-distinct-principal",
+        "server-authoritative-enable",
+        "scope-is-least-privilege",
+        "access-expires",
+        "access-is-revocable",
+        "production-data-is-isolated",
+        "attempts-are-rate-limited",
+        "actions-are-audited",
+        "client-cannot-self-assert-reviewer"
+      ],
+      "operations": [
+        "establish-reviewer-boundary",
+        "constrain-review-session",
+        "isolate-review-data",
+        "defend-and-audit"
+      ]
+    }
+  ]
+}

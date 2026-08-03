@@ -1,0 +1,105 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: wechat-miniprogram-auth
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:06:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/wechat-miniprogram-auth.yaml
+  planSha256: c18b64e198139c3dfb2103f21ef3624595771ff5d5f6ac0c054c257dc293729d
+  ancestry: .aiba/ancestry/wechat-miniprogram-auth.json
+  ancestrySha256: a4fa96e69abaf3ea7febef38355056afe9fa3c01538671f22e831c4840404857
+invariants:
+  - id: login-code-is-exchanged-server-side
+    evidence:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+        sha256: 1e417cb4ec5fa9de4098903993c366a154246abf8d0e847a711435d3adfae649
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+        sha256: dc464e5cd80675204ff7650adf2e0dc8cb83e567e747473c24a88dd250cd5b8c
+  - id: provider-credentials-are-server-owned
+    evidence:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+        sha256: 1e417cb4ec5fa9de4098903993c366a154246abf8d0e847a711435d3adfae649
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+        sha256: dc464e5cd80675204ff7650adf2e0dc8cb83e567e747473c24a88dd250cd5b8c
+  - id: provider-response-fails-closed
+    evidence:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+        sha256: 1e417cb4ec5fa9de4098903993c366a154246abf8d0e847a711435d3adfae649
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+        sha256: dc464e5cd80675204ff7650adf2e0dc8cb83e567e747473c24a88dd250cd5b8c
+  - id: session-key-never-crosses-client-boundary
+    evidence:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+        sha256: 1e417cb4ec5fa9de4098903993c366a154246abf8d0e847a711435d3adfae649
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+        sha256: dc464e5cd80675204ff7650adf2e0dc8cb83e567e747473c24a88dd250cd5b8c
+  - id: provider-identity-is-server-bound
+    evidence:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+        sha256: 1e417cb4ec5fa9de4098903993c366a154246abf8d0e847a711435d3adfae649
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+        sha256: dc464e5cd80675204ff7650adf2e0dc8cb83e567e747473c24a88dd250cd5b8c
+  - id: principal-is-not-client-selectable
+    evidence:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+        sha256: 1e417cb4ec5fa9de4098903993c366a154246abf8d0e847a711435d3adfae649
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+        sha256: dc464e5cd80675204ff7650adf2e0dc8cb83e567e747473c24a88dd250cd5b8c
+  - id: login-code-replay-is-rejected
+    evidence:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+        sha256: 1e417cb4ec5fa9de4098903993c366a154246abf8d0e847a711435d3adfae649
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+        sha256: dc464e5cd80675204ff7650adf2e0dc8cb83e567e747473c24a88dd250cd5b8c
+  - id: integration-processing-is-bounded
+    evidence:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+        sha256: 1e417cb4ec5fa9de4098903993c366a154246abf8d0e847a711435d3adfae649
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+        sha256: dc464e5cd80675204ff7650adf2e0dc8cb83e567e747473c24a88dd250cd5b8c
+  - id: authentication-audit-is-minimized
+    evidence:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+        sha256: 1e417cb4ec5fa9de4098903993c366a154246abf8d0e847a711435d3adfae649
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+        sha256: dc464e5cd80675204ff7650adf2e0dc8cb83e567e747473c24a88dd250cd5b8c

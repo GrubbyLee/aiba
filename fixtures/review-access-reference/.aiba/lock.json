@@ -1,7 +1,7 @@
 {
   "apiVersion": "aiba.dev/v0alpha1",
   "kind": "Lock",
-  "generatedAt": "2026-07-26T00:00:00Z",
+  "generatedAt": "2026-08-03T00:02:00.000Z",
   "capabilities": [
     {
       "id": "review-access",

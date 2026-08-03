@@ -21,7 +21,7 @@ Changelog, and package versions follow Semantic Versioning.
 
 ### Added
 
-- Agent-assisted install, deterministic verification, provenance receipts, and
+- Agent-assisted install, deterministic evidence/provenance verification, receipts, and
   customization-aware capability upgrades.
 - Official `review-access`, `identity`, `users`, `authorization`, `audit`, and
   `notification` capability contracts and recipes.

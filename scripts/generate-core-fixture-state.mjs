@@ -14,7 +14,17 @@ const root = join(workspace, "fixtures", "identity-reference");
 const packsDirectory = join(workspace, "capabilities");
 const requireFromCore = createRequire(join(workspace, "packages", "core", "package.json"));
 const { parse, stringify } = requireFromCore("yaml");
-const capabilities = ["identity", "audit", "authorization", "users", "notification"];
+const capabilities = [
+  "identity",
+  "audit",
+  "wechat-miniprogram-auth",
+  "authorization",
+  "users",
+  "notification",
+  "file-assets",
+  "import-export",
+  "vehicle-records",
+];
 
 function instant(offset) {
   return () => new Date(Date.UTC(2026, 6, 26, 0, offset, 0));

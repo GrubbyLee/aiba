@@ -5,13 +5,13 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-26T00:10:00.000Z
+  createdAt: 2026-07-26T00:12:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/notification.yaml
-  planSha256: 9781475551d0ea3758b23f07f09c5f1bcb8f8790279bd8d0c0cf0ffaa9549090
+  planSha256: 1d087b09479f91dc0262f8100a6f857a784861709d65184b0925f566e10e3441
   ancestry: .aiba/ancestry/notification.json
-  ancestrySha256: 7f0ecee92be4982ab30ede9431b8e263f3ccca42b5d04059cc120ba9a0a24339
+  ancestrySha256: 6cf804eeab98612e301b78372eedc210bdf1d2550f31c5f2d5082cf458cec953
 invariants:
   - id: send-is-authorized
     evidence:

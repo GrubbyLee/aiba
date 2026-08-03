@@ -1,0 +1,185 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: review-access-install
+  createdAt: 2026-08-03T00:01:00.000Z
+capability:
+  id: review-access
+  version: 0.1.0
+  manifestSha256: 92cf34a81a7e9e6a291ff1c13f659a92b504122266dc4dbe3396996472dd71a4
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: aebafb12ee94c8b719952723a90ddbc47a0db4e1f20dfe01066b138aa12da639
+project:
+  name: "@aiba/fixture-review-access-reference"
+  stack:
+    languages:
+      - TypeScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+    - miniprogram/**
+    - cloudfunctions/**
+operations:
+  - id: establish-reviewer-boundary
+    intent: Implement a reviewer principal that cannot impersonate normal or
+      administrative users.
+    requiredInterfaces:
+      - identity.principal
+      - authorization.decision
+    invariants:
+      - reviewer-is-distinct-principal
+      - client-cannot-self-assert-reviewer
+    guidance:
+      - Derive reviewer identity, permissions, and enablement only from trusted
+        server configuration.
+      - Reject client-provided role, scope, data-mode, or reviewer identity
+        assertions.
+  - id: constrain-review-session
+    intent: Bind review access to an enabled release, a short lifetime, and explicit
+      revocation.
+    requiredInterfaces:
+      - identity.principal
+      - authorization.decision
+    invariants:
+      - server-authoritative-enable
+      - access-expires
+      - access-is-revocable
+    guidance:
+      - Enforce enablement and expiry on every authentication and authorization
+        boundary.
+      - Store revocation state in a server-authoritative component.
+  - id: isolate-review-data
+    intent: Restrict reviewers to explicit read-only scopes and isolated or
+      sanitized data.
+    requiredInterfaces:
+      - authorization.decision
+    invariants:
+      - scope-is-least-privilege
+      - production-data-is-isolated
+    guidance:
+      - Use an allowlist of review-only actions and datasets.
+      - Never make unrestricted production records reachable through a review
+        session.
+  - id: defend-and-audit
+    intent: Rate-limit authentication attempts and emit attributable audit events.
+    requiredInterfaces:
+      - audit.event
+    invariants:
+      - attempts-are-rate-limited
+      - actions-are-audited
+    guidance:
+      - Apply rate limits in trusted server state rather than client storage.
+      - Audit authentication, denial, session creation, authorization, expiry,
+        and revocation.
+evidence:
+  - invariant: reviewer-is-distinct-principal
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Server-side review access implementation.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Security-focused review access tests.
+    items:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+  - invariant: server-authoritative-enable
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+  - invariant: scope-is-least-privilege
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+  - invariant: access-expires
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+  - invariant: access-is-revocable
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+  - invariant: production-data-is-isolated
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+  - invariant: attempts-are-rate-limited
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+  - invariant: actions-are-audited
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+  - invariant: client-cannot-self-assert-reviewer
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared

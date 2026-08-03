@@ -5,99 +5,101 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-25T18:57:15.225Z
-  agent: aiba-reference
+  createdAt: 2026-08-03T00:02:00.000Z
+  agent: fixture-generator
   recipe: wechat-native
   plan: .aiba/plans/review-access.yaml
-  planSha256: 9f6d9e7ae98e3c617655803e65732bdd31f26a34571e4859ee1afd6fb1c5ae80
+  planSha256: 9ae69f048264245ca99e7c8cbdd070b2fb4aac73f056357d0328d0d08e00df07
+  ancestry: .aiba/ancestry/review-access.json
+  ancestrySha256: 57b7f64a64ae26a77832c8ae6566ac0cfe6b69c2ae1cf3e23d02f5ae527c2fb2
 invariants:
   - id: reviewer-is-distinct-principal
     evidence:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
         sha256: 7853273c5a018e3c9fa8e40233530f48a24f735879d452579ef96b7a8cb55de0
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
         sha256: 3cea215a5dbeb92755675e29ba54df7fb2df7793a44a79869f81c894a39d0a3a
   - id: server-authoritative-enable
     evidence:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
         sha256: 7853273c5a018e3c9fa8e40233530f48a24f735879d452579ef96b7a8cb55de0
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
         sha256: 3cea215a5dbeb92755675e29ba54df7fb2df7793a44a79869f81c894a39d0a3a
   - id: scope-is-least-privilege
     evidence:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
         sha256: 7853273c5a018e3c9fa8e40233530f48a24f735879d452579ef96b7a8cb55de0
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
         sha256: 3cea215a5dbeb92755675e29ba54df7fb2df7793a44a79869f81c894a39d0a3a
   - id: access-expires
     evidence:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
         sha256: 7853273c5a018e3c9fa8e40233530f48a24f735879d452579ef96b7a8cb55de0
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
         sha256: 3cea215a5dbeb92755675e29ba54df7fb2df7793a44a79869f81c894a39d0a3a
   - id: access-is-revocable
     evidence:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
         sha256: 7853273c5a018e3c9fa8e40233530f48a24f735879d452579ef96b7a8cb55de0
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
         sha256: 3cea215a5dbeb92755675e29ba54df7fb2df7793a44a79869f81c894a39d0a3a
   - id: production-data-is-isolated
     evidence:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
         sha256: 7853273c5a018e3c9fa8e40233530f48a24f735879d452579ef96b7a8cb55de0
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
         sha256: 3cea215a5dbeb92755675e29ba54df7fb2df7793a44a79869f81c894a39d0a3a
   - id: attempts-are-rate-limited
     evidence:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
         sha256: 7853273c5a018e3c9fa8e40233530f48a24f735879d452579ef96b7a8cb55de0
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
         sha256: 3cea215a5dbeb92755675e29ba54df7fb2df7793a44a79869f81c894a39d0a3a
   - id: actions-are-audited
     evidence:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
         sha256: 7853273c5a018e3c9fa8e40233530f48a24f735879d452579ef96b7a8cb55de0
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
         sha256: 3cea215a5dbeb92755675e29ba54df7fb2df7793a44a79869f81c894a39d0a3a
   - id: client-cannot-self-assert-reviewer
     evidence:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
         sha256: 7853273c5a018e3c9fa8e40233530f48a24f735879d452579ef96b7a8cb55de0
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
         sha256: 3cea215a5dbeb92755675e29ba54df7fb2df7793a44a79869f81c894a39d0a3a

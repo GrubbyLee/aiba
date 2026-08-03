@@ -3,9 +3,10 @@
 ## Product Definition
 
 AIBA is not an admin template, a fixed full-stack framework, or a prompt
-collection. It is an independent, agent-native capability system that allows
-AI agents to install common application capabilities into existing projects
-while preserving project architecture, visual language, and code ownership.
+collection. It is an independent, agent-native capability delivery system that
+allows AI agents to install verifiable software capabilities into existing
+projects while preserving project architecture, visual language, and code
+ownership.
 
 The initial audience is WeChat Mini Program developers and AI-assisted
 independent developers. The capability model must remain compatible with later
@@ -27,7 +28,7 @@ AIBA should make this workflow reliable:
 1. Inspect an existing project.
 2. Select a versioned capability.
 3. Let the active AI agent adapt the implementation to that project.
-4. Verify behavior against deterministic capability contracts.
+4. Verify evidence and provenance, then evaluate behavior with trusted conformance tests.
 5. Record where the implementation came from and what changed.
 6. Upgrade the capability without overwriting project-owned customization.
 
@@ -41,6 +42,31 @@ AIBA's defensible core is:
 - Customization-aware upgrades: migrations that preserve project ownership.
 
 AI is the adaptation engine. AIBA is the system of record and the judge.
+
+## Capability Portfolio
+
+AIBA organizes its catalog into five layers. The layers describe stable
+software semantics, not a required framework, database, provider, or UI:
+
+1. `application-foundation`: reusable application boundaries such as identity,
+   authorization, files, notifications, search, and background jobs.
+2. `platform-integration`: provider-facing boundaries such as WeChat, payments,
+   email, SMS, object storage, maps, and model APIs.
+3. `business-capability`: reusable business behavior such as orders,
+   subscriptions, approvals, import/export, content, and inventory.
+4. `engineering-governance`: operational and risk controls such as audit,
+   observability, rate limits, data retention, redaction, backup, and compliance.
+5. `industry-solution`: versioned compositions for products such as vehicle
+   management, appointment systems, education administration, and commerce.
+
+The first four layers are independently verifiable capability packs. An
+industry solution composes those packs with domain-specific contracts and must
+not weaken or bypass any constituent invariant.
+
+A feature belongs in the AIBA catalog when it is repeatedly implemented across
+projects, crosses meaningful system boundaries, has testable acceptance or
+security rules, and needs provenance or upgrades. Atomic UI components and
+one-off page layouts remain project-owned code.
 
 ## Product Shape
 
@@ -68,4 +94,4 @@ production data.
 - Building a complete user-management or admin product.
 - Hosting identity, data, or secrets.
 - Providing a visual capability marketplace.
-- Generating application code without deterministic verification.
+- Claiming behavioral correctness from evidence hashes alone.

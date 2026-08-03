@@ -4,31 +4,102 @@ capability:
   id: review-access
   version: 0.1.0
 installation:
-  method: manual
-  createdAt: 2026-07-26T00:00:00Z
+  method: agent
+  createdAt: 2026-08-03T00:02:00.000Z
+  agent: fixture-generator
   recipe: typescript-reference
+  plan: .aiba/plans/review-access.yaml
+  planSha256: c24b845ee7d5e103ad256030f113bebfdffa7fc5be575c1fb262b5132f1e261b
+  ancestry: .aiba/ancestry/review-access.json
+  ancestrySha256: a2a6485e7282347fea9f6229f6af7c598a328aa74d1e4a089954f09dc4c1e7eb
 invariants:
   - id: reviewer-is-distinct-principal
-    evidence: &implementationEvidence
+    evidence:
       - type: source
         path: src/reviewAccess.ts
+        ownership: shared
         sha256: c41b1b0408bcf4941c73501a94b0e6c51ff34c8df80e697cf87cb1a71079e049
       - type: test
         path: src/reviewAccess.test.ts
+        ownership: shared
         sha256: fd5b739dc296f27369f6ae53bca230e670e6966610681255bf2f63bcf3c4742a
   - id: server-authoritative-enable
-    evidence: *implementationEvidence
+    evidence:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+        sha256: c41b1b0408bcf4941c73501a94b0e6c51ff34c8df80e697cf87cb1a71079e049
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+        sha256: fd5b739dc296f27369f6ae53bca230e670e6966610681255bf2f63bcf3c4742a
   - id: scope-is-least-privilege
-    evidence: *implementationEvidence
+    evidence:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+        sha256: c41b1b0408bcf4941c73501a94b0e6c51ff34c8df80e697cf87cb1a71079e049
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+        sha256: fd5b739dc296f27369f6ae53bca230e670e6966610681255bf2f63bcf3c4742a
   - id: access-expires
-    evidence: *implementationEvidence
+    evidence:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+        sha256: c41b1b0408bcf4941c73501a94b0e6c51ff34c8df80e697cf87cb1a71079e049
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+        sha256: fd5b739dc296f27369f6ae53bca230e670e6966610681255bf2f63bcf3c4742a
   - id: access-is-revocable
-    evidence: *implementationEvidence
+    evidence:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+        sha256: c41b1b0408bcf4941c73501a94b0e6c51ff34c8df80e697cf87cb1a71079e049
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+        sha256: fd5b739dc296f27369f6ae53bca230e670e6966610681255bf2f63bcf3c4742a
   - id: production-data-is-isolated
-    evidence: *implementationEvidence
+    evidence:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+        sha256: c41b1b0408bcf4941c73501a94b0e6c51ff34c8df80e697cf87cb1a71079e049
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+        sha256: fd5b739dc296f27369f6ae53bca230e670e6966610681255bf2f63bcf3c4742a
   - id: attempts-are-rate-limited
-    evidence: *implementationEvidence
+    evidence:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+        sha256: c41b1b0408bcf4941c73501a94b0e6c51ff34c8df80e697cf87cb1a71079e049
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+        sha256: fd5b739dc296f27369f6ae53bca230e670e6966610681255bf2f63bcf3c4742a
   - id: actions-are-audited
-    evidence: *implementationEvidence
+    evidence:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+        sha256: c41b1b0408bcf4941c73501a94b0e6c51ff34c8df80e697cf87cb1a71079e049
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+        sha256: fd5b739dc296f27369f6ae53bca230e670e6966610681255bf2f63bcf3c4742a
   - id: client-cannot-self-assert-reviewer
-    evidence: *implementationEvidence
+    evidence:
+      - type: source
+        path: src/reviewAccess.ts
+        ownership: shared
+        sha256: c41b1b0408bcf4941c73501a94b0e6c51ff34c8df80e697cf87cb1a71079e049
+      - type: test
+        path: src/reviewAccess.test.ts
+        ownership: shared
+        sha256: fd5b739dc296f27369f6ae53bca230e670e6966610681255bf2f63bcf3c4742a

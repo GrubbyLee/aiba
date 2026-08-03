@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/import-export-job-record.schema.json",
+  "title": "AIBA Import Export Job Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "jobId",
+    "operation",
+    "status",
+    "processedRows",
+    "rejectedRows",
+    "createdAt",
+    "completedAt"
+  ],
+  "properties": {
+    "jobId": { "type": "string", "minLength": 16, "maxLength": 255 },
+    "operation": { "enum": ["import", "export"] },
+    "status": { "enum": ["succeeded", "failed"] },
+    "processedRows": { "type": "integer", "minimum": 0, "maximum": 10000000 },
+    "rejectedRows": { "type": "integer", "minimum": 0, "maximum": 10000000 },
+    "outputAssetId": { "type": "string", "minLength": 16, "maxLength": 255 },
+    "errorReportAssetId": { "type": "string", "minLength": 16, "maxLength": 255 },
+    "errorCode": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "completedAt": { "type": "string", "format": "date-time" }
+  }
+}

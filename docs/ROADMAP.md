@@ -70,3 +70,43 @@ Goal: upgrade a deeply customized capability from v1 to v2 safely.
 - [x] Publish and install the first public npm release after explicit approval.
 - [x] Configure npm Trusted Publishing for unattended provenance releases.
 - [ ] Complete qualified legal review before broad public launch.
+
+## M7: General Capability System
+
+Goal: prove that AIBA delivers verifiable software capabilities beyond the
+initial identity and security foundation.
+
+- [x] Define the five-layer capability taxonomy and compatibility rules.
+- [x] Add a backward-compatible capability-layer field to the public protocol.
+- [x] Classify every official capability and validate catalog consistency.
+- [x] Deliver `file-assets` as the first non-identity application capability.
+- [x] Add secure reference behavior and adversarial conformance tests for files.
+- [x] Deliver `import-export` as the first reusable business capability.
+- [x] Deliver `vehicle-records` as the first industry-domain capability.
+- [x] Deliver `wechat-miniprogram-auth` as the first platform integration.
+- [x] Define hash-bound solution composition without allowing invariant weakening.
+- [x] Compose and verify a `vehicle-management` industry solution.
+- [ ] Add standalone publisher signatures before enabling third-party or
+  non-npm Solution distribution; this does not block the current official channel.
+- [x] Validate selected capabilities in TypeScript API, web admin, and native
+  WeChat Mini Program projects without imposing a shared UI framework.
+
+M7 is complete when at least one capability from each of the first four layers
+has passed the full install, verify, provenance, distribution, and upgrade
+lifecycle, and one industry solution composes them without bypassing individual
+verification.
+
+## M8: Beta Adoption
+
+Goal: let a developer discover, evaluate, install, and verify AIBA in a real
+project without reading repository internals.
+
+- [x] Add verified `aiba list` discovery across all capability layers and Solutions.
+- [x] Add `aiba show` for exact dependencies, interfaces, invariants, and composition.
+- [x] Add a guided Solution installation workflow that preserves per-capability plans.
+- [ ] Run an invited human beta in a real Mini Program repository.
+- [ ] Record setup time, verification failures, Agent corrections, and upgrade feedback.
+
+M8 is complete when an invited developer can select a Solution from the CLI,
+adapt it through an Agent, pass independent verification, and repeat the process
+from documented steps without maintainer intervention.

@@ -1,0 +1,198 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: wechat-miniprogram-auth-install
+  createdAt: 2026-07-26T00:05:00.000Z
+capability:
+  id: wechat-miniprogram-auth
+  version: 0.1.0
+  manifestSha256: a9548b412326c85df788e8110e817763f94d20d6f41b1534a41308777afaba7b
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: 9039110056825f2dc2935b2650cf93498da2f7f31865e787b128e221820787ae
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+    - cloudfunctions/**
+operations:
+  - id: accept-bounded-wechat-code
+    intent: Accept only the portable one-time login code without client-selected
+      identity or provider configuration.
+    requiredInterfaces:
+      - wechat-miniprogram-auth.login-command
+    invariants:
+      - principal-is-not-client-selectable
+      - integration-processing-is-bounded
+    guidance:
+      - Reject unknown fields before provider exchange and never accept tenant,
+        AppID, endpoint, or identity claims from the body.
+      - Derive tenant and correlation context from the trusted application
+        transport.
+  - id: exchange-code-with-wechat
+    intent: Exchange the code through a fixed, bounded, HTTPS provider adapter using
+      protected server credentials.
+    requiredInterfaces:
+      - wechat-miniprogram-auth.login-command
+    invariants:
+      - login-code-is-exchanged-server-side
+      - provider-credentials-are-server-owned
+      - provider-response-fails-closed
+    guidance:
+      - Keep AppSecret outside source, client bundles, logs, and returned errors.
+      - Enforce timeout and response-size limits and validate provider error and
+        identity fields before binding.
+  - id: bind-wechat-identity
+    intent: Bind provider identity to a stable application principal using trusted
+      identity state.
+    requiredInterfaces:
+      - identity.principal
+      - wechat-miniprogram-auth.login-result
+    invariants:
+      - provider-identity-is-server-bound
+      - session-key-never-crosses-client-boundary
+    guidance:
+      - Pass OpenID, optional UnionID, and session key only to the trusted
+        binder needed for account/session creation.
+      - Return only the resulting AIBA principal and issuance time from the
+        portable boundary.
+  - id: prevent-code-replay
+    intent: Consume one code fingerprint for its first terminal attempt and reject
+      later reuse.
+    requiredInterfaces:
+      - wechat-miniprogram-auth.login-command
+    invariants:
+      - login-code-replay-is-rejected
+    guidance:
+      - Use a durable short-lived replay gate shared by concurrent application
+        instances.
+      - Do not store the raw login code as the replay key.
+  - id: record-minimized-wechat-authentication
+    intent: Record correlated success or failure without provider or session secrets.
+    requiredInterfaces:
+      - audit.event
+    invariants:
+      - authentication-audit-is-minimized
+    guidance:
+      - Record action, outcome, reason, tenant, correlation ID, and bound
+        principal only after successful binding.
+      - Exclude raw and hashed codes, AppSecret, session key, OpenID, UnionID,
+        and returned session credentials.
+evidence:
+  - invariant: login-code-is-exchanged-server-side
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: WeChat provider, replay, identity binding, and audit boundary.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Injection, provider failure, secret leakage, replay, identity
+          binding, and bounded-processing tests.
+    items:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+  - invariant: provider-credentials-are-server-owned
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+  - invariant: provider-response-fails-closed
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+  - invariant: session-key-never-crosses-client-boundary
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+  - invariant: provider-identity-is-server-bound
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+  - invariant: principal-is-not-client-selectable
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+  - invariant: login-code-replay-is-rejected
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+  - invariant: integration-processing-is-bounded
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared
+  - invariant: authentication-audit-is-minimized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/wechat-miniprogram-auth.ts
+        ownership: shared
+      - type: test
+        path: src/wechat-miniprogram-auth.test.ts
+        ownership: shared

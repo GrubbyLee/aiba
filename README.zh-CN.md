@@ -18,14 +18,17 @@
 
 # AIBA
 
-AIBA 是一套面向 Agent 的应用能力系统。它帮助 AI Agent 为项目添加、验证、
-追踪和升级横切能力，同时不把项目锁定在固定的应用框架或视觉体系中。
+AIBA 是一套面向 Agent 的软件能力交付系统。它帮助 AI Agent 为项目添加、验证、
+追踪和升级完整能力，同时不把项目锁定在固定的应用框架、服务商或视觉体系中。
 
 首批能力包括 `review-access`、`identity`、`audit`、`authorization`、
-`users` 和 `notification`。AIBA 目前支持 Agent 辅助安装、确定性验证、漂移
-检查、感知定制的升级、签名能力包、私有 Registry 认证下载、验证缓存和防回滚
-解析。可选的项目治理机制还能为安装和升级的最终确认增加带签名、绑定证据的团队
-审批。
+`users`、`notification`、`file-assets`、`import-export` 和 `vehicle-records`。
+`wechat-miniprogram-auth` 是首个平台服务商集成能力。
+能力目录按五层扩展：
+应用基础能力、平台集成能力、业务通用能力、工程治理能力和行业组合方案。AIBA
+目前支持 Agent 辅助安装、确定性的证据与来源验证、漂移检查、感知定制的升级、签名能力包、
+私有 Registry 认证下载、验证缓存和防回滚解析。可选的项目治理机制还能为安装和
+升级的最终确认增加带签名、绑定证据的团队审批。
 
 [在线观看车辆管理后台演示](https://grubbylee.github.io/ai-base/video/)，了解 AIBA 和 Codex 如何从空目录
 开始，完成一个可操作、可独立验证的管理后台。
@@ -33,7 +36,7 @@ AIBA 是一套面向 Agent 的应用能力系统。它帮助 AI Agent 为项目�
 ## 原则
 
 - 能力语义稳定，实现方式灵活。
-- 确定性验证，AI 辅助适配。
+- 确定性的证据与来源验证，AI 辅助适配。
 - 生成代码归项目所有。
 - 变更可追踪，能力可升级。
 - Core 保持独立，Agent Skill 只做轻量适配。
@@ -46,6 +49,7 @@ AIBA 是一套面向 Agent 的应用能力系统。它帮助 AI Agent 为项目�
 - `packages/cli`：`aiba` 命令行界面。
 - `packages/registry-server`：带认证的只读参考 Registry。
 - `capabilities/`：官方能力包。
+- `solutions/`：绑定精确版本并按依赖顺序排列的行业能力组合。
 - `integrations/`：Agent 专用适配器。
 - `fixtures/`：一致性与攻击测试参考项目，包括原生微信小程序和集成核心能力的
   安全测试语料。
@@ -67,6 +71,14 @@ node packages/cli/dist/index.js upgrade review-access --finalize \
 node packages/cli/dist/index.js verify review-access \
   --root fixtures/review-access-reference \
   --packs-dir capabilities
+node packages/cli/dist/index.js compose vehicle-management \
+  --root fixtures/identity-reference --packs-dir capabilities
+node packages/cli/dist/index.js add vehicle-management --solution \
+  --root /path/to/project
+node packages/cli/dist/index.js add vehicle-management --solution --finalize \
+  --agent codex --root /path/to/project
+node packages/cli/dist/index.js add wechat-miniprogram-auth \
+  --root /path/to/project
 aiba keygen aiba-official --out ../aiba-publisher-keys
 aiba pack identity --publisher aiba-official --key-id root-1 \
   --private-key ../aiba-publisher-keys/private.pem --out identity.aiba
@@ -101,12 +113,15 @@ aiba policy-check identity --agent codex
 
 ```bash
 npm install --global @grubbylee/aiba
+aiba list
+aiba show identity
 aiba init
-aiba add identity
+aiba add vehicle-management --solution
 aiba inspect
+aiba compose vehicle-management
 ```
 
-作用域包同样会安装 `aiba` 可执行命令。npm 发行包包含官方能力包。作为库使用时，
+作用域包同样会安装 `aiba` 可执行命令。npm 发行包包含官方能力包和行业组合方案。作为库使用时，
 也可以分别安装 `aiba-core`、`aiba-spec` 或 `aiba-registry-server`。
 
 ## 工作方式
@@ -115,9 +130,12 @@ aiba inspect
 
 ```bash
 aiba init
-aiba add identity
+aiba list
+aiba show vehicle-management
+aiba add vehicle-management --solution
 aiba inspect
 aiba verify
+aiba compose vehicle-management
 ```
 
 完整的 M3 安全基座需要依次安装并适配 `identity`、`audit`、`authorization`、
@@ -127,6 +145,19 @@ aiba verify
 `add` 和 `upgrade` 默认只准备有边界的操作计划。Agent 负责适配项目并提交证据或
 冲突处理结果；Core 在 `--finalize` 阶段计算哈希并验证。能力包始终作为数据处理，
 不能向 Core 提供待执行命令。
+
+`compose` 是只读的证据与来源检查。方案把每个组成能力绑定到精确版本和 Manifest
+哈希，要求完整依赖闭包和正确安装顺序，并对每个能力执行原有项目验证。方案不能把
+必需依赖改成可选，也不能忽略任何组成能力的不变量。
+
+`add <solution> --solution` 是分步安装入口。每次调用只准备或完成一个组成能力。
+Agent 实现返回的计划并填写证据后，先运行 `--finalize --agent <name>`，再请求下一步。
+Core 在前进前会重新验证所有已安装组成能力，最后一个能力完成后还会自动执行整套
+Solution 证据与来源验证。
+
+AIBA 返回 `ok` 不代表项目测试已经运行，也不等于运行时行为得到证明。它表示声明的
+证据、来源哈希、回执、血缘、依赖和治理记录有效且没有变化。在可信测试证明协议完成
+之前，行为一致性仍需要项目测试单独给出结果。
 
 `registry-index` 会先验证所有发布者能力包，再创建不可变的签名快照。`resolve`
 会验证最新 Registry 快照、有效期、本地防回滚状态和所选能力包，之后才返回路径；
@@ -146,7 +177,8 @@ aiba verify
 供后续验证。
 
 当前实现状态见 [路线图](docs/ROADMAP.md) 和 [任务清单](docs/TASKS.md)。兼容性与
-发行规则见 [版本策略](docs/VERSIONING.md) 和 [发行指南](docs/RELEASING.md)。
+发行规则见 [版本策略](docs/VERSIONING.md) 和 [发行指南](docs/RELEASING.md)，跨表面
+适配证据见 [可移植性说明](docs/PORTABILITY.md)。
 
 ## 许可证
 

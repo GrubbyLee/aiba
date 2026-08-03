@@ -33,6 +33,7 @@ export interface VerificationIssue {
 
 export interface VerificationReport {
   ok: boolean;
+  scope: "evidence-and-provenance";
   projectRoot: string;
   verifiedCapabilities: string[];
   issues: VerificationIssue[];
@@ -485,19 +486,20 @@ async function verifyCapability(
 
 export async function verifyProject(options: VerifyProjectOptions): Promise<VerificationReport> {
   const projectRoot = resolve(options.projectRoot);
+  const scope = "evidence-and-provenance" as const;
   let project: ProjectManifest;
   let lock: ProjectLock;
   try {
     project = await loadProjectManifest(projectRoot);
   } catch (error) {
     const issue = issueFromError(error, "PROJECT_LOAD_FAILED");
-    return { ok: false, projectRoot, verifiedCapabilities: [], issues: [issue] };
+    return { ok: false, scope, projectRoot, verifiedCapabilities: [], issues: [issue] };
   }
   try {
     lock = await loadProjectLock(projectRoot);
   } catch (error) {
     const issue = issueFromError(error, "PROJECT_LOCK_LOAD_FAILED");
-    return { ok: false, projectRoot, verifiedCapabilities: [], issues: [issue] };
+    return { ok: false, scope, projectRoot, verifiedCapabilities: [], issues: [issue] };
   }
 
   const issues: VerificationIssue[] = [];
@@ -536,6 +538,7 @@ export async function verifyProject(options: VerifyProjectOptions): Promise<Veri
 
   return {
     ok: !issues.some((issue) => issue.level === "error"),
+    scope,
     projectRoot,
     verifiedCapabilities,
     issues,

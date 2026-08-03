@@ -1,6 +1,6 @@
 # Implementation Tasks
 
-Last updated: 2026-07-26
+Last updated: 2026-08-04
 
 ## Completed Milestone: M0
 
@@ -45,7 +45,7 @@ Exit criteria met on 2026-07-26.
 
 M1 is complete when an Agent can prepare a bounded plan, adapt project-owned
 code, submit evidence paths without trusted hashes, finalize an installation,
-and pass deterministic verification. The same workflow must run through a
+and pass deterministic evidence and provenance verification. The same workflow must run through a
 portable Codex/Claude Code Skill and against a native WeChat Mini Program with
 HTTP and client-boundary attack tests.
 
@@ -213,3 +213,57 @@ GitHub Release approval plus npm publisher authentication.
   still required as the first end-to-end OIDC publication proof.
 - The generated-output exception and future contributor agreement require
   qualified legal review before broad public launch.
+
+## Milestone: M7 General Capability System
+
+- [x] Define the five-layer catalog taxonomy and capability admission criteria.
+- [x] Add optional `metadata.layer` protocol classification without invalidating
+  existing third-party v0alpha1 manifests.
+- [x] Classify all official packs without rewriting immutable legacy manifests.
+- [x] Define portable file-asset command and record interfaces.
+- [x] Add the `file-assets` capability contract and TypeScript recipe.
+- [x] Implement and adversarially test the TypeScript file-assets boundary.
+- [x] Include `file-assets` in fixture provenance, CLI distribution, Agent Skill,
+  package verification, and smoke coverage.
+- [x] Add the `import-export` business capability and its conformance corpus.
+- [x] Add the `vehicle-records` domain capability, portable interfaces, recipe,
+  reference boundary, and adversarial tests.
+- [x] Add `wechat-miniprogram-auth` as the first platform integration with
+  server-only code exchange, identity binding, replay defense, and secret-redaction tests.
+- [x] Define a hash-bound solution-composition protocol and dependency graph rules.
+- [x] Add a passing `vehicle-management` composition fixture and read-only CLI check.
+- [ ] Add standalone publisher signatures and trust policy before enabling
+  third-party, private Registry, mirror, or marketplace Solution distribution.
+  npm provenance remains sufficient for the current official-only channel.
+- [x] Validate vehicle-record semantics across a TypeScript HTTP API, functional
+  web admin client, and native WeChat Mini Program client.
+
+## M7 Exit Criteria
+
+M7 is complete when the catalog spans the first four capability layers with
+independently verified packs, an authenticated official industry solution
+composes those packs without weakening their invariants, and the same capability
+semantics have been adapted to three materially different application surfaces. Every completed
+pack must retain deterministic evidence/provenance verification, untrusted-pack safety,
+and customization-aware upgrade behavior.
+
+## Milestone: M8 Beta Adoption
+
+- [x] Implement verified capability and Solution discovery in Core.
+- [x] Add short `aiba list` and `aiba show <id>` commands with JSON output.
+- [x] Reject Catalog/Manifest layer or version conflicts and invalid Solution graphs.
+- [x] Exercise discovery from source smoke tests and installed npm tarballs.
+- [x] Add a guided Solution installation workflow without hiding constituent plans.
+- [x] Verify installed constituents before advancing and reject version or evidence drift.
+- [x] Exercise one-step Solution progress in Core attack tests, CLI smoke, and npm tarballs.
+- [x] Record guided installation state and security boundaries in RFC 0015.
+- [x] Scope current verification to evidence and provenance in RFC 0016.
+- [ ] Define and implement separately named trusted behavioral test proofs.
+- [ ] Run an invited human beta in a real Mini Program repository.
+- [ ] Capture reproducible beta metrics and prioritize failure patterns.
+
+## M8 Exit Criteria
+
+M8 is complete when a developer unfamiliar with the repository can discover a
+Solution, understand its requirements, install it through an Agent, pass local
+verification, and report structured beta results without maintainer intervention.

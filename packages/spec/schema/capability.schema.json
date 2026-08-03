@@ -16,7 +16,16 @@
         "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}$" },
         "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$" },
         "title": { "type": "string", "minLength": 1, "maxLength": 120 },
-        "description": { "type": "string", "minLength": 1, "maxLength": 1000 }
+        "description": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "layer": {
+          "enum": [
+            "application-foundation",
+            "platform-integration",
+            "business-capability",
+            "engineering-governance",
+            "industry-solution"
+          ]
+        }
       }
     },
     "spec": {

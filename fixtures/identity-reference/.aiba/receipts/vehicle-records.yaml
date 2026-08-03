@@ -1,0 +1,105 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: vehicle-records
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:18:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/vehicle-records.yaml
+  planSha256: 32dcff1c4272409260f85aa103ad884f1981cdf245b4d54b5276f13107dae31f
+  ancestry: .aiba/ancestry/vehicle-records.json
+  ancestrySha256: 3cd3019f575a0fce3ae305a759d6d1c55d46dc752cf6e243ddc160a1198ba396
+invariants:
+  - id: vehicle-operations-are-authorized
+    evidence:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+        sha256: d08199bb7dc8974dd0ed19eec3bd6842a36032f34cf6c84fdbfde395d1b523cc
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+        sha256: a3ddb4988a868d0bd3411e9586c6b6ca9ad59b76f49dd6c27e47f5ab5046b1f0
+  - id: tenant-comes-from-trusted-context
+    evidence:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+        sha256: d08199bb7dc8974dd0ed19eec3bd6842a36032f34cf6c84fdbfde395d1b523cc
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+        sha256: a3ddb4988a868d0bd3411e9586c6b6ca9ad59b76f49dd6c27e47f5ab5046b1f0
+  - id: vehicle-identities-are-server-owned
+    evidence:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+        sha256: d08199bb7dc8974dd0ed19eec3bd6842a36032f34cf6c84fdbfde395d1b523cc
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+        sha256: a3ddb4988a868d0bd3411e9586c6b6ca9ad59b76f49dd6c27e47f5ab5046b1f0
+  - id: identifiers-are-normalized-and-tenant-unique
+    evidence:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+        sha256: d08199bb7dc8974dd0ed19eec3bd6842a36032f34cf6c84fdbfde395d1b523cc
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+        sha256: a3ddb4988a868d0bd3411e9586c6b6ca9ad59b76f49dd6c27e47f5ab5046b1f0
+  - id: vehicle-input-is-bounded
+    evidence:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+        sha256: d08199bb7dc8974dd0ed19eec3bd6842a36032f34cf6c84fdbfde395d1b523cc
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+        sha256: a3ddb4988a868d0bd3411e9586c6b6ca9ad59b76f49dd6c27e47f5ab5046b1f0
+  - id: updates-use-optimistic-concurrency
+    evidence:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+        sha256: d08199bb7dc8974dd0ed19eec3bd6842a36032f34cf6c84fdbfde395d1b523cc
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+        sha256: a3ddb4988a868d0bd3411e9586c6b6ca9ad59b76f49dd6c27e47f5ab5046b1f0
+  - id: lifecycle-transitions-are-controlled
+    evidence:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+        sha256: d08199bb7dc8974dd0ed19eec3bd6842a36032f34cf6c84fdbfde395d1b523cc
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+        sha256: a3ddb4988a868d0bd3411e9586c6b6ca9ad59b76f49dd6c27e47f5ab5046b1f0
+  - id: vehicle-creation-is-idempotent
+    evidence:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+        sha256: d08199bb7dc8974dd0ed19eec3bd6842a36032f34cf6c84fdbfde395d1b523cc
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+        sha256: a3ddb4988a868d0bd3411e9586c6b6ca9ad59b76f49dd6c27e47f5ab5046b1f0
+  - id: mutations-and-audit-are-atomic-and-minimized
+    evidence:
+      - type: source
+        path: src/vehicle-records.ts
+        ownership: shared
+        sha256: d08199bb7dc8974dd0ed19eec3bd6842a36032f34cf6c84fdbfde395d1b523cc
+      - type: test
+        path: src/vehicle-records.test.ts
+        ownership: shared
+        sha256: a3ddb4988a868d0bd3411e9586c6b6ca9ad59b76f49dd6c27e47f5ab5046b1f0

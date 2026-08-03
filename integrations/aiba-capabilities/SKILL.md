@@ -1,6 +1,6 @@
 ---
 name: aiba-capabilities
-description: Install, adapt, finalize, fetch, and verify AIBA application capabilities through the provider-independent AIBA CLI. Use when a user asks Codex or Claude Code to add cross-cutting capabilities such as review access, identity, authorization, audit, users, or notifications to an existing project; inspect or verify a project's `.aiba` state; or fetch a verified capability pack from a private registry.
+description: Install, adapt, compose, finalize, fetch, and verify AIBA software capabilities through the provider-independent AIBA CLI. Use when a user asks Codex or Claude Code to add capabilities such as review access, identity, authorization, audit, users, notifications, file assets, import/export, vehicle records, or WeChat Mini Program authentication to an existing project; check an industry solution; inspect or verify a project's `.aiba` state; or fetch a verified capability pack from a private registry.
 ---
 
 # AIBA Capabilities
@@ -17,7 +17,16 @@ the user's authorization.
 
 ## Inspect
 
-Run:
+When the requested capability or Solution is not already exact, discover the
+verified installed catalog before choosing:
+
+```bash
+aiba list --json
+aiba show <capability-or-solution> --json
+```
+
+Do not infer a capability from a similar name or bypass a discovery failure.
+Then inspect the target project:
 
 ```bash
 aiba inspect --json
@@ -54,6 +63,44 @@ its real function: production implementation as `source`, executable tests as
 `test`, runtime policy as `config`, and supporting rationale as `document`.
 Do not claim one file type as another to satisfy the contract.
 
+Treat `capabilities/catalog.yaml` and `metadata.layer` as discovery information,
+not permission to assume an implementation. Reject catalog entries that conflict
+with an embedded manifest layer or exact version. Platform integrations must
+preserve provider-independent contracts. Industry solutions must verify every
+constituent capability and may not weaken or replace their invariants.
+
+## Install A Solution
+
+Before adapting an industry solution, inspect its exact requirements. Use
+`compose` when the user requested only a read-only check:
+
+```bash
+aiba compose <solution> --json
+```
+
+For an installation request, let Core select exactly one constituent at a time:
+
+```bash
+aiba add <solution> --solution --json
+```
+
+Read and implement only the returned `planPath`. When its evidence is complete,
+finalize that same Solution step, then ask Core to prepare the next one:
+
+```bash
+aiba add <solution> --solution --finalize \
+  --agent <codex-or-claude-code> --json
+aiba add <solution> --solution --json
+```
+
+Never prepare all constituent plans in advance. A repeated prepare returning
+`awaiting-finalization` means the current plan must be completed, not replaced.
+Core verifies every already installed constituent before advancing and runs full
+Solution evidence and provenance verification after the final one. Do not edit
+solution hashes, reorder dependencies, add override fields, or claim that AIBA
+verified behavior. The terminal status is `evidence-verified`.
+`--recipe` applies only to the constituent being prepared.
+
 ## Finalize
 
 Run finalization with the current host identity:
@@ -63,8 +110,10 @@ aiba add <capability> --finalize --agent <codex-or-claude-code> --json
 aiba verify <capability> --json
 ```
 
-Report success only when both commands exit successfully. If verification fails,
-repair the implementation or evidence mapping and rerun project tests. Never
+Report evidence/provenance success only when both commands exit successfully.
+AIBA does not attest that project tests ran or prove application behavior; run
+the project's required test suite separately and report its result. If AIBA
+verification fails, repair the implementation or evidence mapping. Never
 edit a receipt, lock hash, or verifier output to make a failure disappear.
 
 ## Verify Existing State

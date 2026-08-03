@@ -1,0 +1,115 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: file-assets
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:14:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/file-assets.yaml
+  planSha256: 803072354e6c88e563743fb68bc315e13b6e92e985e53e5a2d9bd914c5f7cb6d
+  ancestry: .aiba/ancestry/file-assets.json
+  ancestrySha256: 5a94cac35604d100073254f1a9cdf87780025474dd95b949d0426409d1ea340b
+invariants:
+  - id: asset-operations-are-authorized
+    evidence:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+        sha256: 27dcc4691be551d79142057386ff23a51ae30b347579c3c7fcc803f7362b7f6c
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+        sha256: 71cfc8e2eea661127ddbc4c8d722c5a1ce735a02e2fa6249c104e24323428182
+  - id: tenant-comes-from-trusted-context
+    evidence:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+        sha256: 27dcc4691be551d79142057386ff23a51ae30b347579c3c7fcc803f7362b7f6c
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+        sha256: 71cfc8e2eea661127ddbc4c8d722c5a1ce735a02e2fa6249c104e24323428182
+  - id: content-is-bounded-and-byte-verified
+    evidence:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+        sha256: 27dcc4691be551d79142057386ff23a51ae30b347579c3c7fcc803f7362b7f6c
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+        sha256: 71cfc8e2eea661127ddbc4c8d722c5a1ce735a02e2fa6249c104e24323428182
+  - id: storage-keys-are-server-generated
+    evidence:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+        sha256: 27dcc4691be551d79142057386ff23a51ae30b347579c3c7fcc803f7362b7f6c
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+        sha256: 71cfc8e2eea661127ddbc4c8d722c5a1ce735a02e2fa6249c104e24323428182
+  - id: untrusted-content-is-quarantined
+    evidence:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+        sha256: 27dcc4691be551d79142057386ff23a51ae30b347579c3c7fcc803f7362b7f6c
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+        sha256: 71cfc8e2eea661127ddbc4c8d722c5a1ce735a02e2fa6249c104e24323428182
+  - id: assets-are-private-by-default
+    evidence:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+        sha256: 27dcc4691be551d79142057386ff23a51ae30b347579c3c7fcc803f7362b7f6c
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+        sha256: 71cfc8e2eea661127ddbc4c8d722c5a1ce735a02e2fa6249c104e24323428182
+  - id: retrieval-is-tenant-isolated
+    evidence:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+        sha256: 27dcc4691be551d79142057386ff23a51ae30b347579c3c7fcc803f7362b7f6c
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+        sha256: 71cfc8e2eea661127ddbc4c8d722c5a1ce735a02e2fa6249c104e24323428182
+  - id: uploads-are-idempotent
+    evidence:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+        sha256: 27dcc4691be551d79142057386ff23a51ae30b347579c3c7fcc803f7362b7f6c
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+        sha256: 71cfc8e2eea661127ddbc4c8d722c5a1ce735a02e2fa6249c104e24323428182
+  - id: deletion-is-terminal
+    evidence:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+        sha256: 27dcc4691be551d79142057386ff23a51ae30b347579c3c7fcc803f7362b7f6c
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+        sha256: 71cfc8e2eea661127ddbc4c8d722c5a1ce735a02e2fa6249c104e24323428182
+  - id: records-and-audit-are-minimized
+    evidence:
+      - type: source
+        path: src/file-assets.ts
+        ownership: shared
+        sha256: 27dcc4691be551d79142057386ff23a51ae30b347579c3c7fcc803f7362b7f6c
+      - type: test
+        path: src/file-assets.test.ts
+        ownership: shared
+        sha256: 71cfc8e2eea661127ddbc4c8d722c5a1ce735a02e2fa6249c104e24323428182

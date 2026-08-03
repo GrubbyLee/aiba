@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/data-import-command.schema.json",
+  "title": "AIBA Data Import Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profileId", "sourceAssetId", "idempotencyKey"],
+  "properties": {
+    "profileId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+    "sourceAssetId": { "type": "string", "minLength": 16, "maxLength": 255 },
+    "idempotencyKey": { "type": "string", "minLength": 16, "maxLength": 255 }
+  }
+}

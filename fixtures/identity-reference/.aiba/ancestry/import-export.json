@@ -1,0 +1,75 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "import-export",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:16:00.000Z",
+  "files": [
+    {
+      "path": "src/import-export.test.ts",
+      "installedSha256": "6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "exchange-operations-are-authorized",
+        "tenant-comes-from-trusted-context",
+        "profiles-are-server-owned",
+        "import-sources-are-private-assets",
+        "import-processing-is-bounded",
+        "imported-rows-are-schema-validated",
+        "import-commit-is-atomic",
+        "exports-apply-trusted-data-policy",
+        "spreadsheet-formulas-are-neutralized",
+        "exchange-jobs-are-idempotent",
+        "exchange-results-are-private-assets",
+        "jobs-errors-and-audit-are-minimized"
+      ],
+      "operations": [
+        "authorize-and-deduplicate-exchange",
+        "establish-trusted-exchange-profile",
+        "validate-private-import",
+        "commit-import-atomically",
+        "produce-policy-filtered-export",
+        "publish-private-exchange-result"
+      ]
+    },
+    {
+      "path": "src/import-export.ts",
+      "installedSha256": "0a06e4d2c6c9bbd035f35a038d49e257c61d2076c94bfcd7a033fa15ec3d15bf",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "exchange-operations-are-authorized",
+        "tenant-comes-from-trusted-context",
+        "profiles-are-server-owned",
+        "import-sources-are-private-assets",
+        "import-processing-is-bounded",
+        "imported-rows-are-schema-validated",
+        "import-commit-is-atomic",
+        "exports-apply-trusted-data-policy",
+        "spreadsheet-formulas-are-neutralized",
+        "exchange-jobs-are-idempotent",
+        "exchange-results-are-private-assets",
+        "jobs-errors-and-audit-are-minimized"
+      ],
+      "operations": [
+        "authorize-and-deduplicate-exchange",
+        "establish-trusted-exchange-profile",
+        "validate-private-import",
+        "commit-import-atomically",
+        "produce-policy-filtered-export",
+        "publish-private-exchange-result"
+      ]
+    }
+  ]
+}

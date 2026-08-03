@@ -1,7 +1,7 @@
 {
   "apiVersion": "aiba.dev/v0alpha1",
   "kind": "Lock",
-  "generatedAt": "2026-07-26T00:10:00.000Z",
+  "generatedAt": "2026-07-26T00:18:00.000Z",
   "capabilities": [
     {
       "id": "identity",
@@ -19,6 +19,15 @@
       "recipe": {
         "id": "typescript-reference",
         "sha256": "87c5d240d41d5f66b92c9be33c2df529f598dfd50a4923e38ab2cd668578cf24"
+      }
+    },
+    {
+      "id": "wechat-miniprogram-auth",
+      "version": "0.1.0",
+      "manifestSha256": "a9548b412326c85df788e8110e817763f94d20d6f41b1534a41308777afaba7b",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "9039110056825f2dc2935b2650cf93498da2f7f31865e787b128e221820787ae"
       }
     },
     {
@@ -46,6 +55,33 @@
       "recipe": {
         "id": "typescript-reference",
         "sha256": "d3c7003c91046defcc47adcd57cfb69552df2b66d19d8eb9d6b92b4d59dd4896"
+      }
+    },
+    {
+      "id": "file-assets",
+      "version": "0.1.0",
+      "manifestSha256": "29176ec35d328b6e5fe03f9528926a035859305944dc7e5a511e6138b38d7565",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "bbd2d8bd6440d096596218682f99173ea28d381d24bf211d545dcbacc4dab1e1"
+      }
+    },
+    {
+      "id": "import-export",
+      "version": "0.1.0",
+      "manifestSha256": "f6ffb522daa1e4805aec3c0ec2c47626c8b28eb3cf09b83686505e9076642f6e",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "7d4630109d36eddd0cb212c50898c2f2bdfe2e00985450479dfeb0bfbef6643f"
+      }
+    },
+    {
+      "id": "vehicle-records",
+      "version": "0.1.0",
+      "manifestSha256": "752e5d3507fc028244ee5c15f14afdc50238fc0c2f77fc40797d63a0ec16e741",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "8c4ae0064814253a2644db84e9167253a7d85b03ad84d485891de48cb22a1ad8"
       }
     }
   ]

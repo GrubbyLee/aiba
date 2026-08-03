@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/wechat-miniprogram-login-result.schema.json",
+  "title": "AIBA WeChat Mini Program Login Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["principal", "issuedAt"],
+  "properties": {
+    "principal": { "$ref": "principal.schema.json" },
+    "issuedAt": { "type": "string", "format": "date-time" }
+  }
+}

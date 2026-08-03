@@ -6,6 +6,7 @@ import {
   type AuthorizationDecision,
   type CapabilityAncestry,
   type CapabilityApproval,
+  type CapabilityCatalog,
   type CapabilityBundle,
   type CapabilityBundleSignature,
   type CapabilityManifest,
@@ -16,6 +17,12 @@ import {
   type CapabilityRegistryIndexSignature,
   type CapabilityRegistryState,
   type CapabilityRegistryTrustPolicy,
+  type CapabilitySolution,
+  type DataExportCommand,
+  type DataImportCommand,
+  type FileAssetRecord,
+  type FileAssetUploadCommand,
+  type ImportExportJobRecord,
   type OperationPlan,
   type NotificationCommand,
   type NotificationReceipt,
@@ -25,6 +32,11 @@ import {
   type ProjectManifest,
   type TeamGovernancePolicy,
   type UpgradePlan,
+  type VehicleCreateCommand,
+  type VehicleRecord,
+  type VehicleUpdateCommand,
+  type WechatMiniProgramLoginCommand,
+  type WechatMiniProgramLoginResult,
 } from "aiba-spec";
 import { ProtocolValidationError } from "./errors.js";
 
@@ -52,9 +64,45 @@ const notificationCommandValidator = ajv.compile<NotificationCommand>(
 const notificationReceiptValidator = ajv.compile<NotificationReceipt>(
   loadInterfaceSchema("notification-receipt.schema.json"),
 );
+const fileAssetUploadCommandValidator = ajv.compile<FileAssetUploadCommand>(
+  loadInterfaceSchema("file-asset-upload-command.schema.json"),
+);
+const fileAssetRecordValidator = ajv.compile<FileAssetRecord>(
+  loadInterfaceSchema("file-asset-record.schema.json"),
+);
+const dataImportCommandValidator = ajv.compile<DataImportCommand>(
+  loadInterfaceSchema("data-import-command.schema.json"),
+);
+const dataExportCommandValidator = ajv.compile<DataExportCommand>(
+  loadInterfaceSchema("data-export-command.schema.json"),
+);
+const importExportJobRecordValidator = ajv.compile<ImportExportJobRecord>(
+  loadInterfaceSchema("import-export-job-record.schema.json"),
+);
+const vehicleCreateCommandValidator = ajv.compile<VehicleCreateCommand>(
+  loadInterfaceSchema("vehicle-create-command.schema.json"),
+);
+const vehicleUpdateCommandValidator = ajv.compile<VehicleUpdateCommand>(
+  loadInterfaceSchema("vehicle-update-command.schema.json"),
+);
+const vehicleRecordValidator = ajv.compile<VehicleRecord>(
+  loadInterfaceSchema("vehicle-record.schema.json"),
+);
+const wechatMiniProgramLoginCommandValidator = ajv.compile<WechatMiniProgramLoginCommand>(
+  loadInterfaceSchema("wechat-miniprogram-login-command.schema.json"),
+);
+const wechatMiniProgramLoginResultValidator = ajv.compile<WechatMiniProgramLoginResult>(
+  loadInterfaceSchema("wechat-miniprogram-login-result.schema.json"),
+);
 
 const capabilityValidator = ajv.compile<CapabilityManifest>(
   loadProtocolSchema("capability.schema.json"),
+);
+const capabilityCatalogValidator = ajv.compile<CapabilityCatalog>(
+  loadProtocolSchema("capability-catalog.schema.json"),
+);
+const capabilitySolutionValidator = ajv.compile<CapabilitySolution>(
+  loadProtocolSchema("solution.schema.json"),
 );
 const bundleValidator = ajv.compile<CapabilityBundle>(
   loadProtocolSchema("bundle.schema.json"),
@@ -128,6 +176,16 @@ function assertValid<T>(
 export function validateCapabilityManifest(value: unknown): CapabilityManifest {
   assertValid(capabilityValidator, value, "capability manifest");
   return value as CapabilityManifest;
+}
+
+export function validateCapabilityCatalog(value: unknown): CapabilityCatalog {
+  assertValid(capabilityCatalogValidator, value, "capability catalog");
+  return value as CapabilityCatalog;
+}
+
+export function validateCapabilitySolution(value: unknown): CapabilitySolution {
+  assertValid(capabilitySolutionValidator, value, "capability solution");
+  return value as CapabilitySolution;
 }
 
 export function validateCapabilityBundle(value: unknown): CapabilityBundle {
@@ -208,6 +266,68 @@ export function validateNotificationCommand(value: unknown): NotificationCommand
 export function validateNotificationReceipt(value: unknown): NotificationReceipt {
   assertValid(notificationReceiptValidator, value, "notification receipt interface");
   return value as NotificationReceipt;
+}
+
+export function validateFileAssetUploadCommand(value: unknown): FileAssetUploadCommand {
+  assertValid(fileAssetUploadCommandValidator, value, "file asset upload command interface");
+  return value as FileAssetUploadCommand;
+}
+
+export function validateFileAssetRecord(value: unknown): FileAssetRecord {
+  assertValid(fileAssetRecordValidator, value, "file asset record interface");
+  return value as FileAssetRecord;
+}
+
+export function validateDataImportCommand(value: unknown): DataImportCommand {
+  assertValid(dataImportCommandValidator, value, "data import command interface");
+  return value as DataImportCommand;
+}
+
+export function validateDataExportCommand(value: unknown): DataExportCommand {
+  assertValid(dataExportCommandValidator, value, "data export command interface");
+  return value as DataExportCommand;
+}
+
+export function validateImportExportJobRecord(value: unknown): ImportExportJobRecord {
+  assertValid(importExportJobRecordValidator, value, "import export job record interface");
+  return value as ImportExportJobRecord;
+}
+
+export function validateVehicleCreateCommand(value: unknown): VehicleCreateCommand {
+  assertValid(vehicleCreateCommandValidator, value, "vehicle create command interface");
+  return value as VehicleCreateCommand;
+}
+
+export function validateVehicleUpdateCommand(value: unknown): VehicleUpdateCommand {
+  assertValid(vehicleUpdateCommandValidator, value, "vehicle update command interface");
+  return value as VehicleUpdateCommand;
+}
+
+export function validateVehicleRecord(value: unknown): VehicleRecord {
+  assertValid(vehicleRecordValidator, value, "vehicle record interface");
+  return value as VehicleRecord;
+}
+
+export function validateWechatMiniProgramLoginCommand(
+  value: unknown,
+): WechatMiniProgramLoginCommand {
+  assertValid(
+    wechatMiniProgramLoginCommandValidator,
+    value,
+    "WeChat Mini Program login command interface",
+  );
+  return value as WechatMiniProgramLoginCommand;
+}
+
+export function validateWechatMiniProgramLoginResult(
+  value: unknown,
+): WechatMiniProgramLoginResult {
+  assertValid(
+    wechatMiniProgramLoginResultValidator,
+    value,
+    "WeChat Mini Program login result interface",
+  );
+  return value as WechatMiniProgramLoginResult;
 }
 
 export function validateCapabilityAncestry(value: unknown): CapabilityAncestry {

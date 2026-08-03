@@ -2,7 +2,7 @@ apiVersion: aiba.dev/v0alpha1
 kind: OperationPlan
 metadata:
   id: review-access-install
-  createdAt: 2026-07-25T18:57:03.876Z
+  createdAt: 2026-08-03T00:01:00.000Z
 capability:
   id: review-access
   version: 0.1.0
@@ -97,87 +97,87 @@ evidence:
     items:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
   - invariant: server-authoritative-enable
     requirements: *a1
     suggestions: *a2
     items:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
   - invariant: scope-is-least-privilege
     requirements: *a1
     suggestions: *a2
     items:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
   - invariant: access-expires
     requirements: *a1
     suggestions: *a2
     items:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
   - invariant: access-is-revocable
     requirements: *a1
     suggestions: *a2
     items:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
   - invariant: production-data-is-isolated
     requirements: *a1
     suggestions: *a2
     items:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
   - invariant: attempts-are-rate-limited
     requirements: *a1
     suggestions: *a2
     items:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
   - invariant: actions-are-audited
     requirements: *a1
     suggestions: *a2
     items:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared
   - invariant: client-cannot-self-assert-reviewer
     requirements: *a1
     suggestions: *a2
     items:
       - type: source
         path: src/server/reviewAccessApi.ts
-        description: Server-authoritative review access boundary.
+        ownership: shared
       - type: test
         path: src/reviewAccessHttp.blackbox.test.ts
-        description: End-to-end HTTP security and abuse tests.
+        ownership: shared

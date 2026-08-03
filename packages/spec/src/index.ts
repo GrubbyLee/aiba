@@ -5,6 +5,12 @@ export const AIBA_API_VERSION = "aiba.dev/v0alpha1" as const;
 export type InvariantSeverity = "critical" | "error" | "warning";
 export type EvidenceType = "source" | "test" | "config" | "document";
 export type SemanticOwnership = "generated" | "shared" | "project";
+export type CapabilityLayer =
+  | "application-foundation"
+  | "platform-integration"
+  | "business-capability"
+  | "engineering-governance"
+  | "industry-solution";
 
 export type PrincipalType = "user" | "service" | "reviewer" | "anonymous";
 
@@ -62,6 +68,88 @@ export interface NotificationReceipt {
   createdAt: string;
 }
 
+export interface FileAssetUploadCommand {
+  fileName: string;
+  contentType: string;
+  sizeBytes: number;
+  sha256: string;
+  idempotencyKey: string;
+}
+
+export interface FileAssetRecord {
+  assetId: string;
+  status: "quarantined" | "available" | "rejected" | "deleted";
+  sizeBytes: number;
+  contentType: string;
+  sha256: string;
+  createdAt: string;
+}
+
+export interface DataImportCommand {
+  profileId: string;
+  sourceAssetId: string;
+  idempotencyKey: string;
+}
+
+export interface DataExportCommand {
+  profileId: string;
+  idempotencyKey: string;
+}
+
+export interface ImportExportJobRecord {
+  jobId: string;
+  operation: "import" | "export";
+  status: "succeeded" | "failed";
+  processedRows: number;
+  rejectedRows: number;
+  outputAssetId?: string;
+  errorReportAssetId?: string;
+  errorCode?: string;
+  createdAt: string;
+  completedAt: string;
+}
+
+export interface VehicleCreateCommand {
+  fleetNumber: string;
+  plateNumber: string;
+  vin?: string;
+  make: string;
+  model: string;
+  year: number;
+  idempotencyKey: string;
+}
+
+export interface VehicleUpdateCommand {
+  vehicleId: string;
+  expectedRevision: number;
+  status?: "active" | "inactive" | "retired";
+  mileageKm?: number;
+}
+
+export interface VehicleRecord {
+  vehicleId: string;
+  fleetNumber: string;
+  plateNumber: string;
+  vin?: string;
+  make: string;
+  model: string;
+  year: number;
+  status: "active" | "inactive" | "retired";
+  mileageKm: number;
+  revision: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WechatMiniProgramLoginCommand {
+  code: string;
+}
+
+export interface WechatMiniProgramLoginResult {
+  principal: Principal;
+  issuedAt: string;
+}
+
 export interface CapabilityInvariant {
   id: string;
   title: string;
@@ -83,6 +171,7 @@ export interface CapabilityManifest {
     version: string;
     title: string;
     description: string;
+    layer?: CapabilityLayer;
   };
   spec: {
     interfaces: string[];
@@ -92,6 +181,36 @@ export interface CapabilityManifest {
       optional: boolean;
     }>;
     invariants: CapabilityInvariant[];
+  };
+}
+
+export interface CapabilityCatalog {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "CapabilityCatalog";
+  capabilities: Array<{
+    id: string;
+    version: string;
+    layer: CapabilityLayer;
+  }>;
+}
+
+export interface CapabilitySolution {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "CapabilitySolution";
+  metadata: {
+    id: string;
+    version: string;
+    title: string;
+    description: string;
+    layer: "industry-solution";
+  };
+  spec: {
+    capabilities: Array<{
+      id: string;
+      version: string;
+      manifestSha256: string;
+      purpose: string;
+    }>;
   };
 }
 
@@ -480,6 +599,7 @@ export type ProtocolSchemaName =
   | "bundle.schema.json"
   | "bundle-signature.schema.json"
   | "capability-approval.schema.json"
+  | "capability-catalog.schema.json"
   | "capability.schema.json"
   | "lock.schema.json"
   | "migration.schema.json"
@@ -492,15 +612,26 @@ export type ProtocolSchemaName =
   | "registry-index-signature.schema.json"
   | "registry-state.schema.json"
   | "registry-trust-policy.schema.json"
+  | "solution.schema.json"
   | "trust-policy.schema.json"
   | "upgrade-plan.schema.json";
 
 export type InterfaceSchemaName =
   | "audit-event.schema.json"
   | "authorization-decision.schema.json"
+  | "data-export-command.schema.json"
+  | "data-import-command.schema.json"
+  | "file-asset-record.schema.json"
+  | "file-asset-upload-command.schema.json"
+  | "import-export-job-record.schema.json"
   | "notification-command.schema.json"
   | "notification-receipt.schema.json"
-  | "principal.schema.json";
+  | "principal.schema.json"
+  | "vehicle-create-command.schema.json"
+  | "vehicle-record.schema.json"
+  | "vehicle-update-command.schema.json"
+  | "wechat-miniprogram-login-command.schema.json"
+  | "wechat-miniprogram-login-result.schema.json";
 
 export function loadProtocolSchema(name: ProtocolSchemaName): object {
   const url = new URL(`../schema/${name}`, import.meta.url);

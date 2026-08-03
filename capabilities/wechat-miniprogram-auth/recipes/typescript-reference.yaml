@@ -1,0 +1,77 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript WeChat Mini Program Authentication Boundary
+  description: Semantic guidance for a server-side WeChat login integration in TypeScript.
+spec:
+  capability:
+    id: wechat-miniprogram-auth
+    version: 0.1.0
+  compatibility:
+    languages: [TypeScript]
+    frameworks: []
+  writeScope:
+    allowedPatterns: [src/**, server/**, test/**, tests/**, cloudfunctions/**]
+  operations:
+    - id: accept-bounded-wechat-code
+      intent: Accept only the portable one-time login code without client-selected identity or provider configuration.
+      requiredInterfaces: [wechat-miniprogram-auth.login-command]
+      invariants: [principal-is-not-client-selectable, integration-processing-is-bounded]
+      guidance:
+        - Reject unknown fields before provider exchange and never accept tenant, AppID, endpoint, or identity claims from the body.
+        - Derive tenant and correlation context from the trusted application transport.
+    - id: exchange-code-with-wechat
+      intent: Exchange the code through a fixed, bounded, HTTPS provider adapter using protected server credentials.
+      requiredInterfaces: [wechat-miniprogram-auth.login-command]
+      invariants: [login-code-is-exchanged-server-side, provider-credentials-are-server-owned, provider-response-fails-closed]
+      guidance:
+        - Keep AppSecret outside source, client bundles, logs, and returned errors.
+        - Enforce timeout and response-size limits and validate provider error and identity fields before binding.
+    - id: bind-wechat-identity
+      intent: Bind provider identity to a stable application principal using trusted identity state.
+      requiredInterfaces: [identity.principal, wechat-miniprogram-auth.login-result]
+      invariants: [provider-identity-is-server-bound, session-key-never-crosses-client-boundary]
+      guidance:
+        - Pass OpenID, optional UnionID, and session key only to the trusted binder needed for account/session creation.
+        - Return only the resulting AIBA principal and issuance time from the portable boundary.
+    - id: prevent-code-replay
+      intent: Consume one code fingerprint for its first terminal attempt and reject later reuse.
+      requiredInterfaces: [wechat-miniprogram-auth.login-command]
+      invariants: [login-code-replay-is-rejected]
+      guidance:
+        - Use a durable short-lived replay gate shared by concurrent application instances.
+        - Do not store the raw login code as the replay key.
+    - id: record-minimized-wechat-authentication
+      intent: Record correlated success or failure without provider or session secrets.
+      requiredInterfaces: [audit.event]
+      invariants: [authentication-audit-is-minimized]
+      guidance:
+        - Record action, outcome, reason, tenant, correlation ID, and bound principal only after successful binding.
+        - Exclude raw and hashed codes, AppSecret, session key, OpenID, UnionID, and returned session credentials.
+  evidence:
+    - invariant: login-code-is-exchanged-server-side
+      suggestions: &wechatEvidence
+        - type: source
+          pathPattern: src/**/*.ts
+          description: WeChat provider, replay, identity binding, and audit boundary.
+        - type: test
+          pathPattern: src/**/*.test.ts
+          description: Injection, provider failure, secret leakage, replay, identity binding, and bounded-processing tests.
+    - invariant: provider-credentials-are-server-owned
+      suggestions: *wechatEvidence
+    - invariant: provider-response-fails-closed
+      suggestions: *wechatEvidence
+    - invariant: session-key-never-crosses-client-boundary
+      suggestions: *wechatEvidence
+    - invariant: provider-identity-is-server-bound
+      suggestions: *wechatEvidence
+    - invariant: principal-is-not-client-selectable
+      suggestions: *wechatEvidence
+    - invariant: login-code-replay-is-rejected
+      suggestions: *wechatEvidence
+    - invariant: integration-processing-is-bounded
+      suggestions: *wechatEvidence
+    - invariant: authentication-audit-is-minimized
+      suggestions: *wechatEvidence

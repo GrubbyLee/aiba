@@ -1,0 +1,67 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "wechat-miniprogram-auth",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:06:00.000Z",
+  "files": [
+    {
+      "path": "src/wechat-miniprogram-auth.test.ts",
+      "installedSha256": "dc464e5cd80675204ff7650adf2e0dc8cb83e567e747473c24a88dd250cd5b8c",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "login-code-is-exchanged-server-side",
+        "provider-credentials-are-server-owned",
+        "provider-response-fails-closed",
+        "session-key-never-crosses-client-boundary",
+        "provider-identity-is-server-bound",
+        "principal-is-not-client-selectable",
+        "login-code-replay-is-rejected",
+        "integration-processing-is-bounded",
+        "authentication-audit-is-minimized"
+      ],
+      "operations": [
+        "exchange-code-with-wechat",
+        "bind-wechat-identity",
+        "accept-bounded-wechat-code",
+        "prevent-code-replay",
+        "record-minimized-wechat-authentication"
+      ]
+    },
+    {
+      "path": "src/wechat-miniprogram-auth.ts",
+      "installedSha256": "1e417cb4ec5fa9de4098903993c366a154246abf8d0e847a711435d3adfae649",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "login-code-is-exchanged-server-side",
+        "provider-credentials-are-server-owned",
+        "provider-response-fails-closed",
+        "session-key-never-crosses-client-boundary",
+        "provider-identity-is-server-bound",
+        "principal-is-not-client-selectable",
+        "login-code-replay-is-rejected",
+        "integration-processing-is-bounded",
+        "authentication-audit-is-minimized"
+      ],
+      "operations": [
+        "exchange-code-with-wechat",
+        "bind-wechat-identity",
+        "accept-bounded-wechat-code",
+        "prevent-code-replay",
+        "record-minimized-wechat-authentication"
+      ]
+    }
+  ]
+}

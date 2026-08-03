@@ -1,4 +1,4 @@
-import { mkdtemp, mkdir, readFile, rm, stat, writeFile } from "node:fs/promises";
+import { mkdtemp, mkdir, readFile, rm, stat, symlink, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parse, stringify } from "yaml";
@@ -119,6 +119,21 @@ async function setEvidence(planPath: string, path: string): Promise<void> {
 }
 
 describe("capability add lifecycle", () => {
+  it("rejects an operation plan symlink that resolves outside the project", async () => {
+    const fixture = await createFixture();
+    const externalRoot = await mkdtemp(join(tmpdir(), "aiba-external-plan-"));
+    const externalPlan = join(externalRoot, "review-access.yaml");
+    await writeFile(externalPlan, await readFile(fixture.planPath, "utf8"));
+    await rm(fixture.planPath);
+    await symlink(externalPlan, fixture.planPath);
+
+    await expect(finalizeCapability({
+      projectRoot: fixture.root,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+    })).rejects.toMatchObject({ code: "UNSAFE_PROJECT_PATH" });
+  });
+
   it("prepares an untrusted operation plan without declaring installation", async () => {
     const fixture = await createFixture();
     const plan = parse(await readFile(fixture.planPath, "utf8")) as OperationPlan;
@@ -178,6 +193,7 @@ describe("capability add lifecycle", () => {
       operations: ["implement-review-access"],
     })]);
     expect(verification.ok).toBe(true);
+    expect(verification.scope).toBe("evidence-and-provenance");
   });
 
   it("enforces signed governance approvals and records their provenance", async () => {

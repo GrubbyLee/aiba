@@ -17,7 +17,7 @@ Signed Publisher --> registry-add --> Signed Index --> Registry Server
 
 AIBA is agent-native but agent-independent. The core does not depend on a model
 provider SDK. Agent adapters may use the current host agent to generate patches,
-but correctness is decided by deterministic AIBA commands.
+but evidence and provenance validity is decided by deterministic AIBA commands.
 
 ## Layers
 
@@ -33,6 +33,25 @@ M3 interface schemas define `Principal`, `AuthorizationDecision`, `AuditEvent`,
 targets rather than mandatory public API DTOs. In particular, principals do not
 carry roles or permissions; policy produces a separate explicit decision.
 
+M7 adds portable file-asset upload/record, import/export command/job, vehicle
+record, WeChat Mini Program login, and capability-solution schemas.
+These interfaces deliberately carry opaque identifiers and bounded metadata,
+not provider URLs, storage keys, table names, queries, mappings, callbacks, raw
+rows, or credentials. Trusted project adapters map them to local storage,
+database, parser, and queue choices.
+
+The first platform integration, `wechat-miniprogram-auth`, maps a one-time
+`wx.login` code to an AIBA principal. Its portable client command contains only
+the code and its portable result contains only a principal and issuance time.
+AppSecret, provider endpoint configuration, OpenID/UnionID binding, and
+`session_key` stay behind injected server interfaces.
+
+A `CapabilitySolution` is an ordered, content-bound composition. Each entry
+pins a capability ID, exact version, manifest SHA-256, and product purpose.
+Core rejects duplicate entries, incomplete required dependency closure,
+unsatisfied ranges, and dependencies placed after their consumers. The schema
+has no command, override, optionality, or ignored-invariant field.
+
 ### Core
 
 The core loads and validates manifests, inspects projects, resolves capability
@@ -46,11 +65,32 @@ The `aiba` binary is the stable human and automation interface. Commands must
 support human-readable output, `--json`, non-interactive execution, and reliable
 exit codes.
 
+`compose` is read-only. It first validates the solution graph, then runs the
+ordinary project verifier separately for every exact constituent. It reports
+the installation order and missing or drifted capabilities; it never installs
+code or converts a failed constituent into a passing solution.
+
+`add <solution> --solution` is the stateful guided path. One invocation prepares
+or finalizes at most one constituent in the exact Solution order. Existing
+constituents must pass ordinary evidence and provenance verification before Core advances. Every
+constituent retains its own plan, governance decision, receipt, evidence hashes,
+ancestry, and verification boundary; finalizing the last constituent triggers a
+full `compose` evidence and provenance verification. Core never executes recipe content or creates all
+constituent plans in a batch.
+
 ### Capability Packs
 
 A capability pack contains stable semantics and verification requirements, not
 a fixed UI implementation. A pack may later include stack-specific recipes,
 migrations, fixtures, and Agent guidance.
+
+An optional manifest `metadata.layer` and the version-bound
+`CapabilityCatalog` organize packs into application foundations, platform
+integrations, business capabilities, engineering governance, and industry
+solutions. Classification is discovery metadata, never verification authority.
+The separate catalog can classify an immutable legacy manifest without changing
+its bytes; when a manifest embeds a layer, catalog identity, version, and layer
+must agree.
 
 Signed bundles authenticate an exact, size-bounded file set with Ed25519 and
 RFC 8785 canonical JSON. Local trust policy authorizes an exact publisher/key
@@ -141,6 +181,13 @@ hash and semantic ownership of each evidence file, allowing `aiba diff` and
 `aiba upgrade` to distinguish unchanged, customized, missing, and project-owned
 code without storing source contents. State replacement is recoverable and is
 accepted only after target verification succeeds.
+
+`VerificationReport.scope` is currently always `evidence-and-provenance`.
+Within that scope, `ok` proves structural validity, safe evidence paths, source
+and evidence hashes, dependency closure, receipts, ancestry, and governance
+bindings. It does not prove that project tests ran or that runtime behavior
+satisfies an invariant. Behavioral conformance requires a future, separately
+named test-proof protocol; Core must never silently widen the meaning of `ok`.
 
 Registry state is a mutable trust checkpoint rather than provenance evidence.
 Keep it in persistent trusted project or CI storage and review sequence changes;

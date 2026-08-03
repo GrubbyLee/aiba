@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import type { ProjectManifest } from "aiba-spec";
 import { assertDependenciesInstalled } from "./add.js";
-import { loadCapabilityManifest } from "./loaders.js";
+import { loadCapabilityCatalog, loadCapabilityManifest } from "./loaders.js";
 
 const workspace = resolve(dirname(fileURLToPath(import.meta.url)), "../../..");
 
@@ -59,5 +59,95 @@ describe("core capability dependencies", () => {
     ]), notification)).toThrowError(expect.objectContaining({
       code: "CAPABILITY_DEPENDENCY_UNSATISFIED",
     }));
+  });
+
+  it("requires authorization and audit before file assets", async () => {
+    const fileAssets = await loadCapabilityManifest(
+      join(workspace, "capabilities"),
+      "file-assets",
+    );
+    expect(() => assertDependenciesInstalled(project([
+      { id: "authorization", version: "0.1.0" },
+    ]), fileAssets)).toThrowError(expect.objectContaining({
+      code: "CAPABILITY_DEPENDENCY_UNSATISFIED",
+    }));
+    expect(() => assertDependenciesInstalled(project([
+      { id: "audit", version: "0.1.0" },
+      { id: "authorization", version: "0.1.0" },
+    ]), fileAssets)).not.toThrow();
+  });
+
+  it("requires the verified file boundary before import export", async () => {
+    const importExport = await loadCapabilityManifest(
+      join(workspace, "capabilities"),
+      "import-export",
+    );
+    expect(() => assertDependenciesInstalled(project([
+      { id: "audit", version: "0.1.0" },
+      { id: "authorization", version: "0.1.0" },
+    ]), importExport)).toThrowError(expect.objectContaining({
+      code: "CAPABILITY_DEPENDENCY_UNSATISFIED",
+    }));
+    expect(() => assertDependenciesInstalled(project([
+      { id: "audit", version: "0.1.0" },
+      { id: "authorization", version: "0.1.0" },
+      { id: "file-assets", version: "0.1.0" },
+    ]), importExport)).not.toThrow();
+  });
+
+  it("requires authorization and audit before vehicle records", async () => {
+    const vehicleRecords = await loadCapabilityManifest(
+      join(workspace, "capabilities"),
+      "vehicle-records",
+    );
+    expect(() => assertDependenciesInstalled(project([
+      { id: "authorization", version: "0.1.0" },
+    ]), vehicleRecords)).toThrowError(expect.objectContaining({
+      code: "CAPABILITY_DEPENDENCY_UNSATISFIED",
+    }));
+    expect(() => assertDependenciesInstalled(project([
+      { id: "audit", version: "0.1.0" },
+      { id: "authorization", version: "0.1.0" },
+    ]), vehicleRecords)).not.toThrow();
+  });
+
+  it("classifies every official capability in the five-layer catalog", async () => {
+    const expected = new Map([
+      ["audit", "engineering-governance"],
+      ["authorization", "application-foundation"],
+      ["file-assets", "application-foundation"],
+      ["identity", "application-foundation"],
+      ["import-export", "business-capability"],
+      ["notification", "application-foundation"],
+      ["review-access", "application-foundation"],
+      ["users", "application-foundation"],
+      ["vehicle-records", "business-capability"],
+      ["wechat-miniprogram-auth", "platform-integration"],
+    ]);
+    const catalog = await loadCapabilityCatalog(join(workspace, "capabilities"));
+    expect(catalog.capabilities).toHaveLength(expected.size);
+    for (const entry of catalog.capabilities) {
+      expect(entry.layer, entry.id).toBe(expected.get(entry.id));
+      const id = entry.id;
+      const manifest = await loadCapabilityManifest(join(workspace, "capabilities"), id);
+      expect(entry.version, id).toBe(manifest.metadata.version);
+      if (manifest.metadata.layer) expect(manifest.metadata.layer, id).toBe(entry.layer);
+    }
+  });
+
+  it("requires identity and audit before WeChat Mini Program authentication", async () => {
+    const wechatAuth = await loadCapabilityManifest(
+      join(workspace, "capabilities"),
+      "wechat-miniprogram-auth",
+    );
+    expect(() => assertDependenciesInstalled(project([
+      { id: "identity", version: "0.1.0" },
+    ]), wechatAuth)).toThrowError(expect.objectContaining({
+      code: "CAPABILITY_DEPENDENCY_UNSATISFIED",
+    }));
+    expect(() => assertDependenciesInstalled(project([
+      { id: "identity", version: "0.1.0" },
+      { id: "audit", version: "0.1.0" },
+    ]), wechatAuth)).not.toThrow();
   });
 });

@@ -1,9 +1,10 @@
 apiVersion: aiba.dev/v0alpha1
 kind: Project
 project:
-  name: review-access-reference
+  name: "@aiba/fixture-review-access-reference"
   stack:
-    languages: [TypeScript]
+    languages:
+      - TypeScript
     frameworks: []
 capabilities:
   - id: review-access

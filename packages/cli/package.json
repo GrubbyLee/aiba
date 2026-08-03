@@ -19,7 +19,7 @@
     "provenance": true
   },
   "keywords": ["aiba", "ai-agent", "cli", "capability", "miniprogram"],
-  "files": ["dist", "capabilities", "GENERATED_OUTPUT_EXCEPTION.md"],
+  "files": ["dist", "capabilities", "solutions", "GENERATED_OUTPUT_EXCEPTION.md"],
   "bin": {
     "aiba": "dist/index.js"
   },

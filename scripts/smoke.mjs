@@ -33,6 +33,9 @@ function run(name, args, expectedStatus, environment = {}) {
 }
 
 run("inspect", ["inspect", "fixtures/review-access-reference", "--json"], 0);
+run("list verified catalog", ["list", "--json"], 0);
+run("show verified capability", ["show", "vehicle-records", "--json"], 0);
+run("show verified solution", ["show", "vehicle-management", "--json"], 0);
 
 const bundleFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-bundle-"));
 const keyDirectory = join(bundleFixture, "keys");
@@ -236,6 +239,50 @@ const initFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-init-"));
 writeFileSync(join(initFixture, "package.json"), '{"name":"smoke-init"}\n');
 run("init", ["init", initFixture, "--json"], 0);
 rmSync(initFixture, { recursive: true, force: true });
+
+const solutionFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-solution-"));
+mkdirSync(join(solutionFixture, "src"));
+writeFileSync(join(solutionFixture, "package.json"), '{"name":"smoke-solution"}\n');
+copyFileSync(
+  join(workspace, "fixtures", "identity-reference", "src", "audit.ts"),
+  join(solutionFixture, "src", "audit.ts"),
+);
+copyFileSync(
+  join(workspace, "fixtures", "identity-reference", "src", "audit.test.ts"),
+  join(solutionFixture, "src", "audit.test.ts"),
+);
+run("solution init", ["init", solutionFixture, "--json"], 0);
+const solutionArguments = [
+  "vehicle-management",
+  "--solution",
+  "--root",
+  solutionFixture,
+  "--packs-dir",
+  join(workspace, "capabilities"),
+  "--solutions-dir",
+  join(workspace, "solutions"),
+  "--json",
+];
+run("solution prepare first constituent", ["add", ...solutionArguments], 0);
+run("solution recognize pending constituent", ["add", ...solutionArguments], 0);
+const solutionPlanPath = join(solutionFixture, ".aiba", "plans", "audit.yaml");
+const solutionPlan = parse(readFileSync(solutionPlanPath, "utf8"));
+for (const invariant of solutionPlan.evidence) {
+  invariant.items = [
+    { type: "source", path: "src/audit.ts" },
+    { type: "test", path: "src/audit.test.ts" },
+  ];
+}
+writeFileSync(solutionPlanPath, stringify(solutionPlan));
+run("solution finalize first constituent", [
+  "add",
+  ...solutionArguments,
+  "--finalize",
+  "--agent",
+  "smoke-agent",
+], 0);
+run("solution prepare second constituent", ["add", ...solutionArguments], 0);
+rmSync(solutionFixture, { recursive: true, force: true });
 
 const addFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-add-"));
 mkdirSync(join(addFixture, "src"));
@@ -455,6 +502,16 @@ run("verify core capabilities fixture", [
   "fixtures/identity-reference",
   "--packs-dir",
   "capabilities",
+], 0);
+run("verify vehicle management solution", [
+  "compose",
+  "vehicle-management",
+  "--root",
+  "fixtures/identity-reference",
+  "--packs-dir",
+  "capabilities",
+  "--solutions-dir",
+  "solutions",
 ], 0);
 run("diff core capabilities fixture", [
   "diff",

@@ -37,9 +37,45 @@ try {
   if (!specFiles.includes("package/schema/capability.schema.json")) {
     throw new Error("aiba-spec does not contain protocol schemas");
   }
+  if (!specFiles.includes("package/schema/capability-catalog.schema.json")) {
+    throw new Error("aiba-spec does not contain the capability catalog schema");
+  }
   const cliFiles = runChecked("tar", ["-tzf", cli.path], root);
   if (!cliFiles.includes("package/capabilities/identity/capability.yaml")) {
     throw new Error("@grubbylee/aiba does not contain official capability packs");
+  }
+  if (!cliFiles.includes("package/capabilities/file-assets/capability.yaml")) {
+    throw new Error("@grubbylee/aiba does not contain the file-assets capability");
+  }
+  if (!cliFiles.includes("package/capabilities/import-export/capability.yaml")) {
+    throw new Error("@grubbylee/aiba does not contain the import-export capability");
+  }
+  if (!cliFiles.includes("package/capabilities/vehicle-records/capability.yaml")) {
+    throw new Error("@grubbylee/aiba does not contain the vehicle-records capability");
+  }
+  if (!cliFiles.includes("package/capabilities/wechat-miniprogram-auth/capability.yaml")) {
+    throw new Error("@grubbylee/aiba does not contain the WeChat Mini Program auth capability");
+  }
+  if (!cliFiles.includes("package/solutions/vehicle-management/solution.yaml")) {
+    throw new Error("@grubbylee/aiba does not contain the vehicle-management solution");
+  }
+  if (!cliFiles.includes("package/capabilities/catalog.yaml")) {
+    throw new Error("@grubbylee/aiba does not contain the official capability catalog");
+  }
+  if (!specFiles.includes("package/schema/interfaces/file-asset-record.schema.json")) {
+    throw new Error("aiba-spec does not contain file-assets interface schemas");
+  }
+  if (!specFiles.includes("package/schema/interfaces/import-export-job-record.schema.json")) {
+    throw new Error("aiba-spec does not contain import-export interface schemas");
+  }
+  if (!specFiles.includes("package/schema/solution.schema.json")) {
+    throw new Error("aiba-spec does not contain the solution schema");
+  }
+  if (!specFiles.includes("package/schema/interfaces/vehicle-record.schema.json")) {
+    throw new Error("aiba-spec does not contain vehicle record interface schemas");
+  }
+  if (!specFiles.includes("package/schema/interfaces/wechat-miniprogram-login-result.schema.json")) {
+    throw new Error("aiba-spec does not contain WeChat Mini Program auth interfaces");
   }
   if (!cliFiles.includes("package/GENERATED_OUTPUT_EXCEPTION.md")) {
     throw new Error("@grubbylee/aiba does not contain the generated-output exception");
@@ -108,7 +144,10 @@ try {
     throw new Error(`Installed CLI reports ${installedVersion}, expected ${expectedVersion}`);
   }
   runChecked(executable, ["init", app, "--json"], consumer);
+  runChecked(executable, ["list", "--json"], consumer);
+  runChecked(executable, ["show", "vehicle-management", "--json"], consumer);
   runChecked(executable, ["inspect", app, "--json"], consumer);
+  runChecked(executable, ["add", "vehicle-management", "--solution", "--root", app, "--json"], consumer);
   runChecked(executable, ["add", "identity", "--root", app, "--json"], consumer);
 
   process.stdout.write([

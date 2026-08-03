@@ -18,17 +18,22 @@
 
 # AIBA
 
-AIBA is an agent-native application capability system. It helps AI agents add,
-verify, trace, and upgrade cross-cutting application capabilities without
-forcing projects into a fixed application framework or visual system.
+AIBA is an agent-native software capability delivery system. It helps AI agents
+add, verify, trace, and upgrade complete capabilities without forcing projects
+into a fixed application framework, provider, or visual system.
 
 The initial capability set covers `review-access`, `identity`, `audit`,
-`authorization`, `users`, and `notification`. AIBA currently supports
-Agent-assisted install, deterministic verification, drift inspection,
-customization-aware upgrade, signed capability bundles, authenticated private
-registry fetch, verified caching, and anti-rollback resolution. Optional project
-governance adds signed, evidence-bound team approvals to install and upgrade
-finalization.
+`authorization`, `users`, `notification`, `file-assets`, `import-export`, and
+`vehicle-records`. `wechat-miniprogram-auth` is the first provider-facing
+platform integration.
+The catalog grows through five layers: application foundations, platform
+integrations, reusable business capabilities, engineering governance, and
+composed industry solutions.
+AIBA currently supports Agent-assisted install, deterministic evidence and provenance verification,
+drift inspection, customization-aware upgrade, signed capability bundles,
+authenticated private registry fetch, verified caching, and anti-rollback
+resolution. Optional project governance adds signed, evidence-bound team
+approvals to install and upgrade finalization.
 
 [Watch the vehicle-management walkthrough](https://grubbylee.github.io/ai-base/video/) to see AIBA and
 Codex move from an empty directory to a working, independently verified admin
@@ -37,7 +42,7 @@ application.
 ## Principles
 
 - Stable capability semantics, flexible implementation.
-- Deterministic verification, AI-assisted adaptation.
+- Deterministic evidence and provenance verification, AI-assisted adaptation.
 - Project-owned generated code.
 - Traceable changes and upgradeable capabilities.
 - Independent core with thin Agent skill adapters.
@@ -50,6 +55,7 @@ application.
 - `packages/cli`: the `aiba` command-line interface.
 - `packages/registry-server`: authenticated read-only reference registry.
 - `capabilities/`: official capability packs.
+- `solutions/`: exact, dependency-ordered industry capability compositions.
 - `integrations/`: Agent-specific adapters.
 - `fixtures/`: reference projects used for conformance and attack testing,
   including a native WeChat Mini Program and an integrated core-capabilities
@@ -72,6 +78,14 @@ node packages/cli/dist/index.js upgrade review-access --finalize \
 node packages/cli/dist/index.js verify review-access \
   --root fixtures/review-access-reference \
   --packs-dir capabilities
+node packages/cli/dist/index.js compose vehicle-management \
+  --root fixtures/identity-reference --packs-dir capabilities
+node packages/cli/dist/index.js add vehicle-management --solution \
+  --root /path/to/project
+node packages/cli/dist/index.js add vehicle-management --solution --finalize \
+  --agent codex --root /path/to/project
+node packages/cli/dist/index.js add wechat-miniprogram-auth \
+  --root /path/to/project
 aiba keygen aiba-official --out ../aiba-publisher-keys
 aiba pack identity --publisher aiba-official --key-id root-1 \
   --private-key ../aiba-publisher-keys/private.pem --out identity.aiba
@@ -108,13 +122,16 @@ After the first npm release:
 
 ```bash
 npm install --global @grubbylee/aiba
+aiba list
+aiba show identity
 aiba init
-aiba add identity
+aiba add vehicle-management --solution
 aiba inspect
+aiba compose vehicle-management
 ```
 
 The scoped package still installs the `aiba` executable. The npm distribution
-includes the official capability packs. Library consumers
+includes the official capability packs and industry solutions. Library consumers
 can install `aiba-core`, `aiba-spec`, or `aiba-registry-server` independently.
 
 ## License
@@ -129,9 +146,12 @@ The concise product workflow remains:
 
 ```bash
 aiba init
-aiba add identity
+aiba list
+aiba show vehicle-management
+aiba add vehicle-management --solution
 aiba inspect
 aiba verify
+aiba compose vehicle-management
 ```
 
 For the complete M3 security base, install and adapt `identity`, `audit`,
@@ -143,6 +163,23 @@ Core-computed provenance after project tests pass.
 project and supplies evidence or conflict resolutions; Core then hashes and
 verifies the result during `--finalize`. Capability packs are treated as data
 and cannot provide commands for Core to execute.
+
+`compose` is a read-only evidence and provenance check. A solution pins every constituent to
+an exact version and manifest hash, requires a complete dependency closure in
+installation order, and runs normal project verification for every capability.
+It cannot mark a required dependency optional or ignore a constituent invariant.
+
+`add <solution> --solution` is the guided installation path. It prepares or
+finalizes exactly one constituent per invocation. The Agent implements the
+returned plan and adds evidence, then runs `--finalize --agent <name>` before
+requesting the next step. Core re-verifies installed constituents before it
+advances and runs full Solution evidence and provenance verification after the last capability.
+
+An AIBA `ok` result does not claim that project tests ran or prove runtime
+behavior. It means the declared evidence, source hashes, receipts, ancestry,
+dependencies, and governance provenance are internally valid and unchanged.
+Behavioral conformance remains a separate project test result until AIBA gains a
+trusted test-proof protocol.
 
 `registry-index` creates an immutable signed snapshot after verifying every
 listed publisher bundle. `resolve` verifies the latest registry snapshot, its
@@ -169,4 +206,5 @@ for later verification.
 See [docs/ROADMAP.md](docs/ROADMAP.md) and [docs/TASKS.md](docs/TASKS.md) for
 the current implementation status. Compatibility and release details live in
 [docs/VERSIONING.md](docs/VERSIONING.md) and
-[docs/RELEASING.md](docs/RELEASING.md).
+[docs/RELEASING.md](docs/RELEASING.md). M7 cross-surface evidence is summarized
+in [docs/PORTABILITY.md](docs/PORTABILITY.md).

@@ -67,6 +67,12 @@ export interface FinalizeCapabilityResult {
   evidenceFiles: number;
 }
 
+export interface ValidateCapabilityPlanOptions {
+  projectRoot: string;
+  packsDirectory: string;
+  capabilityId: string;
+}
+
 function assertCapabilityId(capabilityId: string): void {
   if (!CAPABILITY_ID.test(capabilityId)) {
     throw new AibaError(
@@ -384,6 +390,54 @@ function assertPlanMatchesSources(
       "PLAN_CONTRACT_MODIFIED",
     );
   }
+}
+
+export async function validateCapabilityPlan(
+  options: ValidateCapabilityPlanOptions,
+): Promise<PrepareCapabilityResult> {
+  assertCapabilityId(options.capabilityId);
+  const root = resolve(options.projectRoot);
+  const project = await loadProjectManifest(root);
+  assertNotInstalled(project, options.capabilityId);
+
+  const planPath = await resolveExistingProjectPath(
+    root,
+    `.aiba/plans/${options.capabilityId}.yaml`,
+  );
+  const plan = await loadOperationPlan(root, options.capabilityId);
+  const manifest = await loadCapabilityManifest(options.packsDirectory, options.capabilityId);
+  const recipe = await loadCapabilityRecipe(
+    options.packsDirectory,
+    options.capabilityId,
+    plan.recipe.id,
+  );
+  assertRecipeSemantics(recipe, manifest);
+  assertDependenciesInstalled(project, manifest);
+
+  const manifestPath = join(
+    resolve(options.packsDirectory),
+    options.capabilityId,
+    "capability.yaml",
+  );
+  const recipePath = join(
+    resolve(options.packsDirectory),
+    options.capabilityId,
+    "recipes",
+    `${recipe.metadata.id}.yaml`,
+  );
+  assertPlanMatchesSources(
+    plan,
+    project,
+    manifest,
+    recipe,
+    await sha256File(manifestPath),
+    await sha256File(recipePath),
+  );
+
+  return {
+    planPath: normalizeProjectPath(relative(root, planPath)),
+    plan,
+  };
 }
 
 export async function createCapabilityReceipt(

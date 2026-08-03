@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/wechat-miniprogram-login-command.schema.json",
+  "title": "AIBA WeChat Mini Program Login Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["code"],
+  "properties": {
+    "code": { "type": "string", "minLength": 8, "maxLength": 256, "pattern": "^[A-Za-z0-9_-]+$" }
+  }
+}
