@@ -194,6 +194,33 @@ afterEach(async () => {
 });
 
 describe("reference registry server", () => {
+  it("serves authenticated health, readiness, metrics, limits, and redacted audit events", async () => {
+    const fixture = await createFixture();
+    const events: Array<{ event: string; routeClass: string; status: number }> = [];
+    fixture.options.requestLimitPerMinute = 4;
+    fixture.options.audit = (event) => events.push(event);
+    const baseUrl = await start(fixture);
+    expect((await fetch(`${baseUrl}/healthz`)).status).toBe(401);
+    await expect((await request(baseUrl, "/healthz")).json()).resolves.toEqual({ status: "ok" });
+    await expect((await request(baseUrl, "/readyz")).json()).resolves.toEqual({
+      status: "ready",
+      registry: "reference-registry",
+      sequence: 1,
+    });
+    const metrics = await (await request(baseUrl, "/metrics")).text();
+    expect(metrics).toContain("aiba_registry_up 1");
+    expect(metrics).toContain("aiba_registry_unauthorized_total 1");
+    expect((await request(baseUrl, "/healthz")).status).toBe(200);
+    const limited = await request(baseUrl, "/healthz");
+    expect(limited.status).toBe(429);
+    expect(limited.headers.get("retry-after")).toBe("60");
+    expect(JSON.stringify(events)).not.toContain(TOKEN);
+    expect(events).toEqual(expect.arrayContaining([
+      expect.objectContaining({ event: "unauthorized", routeClass: "health", status: 401 }),
+      expect.objectContaining({ event: "rate-limited", routeClass: "health", status: 429 }),
+    ]));
+  });
+
   it("serves only verified indexed content through authenticated GET and HEAD", async () => {
     const fixture = await createFixture();
     const baseUrl = await start(fixture);
@@ -294,6 +321,10 @@ describe("reference registry server", () => {
       ...fixture.options,
       tlsCertificatePath: join(fixture.root, "cert.pem"),
     })).rejects.toMatchObject({ code: "INCOMPLETE_TLS_CONFIG" });
+    await expect(createRegistryServer({
+      ...fixture.options,
+      requestLimitPerMinute: 0,
+    })).rejects.toMatchObject({ code: "INVALID_REGISTRY_REQUEST_LIMIT" });
   });
 
   it("serves the same verified route set over direct TLS", async () => {

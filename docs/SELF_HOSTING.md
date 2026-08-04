@@ -86,8 +86,10 @@ the trusted state file.
 
 ## Operational Boundary
 
-The reference server has no upload, signing, administration, health, or browser
-API. Protect filesystem mutation and operator commands with normal host access
-controls. Multi-tenancy, SSO, HSM custody, approval UX, audit retention, hot
-reload, rate limiting, and managed availability remain hosted control-plane
-features rather than local verification shortcuts.
+The reference server has no upload, signing, administration, or browser API.
+Its authenticated health, readiness, and metrics endpoints reveal only bounded
+operational state. Protect filesystem mutation and local operator commands with
+normal host access controls. Verified backup, restore, retention, a request
+limit, and hardened deployment assets are documented in
+`docs/REGISTRY_OPERATIONS.md`. Multi-tenancy, SSO, HSM custody, approval UX,
+billing, and managed availability remain hosted control-plane features.

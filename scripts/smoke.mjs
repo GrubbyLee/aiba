@@ -74,6 +74,8 @@ const registryTrustPath = join(bundleFixture, "registry-trust.json");
 const registryStatePath = join(bundleFixture, "registry-state.json");
 const remoteCachePath = join(bundleFixture, "remote-cache");
 const remoteStatePath = join(bundleFixture, "remote-state.json");
+const registryBackupPath = join(bundleFixture, "registry-backup");
+const registryRestorePath = join(bundleFixture, "registry-restored");
 run("publisher keygen", [
   "keygen",
   "aiba-official",
@@ -219,6 +221,27 @@ createRegistrySnapshot(1);
 resolveRegistry(0);
 createRegistrySnapshot(2);
 resolveRegistry(0);
+run("backup verified registry", [
+  "registry-backup", registryDirectory,
+  "--out", registryBackupPath,
+  "--registry-trust", registryTrustPath,
+  "--publisher-trust", trustPolicyPath,
+  "--json",
+], 0);
+run("restore verified registry", [
+  "registry-restore", registryBackupPath,
+  "--out", registryRestorePath,
+  "--registry-trust", registryTrustPath,
+  "--publisher-trust", trustPolicyPath,
+  "--json",
+], 0);
+run("plan registry retention", [
+  "registry-gc", registryDirectory,
+  "--keep-indexes", "1",
+  "--registry-trust", registryTrustPath,
+  "--publisher-trust", trustPolicyPath,
+  "--json",
+], 0);
 run("reject missing registry server token", [
   "registry-serve",
   registryDirectory,

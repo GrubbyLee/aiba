@@ -120,3 +120,25 @@ Verification:
 
 Progress: 5/7
 Next: m14-registry-operations
+
+----------------------------------------
+Session #6 - m14-registry-operations
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added authenticated health, readiness, and Prometheus metrics endpoints.
+  [x] Added request limiting and redacted operational audit events.
+  [x] Added verified deterministic backup, atomic restore, and retention planning.
+  [x] Added dry-run-first garbage collection that preserves retained closure.
+  [x] Added hardened Docker and Compose deployment assets and operator guidance.
+
+Verification:
+  - pnpm check: passed
+  - Core: 127 tests; Registry Server: 8 tests
+  - Compiled smoke: backup, restore, retention, and Registry serving passed
+  - Docker Compose config and Docker image build: passed
+  - External npm consumer: four packages installed and exercised
+
+Progress: 6/7
+Next: m15-developer-experience

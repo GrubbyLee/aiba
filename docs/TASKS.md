@@ -315,3 +315,11 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Bind publisher, key, sequence, validity window, identity, and file hash.
 - [x] Enforce allowlists, timestamped key revocation, rollback, and equivocation.
 - [x] Advance persistent state only after every trust and content check passes.
+
+### Completed: M14 Production Registry Operations
+
+- [x] Authenticate health, readiness, and Prometheus metrics endpoints.
+- [x] Rate-limit requests and emit redacted operational audit events.
+- [x] Verify deterministic backups before atomic restore into a new target.
+- [x] Preserve retained index closure with dry-run-first garbage collection.
+- [x] Ship and validate a hardened Docker image and Compose deployment example.

@@ -147,9 +147,9 @@ commands in Core.
 
 ## M14: Production Registry Operations
 
-- [ ] Add authenticated health, readiness, and Prometheus metrics endpoints.
-- [ ] Add verified backup, restore, retention, and dry-run garbage collection.
-- [ ] Ship a hardened container image and deployment example.
+- [x] Add authenticated health, readiness, and Prometheus metrics endpoints.
+- [x] Add verified backup, restore, retention, and dry-run garbage collection.
+- [x] Ship a hardened container image and deployment example.
 
 ## M15: Beta-Ready Developer Experience
 

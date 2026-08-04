@@ -11,3 +11,7 @@ import { createRegistryServer } from "aiba-registry-server";
 For normal operation, use `aiba registry-serve`. The server exposes no remote
 mutation or signing API. Requires Node.js 22 or newer and is licensed under
 AGPL-3.0-only.
+
+Authenticated health, readiness, and Prometheus metrics are available at
+`/healthz`, `/readyz`, and `/metrics`. Local verified backup, restore, and
+retention commands remain in the CLI rather than remote server routes.

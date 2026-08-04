@@ -10,6 +10,8 @@ const commands: AgentProtocolDescriptor["commands"] = [
   ["policy-check", false, false], ["resolve", false, false], ["fetch", true, true],
   ["create", true, false], ["lint", false, false], ["test-pack", false, false],
   ["solution-verify", true, true],
+  ["registry-backup", true, true], ["registry-restore", true, true],
+  ["registry-gc", true, true],
 ].map(([name, mutatesProject, resumable]) => ({
   name: name as string,
   mutatesProject: mutatesProject as boolean,

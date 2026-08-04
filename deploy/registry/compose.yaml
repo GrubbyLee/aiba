@@ -1,0 +1,29 @@
+services:
+  registry:
+    build:
+      context: ../..
+      dockerfile: deploy/registry/Dockerfile
+      args:
+        AIBA_VERSION: ${AIBA_VERSION:-latest}
+    environment:
+      AIBA_REGISTRY_TOKEN: ${AIBA_REGISTRY_TOKEN:?set AIBA_REGISTRY_TOKEN}
+    ports:
+      - "7443:7331"
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,noexec,nosuid,nodev
+    volumes:
+      - ${AIBA_REGISTRY_DIR:?set AIBA_REGISTRY_DIR}:/registry:ro
+      - ${AIBA_REGISTRY_CONFIG_DIR:?set AIBA_REGISTRY_CONFIG_DIR}:/config:ro
+      - ${AIBA_REGISTRY_TLS_DIR:?set AIBA_REGISTRY_TLS_DIR}:/tls:ro
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-check-certificate --header='Authorization: Bearer '$$AIBA_REGISTRY_TOKEN -qO- https://127.0.0.1:7331/readyz >/dev/null"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

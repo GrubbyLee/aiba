@@ -33,6 +33,16 @@ export interface RegistryServerOptions {
   tlsCertificatePath?: string;
   tlsPrivateKeyPath?: string;
   now?: () => Date;
+  requestLimitPerMinute?: number;
+  audit?: (event: RegistryAuditEvent) => void;
+}
+
+export interface RegistryAuditEvent {
+  event: "request" | "unauthorized" | "rate-limited" | "internal-error";
+  method: string;
+  routeClass: "distribution" | "health" | "metrics" | "unknown";
+  status: number;
+  occurredAt: string;
 }
 
 export interface RegistryServerSnapshot {
@@ -47,6 +57,15 @@ export interface CreatedRegistryServer {
   server: HttpServer | HttpsServer;
   snapshot: RegistryServerSnapshot;
   secure: boolean;
+  metrics: RegistryServerMetrics;
+}
+
+export interface RegistryServerMetrics {
+  startedAt: string;
+  requests: number;
+  unauthorized: number;
+  rateLimited: number;
+  internalErrors: number;
 }
 
 async function assertDirectory(path: string, label: string): Promise<void> {
@@ -200,25 +219,72 @@ function requestListener(
   token: string,
   routes: Map<string, RegistryRoute>,
   latest: Buffer,
+  snapshot: RegistryServerSnapshot,
+  options: Pick<RegistryServerOptions, "requestLimitPerMinute" | "audit" | "now">,
+  metrics: RegistryServerMetrics,
 ): RequestListener {
   const expectedDigest = tokenDigest(token);
+  const limit = options.requestLimitPerMinute ?? 600;
+  let windowStarted = Date.now();
+  let windowRequests = 0;
+  const routeClass = (path: string): RegistryAuditEvent["routeClass"] =>
+    path === "/healthz" || path === "/readyz"
+      ? "health"
+      : path === "/metrics"
+        ? "metrics"
+        : path.startsWith("/v0/")
+          ? "distribution"
+          : "unknown";
+  const audit = (
+    event: RegistryAuditEvent["event"],
+    method: string,
+    path: string,
+    status: number,
+  ): void => {
+    options.audit?.({
+      event,
+      method,
+      routeClass: routeClass(path),
+      status,
+      occurredAt: (options.now ?? (() => new Date()))().toISOString(),
+    });
+  };
   return (request, response) => {
     void (async () => {
+      const requestPath = request.url ?? "";
+      const method = request.method ?? "UNKNOWN";
+      metrics.requests += 1;
       response.setHeader("cache-control", "no-store");
       response.setHeader("x-content-type-options", "nosniff");
       if (!isAuthorized(request.headers.authorization, expectedDigest)) {
+        metrics.unauthorized += 1;
         response.setHeader("www-authenticate", "Bearer");
         response.writeHead(401);
         response.end();
+        audit("unauthorized", method, requestPath, 401);
+        return;
+      }
+      const current = Date.now();
+      if (current - windowStarted >= 60000) {
+        windowStarted = current;
+        windowRequests = 0;
+      }
+      windowRequests += 1;
+      if (windowRequests > limit) {
+        metrics.rateLimited += 1;
+        response.setHeader("retry-after", "60");
+        response.writeHead(429);
+        response.end();
+        audit("rate-limited", method, requestPath, 429);
         return;
       }
       if (request.method !== "GET" && request.method !== "HEAD") {
         response.setHeader("allow", "GET, HEAD");
         response.writeHead(405);
         response.end();
+        audit("request", method, requestPath, 405);
         return;
       }
-      const requestPath = request.url ?? "";
       if (
         !requestPath.startsWith("/")
         || requestPath.includes("?")
@@ -229,17 +295,43 @@ function requestListener(
       ) {
         response.writeHead(400);
         response.end();
+        audit("request", method, requestPath, 400);
         return;
       }
       let bytes: Buffer;
       let type = "application/json; charset=utf-8";
-      if (requestPath === "/v0/indexes/latest.json") {
+      if (requestPath === "/healthz") {
+        bytes = Buffer.from(`${JSON.stringify({ status: "ok" })}\n`);
+      } else if (requestPath === "/readyz") {
+        bytes = Buffer.from(`${JSON.stringify({
+          status: "ready",
+          registry: snapshot.registry,
+          sequence: snapshot.sequence,
+        })}\n`);
+      } else if (requestPath === "/metrics") {
+        type = "text/plain; version=0.0.4; charset=utf-8";
+        bytes = Buffer.from([
+          "# HELP aiba_registry_up Registry readiness.",
+          "# TYPE aiba_registry_up gauge",
+          "aiba_registry_up 1",
+          "# TYPE aiba_registry_requests_total counter",
+          `aiba_registry_requests_total ${metrics.requests}`,
+          "# TYPE aiba_registry_unauthorized_total counter",
+          `aiba_registry_unauthorized_total ${metrics.unauthorized}`,
+          "# TYPE aiba_registry_rate_limited_total counter",
+          `aiba_registry_rate_limited_total ${metrics.rateLimited}`,
+          "# TYPE aiba_registry_internal_errors_total counter",
+          `aiba_registry_internal_errors_total ${metrics.internalErrors}`,
+          "",
+        ].join("\n"));
+      } else if (requestPath === "/v0/indexes/latest.json") {
         bytes = latest;
       } else {
         const route = routes.get(requestPath);
         if (!route) {
           response.writeHead(404);
           response.end();
+          audit("request", method, requestPath, 404);
           return;
         }
         bytes = await readRegularRouteFile(root, route);
@@ -249,7 +341,10 @@ function requestListener(
       response.setHeader("content-length", String(bytes.length));
       response.writeHead(200);
       response.end(request.method === "HEAD" ? undefined : bytes);
+      audit("request", method, requestPath, 200);
     })().catch(() => {
+      metrics.internalErrors += 1;
+      audit("internal-error", request.method ?? "UNKNOWN", request.url ?? "", 500);
       if (!response.headersSent) response.writeHead(500);
       response.end();
     });
@@ -283,9 +378,32 @@ export async function createRegistryServer(
   if ((options.tlsCertificatePath === undefined) !== (options.tlsPrivateKeyPath === undefined)) {
     throw new AibaError("TLS certificate and private key must be provided together", "INCOMPLETE_TLS_CONFIG");
   }
+  if (
+    options.requestLimitPerMinute !== undefined
+    && (!Number.isSafeInteger(options.requestLimitPerMinute)
+      || options.requestLimitPerMinute < 1
+      || options.requestLimitPerMinute > 1_000_000)
+  ) {
+    throw new AibaError("Registry request limit must be between 1 and 1000000", "INVALID_REGISTRY_REQUEST_LIMIT");
+  }
   const root = resolve(options.registryDirectory);
   const verified = await buildVerifiedRoutes(options);
-  const listener = requestListener(root, options.token, verified.routes, verified.latest);
+  const metrics: RegistryServerMetrics = {
+    startedAt: (options.now ?? (() => new Date()))().toISOString(),
+    requests: 0,
+    unauthorized: 0,
+    rateLimited: 0,
+    internalErrors: 0,
+  };
+  const listener = requestListener(
+    root,
+    options.token,
+    verified.routes,
+    verified.latest,
+    verified.snapshot,
+    options,
+    metrics,
+  );
   if (options.tlsCertificatePath && options.tlsPrivateKeyPath) {
     const [cert, key] = await Promise.all([
       readTlsFile(options.tlsCertificatePath, "TLS certificate"),
@@ -295,11 +413,13 @@ export async function createRegistryServer(
       server: createHttpsServer({ cert, key }, listener),
       snapshot: verified.snapshot,
       secure: true,
+      metrics,
     };
   }
   return {
     server: createHttpServer(listener),
     snapshot: verified.snapshot,
     secure: false,
+    metrics,
   };
 }

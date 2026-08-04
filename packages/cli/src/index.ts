@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { Command } from "commander";
 import {
   AibaError,
+  backupRegistry,
   ProtocolValidationError,
   finalizeCapability,
   finalizeUpgrade,
@@ -32,9 +33,11 @@ import {
   prepareCapability,
   prepareBehaviorChallenge,
   prepareUpgrade,
+  planRegistryRetention,
   evaluateGovernance,
   fetchRegistryCapability,
   resolveRegistryCapability,
+  restoreRegistry,
   solutionStatus,
   signSolution,
   verifyCapabilityBundle,
@@ -87,6 +90,46 @@ program
   .name("aiba")
   .description("Install, verify, trace, and upgrade application capabilities")
   .version(packageVersion());
+
+program
+  .command("registry-backup")
+  .description("Create a verified deterministic Registry backup directory")
+  .argument("<registry-directory>", "Registry directory")
+  .requiredOption("--out <path>", "new backup output directory")
+  .requiredOption("--registry-trust <path>", "registry trust policy JSON")
+  .requiredOption("--publisher-trust <path>", "publisher trust policy JSON")
+  .option("--json", "print machine-readable JSON")
+  .action(async (registry: string, options: { out: string; registryTrust: string; publisherTrust: string; json?: boolean }) => {
+    const result = await backupRegistry({ registryDirectory: resolve(registry), outputDirectory: resolve(options.out), registryTrustPolicyPath: resolve(options.registryTrust), publisherTrustPolicyPath: resolve(options.publisherTrust) });
+    process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : `Backed up ${result.registry} sequence ${result.latestSequence} to ${result.outputDirectory}.\n`);
+  });
+
+program
+  .command("registry-restore")
+  .description("Restore a hash-verified Registry backup to a new directory")
+  .argument("<backup-directory>", "backup directory")
+  .requiredOption("--out <path>", "new Registry target directory")
+  .requiredOption("--registry-trust <path>", "registry trust policy JSON")
+  .requiredOption("--publisher-trust <path>", "publisher trust policy JSON")
+  .option("--json", "print machine-readable JSON")
+  .action(async (backup: string, options: { out: string; registryTrust: string; publisherTrust: string; json?: boolean }) => {
+    const result = await restoreRegistry({ backupDirectory: resolve(backup), targetDirectory: resolve(options.out), registryTrustPolicyPath: resolve(options.registryTrust), publisherTrustPolicyPath: resolve(options.publisherTrust) });
+    process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : `Restored ${result.registry} sequence ${result.latestSequence} to ${result.targetDirectory}.\n`);
+  });
+
+program
+  .command("registry-gc")
+  .description("Plan or apply verified Registry history retention")
+  .argument("<registry-directory>", "Registry directory")
+  .requiredOption("--registry-trust <path>", "registry trust policy JSON")
+  .requiredOption("--publisher-trust <path>", "publisher trust policy JSON")
+  .option("--keep-indexes <number>", "latest index snapshots to retain", "10")
+  .option("--apply", "delete only the reported unreferenced history")
+  .option("--json", "print machine-readable JSON")
+  .action(async (registry: string, options: { registryTrust: string; publisherTrust: string; keepIndexes: string; apply?: boolean; json?: boolean }) => {
+    const result = await planRegistryRetention({ registryDirectory: resolve(registry), registryTrustPolicyPath: resolve(options.registryTrust), publisherTrustPolicyPath: resolve(options.publisherTrust), keepIndexes: Number(options.keepIndexes), ...(options.apply ? { apply: true } : {}) });
+    process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : `${result.dryRun ? "Dry run" : "Applied"}: ${result.removableIndexes.length} indexes and ${result.removableBundles.length} bundles removable.\n`);
+  });
 
 program
   .command("solution-sign")
@@ -672,6 +715,7 @@ program
   .option("--token-env <name>", "environment variable containing the read token", "AIBA_REGISTRY_TOKEN")
   .option("--host <host>", "listen host", "127.0.0.1")
   .option("--port <number>", "listen port", "7331")
+  .option("--request-limit <number>", "authenticated requests per minute", "600")
   .option("--tls-cert <path>", "TLS certificate PEM")
   .option("--tls-key <path>", "TLS private key PEM")
   .option("--allow-insecure-localhost", "allow HTTP on a loopback host")
@@ -684,6 +728,7 @@ program
       tokenEnv: string;
       host: string;
       port: string;
+      requestLimit: string;
       tlsCert?: string;
       tlsKey?: string;
       allowInsecureLocalhost?: boolean;
@@ -699,6 +744,10 @@ program
     if (!Number.isSafeInteger(port) || port < 0 || port > 65535) {
       throw new Error("--port must be an integer between 0 and 65535");
     }
+    const requestLimitPerMinute = Number(options.requestLimit);
+    if (!Number.isSafeInteger(requestLimitPerMinute) || requestLimitPerMinute < 1) {
+      throw new Error("--request-limit must be a positive integer");
+    }
     const hasTls = options.tlsCert !== undefined || options.tlsKey !== undefined;
     const loopback = ["127.0.0.1", "::1", "localhost"].includes(options.host);
     if (!hasTls && !(options.allowInsecureLocalhost && loopback)) {
@@ -709,6 +758,7 @@ program
       registryTrustPolicyPath: resolve(options.registryTrust),
       publisherTrustPolicyPath: resolve(options.publisherTrust),
       token,
+      requestLimitPerMinute,
       ...(options.tlsCert ? { tlsCertificatePath: resolve(options.tlsCert) } : {}),
       ...(options.tlsKey ? { tlsPrivateKeyPath: resolve(options.tlsKey) } : {}),
     });

@@ -59,7 +59,7 @@
       "description": "Add production-oriented Registry observability, backup, restore, retention, and deployment assets.",
       "file": "packages/registry-server/src/index.ts",
       "steps": ["Add health and metrics.", "Add backup and restore.", "Add retention and audit.", "Ship deployment assets."],
-      "passes": false,
+      "passes": true,
       "verification": "Operations tests cover authentication, tamper, paths, restore conflicts and metrics."
     },
     {

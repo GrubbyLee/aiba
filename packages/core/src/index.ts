@@ -13,6 +13,7 @@ export * from "./inspect.js";
 export * from "./loaders.js";
 export * from "./paths.js";
 export * from "./registry.js";
+export * from "./registry-operations.js";
 export * from "./solution.js";
 export * from "./solution-install.js";
 export * from "./solution-signing.js";
