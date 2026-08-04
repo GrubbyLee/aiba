@@ -39,6 +39,28 @@ run("list verified catalog", ["list", "--json"], 0);
 run("show verified capability", ["show", "vehicle-records", "--json"], 0);
 run("show verified solution", ["show", "vehicle-management", "--json"], 0);
 
+const authoringFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-authoring-"));
+run("create capability scaffold", [
+  "create", "capability", "appointment-booking", "--out", authoringFixture, "--json",
+], 0);
+run("lint capability scaffold", ["lint", join(authoringFixture, "appointment-booking"), "--json"], 0);
+run("test pack readiness", ["test-pack", join(authoringFixture, "appointment-booking"), "--json"], 0);
+run("reject scaffold overwrite", [
+  "create", "capability", "appointment-booking", "--out", authoringFixture, "--json",
+], 1);
+run("create Solution scaffold", [
+  "create", "solution", "secure-accounts",
+  "--out", authoringFixture,
+  "--packs-dir", join(workspace, "capabilities"),
+  "--capability", "audit", "identity", "authorization",
+  "--json",
+], 0);
+run("lint Solution scaffold", [
+  "lint", join(authoringFixture, "secure-accounts"),
+  "--packs-dir", join(workspace, "capabilities"), "--json",
+], 0);
+rmSync(authoringFixture, { recursive: true, force: true });
+
 const bundleFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-bundle-"));
 const keyDirectory = join(bundleFixture, "keys");
 const bundleDirectory = join(bundleFixture, "identity-bundle");

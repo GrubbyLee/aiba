@@ -300,3 +300,11 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Add `agent-protocol --json` negotiation with command mutation metadata.
 - [x] Return stable error codes on stderr for failed JSON commands.
 - [x] Align the portable Codex/Claude Skill with workflow and behavior proofs.
+
+### Completed: M12 Capability Authoring SDK
+
+- [x] Scaffold framework-neutral capability contracts and exact Solutions.
+- [x] Add authoring lint and static `test-pack` security-readiness reports.
+- [x] Require invariant operation coverage, test guidance, and critical rules.
+- [x] Reject overwrite, traversal, symlinks, scripts, special files, and bad
+  dependency order without executing authored content.

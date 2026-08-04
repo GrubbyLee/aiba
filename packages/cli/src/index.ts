@@ -16,6 +16,8 @@ import {
   checkSolution,
   advanceSolutionInstallation,
   createBehaviorProof,
+  createCapabilityScaffold,
+  createSolutionScaffold,
   describeAgentProtocol,
   describeCatalogItem,
   doctorProject,
@@ -26,6 +28,7 @@ import {
   initializeGovernancePolicy,
   importRegistryBundle,
   inspectProject,
+  lintAuthoringDirectory,
   prepareCapability,
   prepareBehaviorChallenge,
   prepareUpgrade,
@@ -82,6 +85,71 @@ program
   .name("aiba")
   .description("Install, verify, trace, and upgrade application capabilities")
   .version(packageVersion());
+
+program
+  .command("create")
+  .description("Scaffold a framework-neutral AIBA artifact")
+  .addCommand(
+    new Command("capability")
+      .description("Create a capability contract and authoring quality plan")
+      .argument("<id>", "new capability identifier")
+      .option("--out <path>", "parent output directory", "capabilities")
+      .option("--layer <layer>", "capability layer", "business-capability")
+      .option("--language <name>", "initial recipe language", "TypeScript")
+      .option("--json", "print machine-readable JSON")
+      .action(async (id: string, options: { out: string; layer: string; language: string; json?: boolean }) => {
+        const allowedLayers = ["application-foundation", "platform-integration", "business-capability", "engineering-governance"] as const;
+        if (!allowedLayers.includes(options.layer as typeof allowedLayers[number])) throw new Error(`Unsupported capability layer: ${options.layer}`);
+        const result = await createCapabilityScaffold({
+          id,
+          outputDirectory: resolve(options.out),
+          layer: options.layer as typeof allowedLayers[number],
+          language: options.language,
+        });
+        process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : `Created capability ${id} at ${result.directory}.\n`);
+      }),
+  )
+  .addCommand(
+    new Command("solution")
+      .description("Create an exact Solution from existing capability packs")
+      .argument("<id>", "new Solution identifier")
+      .requiredOption("--capability <ids...>", "dependency-ordered capability identifiers")
+      .option("--out <path>", "parent output directory", "solutions")
+      .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+      .option("--json", "print machine-readable JSON")
+      .action(async (id: string, options: { capability: string[]; out: string; packsDir: string; json?: boolean }) => {
+        const result = await createSolutionScaffold({
+          id,
+          outputDirectory: resolve(options.out),
+          packsDirectory: resolve(options.packsDir),
+          capabilities: options.capability,
+        });
+        process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : `Created Solution ${id} at ${result.directory}.\n`);
+      }),
+  );
+
+program
+  .command("lint")
+  .description("Statically validate an authored capability or Solution")
+  .argument("<path>", "artifact directory")
+  .option("--packs-dir <path>", "capability packs for Solution validation", defaultPacksDirectory())
+  .option("--json", "print machine-readable JSON")
+  .action(async (path: string, options: { packsDir: string; json?: boolean }) => {
+    const result = await lintAuthoringDirectory({ path: resolve(path), packsDirectory: resolve(options.packsDir) });
+    process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : [`Authoring lint: ${result.ok ? "ok" : "failed"}`, `Quality: ${result.quality.score}/100`, ...result.issues.map((item) => `${item.code}: ${item.message}`)].join("\n") + "\n");
+    if (!result.ok) process.exitCode = 1;
+  });
+
+program
+  .command("test-pack")
+  .description("Check static security-test readiness without executing pack code")
+  .argument("<path>", "capability pack directory")
+  .option("--json", "print machine-readable JSON")
+  .action(async (path: string, options: { json?: boolean }) => {
+    const result = await lintAuthoringDirectory({ path: resolve(path), requireSecurityTests: true });
+    process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : [`Pack readiness: ${result.ok ? "ok" : "failed"}`, `Quality: ${result.quality.score}/100`, ...result.issues.map((item) => `${item.code}: ${item.message}`)].join("\n") + "\n");
+    if (!result.ok) process.exitCode = 1;
+  });
 
 program
   .command("agent-protocol")

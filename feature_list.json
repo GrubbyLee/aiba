@@ -39,7 +39,7 @@
       "description": "Scaffold and validate third-party capabilities and Solutions from safe built-in templates.",
       "file": "packages/core/src/authoring.ts",
       "steps": ["Add scaffolds.", "Add lint and test-pack.", "Validate quality requirements.", "Reject unsafe output."],
-      "passes": false,
+      "passes": true,
       "verification": "Generated artifacts validate and unsafe packs fail closed."
     },
     {

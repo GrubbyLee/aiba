@@ -135,9 +135,9 @@ commands in Core.
 
 ## M12: Capability Authoring SDK
 
-- [ ] Scaffold capabilities and Solutions from safe built-in templates.
-- [ ] Add authoring lint and test-pack quality gates.
-- [ ] Check identifiers, schemas, dependency closure, recipes, and security tests.
+- [x] Scaffold capabilities and Solutions from safe built-in templates.
+- [x] Add authoring lint and test-pack quality gates.
+- [x] Check identifiers, schemas, dependency closure, recipes, and security tests.
 
 ## M13: Signed Solution Distribution
 

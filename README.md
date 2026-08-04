@@ -162,6 +162,9 @@ The concise product workflow remains:
 ```bash
 aiba init
 aiba agent-protocol --json
+aiba create capability appointment-booking
+aiba lint capabilities/appointment-booking
+aiba test-pack capabilities/appointment-booking
 aiba list
 aiba show vehicle-management
 aiba add vehicle-management --solution

@@ -80,3 +80,23 @@ Verification:
 
 Progress: 3/7
 Next: m12-authoring-sdk
+
+----------------------------------------
+Session #4 - m12-authoring-sdk
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added capability and exact Solution scaffolds from Core-owned templates.
+  [x] Added lint and test-pack static quality reports.
+  [x] Added safe-path, overwrite, symlink, script, semantic and dependency tests.
+  [x] Added compiled CLI smoke and author documentation.
+
+Verification:
+  - pnpm check: passed
+  - Core: 120 tests passed
+  - Compiled smoke: create, lint, test-pack and overwrite rejection passed
+  - External npm consumer: four packages installed and exercised
+
+Progress: 4/7
+Next: m13-signed-solutions
