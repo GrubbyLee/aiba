@@ -34,7 +34,7 @@ import {
   loadProjectLock,
   loadProjectManifest,
 } from "./loaders.js";
-import { resolveExistingProjectPath } from "./paths.js";
+import { canonicalProjectRoot, resolveExistingProjectPath } from "./paths.js";
 import { verifyProject, verifyReceiptEvidence } from "./verify.js";
 
 const CAPABILITY_ID = /^[a-z][a-z0-9-]{1,62}$/;
@@ -262,7 +262,7 @@ export async function prepareCapability(
   options: PrepareCapabilityOptions,
 ): Promise<PrepareCapabilityResult> {
   assertCapabilityId(options.capabilityId);
-  const root = resolve(options.projectRoot);
+  const root = await canonicalProjectRoot(options.projectRoot);
   const project = await loadProjectManifest(root);
   assertNotInstalled(project, options.capabilityId);
 
@@ -396,7 +396,7 @@ export async function validateCapabilityPlan(
   options: ValidateCapabilityPlanOptions,
 ): Promise<PrepareCapabilityResult> {
   assertCapabilityId(options.capabilityId);
-  const root = resolve(options.projectRoot);
+  const root = await canonicalProjectRoot(options.projectRoot);
   const project = await loadProjectManifest(root);
   assertNotInstalled(project, options.capabilityId);
 
@@ -704,7 +704,7 @@ export async function finalizeCapability(
   options: FinalizeCapabilityOptions,
 ): Promise<FinalizeCapabilityResult> {
   assertCapabilityId(options.capabilityId);
-  const root = resolve(options.projectRoot);
+  const root = await canonicalProjectRoot(options.projectRoot);
   const project = await loadProjectManifest(root);
   const lock = await loadProjectLock(root);
   assertNotInstalled(project, options.capabilityId);

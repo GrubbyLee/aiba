@@ -7,6 +7,10 @@ function isWithin(root: string, target: string): boolean {
   return relation === "" || (!relation.startsWith("..") && !isAbsolute(relation));
 }
 
+export async function canonicalProjectRoot(projectRoot: string): Promise<string> {
+  return realpath(resolve(projectRoot));
+}
+
 export async function resolveExistingProjectPath(
   projectRoot: string,
   projectPath: string,
@@ -18,7 +22,7 @@ export async function resolveExistingProjectPath(
     );
   }
 
-  const root = await realpath(projectRoot);
+  const root = await canonicalProjectRoot(projectRoot);
   const lexicalTarget = resolve(root, projectPath);
   if (!isWithin(root, lexicalTarget)) {
     throw new AibaError(

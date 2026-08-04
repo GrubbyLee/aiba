@@ -38,7 +38,7 @@ run("negotiate Agent protocol", ["agent-protocol", "--json"], 0);
 const structuredError = run("structured Agent error", ["show", "missing-capability", "--json"], 1);
 const structuredEnvelope = JSON.parse(structuredError.stderr);
 if (structuredEnvelope.kind !== "AibaErrorEnvelope" || structuredEnvelope.error?.code !== "CATALOG_ITEM_NOT_FOUND") {
-  throw new Error("runtime failure did not return the expected AibaErrorEnvelope");
+  throw new Error(`runtime failure returned ${structuredEnvelope.error?.code ?? "no error code"}`);
 }
 const usageError = run("structured command usage error", ["show", "--json"], 1);
 const usageEnvelope = JSON.parse(usageError.stderr);

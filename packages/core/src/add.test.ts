@@ -196,6 +196,26 @@ describe("capability add lifecycle", () => {
     expect(verification.scope).toBe("evidence-and-provenance");
   });
 
+  it("keeps state paths project-relative through a symlinked project root", async () => {
+    const fixture = await createFixture();
+    await setEvidence(fixture.planPath, "src/review.ts");
+    const aliases = await mkdtemp(join(tmpdir(), "aiba-project-alias-"));
+    const alias = join(aliases, "project");
+    await symlink(fixture.root, alias, "dir");
+
+    const result = await finalizeCapability({
+      projectRoot: alias,
+      packsDirectory: fixture.packs,
+      capabilityId: "review-access",
+    });
+
+    expect(result.receiptPath).toBe(".aiba/receipts/review-access.yaml");
+    const project = parse(
+      await readFile(join(fixture.root, ".aiba", "manifest.yaml"), "utf8"),
+    ) as ProjectManifest;
+    expect(project.capabilities[0]?.receipt).toBe(result.receiptPath);
+  });
+
   it("enforces signed governance approvals and records their provenance", async () => {
     const fixture = await createFixture();
     await setEvidence(fixture.planPath, "src/review.ts");

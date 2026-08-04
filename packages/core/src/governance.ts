@@ -23,7 +23,7 @@ import { satisfies, validRange } from "semver";
 import { AibaError } from "./errors.js";
 import { sha256File } from "./hash.js";
 import { loadOperationPlan, loadUpgradePlan } from "./loaders.js";
-import { resolveExistingProjectPath } from "./paths.js";
+import { canonicalProjectRoot, resolveExistingProjectPath } from "./paths.js";
 import {
   canonicalDocument,
   loadEd25519PrivateKey,
@@ -339,7 +339,7 @@ export async function initializeGovernancePolicy(
   for (const capability of options.capabilities) {
     assertIdentifier(capability, "capability identifier", CAPABILITY_ID);
   }
-  const root = resolve(options.projectRoot);
+  const root = await canonicalProjectRoot(options.projectRoot);
   const stateDirectory = join(root, ".aiba");
   const stateInfo = await lstat(stateDirectory).catch((error: unknown) => {
     throw new AibaError("Initialize AIBA before governance policy", "AIBA_NOT_INITIALIZED", {
@@ -406,7 +406,7 @@ export async function createCapabilityApproval(
   assertIdentifier(options.capabilityId, "capability identifier", CAPABILITY_ID);
   assertIdentifier(options.approverId, "approver identifier");
   assertIdentifier(options.keyId, "approver key identifier");
-  const root = resolve(options.projectRoot);
+  const root = await canonicalProjectRoot(options.projectRoot);
   const loaded = await loadPolicy(root);
   if (!loaded) {
     throw new AibaError("Project has no governance policy", "GOVERNANCE_POLICY_NOT_FOUND");
@@ -528,7 +528,7 @@ async function approvalFiles(root: string, capabilityId: string, operation: Gove
 export async function evaluateGovernance(
   options: EvaluateGovernanceOptions,
 ): Promise<GovernanceEvaluation> {
-  const root = resolve(options.projectRoot);
+  const root = await canonicalProjectRoot(options.projectRoot);
   const loaded = await loadPolicy(root);
   if (!loaded) {
     return {

@@ -36,7 +36,7 @@ import {
   loadProjectManifest,
   loadUpgradePlan,
 } from "./loaders.js";
-import { resolveExistingProjectPath } from "./paths.js";
+import { canonicalProjectRoot, resolveExistingProjectPath } from "./paths.js";
 
 export interface PrepareUpgradeOptions {
   projectRoot: string;
@@ -160,7 +160,7 @@ async function ancestryRecipeVersion(
 export async function prepareUpgrade(
   options: PrepareUpgradeOptions,
 ): Promise<PrepareUpgradeResult> {
-  const root = resolve(options.projectRoot);
+  const root = await canonicalProjectRoot(options.projectRoot);
   const packsDirectory = resolve(options.targetPacksDirectory);
   const state = await loadInstalledState(root, options.capabilityId);
   const target = await loadCapabilityManifest(packsDirectory, options.capabilityId);
@@ -331,7 +331,7 @@ async function assertUpgradeSources(
 export async function finalizeUpgrade(
   options: FinalizeUpgradeOptions,
 ): Promise<FinalizeUpgradeResult> {
-  const root = resolve(options.projectRoot);
+  const root = await canonicalProjectRoot(options.projectRoot);
   const packsDirectory = resolve(options.targetPacksDirectory);
   const state = await loadInstalledState(root, options.capabilityId);
   const plan = await loadUpgradePlan(root, options.capabilityId);
