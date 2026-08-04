@@ -38,6 +38,8 @@ Verification:
   - Core: 112 tests passed
   - External npm consumer: four packages installed and exercised
 
+Commit: 0ea6afe
+
 Progress: 1/7
 Next: m10-orchestration
 
@@ -57,6 +59,8 @@ Verification:
   - Core: 115 tests passed
   - Compiled smoke: status, continue, doctor and legacy Solution path passed
   - External npm consumer: four packages installed and exercised
+
+Commit: 07ef656
 
 Progress: 2/7
 Next: m11-agent-protocol
@@ -78,6 +82,8 @@ Verification:
   - CLI negotiated 18 commands and returned CATALOG_ITEM_NOT_FOUND envelope
   - External npm consumer: four packages installed and exercised
 
+Commit: 8bee502
+
 Progress: 3/7
 Next: m12-authoring-sdk
 
@@ -98,6 +104,8 @@ Verification:
   - Compiled smoke: create, lint, test-pack and overwrite rejection passed
   - External npm consumer: four packages installed and exercised
 
+Commit: 0eb979f
+
 Progress: 4/7
 Next: m13-signed-solutions
 
@@ -117,6 +125,8 @@ Verification:
   - Spec: 44 tests; Core: 124 tests
   - Compiled smoke: signed and verified vehicle-management Solution
   - External npm consumer: four packages installed and exercised
+
+Commit: 151ab9b
 
 Progress: 5/7
 Next: m14-registry-operations
@@ -140,5 +150,33 @@ Verification:
   - Docker Compose config and Docker image build: passed
   - External npm consumer: four packages installed and exercised
 
+Commit: 9126a73
+
 Progress: 6/7
 Next: m15-developer-experience
+
+----------------------------------------
+Session #7 - m15-developer-experience
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added honest bilingual ten-minute setup and Agent handoff guides.
+  [x] Added Bash, Zsh, and Fish completion generated from the CLI command model.
+  [x] Added stable JSON envelopes for runtime and command-usage failures.
+  [x] Expanded clean npm consumer coverage across diagnostics, workflows,
+      authoring, completion, and failure contracts.
+  [x] Added workflow syntax/pinning checks and macOS/Windows portability CI.
+  [x] Reconciled stale roadmap and release documentation with M9-M14.
+
+Verification:
+  - pnpm check: passed after final task and documentation updates
+  - Spec: 44 tests; Core: 127 tests; Registry Server: 8 tests; CLI: 10 tests
+  - Compiled smoke: all commands, negative fixtures, JSON errors, and completion passed
+  - Four deterministic npm tarballs installed and exercised in a clean consumer
+  - GitHub Actions YAML parsed; action references pinned; portability matrix present
+
+Commit: e222094
+
+Progress: 7/7
+Next: external launch gates only; human beta remains intentionally incomplete
