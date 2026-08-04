@@ -46,5 +46,5 @@ jobs:
           GIT_TERMINAL_PROMPT: "0"
         run: |
           git remote add gitee "https://${GITEE_USERNAME}:${GITEE_TOKEN}@gitee.com/synovation/aiba.git"
-          timeout 120s git push gitee HEAD:main --force
-          timeout 120s git push gitee --tags --force
+          timeout 600s git push gitee HEAD:main --force
+          timeout 600s git push gitee --tags --force
