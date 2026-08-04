@@ -1,0 +1,25 @@
+{
+  "project": "AIBA Beta-Ready Development",
+  "version": "1.0",
+  "created": "2026-08-05",
+  "updated": "2026-08-05",
+  "methodology": "Effective harnesses for long-running agents",
+  "description": "Complete the locally deliverable M9-M15 product scope with independent verification.",
+  "status": "in_progress",
+  "harness": {
+    "initializer_done": true,
+    "files": { "feature_list": "feature_list.json", "progress_log": "progress.txt", "init_script": "init.sh" },
+    "rules": [
+      "Run bash init.sh before resuming work.",
+      "Only change feature passes after verification.",
+      "Commit and push each completed feature independently.",
+      "Append verification and commit details to progress.txt."
+    ]
+  },
+  "milestones": [
+    { "name": "M9-M11 Trust and Agent Workflow", "feature_ids": ["m9-behavior-proofs", "m10-orchestration", "m11-agent-protocol"], "status": "active" },
+    { "name": "M12-M14 Ecosystem and Operations", "feature_ids": ["m12-authoring-sdk", "m13-signed-solutions", "m14-registry-operations"], "status": "pending" },
+    { "name": "M15 Beta-Ready DX", "feature_ids": ["m15-developer-experience"], "status": "pending" }
+  ],
+  "summary": { "total_features": 7, "estimated_files_to_edit": 35 }
+}

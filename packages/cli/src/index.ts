@@ -13,6 +13,7 @@ import {
   createRegistryIndex,
   checkSolution,
   advanceSolutionInstallation,
+  createBehaviorProof,
   describeCatalogItem,
   discoverCatalog,
   diffProject,
@@ -22,11 +23,13 @@ import {
   importRegistryBundle,
   inspectProject,
   prepareCapability,
+  prepareBehaviorChallenge,
   prepareUpgrade,
   evaluateGovernance,
   fetchRegistryCapability,
   resolveRegistryCapability,
   verifyCapabilityBundle,
+  verifyBehaviorProof,
   verifyProject,
 } from "aiba-core";
 import { createRegistryServer } from "aiba-registry-server";
@@ -73,6 +76,150 @@ program
   .name("aiba")
   .description("Install, verify, trace, and upgrade application capabilities")
   .version(packageVersion());
+
+program
+  .command("test")
+  .description("Prepare a source-bound challenge for an external behavioral test")
+  .argument("<subject>", "installed capability or Solution identifier")
+  .option("--root <path>", "project root", ".")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--solutions-dir <path>", "Solution definition directory", defaultSolutionsDirectory())
+  .option("--solution", "treat the subject as a Solution")
+  .requiredOption("--runner <id>", "trusted external runner identifier")
+  .requiredOption("--key-id <id>", "runner signing key identifier")
+  .requiredOption("--test-id <id>", "stable behavioral test identifier")
+  .requiredOption("--command <command>", "exact external command to bind without executing")
+  .option("--ttl <seconds>", "challenge lifetime", "900")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    subject: string,
+    options: {
+      root: string;
+      packsDir: string;
+      solutionsDir: string;
+      solution?: boolean;
+      runner: string;
+      keyId: string;
+      testId: string;
+      command: string;
+      ttl: string;
+      json?: boolean;
+    },
+  ) => {
+    const ttlSeconds = Number(options.ttl);
+    const result = await prepareBehaviorChallenge({
+      projectRoot: resolve(options.root),
+      packsDirectory: resolve(options.packsDir),
+      solutionsDirectory: resolve(options.solutionsDir),
+      subjectKind: options.solution ? "solution" : "capability",
+      subjectId: subject,
+      runnerId: options.runner,
+      keyId: options.keyId,
+      testId: options.testId,
+      command: options.command,
+      ttlSeconds,
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `Prepared behavior challenge for ${result.challenge.subject.kind} ${subject}@${result.challenge.subject.version}.`,
+      `Runner: ${result.challenge.runner.id}/${result.challenge.runner.keyId}`,
+      `Expires: ${result.challenge.metadata.expiresAt}`,
+      `Challenge: ${result.challengePath}`,
+      "Run the bound command externally, save its summary, then use aiba attest.",
+    ].join("\n") + "\n");
+  });
+
+program
+  .command("attest")
+  .description("Sign a successful external behavioral test result")
+  .argument("<challenge>", "project-relative challenge JSON path")
+  .option("--root <path>", "project root", ".")
+  .requiredOption("--private-key <path>", "trusted runner Ed25519 PKCS#8 private key")
+  .requiredOption("--started-at <date-time>", "test start time")
+  .requiredOption("--completed-at <date-time>", "test completion time")
+  .requiredOption("--exit-code <number>", "test process exit code")
+  .requiredOption("--summary <path>", "project-relative test summary file")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    challenge: string,
+    options: {
+      root: string;
+      privateKey: string;
+      startedAt: string;
+      completedAt: string;
+      exitCode: string;
+      summary: string;
+      json?: boolean;
+    },
+  ) => {
+    const result = await createBehaviorProof({
+      projectRoot: resolve(options.root),
+      challengePath: challenge,
+      privateKeyPath: resolve(options.privateKey),
+      startedAt: options.startedAt,
+      completedAt: options.completedAt,
+      exitCode: Number(options.exitCode),
+      summaryPath: options.summary,
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `Attested successful test ${result.proof.statement.test.id}.`,
+      `Snapshot: ${result.proof.statement.project.snapshotSha256}`,
+      `Proof: ${result.proofPath}`,
+    ].join("\n") + "\n");
+  });
+
+program
+  .command("verify-behavior")
+  .description("Verify a signed behavioral proof against current project state")
+  .argument("<proof>", "project-relative behavior proof JSON path")
+  .option("--root <path>", "project root", ".")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--solutions-dir <path>", "Solution definition directory", defaultSolutionsDirectory())
+  .requiredOption("--trust <path>", "runner trust policy JSON")
+  .requiredOption("--command <command>", "exact command used by the external runner")
+  .requiredOption("--summary <path>", "project-relative test summary file")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    proof: string,
+    options: {
+      root: string;
+      packsDir: string;
+      solutionsDir: string;
+      trust: string;
+      command: string;
+      summary: string;
+      json?: boolean;
+    },
+  ) => {
+    const report = await verifyBehaviorProof({
+      projectRoot: resolve(options.root),
+      packsDirectory: resolve(options.packsDir),
+      solutionsDirectory: resolve(options.solutionsDir),
+      proofPath: proof,
+      trustPolicyPath: resolve(options.trust),
+      command: options.command,
+      summaryPath: options.summary,
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+    } else {
+      process.stdout.write([
+        `Trusted behavior: ${report.ok ? "ok" : "failed"}`,
+        `Subject: ${report.subject.id}@${report.subject.version}`,
+        `Runner: ${report.runner.id}/${report.runner.keyId}`,
+        `Test: ${report.test}`,
+        ...report.issues.map((issue) => `${issue.code}: ${issue.message}`),
+      ].join("\n") + "\n");
+    }
+    if (!report.ok) process.exitCode = 1;
+  });
 
 program
   .command("policy-init")

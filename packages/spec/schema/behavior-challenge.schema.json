@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/v0alpha1/behavior-challenge.schema.json",
+  "title": "AIBA Behavioral Test Challenge",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "project", "subject", "runner", "test"],
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+    "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "uuid": { "type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$" }
+  },
+  "properties": {
+    "apiVersion": { "const": "aiba.dev/v0alpha1" },
+    "kind": { "const": "BehaviorChallenge" },
+    "metadata": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "createdAt", "expiresAt"],
+      "properties": {
+        "id": { "$ref": "#/$defs/uuid" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "expiresAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "project": {
+      "type": "object", "additionalProperties": false,
+      "required": ["name", "snapshotSha256"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "snapshotSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "subject": {
+      "type": "object", "additionalProperties": false,
+      "required": ["kind", "id", "version"],
+      "properties": {
+        "kind": { "enum": ["capability", "solution"] },
+        "id": { "$ref": "#/$defs/identifier" },
+        "version": { "$ref": "#/$defs/version" }
+      }
+    },
+    "runner": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "keyId"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "keyId": { "$ref": "#/$defs/identifier" }
+      }
+    },
+    "test": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "commandSha256"],
+      "properties": {
+        "id": { "$ref": "#/$defs/identifier" },
+        "commandSha256": { "$ref": "#/$defs/sha256" }
+      }
+    }
+  }
+}

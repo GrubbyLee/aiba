@@ -1,0 +1,42 @@
+========================================
+  AIBA Beta-Ready Development Progress
+========================================
+
+Project: Complete M9-M15 while preserving Core security boundaries.
+Stack: pnpm, TypeScript ESM, JSON Schema 2020-12, Vitest, Commander, Node 22/24.
+
+Session #0 - Harness initialization
+Date: 2026-08-05
+
+Completed:
+  [x] Audited Spec, Core, CLI, Registry, tests, roadmap, npm and CI state.
+  [x] Defined M9-M15 acceptance scope in docs/ROADMAP.md.
+  [x] Created seven immutable feature records.
+
+Key findings:
+  - Core must never execute commands supplied by capability packs.
+  - Existing Solution installation is already a safe one-step state machine.
+  - Evidence verification does not currently prove runtime behavior.
+
+Next: complete m9-behavior-proofs and verify adversarial cases.
+
+----------------------------------------
+Session #1 - m9-behavior-proofs
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added three public JSON Schemas and TypeScript bindings.
+  [x] Added source-bound challenges and signed external test proofs.
+  [x] Added test, attest, and verify-behavior CLI commands.
+  [x] Added stale source, command, summary, expiry, failure, trust, revocation,
+      and signature-tamper tests.
+  [x] Documented the non-executing security boundary in RFC 0017.
+
+Verification:
+  - pnpm check: passed
+  - Core: 112 tests passed
+  - External npm consumer: four packages installed and exercised
+
+Progress: 1/7
+Next: m10-orchestration

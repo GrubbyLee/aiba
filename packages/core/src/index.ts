@@ -1,6 +1,7 @@
 export * from "./errors.js";
 export * from "./add.js";
 export * from "./bundle.js";
+export * from "./behavior.js";
 export * from "./diff.js";
 export * from "./discovery.js";
 export * from "./hash.js";

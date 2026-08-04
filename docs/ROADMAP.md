@@ -110,3 +110,55 @@ project without reading repository internals.
 M8 is complete when an invited developer can select a Solution from the CLI,
 adapt it through an Agent, pass independent verification, and repeat the process
 from documented steps without maintainer intervention.
+
+## M9: Trusted Behavioral Proofs
+
+Goal: bind an externally executed test result to the exact project, capability,
+runner identity, challenge, and source snapshot without executing pack-provided
+commands in Core.
+
+- [x] Define challenge, signed proof, runner trust, and revocation protocols.
+- [x] Add prepare, attest, and verify behavior-proof commands.
+- [x] Reject replayed, expired, stale, unsigned, or untrusted proofs.
+
+## M10: Resumable Agent Orchestration
+
+- [ ] Persist inspectable Solution workflow state without duplicating Core truth.
+- [ ] Add `status`, `continue`, and `doctor` commands with JSON output.
+- [ ] Preserve one-capability-per-step execution and safe interruption recovery.
+
+## M11: Agent Adapter Protocol
+
+- [ ] Publish a machine-readable Agent capability and error envelope.
+- [ ] Add protocol negotiation and consistent Codex/Claude adapter guidance.
+- [ ] Test every advertised command and structured failure contract.
+
+## M12: Capability Authoring SDK
+
+- [ ] Scaffold capabilities and Solutions from safe built-in templates.
+- [ ] Add authoring lint and test-pack quality gates.
+- [ ] Check identifiers, schemas, dependency closure, recipes, and security tests.
+
+## M13: Signed Solution Distribution
+
+- [ ] Sign exact Solution files with Ed25519 publisher identities.
+- [ ] Enforce publisher allowlists, key revocation, expiry, and anti-rollback state.
+- [ ] Keep official npm provenance valid while enabling independent channels.
+
+## M14: Production Registry Operations
+
+- [ ] Add authenticated health, readiness, and Prometheus metrics endpoints.
+- [ ] Add verified backup, restore, retention, and dry-run garbage collection.
+- [ ] Ship a hardened container image and deployment example.
+
+## M15: Beta-Ready Developer Experience
+
+- [ ] Provide a ten-minute Quick Start and standalone example path.
+- [ ] Add stable errors, complete JSON output, shell completion, and diagnostics.
+- [ ] Validate Linux, macOS, and Windows behavior in CI where applicable.
+
+M9-M15 are development-complete when all public protocols have schemas, all
+commands ship in npm tarballs, adversarial tests pass in CI, and the documented
+clean-project path is reproducible. Hosted multi-tenancy, billing, production
+key custody, qualified legal review, and invited human beta remain external
+launch gates rather than claims made by the open-source implementation.

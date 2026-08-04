@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/v0alpha1/behavior-proof.schema.json",
+  "title": "AIBA Signed Behavioral Test Proof",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "statement", "signature"],
+  "$defs": {
+    "identifier": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+    "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "uuid": { "type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$" },
+    "subject": {
+      "type": "object", "additionalProperties": false, "required": ["kind", "id", "version"],
+      "properties": { "kind": { "enum": ["capability", "solution"] }, "id": { "$ref": "#/$defs/identifier" }, "version": { "$ref": "#/$defs/version" } }
+    },
+    "runner": {
+      "type": "object", "additionalProperties": false, "required": ["id", "keyId"],
+      "properties": { "id": { "$ref": "#/$defs/identifier" }, "keyId": { "$ref": "#/$defs/identifier" } }
+    }
+  },
+  "properties": {
+    "apiVersion": { "const": "aiba.dev/v0alpha1" },
+    "kind": { "const": "BehaviorProof" },
+    "statement": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "challenge", "project", "subject", "runner", "test"],
+      "properties": {
+        "id": { "$ref": "#/$defs/uuid" },
+        "challenge": {
+          "type": "object", "additionalProperties": false, "required": ["id", "path", "sha256"],
+          "properties": { "id": { "$ref": "#/$defs/uuid" }, "path": { "type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+", "maxLength": 500 }, "sha256": { "$ref": "#/$defs/sha256" } }
+        },
+        "project": {
+          "type": "object", "additionalProperties": false, "required": ["name", "snapshotSha256"],
+          "properties": { "name": { "type": "string", "minLength": 1, "maxLength": 120 }, "snapshotSha256": { "$ref": "#/$defs/sha256" } }
+        },
+        "subject": { "$ref": "#/$defs/subject" },
+        "runner": { "$ref": "#/$defs/runner" },
+        "test": {
+          "type": "object", "additionalProperties": false,
+          "required": ["id", "commandSha256", "startedAt", "completedAt", "exitCode", "summarySha256"],
+          "properties": {
+            "id": { "$ref": "#/$defs/identifier" }, "commandSha256": { "$ref": "#/$defs/sha256" },
+            "startedAt": { "type": "string", "format": "date-time" }, "completedAt": { "type": "string", "format": "date-time" },
+            "exitCode": { "type": "integer", "minimum": 0, "maximum": 255 }, "summarySha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "signature": {
+      "type": "object", "additionalProperties": false, "required": ["algorithm", "keyId", "value"],
+      "properties": { "algorithm": { "const": "Ed25519" }, "keyId": { "$ref": "#/$defs/identifier" }, "value": { "type": "string", "pattern": "^[A-Za-z0-9_-]{86}$" } }
+    }
+  }
+}

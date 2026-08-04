@@ -594,8 +594,79 @@ export interface CapabilityApproval {
   };
 }
 
+export interface BehaviorChallenge {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "BehaviorChallenge";
+  metadata: {
+    id: string;
+    createdAt: string;
+    expiresAt: string;
+  };
+  project: {
+    name: string;
+    snapshotSha256: string;
+  };
+  subject: {
+    kind: "capability" | "solution";
+    id: string;
+    version: string;
+  };
+  runner: {
+    id: string;
+    keyId: string;
+  };
+  test: {
+    id: string;
+    commandSha256: string;
+  };
+}
+
+export interface BehaviorProof {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "BehaviorProof";
+  statement: {
+    id: string;
+    challenge: {
+      id: string;
+      path: string;
+      sha256: string;
+    };
+    project: BehaviorChallenge["project"];
+    subject: BehaviorChallenge["subject"];
+    runner: BehaviorChallenge["runner"];
+    test: BehaviorChallenge["test"] & {
+      startedAt: string;
+      completedAt: string;
+      exitCode: number;
+      summarySha256: string;
+    };
+  };
+  signature: {
+    algorithm: "Ed25519";
+    keyId: string;
+    value: string;
+  };
+}
+
+export interface BehaviorRunnerTrustPolicy {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "BehaviorRunnerTrustPolicy";
+  metadata: { id: string };
+  runners: Array<{
+    runner: string;
+    keyId: string;
+    algorithm: "Ed25519";
+    publicKey: string;
+    subjects: string[];
+    revokedAt?: string;
+  }>;
+}
+
 export type ProtocolSchemaName =
   | "ancestry.schema.json"
+  | "behavior-challenge.schema.json"
+  | "behavior-proof.schema.json"
+  | "behavior-runner-trust-policy.schema.json"
   | "bundle.schema.json"
   | "bundle-signature.schema.json"
   | "capability-approval.schema.json"

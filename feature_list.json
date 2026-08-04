@@ -1,0 +1,76 @@
+{
+  "project": "AIBA Beta-Ready Development",
+  "description": "Complete M9-M15 as verifiable open-source product capabilities without claiming external launch gates.",
+  "features": [
+    {
+      "id": "m9-behavior-proofs",
+      "category": "verification",
+      "priority": 1,
+      "description": "Bind signed external behavioral test results to exact project snapshots and trusted runners.",
+      "file": "packages/core/src/behavior.ts",
+      "steps": ["Define public protocols.", "Implement signed proof lifecycle.", "Expose CLI commands.", "Add adversarial tests."],
+      "passes": true,
+      "verification": "Protocol, Core, CLI, package and adversarial tests pass; pnpm check passes."
+    },
+    {
+      "id": "m10-orchestration",
+      "category": "workflow",
+      "priority": 2,
+      "description": "Provide resumable, inspectable one-step Solution orchestration and diagnostics.",
+      "file": "packages/core/src/workflow.ts",
+      "steps": ["Derive workflow status.", "Implement status, continue, and doctor.", "Reject stale state.", "Add recovery tests."],
+      "passes": false,
+      "verification": "Clean and interrupted workflows report deterministic state in tests and smoke."
+    },
+    {
+      "id": "m11-agent-protocol",
+      "category": "agent",
+      "priority": 3,
+      "description": "Publish a stable machine-readable Agent protocol with negotiation and error envelopes.",
+      "file": "packages/spec/schema/agent-protocol.schema.json",
+      "steps": ["Define protocol envelopes.", "Expose negotiation.", "Align adapters.", "Test structured errors."],
+      "passes": false,
+      "verification": "Schema, adapter contract, and CLI JSON tests pass."
+    },
+    {
+      "id": "m12-authoring-sdk",
+      "category": "ecosystem",
+      "priority": 4,
+      "description": "Scaffold and validate third-party capabilities and Solutions from safe built-in templates.",
+      "file": "packages/core/src/authoring.ts",
+      "steps": ["Add scaffolds.", "Add lint and test-pack.", "Validate quality requirements.", "Reject unsafe output."],
+      "passes": false,
+      "verification": "Generated artifacts validate and unsafe packs fail closed."
+    },
+    {
+      "id": "m13-signed-solutions",
+      "category": "distribution",
+      "priority": 5,
+      "description": "Enable independently signed Solution distribution with trust, revocation, expiry, and anti-rollback.",
+      "file": "packages/core/src/solution-signing.ts",
+      "steps": ["Define signed protocols.", "Implement signing and verification.", "Enforce trust lifecycle.", "Add attack tests."],
+      "passes": false,
+      "verification": "Valid Solutions verify and attack cases fail without state advancement."
+    },
+    {
+      "id": "m14-registry-operations",
+      "category": "operations",
+      "priority": 6,
+      "description": "Add production-oriented Registry observability, backup, restore, retention, and deployment assets.",
+      "file": "packages/registry-server/src/index.ts",
+      "steps": ["Add health and metrics.", "Add backup and restore.", "Add retention and audit.", "Ship deployment assets."],
+      "passes": false,
+      "verification": "Operations tests cover authentication, tamper, paths, restore conflicts and metrics."
+    },
+    {
+      "id": "m15-developer-experience",
+      "category": "distribution",
+      "priority": 7,
+      "description": "Close the beta-ready developer path with diagnostics, completion, docs, and cross-platform CI.",
+      "file": "docs/QUICKSTART.md",
+      "steps": ["Add Quick Start.", "Complete JSON and diagnostics.", "Add cross-platform CI.", "Verify npm path."],
+      "passes": false,
+      "verification": "pnpm check, package verification, smoke, workflows and documented commands pass."
+    }
+  ]
+}

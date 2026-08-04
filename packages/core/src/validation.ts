@@ -4,6 +4,9 @@ import {
   loadProtocolSchema,
   type AuditEvent,
   type AuthorizationDecision,
+  type BehaviorChallenge,
+  type BehaviorProof,
+  type BehaviorRunnerTrustPolicy,
   type CapabilityAncestry,
   type CapabilityApproval,
   type CapabilityCatalog,
@@ -98,6 +101,15 @@ const wechatMiniProgramLoginResultValidator = ajv.compile<WechatMiniProgramLogin
 const capabilityValidator = ajv.compile<CapabilityManifest>(
   loadProtocolSchema("capability.schema.json"),
 );
+const behaviorChallengeValidator = ajv.compile<BehaviorChallenge>(
+  loadProtocolSchema("behavior-challenge.schema.json"),
+);
+const behaviorProofValidator = ajv.compile<BehaviorProof>(
+  loadProtocolSchema("behavior-proof.schema.json"),
+);
+const behaviorRunnerTrustPolicyValidator = ajv.compile<BehaviorRunnerTrustPolicy>(
+  loadProtocolSchema("behavior-runner-trust-policy.schema.json"),
+);
 const capabilityCatalogValidator = ajv.compile<CapabilityCatalog>(
   loadProtocolSchema("capability-catalog.schema.json"),
 );
@@ -176,6 +188,27 @@ function assertValid<T>(
 export function validateCapabilityManifest(value: unknown): CapabilityManifest {
   assertValid(capabilityValidator, value, "capability manifest");
   return value as CapabilityManifest;
+}
+
+export function validateBehaviorChallenge(value: unknown): BehaviorChallenge {
+  assertValid(behaviorChallengeValidator, value, "behavior challenge");
+  return value as BehaviorChallenge;
+}
+
+export function validateBehaviorProof(value: unknown): BehaviorProof {
+  assertValid(behaviorProofValidator, value, "behavior proof");
+  return value as BehaviorProof;
+}
+
+export function validateBehaviorRunnerTrustPolicy(
+  value: unknown,
+): BehaviorRunnerTrustPolicy {
+  assertValid(
+    behaviorRunnerTrustPolicyValidator,
+    value,
+    "behavior runner trust policy",
+  );
+  return value as BehaviorRunnerTrustPolicy;
 }
 
 export function validateCapabilityCatalog(value: unknown): CapabilityCatalog {

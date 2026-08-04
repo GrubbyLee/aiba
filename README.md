@@ -130,6 +130,15 @@ aiba init
 aiba add vehicle-management --solution
 aiba inspect
 aiba compose vehicle-management
+aiba test identity --runner ci-runner --key-id runner-1 \
+  --test-id identity-contract --command "pnpm test -- identity"
+aiba attest .aiba/behavior/challenges/<id>.json \
+  --private-key /secure/runner-private.pem \
+  --started-at <date-time> --completed-at <date-time> \
+  --exit-code 0 --summary test-results/identity.json
+aiba verify-behavior .aiba/behavior/proofs/<id>.json \
+  --trust runner-trust.json --command "pnpm test -- identity" \
+  --summary test-results/identity.json
 ```
 
 The scoped package still installs the `aiba` executable. The npm distribution
@@ -177,11 +186,11 @@ returned plan and adds evidence, then runs `--finalize --agent <name>` before
 requesting the next step. Core re-verifies installed constituents before it
 advances and runs full Solution evidence and provenance verification after the last capability.
 
-An AIBA `ok` result does not claim that project tests ran or prove runtime
-behavior. It means the declared evidence, source hashes, receipts, ancestry,
-dependencies, and governance provenance are internally valid and unchanged.
-Behavioral conformance remains a separate project test result until AIBA gains a
-trusted test-proof protocol.
+An evidence `ok` result means declared evidence, source hashes, receipts,
+ancestry, dependencies, and governance provenance are valid and unchanged; it
+does not claim project tests ran. Trusted runtime claims use the separate
+challenge-based `test` / `attest` / `verify-behavior` protocol. Core never
+executes the bound command. See [RFC 0017](docs/rfcs/0017-trusted-behavior-proofs.md).
 
 `registry-index` creates an immutable signed snapshot after verifying every
 listed publisher bundle. `resolve` verifies the latest registry snapshot, its

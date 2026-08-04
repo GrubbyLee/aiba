@@ -269,3 +269,19 @@ and customization-aware upgrade behavior.
 M8 is complete when a developer unfamiliar with the repository can discover a
 Solution, understand its requirements, install it through an Agent, pass local
 verification, and report structured beta results without maintainer intervention.
+
+## Active Development: M9-M15
+
+The detailed acceptance criteria are tracked in `docs/ROADMAP.md`. Work proceeds
+in dependency order: trusted behavioral proofs, resumable orchestration, Agent
+protocol, authoring SDK, signed Solutions, Registry operations, and developer
+experience. A checkbox is completed only when protocol schemas, implementation,
+negative tests, packaged distribution, and user documentation agree.
+
+### Completed: M9 Trusted Behavioral Proofs
+
+- [x] Bind challenges to verified capability or Solution snapshots.
+- [x] Sign successful external results with trusted Ed25519 runner keys.
+- [x] Verify command, summary, time window, trust, revocation, signature, and
+  current evidence without executing the command in Core.
+- [x] Ship `test`, `attest`, and `verify-behavior` in the npm CLI.
