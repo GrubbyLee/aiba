@@ -12,7 +12,7 @@
 
 <p align="center">
   <a href="https://www.npmjs.com/package/@grubbylee/aiba"><img src="https://img.shields.io/npm/v/@grubbylee/aiba?color=ff4a2b" alt="npm 版本"></a>
-  <a href="https://github.com/GrubbyLee/ai-base/actions/workflows/ci.yml"><img src="https://github.com/GrubbyLee/ai-base/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/GrubbyLee/aiba/actions/workflows/ci.yml"><img src="https://github.com/GrubbyLee/aiba/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-AGPL--3.0--only-151412" alt="AGPL-3.0-only"></a>
 </p>
 
@@ -32,7 +32,7 @@ AIBA 是一套面向 AI Agent 的应用构建基础设施。它帮助 Agent 为�
 私有 Registry 认证下载、验证缓存和防回滚解析。可选的项目治理机制还能为安装和
 升级的最终确认增加带签名、绑定证据的团队审批。
 
-[在线观看车辆管理后台演示](https://grubbylee.github.io/ai-base/video/)，了解 AIBA 和 Codex 如何从空目录
+[在线观看车辆管理后台演示](https://grubbylee.github.io/aiba/video/)，了解 AIBA 和 Codex 如何从空目录
 开始，完成一个可操作、可独立验证的管理后台。
 
 ## 原则

@@ -50,7 +50,7 @@ truth.
 Configure each npm package with this trusted publisher before the next tag:
 
 - Organization or user: `GrubbyLee`
-- Repository: `ai-base`
+- Repository: `aiba`
 - Workflow filename: `release.yml`
 - Environment: `npm`
 

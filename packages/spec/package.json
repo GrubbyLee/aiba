@@ -6,11 +6,11 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GrubbyLee/ai-base.git",
+    "url": "git+https://github.com/GrubbyLee/aiba.git",
     "directory": "packages/spec"
   },
-  "homepage": "https://github.com/GrubbyLee/ai-base#readme",
-  "bugs": "https://github.com/GrubbyLee/ai-base/issues",
+  "homepage": "https://github.com/GrubbyLee/aiba#readme",
+  "bugs": "https://github.com/GrubbyLee/aiba/issues",
   "engines": {
     "node": ">=22"
   },

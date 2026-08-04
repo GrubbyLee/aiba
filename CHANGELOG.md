@@ -45,6 +45,6 @@ Changelog, and package versions follow Semantic Versioning.
   malformed manifests, tampered signatures, registry rollback, redirects,
   oversized responses, untrusted keys, and insecure non-loopback listeners.
 
-[Unreleased]: https://github.com/GrubbyLee/ai-base/compare/v0.1.1...HEAD
-[0.1.1]: https://github.com/GrubbyLee/ai-base/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/GrubbyLee/ai-base/releases/tag/v0.1.0
+[Unreleased]: https://github.com/GrubbyLee/aiba/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/GrubbyLee/aiba/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/GrubbyLee/aiba/releases/tag/v0.1.0
