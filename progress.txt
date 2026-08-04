@@ -180,3 +180,26 @@ Commit: e222094
 
 Progress: 7/7
 Next: external launch gates only; human beta remains intentionally incomplete
+
+----------------------------------------
+Post-completion portability audit
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Canonicalized project roots across symlinked and platform-specific paths.
+  [x] Forced stable LF release inputs across Git checkouts.
+  [x] Invoked npm through its JavaScript entry point on Windows.
+  [x] Normalized Windows CRLF output when inspecting npm tarballs.
+
+Verification:
+  - pnpm check: passed
+  - GitHub CI 30944971470: Linux Node 22/24, macOS, and Windows passed
+  - Windows: typecheck, build, smoke, workflow checks, and clean npm consumer passed
+  - GitHub Pages 30944969741: passed
+  - Gitee sync 30944971296: passed
+
+Commits: 7a7f224, 8a2baf1, c5068a0, 3a7e677
+
+Progress: 7/7
+Next: external launch gates only; human beta remains intentionally incomplete
