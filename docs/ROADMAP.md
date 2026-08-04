@@ -123,9 +123,9 @@ commands in Core.
 
 ## M10: Resumable Agent Orchestration
 
-- [ ] Persist inspectable Solution workflow state without duplicating Core truth.
-- [ ] Add `status`, `continue`, and `doctor` commands with JSON output.
-- [ ] Preserve one-capability-per-step execution and safe interruption recovery.
+- [x] Persist inspectable Solution workflow state without duplicating Core truth.
+- [x] Add `status`, `continue`, and `doctor` commands with JSON output.
+- [x] Preserve one-capability-per-step execution and safe interruption recovery.
 
 ## M11: Agent Adapter Protocol
 

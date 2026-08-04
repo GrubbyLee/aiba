@@ -252,6 +252,25 @@ copyFileSync(
   join(solutionFixture, "src", "audit.test.ts"),
 );
 run("solution init", ["init", solutionFixture, "--json"], 0);
+run("solution doctor", [
+  "doctor",
+  "--root",
+  solutionFixture,
+  "--packs-dir",
+  join(workspace, "capabilities"),
+  "--json",
+], 0);
+run("solution status ready", [
+  "status",
+  "vehicle-management",
+  "--root",
+  solutionFixture,
+  "--packs-dir",
+  join(workspace, "capabilities"),
+  "--solutions-dir",
+  join(workspace, "solutions"),
+  "--json",
+], 0);
 const solutionArguments = [
   "vehicle-management",
   "--solution",
@@ -263,7 +282,28 @@ const solutionArguments = [
   join(workspace, "solutions"),
   "--json",
 ];
-run("solution prepare first constituent", ["add", ...solutionArguments], 0);
+run("solution prepare first constituent", [
+  "continue",
+  "vehicle-management",
+  "--root",
+  solutionFixture,
+  "--packs-dir",
+  join(workspace, "capabilities"),
+  "--solutions-dir",
+  join(workspace, "solutions"),
+  "--json",
+], 0);
+run("solution status awaiting Agent", [
+  "status",
+  "vehicle-management",
+  "--root",
+  solutionFixture,
+  "--packs-dir",
+  join(workspace, "capabilities"),
+  "--solutions-dir",
+  join(workspace, "solutions"),
+  "--json",
+], 0);
 run("solution recognize pending constituent", ["add", ...solutionArguments], 0);
 const solutionPlanPath = join(solutionFixture, ".aiba", "plans", "audit.yaml");
 const solutionPlan = parse(readFileSync(solutionPlanPath, "utf8"));
@@ -275,11 +315,18 @@ for (const invariant of solutionPlan.evidence) {
 }
 writeFileSync(solutionPlanPath, stringify(solutionPlan));
 run("solution finalize first constituent", [
-  "add",
-  ...solutionArguments,
+  "continue",
+  "vehicle-management",
+  "--root",
+  solutionFixture,
+  "--packs-dir",
+  join(workspace, "capabilities"),
+  "--solutions-dir",
+  join(workspace, "solutions"),
   "--finalize",
   "--agent",
   "smoke-agent",
+  "--json",
 ], 0);
 run("solution prepare second constituent", ["add", ...solutionArguments], 0);
 rmSync(solutionFixture, { recursive: true, force: true });

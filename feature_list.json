@@ -19,7 +19,7 @@
       "description": "Provide resumable, inspectable one-step Solution orchestration and diagnostics.",
       "file": "packages/core/src/workflow.ts",
       "steps": ["Derive workflow status.", "Implement status, continue, and doctor.", "Reject stale state.", "Add recovery tests."],
-      "passes": false,
+      "passes": true,
       "verification": "Clean and interrupted workflows report deterministic state in tests and smoke."
     },
     {

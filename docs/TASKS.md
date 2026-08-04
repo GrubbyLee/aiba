@@ -285,3 +285,11 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Verify command, summary, time window, trust, revocation, signature, and
   current evidence without executing the command in Core.
 - [x] Ship `test`, `attest`, and `verify-behavior` in the npm CLI.
+
+### Completed: M10 Resumable Agent Orchestration
+
+- [x] Derive workflow state from verified Project, Lock, receipts, Solution, and
+  pending plan documents instead of a second mutable state database.
+- [x] Add read-only `status`, one-step `continue`, and project `doctor` commands.
+- [x] Reject stale plans, drifted constituents, and exact-version mismatches.
+- [x] Preserve old `add --solution` compatibility and explicit finalization.

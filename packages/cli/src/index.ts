@@ -15,6 +15,7 @@ import {
   advanceSolutionInstallation,
   createBehaviorProof,
   describeCatalogItem,
+  doctorProject,
   discoverCatalog,
   diffProject,
   generatePublisherKeyPair,
@@ -28,6 +29,7 @@ import {
   evaluateGovernance,
   fetchRegistryCapability,
   resolveRegistryCapability,
+  solutionStatus,
   verifyCapabilityBundle,
   verifyBehaviorProof,
   verifyProject,
@@ -76,6 +78,98 @@ program
   .name("aiba")
   .description("Install, verify, trace, and upgrade application capabilities")
   .version(packageVersion());
+
+program
+  .command("status")
+  .description("Inspect resumable progress for an exact Solution")
+  .argument("<solution>", "Solution identifier")
+  .option("--root <path>", "project root", ".")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--solutions-dir <path>", "Solution definition directory", defaultSolutionsDirectory())
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    solution: string,
+    options: { root: string; packsDir: string; solutionsDir: string; json?: boolean },
+  ) => {
+    const result = await solutionStatus({
+      solutionId: solution,
+      projectRoot: resolve(options.root),
+      packsDirectory: resolve(options.packsDir),
+      solutionsDirectory: resolve(options.solutionsDir),
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `${result.solution.title}: ${result.phase}`,
+      `Progress: ${result.progress.completed}/${result.progress.total}`,
+      ...(result.currentCapability ? [`Current: ${result.currentCapability.id}@${result.currentCapability.version}`] : []),
+      ...(result.planPath ? [`Plan: ${result.planPath}`] : []),
+      `Next: ${result.nextAction.command} - ${result.nextAction.reason}`,
+    ].join("\n") + "\n");
+  });
+
+program
+  .command("continue")
+  .description("Advance one explicit step of a resumable Solution installation")
+  .argument("<solution>", "Solution identifier")
+  .option("--root <path>", "project root", ".")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--solutions-dir <path>", "Solution definition directory", defaultSolutionsDirectory())
+  .option("--recipe <id>", "select a capability recipe while preparing")
+  .option("--agent <name>", "record the installing Agent")
+  .option("--finalize", "verify the pending step and record it")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    solution: string,
+    options: {
+      root: string;
+      packsDir: string;
+      solutionsDir: string;
+      recipe?: string;
+      agent?: string;
+      finalize?: boolean;
+      json?: boolean;
+    },
+  ) => {
+    if (options.finalize && options.recipe) {
+      throw new Error("--recipe is only valid while preparing a step");
+    }
+    const result = await advanceSolutionInstallation({
+      solutionId: solution,
+      projectRoot: resolve(options.root),
+      packsDirectory: resolve(options.packsDir),
+      solutionsDirectory: resolve(options.solutionsDir),
+      mode: options.finalize ? "finalize" : "prepare",
+      ...(options.recipe ? { recipeId: options.recipe } : {}),
+      ...(options.agent ? { agent: options.agent } : {}),
+    });
+    process.stdout.write(`${options.json ? JSON.stringify(result, null, 2) : renderSolutionInstall(result)}\n`);
+  });
+
+program
+  .command("doctor")
+  .description("Diagnose project state, provenance, and resumable workflow issues")
+  .option("--root <path>", "project root", ".")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--json", "print machine-readable JSON")
+  .action(async (options: { root: string; packsDir: string; json?: boolean }) => {
+    const result = await doctorProject({
+      projectRoot: resolve(options.root),
+      packsDirectory: resolve(options.packsDir),
+    });
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    } else {
+      process.stdout.write([
+        `AIBA doctor: ${result.ok ? "ok" : "failed"}`,
+        ...result.checks.map((check) => `${check.status.toUpperCase()} ${check.id}: ${check.message}`),
+        `Summary: ${result.summary.passed} passed, ${result.summary.warnings} warnings, ${result.summary.failed} failed`,
+      ].join("\n") + "\n");
+    }
+    if (!result.ok) process.exitCode = 1;
+  });
 
 program
   .command("test")

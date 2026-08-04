@@ -17,3 +17,4 @@ export * from "./transport.js";
 export * from "./upgrade.js";
 export * from "./validation.js";
 export * from "./verify.js";
+export * from "./workflow.js";

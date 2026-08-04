@@ -40,3 +40,23 @@ Verification:
 
 Progress: 1/7
 Next: m10-orchestration
+
+----------------------------------------
+Session #2 - m10-orchestration
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added derived ready, awaiting-Agent, and complete Solution workflow state.
+  [x] Added status, continue, and doctor with JSON and human output.
+  [x] Preserved explicit one-step finalization and legacy add compatibility.
+  [x] Added stale-plan, interruption, initialization, and drift diagnostics.
+
+Verification:
+  - pnpm check: passed
+  - Core: 115 tests passed
+  - Compiled smoke: status, continue, doctor and legacy Solution path passed
+  - External npm consumer: four packages installed and exercised
+
+Progress: 2/7
+Next: m11-agent-protocol

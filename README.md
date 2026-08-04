@@ -128,6 +128,10 @@ aiba list
 aiba show identity
 aiba init
 aiba add vehicle-management --solution
+aiba status vehicle-management
+aiba continue vehicle-management
+aiba continue vehicle-management --finalize --agent codex
+aiba doctor
 aiba inspect
 aiba compose vehicle-management
 aiba test identity --runner ci-runner --key-id runner-1 \

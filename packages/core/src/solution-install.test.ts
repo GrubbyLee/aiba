@@ -10,6 +10,7 @@ import { initializeGovernancePolicy } from "./governance.js";
 import { sha256File } from "./hash.js";
 import { initializeProject } from "./init.js";
 import { advanceSolutionInstallation } from "./solution-install.js";
+import { doctorProject, solutionStatus } from "./workflow.js";
 
 interface Fixture {
   root: string;
@@ -159,6 +160,63 @@ async function installStandalone(fixture: Fixture, capabilityId: string): Promis
 }
 
 describe("guided Solution installation", () => {
+  it("derives resumable status without writing or skipping a step", async () => {
+    const fixture = await createFixture();
+    let status = await solutionStatus(options(fixture));
+    expect(status).toMatchObject({
+      phase: "ready-to-prepare",
+      progress: { completed: 0, total: 3 },
+      currentCapability: { id: "audit", index: 1 },
+      nextAction: { command: "continue" },
+    });
+    await advanceSolutionInstallation(options(fixture));
+    status = await solutionStatus(options(fixture));
+    expect(status).toMatchObject({
+      phase: "awaiting-agent",
+      currentCapability: { id: "audit" },
+      planPath: ".aiba/plans/audit.yaml",
+      nextAction: { command: "continue-finalize" },
+    });
+    await installCurrent(fixture, "audit");
+    status = await solutionStatus(options(fixture));
+    expect(status).toMatchObject({
+      phase: "ready-to-prepare",
+      progress: { completed: 1, total: 3 },
+      currentCapability: { id: "identity", index: 2 },
+    });
+  });
+
+  it("fails status closed for a tampered pending plan", async () => {
+    const fixture = await createFixture();
+    await advanceSolutionInstallation(options(fixture));
+    const path = join(fixture.root, ".aiba", "plans", "audit.yaml");
+    const plan = parse(await readFile(path, "utf8")) as OperationPlan;
+    plan.capability.manifestSha256 = "0".repeat(64);
+    await writeFile(path, stringify(plan));
+    await expect(solutionStatus(options(fixture))).rejects.toMatchObject({
+      code: "STALE_CAPABILITY_PLAN",
+    });
+  });
+
+  it("diagnoses initialization, clean state, and evidence drift", async () => {
+    const empty = await mkdtemp(join(tmpdir(), "aiba-doctor-empty-"));
+    await writeFile(join(empty, "package.json"), JSON.stringify({ name: "empty" }));
+    let doctor = await doctorProject({ projectRoot: empty, packsDirectory: join(empty, "packs") });
+    expect(doctor.ok).toBe(false);
+    expect(doctor.checks).toContainEqual(expect.objectContaining({ id: "aiba-state", status: "fail" }));
+
+    const fixture = await createFixture();
+    doctor = await doctorProject({ projectRoot: fixture.root, packsDirectory: fixture.packs });
+    expect(doctor.ok).toBe(true);
+    await installCurrent(fixture, "audit");
+    doctor = await doctorProject({ projectRoot: fixture.root, packsDirectory: fixture.packs });
+    expect(doctor.ok).toBe(true);
+    await writeFile(join(fixture.root, "src", "project.ts"), "export const project = false;\n");
+    doctor = await doctorProject({ projectRoot: fixture.root, packsDirectory: fixture.packs });
+    expect(doctor.ok).toBe(false);
+    expect(doctor.checks).toContainEqual(expect.objectContaining({ id: "evidence-provenance", status: "fail" }));
+  });
+
   it("prepares only the first missing capability and recognizes its valid plan", async () => {
     const fixture = await createFixture();
     const prepared = await advanceSolutionInstallation(options(fixture));
