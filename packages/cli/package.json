@@ -1,6 +1,6 @@
 {
   "name": "@grubbylee/aiba",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Agent infrastructure for building applications with verifiable, traceable, and upgradeable capabilities",
   "type": "module",
   "license": "AGPL-3.0-only",
