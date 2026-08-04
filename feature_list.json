@@ -69,7 +69,7 @@
       "description": "Close the beta-ready developer path with diagnostics, completion, docs, and cross-platform CI.",
       "file": "docs/QUICKSTART.md",
       "steps": ["Add Quick Start.", "Complete JSON and diagnostics.", "Add cross-platform CI.", "Verify npm path."],
-      "passes": false,
+      "passes": true,
       "verification": "pnpm check, package verification, smoke, workflows and documented commands pass."
     }
   ]

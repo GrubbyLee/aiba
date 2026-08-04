@@ -8,6 +8,7 @@ npm install --global @grubbylee/aiba
 aiba init
 aiba add identity
 aiba inspect
+aiba completion bash
 ```
 
 The scoped npm package installs the unscoped `aiba` executable shown above.

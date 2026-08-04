@@ -86,7 +86,7 @@ initial identity and security foundation.
 - [x] Deliver `wechat-miniprogram-auth` as the first platform integration.
 - [x] Define hash-bound solution composition without allowing invariant weakening.
 - [x] Compose and verify a `vehicle-management` industry solution.
-- [ ] Add standalone publisher signatures before enabling third-party or
+- [x] Add standalone publisher signatures before enabling third-party or
   non-npm Solution distribution; this does not block the current official channel.
 - [x] Validate selected capabilities in TypeScript API, web admin, and native
   WeChat Mini Program projects without imposing a shared UI framework.
@@ -153,9 +153,9 @@ commands in Core.
 
 ## M15: Beta-Ready Developer Experience
 
-- [ ] Provide a ten-minute Quick Start and standalone example path.
-- [ ] Add stable errors, complete JSON output, shell completion, and diagnostics.
-- [ ] Validate Linux, macOS, and Windows behavior in CI where applicable.
+- [x] Provide a ten-minute Quick Start and standalone example path.
+- [x] Add stable errors, complete JSON output, shell completion, and diagnostics.
+- [x] Validate Linux, macOS, and Windows behavior in CI where applicable.
 
 M9-M15 are development-complete when all public protocols have schemas, all
 commands ship in npm tarballs, adversarial tests pass in CI, and the documented

@@ -30,11 +30,28 @@ function run(name, args, expectedStatus, environment = {}) {
     process.exit(1);
   }
   process.stdout.write(`${name}: ok\n`);
+  return result;
 }
 
 run("inspect", ["inspect", "fixtures/review-access-reference", "--json"], 0);
 run("negotiate Agent protocol", ["agent-protocol", "--json"], 0);
-run("structured Agent error", ["show", "missing-capability", "--json"], 1);
+const structuredError = run("structured Agent error", ["show", "missing-capability", "--json"], 1);
+const structuredEnvelope = JSON.parse(structuredError.stderr);
+if (structuredEnvelope.kind !== "AibaErrorEnvelope" || structuredEnvelope.error?.code !== "CATALOG_ITEM_NOT_FOUND") {
+  throw new Error("runtime failure did not return the expected AibaErrorEnvelope");
+}
+const usageError = run("structured command usage error", ["show", "--json"], 1);
+const usageEnvelope = JSON.parse(usageError.stderr);
+if (usageEnvelope.kind !== "AibaErrorEnvelope" || usageEnvelope.error?.code !== "COMMAND_USAGE_ERROR") {
+  throw new Error("command usage failure did not return the expected AibaErrorEnvelope");
+}
+for (const shell of ["bash", "zsh", "fish"]) {
+  const completion = run(`generate ${shell} completion`, ["completion", shell, "--json"], 0);
+  const payload = JSON.parse(completion.stdout);
+  if (payload.shell !== shell || !payload.script.includes("aiba")) {
+    throw new Error(`invalid ${shell} completion payload`);
+  }
+}
 run("list verified catalog", ["list", "--json"], 0);
 run("show verified capability", ["show", "vehicle-records", "--json"], 0);
 run("show verified solution", ["show", "vehicle-management", "--json"], 0);

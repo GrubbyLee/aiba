@@ -207,12 +207,11 @@ GitHub Release approval plus npm publisher authentication.
   prove selected behavior. Future packs need comparable conformance suites.
 - Capability package code is untrusted input. Core does not execute
   pack-provided commands.
-- Cache garbage collection and offline retention policy remain future work;
+- Registry cache retention now has verified dry-run-first garbage collection;
   authenticated fetch, verified atomic caching, and anti-rollback state are
   complete.
-- The first release used npm's interactive 2FA bootstrap path. All four packages
-  now trust the documented GitHub OIDC publisher, but the next new version is
-  still required as the first end-to-end OIDC publication proof.
+- The first release used npm's interactive 2FA bootstrap path. Version 0.1.2
+  exercised the documented GitHub OIDC Trusted Publishing path.
 - The generated-output exception and future contributor agreement require
   qualified legal review before broad public launch.
 
@@ -234,7 +233,7 @@ GitHub Release approval plus npm publisher authentication.
   server-only code exchange, identity binding, replay defense, and secret-redaction tests.
 - [x] Define a hash-bound solution-composition protocol and dependency graph rules.
 - [x] Add a passing `vehicle-management` composition fixture and read-only CLI check.
-- [ ] Add standalone publisher signatures and trust policy before enabling
+- [x] Add standalone publisher signatures and trust policy before enabling
   third-party, private Registry, mirror, or marketplace Solution distribution.
   npm provenance remains sufficient for the current official-only channel.
 - [x] Validate vehicle-record semantics across a TypeScript HTTP API, functional
@@ -260,7 +259,7 @@ and customization-aware upgrade behavior.
 - [x] Exercise one-step Solution progress in Core attack tests, CLI smoke, and npm tarballs.
 - [x] Record guided installation state and security boundaries in RFC 0015.
 - [x] Scope current verification to evidence and provenance in RFC 0016.
-- [ ] Define and implement separately named trusted behavioral test proofs.
+- [x] Define and implement separately named trusted behavioral test proofs.
 - [ ] Run an invited human beta in a real Mini Program repository.
 - [ ] Capture reproducible beta metrics and prioritize failure patterns.
 
@@ -323,3 +322,13 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Verify deterministic backups before atomic restore into a new target.
 - [x] Preserve retained index closure with dry-run-first garbage collection.
 - [x] Ship and validate a hardened Docker image and Compose deployment example.
+
+### Completed: M15 Beta-Ready Developer Experience
+
+- [x] Publish bilingual ten-minute setup, Agent handoff, and standalone CLI paths.
+- [x] Generate Bash, Zsh, and Fish completion from the registered CLI surface.
+- [x] Return stable JSON envelopes for runtime and command-usage failures.
+- [x] Exercise diagnostics, orchestration, authoring, completion, and failures
+  from clean npm tarball installations.
+- [x] Validate workflows and add macOS and Windows portability jobs alongside
+  the Linux Node.js 22 and 24 matrix.

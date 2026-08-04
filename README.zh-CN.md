@@ -35,6 +35,9 @@ AIBA 是一套面向 AI Agent 的应用构建基础设施。它帮助 Agent 为�
 [在线观看车辆管理后台演示](https://grubbylee.github.io/aiba/video/)，了解 AIBA 和 Codex 如何从空目录
 开始，完成一个可操作、可独立验证的管理后台。
 
+[从十分钟快速上手开始](docs/QUICKSTART.zh-CN.md)，在全新项目中验证 npm CLI，并把
+第一个有边界的计划交给 Agent。
+
 ## 原则
 
 - 能力语义稳定，实现方式灵活。
@@ -113,6 +116,8 @@ aiba policy-check identity --agent codex
 
 ## 安装
 
+需要 Node.js 22 或更高版本：
+
 ```bash
 npm install --global @grubbylee/aiba
 aiba list
@@ -158,8 +163,8 @@ Core 在前进前会重新验证所有已安装组成能力，最后一个能力
 Solution 证据与来源验证。
 
 AIBA 返回 `ok` 不代表项目测试已经运行，也不等于运行时行为得到证明。它表示声明的
-证据、来源哈希、回执、血缘、依赖和治理记录有效且没有变化。在可信测试证明协议完成
-之前，行为一致性仍需要项目测试单独给出结果。
+证据、来源哈希、回执、血缘、依赖和治理记录有效且没有变化。需要证明运行时行为时，
+使用独立的 `test`、`attest`、`verify-behavior` 签名证明流程；Core 不执行测试命令。
 
 `registry-index` 会先验证所有发布者能力包，再创建不可变的签名快照。`resolve`
 会验证最新 Registry 快照、有效期、本地防回滚状态和所选能力包，之后才返回路径；

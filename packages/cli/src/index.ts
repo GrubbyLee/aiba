@@ -4,7 +4,7 @@ import process from "node:process";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { Command } from "commander";
+import { Command, CommanderError } from "commander";
 import {
   AibaError,
   backupRegistry,
@@ -56,6 +56,7 @@ import {
   renderSolutionInstall,
   renderVerification,
 } from "./render.js";
+import { isCompletionShell, renderCompletion } from "./completion.js";
 
 const program = new Command();
 const installedPacksDirectory = fileURLToPath(new URL("../capabilities", import.meta.url));
@@ -90,6 +91,13 @@ program
   .name("aiba")
   .description("Install, verify, trace, and upgrade application capabilities")
   .version(packageVersion());
+
+program.exitOverride();
+program.configureOutput({
+  writeErr: (value) => {
+    if (!process.argv.includes("--json")) process.stderr.write(value);
+  },
+});
 
 program
   .command("registry-backup")
@@ -1289,18 +1297,43 @@ program
     if (!report.ok) process.exitCode = 1;
   });
 
+program
+  .command("completion")
+  .description("Generate shell completion for Bash, Zsh, or Fish")
+  .argument("<shell>", "bash, zsh, or fish")
+  .option("--json", "print machine-readable JSON")
+  .action((shell: string, options: { json?: boolean }) => {
+    if (!isCompletionShell(shell)) {
+      throw new AibaError(`Unsupported shell ${shell}; expected bash, zsh, or fish`, "UNSUPPORTED_SHELL");
+    }
+    const script = renderCompletion(program, shell);
+    process.stdout.write(options.json
+      ? `${JSON.stringify({ shell, script }, null, 2)}\n`
+      : script);
+  });
+
 program.parseAsync().catch((error: unknown) => {
+  if (error instanceof CommanderError && error.exitCode === 0) {
+    process.exitCode = 0;
+    return;
+  }
   const message = error instanceof Error ? error.message : String(error);
   if (process.argv.includes("--json")) {
     const details = error instanceof ProtocolValidationError
       ? { documentType: error.documentType, validationErrors: error.validationErrors }
-      : undefined;
+      : error instanceof CommanderError
+        ? { commanderCode: error.code }
+        : undefined;
     const envelope: AibaErrorEnvelope = {
       apiVersion: AIBA_API_VERSION,
       kind: "AibaErrorEnvelope",
       ok: false,
       error: {
-        code: error instanceof AibaError ? error.code : "COMMAND_FAILED",
+        code: error instanceof AibaError
+          ? error.code
+          : error instanceof CommanderError
+            ? "COMMAND_USAGE_ERROR"
+            : "COMMAND_FAILED",
         message,
         ...(details ? { details } : {}),
       },

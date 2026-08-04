@@ -41,6 +41,9 @@ approvals to install and upgrade finalization.
 Codex move from an empty directory to a working, independently verified admin
 application.
 
+[Start with the ten-minute Quick Start](docs/QUICKSTART.md) to verify the npm
+CLI in a clean project and hand the first bounded plan to an Agent.
+
 ## Principles
 
 - Stable capability semantics, flexible implementation.
@@ -120,7 +123,7 @@ aiba policy-check identity --agent codex
 
 ## Install
 
-After the first npm release:
+Requires Node.js 22 or newer:
 
 ```bash
 npm install --global @grubbylee/aiba
@@ -143,19 +146,12 @@ aiba attest .aiba/behavior/challenges/<id>.json \
 aiba verify-behavior .aiba/behavior/proofs/<id>.json \
   --trust runner-trust.json --command "pnpm test -- identity" \
   --summary test-results/identity.json
+aiba completion bash
 ```
 
 The scoped package still installs the `aiba` executable. The npm distribution
 includes the official capability packs and industry solutions. Library consumers
 can install `aiba-core`, `aiba-spec`, or `aiba-registry-server` independently.
-
-## License
-
-The CLI, Core, Registry Server, capability contracts, recipes, and migrations
-are AGPL-3.0-only. The protocol package is Apache-2.0. Some application output
-may use the additional permission in
-[GENERATED_OUTPUT_EXCEPTION.md](GENERATED_OUTPUT_EXCEPTION.md); this exception
-does not relicense AIBA itself or third-party material.
 
 The concise product workflow remains:
 
@@ -233,3 +229,11 @@ the current implementation status. Compatibility and release details live in
 [docs/VERSIONING.md](docs/VERSIONING.md) and
 [docs/RELEASING.md](docs/RELEASING.md). M7 cross-surface evidence is summarized
 in [docs/PORTABILITY.md](docs/PORTABILITY.md).
+
+## License
+
+The CLI, Core, Registry Server, capability contracts, recipes, and migrations
+are AGPL-3.0-only. The protocol package is Apache-2.0. Some application output
+may use the additional permission in
+[GENERATED_OUTPUT_EXCEPTION.md](GENERATED_OUTPUT_EXCEPTION.md); this exception
+does not relicense AIBA itself or third-party material.

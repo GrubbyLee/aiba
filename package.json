@@ -16,9 +16,10 @@
     "release:check": "node scripts/release/check-version.mjs",
     "pack:artifacts": "node scripts/release/pack.mjs --out artifacts",
     "pack:check": "pnpm build && node scripts/release/verify-packages.mjs",
+    "workflows:check": "node scripts/check-workflows.mjs",
     "fixture:core-state": "node scripts/generate-core-fixture-state.mjs",
     "fixture:review-state": "node scripts/generate-review-fixture-state.mjs",
-    "check": "pnpm typecheck && pnpm test && pnpm build && pnpm smoke && pnpm release:check && pnpm release:oidc-check && node scripts/release/verify-packages.mjs",
+    "check": "pnpm typecheck && pnpm test && pnpm build && pnpm smoke && pnpm release:check && pnpm release:oidc-check && pnpm workflows:check && node scripts/release/verify-packages.mjs",
     "aiba": "node packages/cli/dist/index.js"
   },
   "devDependencies": {

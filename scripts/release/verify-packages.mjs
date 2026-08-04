@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { basename, join } from "node:path";
 import { createPackageArtifacts, runChecked, workspace } from "./packages.mjs";
@@ -136,19 +137,52 @@ try {
   writeFileSync(join(app, "package.json"), '{"name":"aiba-trial-app","type":"module"}\n');
   writeFileSync(join(app, "tsconfig.json"), '{"compilerOptions":{"strict":true}}\n');
   writeFileSync(join(app, "src/index.ts"), "export {};\n");
-  const executable = join(consumer, "node_modules", ".bin", "aiba");
+  const executable = join(consumer, "node_modules", ".bin", process.platform === "win32" ? "aiba.cmd" : "aiba");
+  if (!existsSync(executable)) throw new Error(`Installed CLI shim is missing: ${executable}`);
+  const installedCliEntry = join(consumer, "node_modules", "@grubbylee", "aiba", "dist", "index.js");
+  const cliCommand = process.platform === "win32" ? process.execPath : executable;
+  const cliPrefix = process.platform === "win32" ? [installedCliEntry] : [];
+  const runCli = (args) => runChecked(cliCommand, [...cliPrefix, ...args], consumer);
+  const failCli = (args) => spawnSync(cliCommand, [...cliPrefix, ...args], {
+    cwd: consumer,
+    encoding: "utf8",
+    env: process.env,
+  });
   const version = readFileSync(join(workspace, "package.json"), "utf8");
   const expectedVersion = JSON.parse(version).version;
-  const installedVersion = runChecked(executable, ["--version"], consumer).trim();
+  const installedVersion = runCli(["--version"]).trim();
   if (installedVersion !== expectedVersion) {
     throw new Error(`Installed CLI reports ${installedVersion}, expected ${expectedVersion}`);
   }
-  runChecked(executable, ["init", app, "--json"], consumer);
-  runChecked(executable, ["list", "--json"], consumer);
-  runChecked(executable, ["show", "vehicle-management", "--json"], consumer);
-  runChecked(executable, ["inspect", app, "--json"], consumer);
-  runChecked(executable, ["add", "vehicle-management", "--solution", "--root", app, "--json"], consumer);
-  runChecked(executable, ["add", "identity", "--root", app, "--json"], consumer);
+  runCli(["init", app, "--json"]);
+  runCli(["list", "--json"]);
+  runCli(["show", "vehicle-management", "--json"]);
+  runCli(["inspect", app, "--json"]);
+  runCli(["doctor", "--root", app, "--json"]);
+  runCli(["agent-protocol", "--json"]);
+  runCli(["add", "vehicle-management", "--solution", "--root", app, "--json"]);
+  runCli(["status", "vehicle-management", "--root", app, "--json"]);
+  runCli(["add", "identity", "--root", app, "--json"]);
+  for (const shell of ["bash", "zsh", "fish"]) {
+    const completion = JSON.parse(runCli(["completion", shell, "--json"]));
+    if (completion.shell !== shell || !completion.script.includes("aiba")) {
+      throw new Error(`Installed CLI returned invalid ${shell} completion`);
+    }
+  }
+  const authored = join(consumer, "authored");
+  mkdirSync(authored);
+  runCli(["create", "capability", "appointment-booking", "--out", authored, "--json"]);
+  const authoredCapability = join(authored, "appointment-booking");
+  runCli(["lint", authoredCapability, "--json"]);
+  runCli(["test-pack", authoredCapability, "--json"]);
+  for (const args of [["show", "missing-capability", "--json"], ["show", "--json"]]) {
+    const failure = failCli(args);
+    if (failure.status !== 1) throw new Error(`Installed CLI failure returned ${failure.status}`);
+    const envelope = JSON.parse(failure.stderr);
+    if (envelope.kind !== "AibaErrorEnvelope" || envelope.ok !== false) {
+      throw new Error("Installed CLI failure did not return an AibaErrorEnvelope");
+    }
+  }
 
   process.stdout.write([
     `Package artifacts: ${artifacts.map((artifact) => basename(artifact.path)).join(", ")}`,
