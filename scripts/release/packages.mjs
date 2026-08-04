@@ -47,9 +47,16 @@ export function packageMetadata() {
   }));
 }
 
+function childCommand(command, args) {
+  if (process.platform !== "win32" || command !== "npm") return { command, args };
+  const npmCli = join(dirname(process.execPath), "node_modules", "npm", "bin", "npm-cli.js");
+  if (!existsSync(npmCli)) throw new Error(`Cannot find the npm CLI at ${npmCli}`);
+  return { command: process.execPath, args: [npmCli, ...args] };
+}
+
 function run(command, args, cwd) {
-  const executable = process.platform === "win32" && command === "npm" ? "npm.cmd" : command;
-  const result = spawnSync(executable, args, {
+  const child = childCommand(command, args);
+  const result = spawnSync(child.command, child.args, {
     cwd,
     encoding: "utf8",
     env: { ...process.env, npm_config_registry: "https://registry.npmjs.org/" },
@@ -157,8 +164,8 @@ export function createPackageArtifacts(outputPath) {
 }
 
 export function runChecked(command, args, cwd, environment = {}) {
-  const executable = process.platform === "win32" && command === "npm" ? "npm.cmd" : command;
-  const result = spawnSync(executable, args, {
+  const child = childCommand(command, args);
+  const result = spawnSync(child.command, child.args, {
     cwd,
     encoding: "utf8",
     env: { ...process.env, ...environment },
