@@ -14,7 +14,7 @@ try {
   const byName = new Map(artifacts.map((artifact) => [artifact.name, artifact]));
   const forbidden = /(^|\/)(?:src|node_modules)(\/|$)|\.test\.|\.map$|\.pem$|(^|\/)\.env(?:\.|$)/;
   for (const artifact of artifacts) {
-    const listing = runChecked("tar", ["-tzf", artifact.path], root).trim().split("\n");
+    const listing = runChecked("tar", ["-tzf", artifact.path], root).trim().split(/\r?\n/);
     for (const path of listing) {
       if (forbidden.test(path)) throw new Error(`${artifact.name} contains forbidden path ${path}`);
     }
