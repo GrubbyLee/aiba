@@ -1,5 +1,9 @@
 # AIBA Video Player Brand Spec
 
+- Brand name: `AIBA`
+- Full name: `Agent Infrastructure for Building Applications`
+- Category: agent application infrastructure
+- Positioning: `Infrastructure for agent-built software.`
 - Logo: `../assets/aiba-logo.svg` and `../assets/aiba-mark.svg`
 - Product media: `../introduce.mp4`
 - Poster: `poster.jpg`, extracted from the product video

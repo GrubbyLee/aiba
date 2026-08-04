@@ -15,9 +15,10 @@ Signed Publisher --> registry-add --> Signed Index --> Registry Server
                                                         +--> aiba fetch
 ```
 
-AIBA is agent-native but agent-independent. The core does not depend on a model
-provider SDK. Agent adapters may use the current host agent to generate patches,
-but evidence and provenance validity is decided by deterministic AIBA commands.
+AIBA, Agent Infrastructure for Building Applications, is agent-native but
+agent-independent. The core does not depend on a model provider SDK. Agent
+adapters may use the current host agent to generate patches, but evidence and
+provenance validity is decided by deterministic AIBA commands.
 
 ## Layers
 

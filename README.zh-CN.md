@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="docs/assets/aiba-logo.svg" width="760" alt="AIBA - 面向 Agent 的应用能力系统">
+  <img src="docs/assets/aiba-logo.svg" width="760" alt="AIBA - 面向 AI Agent 的应用构建基础设施">
 </p>
 
 <p align="center">
-  <strong>稳定的能力语义，灵活且归项目所有的实现。</strong>
+  <strong>面向 AI Agent 的应用构建基础设施。</strong>
 </p>
 
 <p align="center">
@@ -18,8 +18,10 @@
 
 # AIBA
 
-AIBA 是一套面向 Agent 的软件能力交付系统。它帮助 AI Agent 为项目添加、验证、
-追踪和升级完整能力，同时不把项目锁定在固定的应用框架、服务商或视觉体系中。
+**Agent Infrastructure for Building Applications。**
+
+AIBA 是一套面向 AI Agent 的应用构建基础设施。它帮助 Agent 为项目添加、验证、
+追踪和升级完整的软件能力，同时不把项目锁定在固定的应用框架、服务商或视觉体系中。
 
 首批能力包括 `review-access`、`identity`、`audit`、`authorization`、
 `users`、`notification`、`file-assets`、`import-export` 和 `vehicle-records`。

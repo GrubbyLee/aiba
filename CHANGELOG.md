@@ -5,6 +5,11 @@ Changelog, and package versions follow Semantic Versioning.
 
 ## [Unreleased]
 
+### Changed
+
+- Define AIBA as Agent Infrastructure for Building Applications and align the
+  public product positioning across documentation and package metadata.
+
 ## [0.1.1] - 2026-07-29
 
 ### Fixed

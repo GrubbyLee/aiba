@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="docs/assets/aiba-logo.svg" width="760" alt="AIBA - Agent-native application capabilities">
+  <img src="docs/assets/aiba-logo.svg" width="760" alt="AIBA - Agent Infrastructure for Building Applications">
 </p>
 
 <p align="center">
-  <strong>Stable capability semantics. Flexible, project-owned implementation.</strong>
+  <strong>Infrastructure for agent-built software.</strong>
 </p>
 
 <p align="center">
@@ -18,9 +18,11 @@
 
 # AIBA
 
-AIBA is an agent-native software capability delivery system. It helps AI agents
-add, verify, trace, and upgrade complete capabilities without forcing projects
-into a fixed application framework, provider, or visual system.
+**Agent Infrastructure for Building Applications.**
+
+AIBA is application-building infrastructure for AI agents. It helps agents add,
+verify, trace, and upgrade complete software capabilities without forcing
+projects into a fixed application framework, provider, or visual system.
 
 The initial capability set covers `review-access`, `identity`, `audit`,
 `authorization`, `users`, `notification`, `file-assets`, `import-export`, and

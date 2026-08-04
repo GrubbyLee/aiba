@@ -2,11 +2,12 @@
 
 ## Product Definition
 
-AIBA is not an admin template, a fixed full-stack framework, or a prompt
-collection. It is an independent, agent-native capability delivery system that
-allows AI agents to install verifiable software capabilities into existing
-projects while preserving project architecture, visual language, and code
-ownership.
+AIBA means **Agent Infrastructure for Building Applications**. It is
+application-building infrastructure for AI agents, not an admin template, a
+fixed full-stack framework, or a prompt collection. Its independent capability
+delivery system allows AI agents to install verifiable software capabilities
+into existing projects while preserving project architecture, visual language,
+and code ownership.
 
 The initial audience is WeChat Mini Program developers and AI-assisted
 independent developers. The capability model must remain compatible with later
