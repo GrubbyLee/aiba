@@ -100,3 +100,23 @@ Verification:
 
 Progress: 4/7
 Next: m13-signed-solutions
+
+----------------------------------------
+Session #5 - m13-signed-solutions
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added signed Solution envelope, trust policy, and state schemas.
+  [x] Added solution-sign and solution-verify commands.
+  [x] Added expiry, allowlist, revocation, tamper, rollback and equivocation tests.
+  [x] Preserved npm provenance while enabling independent distribution trust.
+
+Verification:
+  - pnpm check: passed
+  - Spec: 44 tests; Core: 124 tests
+  - Compiled smoke: signed and verified vehicle-management Solution
+  - External npm consumer: four packages installed and exercised
+
+Progress: 5/7
+Next: m14-registry-operations

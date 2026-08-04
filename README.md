@@ -165,6 +165,12 @@ aiba agent-protocol --json
 aiba create capability appointment-booking
 aiba lint capabilities/appointment-booking
 aiba test-pack capabilities/appointment-booking
+aiba solution-sign solutions/vehicle-management \
+  --publisher aiba-official --key-id root-1 --private-key /secure/private.pem \
+  --sequence 1 --expires-at <date-time> --out vehicle-management.signed.json
+aiba solution-verify solutions/vehicle-management \
+  --envelope vehicle-management.signed.json --trust solution-trust.json \
+  --state solution-state.json
 aiba list
 aiba show vehicle-management
 aiba add vehicle-management --solution

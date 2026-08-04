@@ -34,6 +34,9 @@ import {
   type PublisherTrustPolicy,
   type ProjectLock,
   type ProjectManifest,
+  type SignedSolutionEnvelope,
+  type SolutionPublisherTrustPolicy,
+  type SolutionVerificationState,
   type TeamGovernancePolicy,
   type UpgradePlan,
   type VehicleCreateCommand,
@@ -119,6 +122,15 @@ const capabilityCatalogValidator = ajv.compile<CapabilityCatalog>(
 );
 const capabilitySolutionValidator = ajv.compile<CapabilitySolution>(
   loadProtocolSchema("solution.schema.json"),
+);
+const signedSolutionValidator = ajv.compile<SignedSolutionEnvelope>(
+  loadProtocolSchema("signed-solution.schema.json"),
+);
+const solutionTrustValidator = ajv.compile<SolutionPublisherTrustPolicy>(
+  loadProtocolSchema("solution-trust-policy.schema.json"),
+);
+const solutionStateValidator = ajv.compile<SolutionVerificationState>(
+  loadProtocolSchema("solution-state.schema.json"),
 );
 const bundleValidator = ajv.compile<CapabilityBundle>(
   loadProtocolSchema("bundle.schema.json"),
@@ -228,6 +240,23 @@ export function validateCapabilityCatalog(value: unknown): CapabilityCatalog {
 export function validateCapabilitySolution(value: unknown): CapabilitySolution {
   assertValid(capabilitySolutionValidator, value, "capability solution");
   return value as CapabilitySolution;
+}
+
+export function validateSignedSolutionEnvelope(value: unknown): SignedSolutionEnvelope {
+  assertValid(signedSolutionValidator, value, "signed Solution envelope");
+  return value as SignedSolutionEnvelope;
+}
+
+export function validateSolutionPublisherTrustPolicy(
+  value: unknown,
+): SolutionPublisherTrustPolicy {
+  assertValid(solutionTrustValidator, value, "Solution publisher trust policy");
+  return value as SolutionPublisherTrustPolicy;
+}
+
+export function validateSolutionVerificationState(value: unknown): SolutionVerificationState {
+  assertValid(solutionStateValidator, value, "Solution verification state");
+  return value as SolutionVerificationState;
 }
 
 export function validateCapabilityBundle(value: unknown): CapabilityBundle {

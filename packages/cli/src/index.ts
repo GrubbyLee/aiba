@@ -36,9 +36,11 @@ import {
   fetchRegistryCapability,
   resolveRegistryCapability,
   solutionStatus,
+  signSolution,
   verifyCapabilityBundle,
   verifyBehaviorProof,
   verifyProject,
+  verifySignedSolution,
 } from "aiba-core";
 import { AIBA_API_VERSION, type AibaErrorEnvelope } from "aiba-spec";
 import { createRegistryServer } from "aiba-registry-server";
@@ -85,6 +87,35 @@ program
   .name("aiba")
   .description("Install, verify, trace, and upgrade application capabilities")
   .version(packageVersion());
+
+program
+  .command("solution-sign")
+  .description("Sign an exact Solution for independent distribution")
+  .argument("<solution-directory>", "Solution directory containing solution.yaml")
+  .requiredOption("--publisher <id>", "Solution publisher identifier")
+  .requiredOption("--key-id <id>", "publisher signing key identifier")
+  .requiredOption("--private-key <path>", "Ed25519 PKCS#8 private key")
+  .requiredOption("--sequence <number>", "monotonic Solution publication sequence")
+  .requiredOption("--expires-at <date-time>", "signature expiry")
+  .requiredOption("--out <path>", "signed envelope output JSON")
+  .option("--json", "print machine-readable JSON")
+  .action(async (directory: string, options: { publisher: string; keyId: string; privateKey: string; sequence: string; expiresAt: string; out: string; json?: boolean }) => {
+    const result = await signSolution({ solutionDirectory: resolve(directory), outputPath: resolve(options.out), publisherId: options.publisher, keyId: options.keyId, privateKeyPath: resolve(options.privateKey), sequence: Number(options.sequence), expiresAt: options.expiresAt });
+    process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : `Signed ${result.envelope.solution.id}@${result.envelope.solution.version} sequence ${result.envelope.metadata.sequence}.\nEnvelope: ${result.outputPath}\n`);
+  });
+
+program
+  .command("solution-verify")
+  .description("Verify an independently signed Solution and anti-rollback state")
+  .argument("<solution-directory>", "Solution directory containing solution.yaml")
+  .requiredOption("--envelope <path>", "signed Solution envelope JSON")
+  .requiredOption("--trust <path>", "Solution publisher trust policy JSON")
+  .option("--state <path>", "persistent anti-rollback state")
+  .option("--json", "print machine-readable JSON")
+  .action(async (directory: string, options: { envelope: string; trust: string; state?: string; json?: boolean }) => {
+    const result = await verifySignedSolution({ solutionDirectory: resolve(directory), envelopePath: resolve(options.envelope), trustPolicyPath: resolve(options.trust), ...(options.state ? { statePath: resolve(options.state) } : {}) });
+    process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : `Verified signed Solution ${result.solution}@${result.version} sequence ${result.sequence}.\nPublisher: ${result.publisher}/${result.keyId}\n`);
+  });
 
 program
   .command("create")

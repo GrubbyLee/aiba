@@ -308,3 +308,10 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Require invariant operation coverage, test guidance, and critical rules.
 - [x] Reject overwrite, traversal, symlinks, scripts, special files, and bad
   dependency order without executing authored content.
+
+### Completed: M13 Signed Solution Distribution
+
+- [x] Add an independent Ed25519 signing domain for exact Solutions.
+- [x] Bind publisher, key, sequence, validity window, identity, and file hash.
+- [x] Enforce allowlists, timestamped key revocation, rollback, and equivocation.
+- [x] Advance persistent state only after every trust and content check passes.

@@ -49,7 +49,7 @@
       "description": "Enable independently signed Solution distribution with trust, revocation, expiry, and anti-rollback.",
       "file": "packages/core/src/solution-signing.ts",
       "steps": ["Define signed protocols.", "Implement signing and verification.", "Enforce trust lifecycle.", "Add attack tests."],
-      "passes": false,
+      "passes": true,
       "verification": "Valid Solutions verify and attack cases fail without state advancement."
     },
     {

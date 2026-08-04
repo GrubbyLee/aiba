@@ -15,6 +15,7 @@ export * from "./paths.js";
 export * from "./registry.js";
 export * from "./solution.js";
 export * from "./solution-install.js";
+export * from "./solution-signing.js";
 export * from "./transport.js";
 export * from "./upgrade.js";
 export * from "./validation.js";

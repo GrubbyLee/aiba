@@ -65,6 +65,9 @@ const bundleFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-bundle-"));
 const keyDirectory = join(bundleFixture, "keys");
 const bundleDirectory = join(bundleFixture, "identity-bundle");
 const trustPolicyPath = join(bundleFixture, "trust-policy.json");
+const solutionEnvelopePath = join(bundleFixture, "vehicle-management.signed.json");
+const solutionTrustPath = join(bundleFixture, "solution-trust.json");
+const solutionStatePath = join(bundleFixture, "solution-state.json");
 const registryDirectory = join(bundleFixture, "registry");
 const registryKeys = join(bundleFixture, "registry-keys");
 const registryTrustPath = join(bundleFixture, "registry-trust.json");
@@ -78,6 +81,38 @@ run("publisher keygen", [
   "root-1",
   "--out",
   keyDirectory,
+  "--json",
+], 0);
+const solutionExpiry = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+run("sign exact Solution", [
+  "solution-sign",
+  join(workspace, "solutions", "vehicle-management"),
+  "--publisher", "aiba-official",
+  "--key-id", "root-1",
+  "--private-key", join(keyDirectory, "private.pem"),
+  "--sequence", "1",
+  "--expires-at", solutionExpiry,
+  "--out", solutionEnvelopePath,
+  "--json",
+], 0);
+writeFileSync(solutionTrustPath, `${JSON.stringify({
+  apiVersion: "aiba.dev/v0alpha1",
+  kind: "SolutionPublisherTrustPolicy",
+  metadata: { id: "official-solutions" },
+  publishers: [{
+    publisher: "aiba-official",
+    keyId: "root-1",
+    algorithm: "Ed25519",
+    publicKey: readFileSync(join(keyDirectory, "public.pem"), "utf8"),
+    solutions: ["vehicle-management"],
+  }],
+}, null, 2)}\n`);
+run("verify signed Solution", [
+  "solution-verify",
+  join(workspace, "solutions", "vehicle-management"),
+  "--envelope", solutionEnvelopePath,
+  "--trust", solutionTrustPath,
+  "--state", solutionStatePath,
   "--json",
 ], 0);
 run("pack signed capability", [

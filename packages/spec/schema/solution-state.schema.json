@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/v0alpha1/solution-state.schema.json",
+  "title": "AIBA Solution Verification State",
+  "type": "object", "additionalProperties": false,
+  "required": ["apiVersion", "kind", "solution"],
+  "properties": {
+    "apiVersion": { "const": "aiba.dev/v0alpha1" }, "kind": { "const": "SolutionVerificationState" },
+    "solution": { "type": "object", "additionalProperties": false, "required": ["id", "sequence", "envelopeSha256", "verifiedAt"], "properties": { "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" }, "sequence": { "type": "integer", "minimum": 1 }, "envelopeSha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }, "verifiedAt": { "type": "string", "format": "date-time" } } }
+  }
+}

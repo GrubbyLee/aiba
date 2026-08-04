@@ -141,9 +141,9 @@ commands in Core.
 
 ## M13: Signed Solution Distribution
 
-- [ ] Sign exact Solution files with Ed25519 publisher identities.
-- [ ] Enforce publisher allowlists, key revocation, expiry, and anti-rollback state.
-- [ ] Keep official npm provenance valid while enabling independent channels.
+- [x] Sign exact Solution files with Ed25519 publisher identities.
+- [x] Enforce publisher allowlists, key revocation, expiry, and anti-rollback state.
+- [x] Keep official npm provenance valid while enabling independent channels.
 
 ## M14: Production Registry Operations
 

@@ -701,10 +701,60 @@ export interface AibaErrorEnvelope {
   };
 }
 
+export interface SignedSolutionEnvelope {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "SignedSolutionEnvelope";
+  metadata: {
+    sequence: number;
+    createdAt: string;
+    expiresAt: string;
+  };
+  solution: {
+    id: string;
+    version: string;
+    path: "solution.yaml";
+    sha256: string;
+  };
+  publisher: { id: string; keyId: string };
+  signature: {
+    algorithm: "Ed25519";
+    keyId: string;
+    value: string;
+  };
+}
+
+export interface SolutionPublisherTrustPolicy {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "SolutionPublisherTrustPolicy";
+  metadata: { id: string };
+  publishers: Array<{
+    publisher: string;
+    keyId: string;
+    algorithm: "Ed25519";
+    publicKey: string;
+    solutions: string[];
+    revokedAt?: string;
+  }>;
+}
+
+export interface SolutionVerificationState {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "SolutionVerificationState";
+  solution: {
+    id: string;
+    sequence: number;
+    envelopeSha256: string;
+    verifiedAt: string;
+  };
+}
+
 export type ProtocolSchemaName =
   | "ancestry.schema.json"
   | "agent-protocol.schema.json"
   | "error-envelope.schema.json"
+  | "signed-solution.schema.json"
+  | "solution-trust-policy.schema.json"
+  | "solution-state.schema.json"
   | "behavior-challenge.schema.json"
   | "behavior-proof.schema.json"
   | "behavior-runner-trust-policy.schema.json"
