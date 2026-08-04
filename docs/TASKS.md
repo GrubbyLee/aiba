@@ -188,6 +188,8 @@ Exit criteria met on 2026-07-26.
 - [x] Publish npm v0.1.1 and create its GitHub Release after explicit approval.
 - [x] Configure npm Trusted Publishing for all four packages before the next
   release.
+- [x] Rebind and verify all four npm Trusted Publishers after renaming the
+  GitHub repository from `ai-base` to `aiba`.
 - [ ] Run an invited human beta in a real Mini Program project.
 - [ ] Obtain qualified review of the exception and contributor agreement.
 

@@ -54,8 +54,9 @@ Configure each npm package with this trusted publisher before the next tag:
 - Workflow filename: `release.yml`
 - Environment: `npm`
 
-All four packages were configured with this publisher on 2026-07-29. Keep the
-values below as the recovery and ownership-transfer checklist.
+All four packages were rebound to this publisher on 2026-08-04 after the
+GitHub repository was renamed from `ai-base` to `aiba`. Keep the values below
+as the recovery and ownership-transfer checklist.
 
 Open the package settings while signed in as an npm package owner, select
 **Trusted Publisher**, choose **GitHub Actions**, and enter the values above:
@@ -67,12 +68,19 @@ Open the package settings while signed in as an npm package owner, select
 | `aiba-spec` | <https://www.npmjs.com/package/aiba-spec/access> |
 | `aiba-registry-server` | <https://www.npmjs.com/package/aiba-registry-server/access> |
 
-npm does not currently expose this package-owner operation through its CLI, so
-the four website changes are intentionally manual. Run `pnpm
+npm 11.19 or newer can inspect and manage these settings through `npm trust`.
+Run the following command for each package and complete npm's browser-based
+account verification when prompted:
+
+```bash
+npm trust list <package> --registry=https://registry.npmjs.org/
+```
+
+Each result must name repository `GrubbyLee/aiba`, workflow `release.yml`,
+environment `npm`, and permissions `publish, stage publish`. Run `pnpm
 release:oidc-check` to audit the repository half of the trust relationship. A
-successful check cannot prove the npm-side bindings exist; verify each package
-settings page shows the publisher before creating the next version tag. The
-first new version published by `release.yml` is the end-to-end proof.
+successful check cannot prove the npm-side bindings exist; the first new
+version published by `release.yml` remains the end-to-end proof.
 
 Never publish from an uncommitted worktree or use mutable tags. npm versions are
 immutable; a bad release is corrected with a new version and deprecation notice.
