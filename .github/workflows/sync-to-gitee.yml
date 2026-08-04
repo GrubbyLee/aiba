@@ -18,11 +18,19 @@ jobs:
     steps:
       - name: Check required secrets
         env:
-          GITEE_USERNAME: ${{ secrets.GITEE_USERNAME }}
-          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+          GITEE_SSH_KEY: ${{ secrets.GITEE_SSH_KEY }}
         run: |
-          [ -n "$GITEE_USERNAME" ] || { echo "::error::Missing Secret: GITEE_USERNAME"; exit 1; }
-          [ -n "$GITEE_TOKEN" ] || { echo "::error::Missing Secret: GITEE_TOKEN"; exit 1; }
+          [ -n "$GITEE_SSH_KEY" ] || { echo "::error::Missing Secret: GITEE_SSH_KEY"; exit 1; }
+
+      - name: Configure Gitee SSH
+        env:
+          GITEE_SSH_KEY: ${{ secrets.GITEE_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$GITEE_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' 'gitee.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEKxHSJ7084RmkJ4YdEi5tngynE8aZe2uEoVVsB/OvYN' > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
 
       - name: Checkout full history
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -41,10 +49,8 @@ jobs:
 
       - name: Push main and tags to Gitee
         env:
-          GITEE_USERNAME: ${{ secrets.GITEE_USERNAME }}
-          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
           GIT_TERMINAL_PROMPT: "0"
         run: |
-          git remote add gitee "https://${GITEE_USERNAME}:${GITEE_TOKEN}@gitee.com/synovation/aiba.git"
+          git remote add gitee "git@gitee.com:synovation/aiba.git"
           timeout 120s git push gitee HEAD:main --force
           timeout 120s git push gitee --tags --force
