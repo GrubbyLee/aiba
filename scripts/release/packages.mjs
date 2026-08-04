@@ -48,7 +48,8 @@ export function packageMetadata() {
 }
 
 function run(command, args, cwd) {
-  const result = spawnSync(command, args, {
+  const executable = process.platform === "win32" && command === "npm" ? "npm.cmd" : command;
+  const result = spawnSync(executable, args, {
     cwd,
     encoding: "utf8",
     env: { ...process.env, npm_config_registry: "https://registry.npmjs.org/" },
@@ -56,6 +57,7 @@ function run(command, args, cwd) {
   if (result.status !== 0) {
     throw new Error([
       `${command} ${args.join(" ")} failed with status ${result.status}`,
+      result.error,
       result.stdout,
       result.stderr,
     ].filter(Boolean).join("\n"));
@@ -155,7 +157,8 @@ export function createPackageArtifacts(outputPath) {
 }
 
 export function runChecked(command, args, cwd, environment = {}) {
-  const result = spawnSync(command, args, {
+  const executable = process.platform === "win32" && command === "npm" ? "npm.cmd" : command;
+  const result = spawnSync(executable, args, {
     cwd,
     encoding: "utf8",
     env: { ...process.env, ...environment },
@@ -163,6 +166,7 @@ export function runChecked(command, args, cwd, environment = {}) {
   if (result.status !== 0) {
     throw new Error([
       `${command} ${args.join(" ")} failed with status ${result.status}`,
+      result.error,
       result.stdout,
       result.stderr,
     ].filter(Boolean).join("\n"));
