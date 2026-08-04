@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "aiba-core": "workspace:^",
+    "aiba-spec": "workspace:^",
     "aiba-registry-server": "workspace:^",
     "commander": "^14.0.0"
   },

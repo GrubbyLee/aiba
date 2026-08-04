@@ -1,5 +1,6 @@
 export * from "./errors.js";
 export * from "./add.js";
+export * from "./agent-protocol.js";
 export * from "./bundle.js";
 export * from "./behavior.js";
 export * from "./diff.js";

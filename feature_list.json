@@ -29,7 +29,7 @@
       "description": "Publish a stable machine-readable Agent protocol with negotiation and error envelopes.",
       "file": "packages/spec/schema/agent-protocol.schema.json",
       "steps": ["Define protocol envelopes.", "Expose negotiation.", "Align adapters.", "Test structured errors."],
-      "passes": false,
+      "passes": true,
       "verification": "Schema, adapter contract, and CLI JSON tests pass."
     },
     {

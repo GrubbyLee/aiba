@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/v0alpha1/error-envelope.schema.json",
+  "title": "AIBA Error Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "ok", "error"],
+  "properties": {
+    "apiVersion": { "const": "aiba.dev/v0alpha1" },
+    "kind": { "const": "AibaErrorEnvelope" },
+    "ok": { "const": false },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]{1,95}$" },
+        "message": { "type": "string", "minLength": 1, "maxLength": 4000 },
+        "details": { "type": "object" }
+      }
+    }
+  }
+}

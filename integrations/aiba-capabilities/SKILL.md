@@ -15,6 +15,17 @@ Prefer `aiba` when it is on `PATH`. In an AIBA source checkout, use
 Do not install dependencies or send project files to a hosted service without
 the user's authorization.
 
+Before relying on commands or response fields, negotiate the installed machine
+protocol:
+
+```bash
+aiba agent-protocol --json
+```
+
+Require `protocolVersion: "0.1.0"` and use only advertised commands. Every
+Agent call must include `--json`. On nonzero exit, parse stderr as an
+`AibaErrorEnvelope` and branch on `error.code`, never on human message text.
+
 ## Inspect
 
 When the requested capability or Solution is not already exact, discover the
@@ -81,16 +92,17 @@ aiba compose <solution> --json
 For an installation request, let Core select exactly one constituent at a time:
 
 ```bash
-aiba add <solution> --solution --json
+aiba status <solution> --json
+aiba continue <solution> --json
 ```
 
 Read and implement only the returned `planPath`. When its evidence is complete,
 finalize that same Solution step, then ask Core to prepare the next one:
 
 ```bash
-aiba add <solution> --solution --finalize \
+aiba continue <solution> --finalize \
   --agent <codex-or-claude-code> --json
-aiba add <solution> --solution --json
+aiba continue <solution> --json
 ```
 
 Never prepare all constituent plans in advance. A repeated prepare returning
@@ -111,8 +123,10 @@ aiba verify <capability> --json
 ```
 
 Report evidence/provenance success only when both commands exit successfully.
-AIBA does not attest that project tests ran or prove application behavior; run
-the project's required test suite separately and report its result. If AIBA
+For a trusted runtime claim, use `aiba test` to create a source-bound challenge,
+run the exact bound command externally, let an authorized runner use `aiba
+attest`, and verify it with `aiba verify-behavior`. The Agent must never request
+or read the runner private key. If AIBA
 verification fails, repair the implementation or evidence mapping. Never
 edit a receipt, lock hash, or verifier output to make a failure disappear.
 

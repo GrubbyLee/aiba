@@ -60,3 +60,23 @@ Verification:
 
 Progress: 2/7
 Next: m11-agent-protocol
+
+----------------------------------------
+Session #3 - m11-agent-protocol
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added Agent descriptor and error envelope public schemas.
+  [x] Added protocol negotiation for 18 stable commands.
+  [x] Added command mutation/resumability metadata and structured errors.
+  [x] Updated the portable Skill for Codex and Claude Code.
+
+Verification:
+  - pnpm check: passed
+  - Spec: 41 tests; Core: 116 tests
+  - CLI negotiated 18 commands and returned CATALOG_ITEM_NOT_FOUND envelope
+  - External npm consumer: four packages installed and exercised
+
+Progress: 3/7
+Next: m12-authoring-sdk

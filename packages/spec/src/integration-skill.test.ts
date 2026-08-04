@@ -13,9 +13,13 @@ describe("portable AIBA Agent Skill", () => {
     expect(skill).toMatch(/^---\nname: aiba-capabilities\ndescription: .+\n---/);
     expect(skill).not.toContain("TODO");
     expect(skill).toContain("aiba inspect --json");
+    expect(skill).toContain("aiba agent-protocol --json");
     expect(skill).toContain("aiba add <capability> --json");
     expect(skill).toContain("--finalize --agent <codex-or-claude-code>");
     expect(skill).toContain("aiba verify <capability> --json");
+    expect(skill).toContain("aiba status <solution> --json");
+    expect(skill).toContain("aiba continue <solution> --json");
+    expect(skill).toContain("AibaErrorEnvelope");
     expect(skill).toContain("Never\nedit a receipt, lock hash, or verifier output");
     expect(metadata).toContain("$aiba-capabilities");
   });

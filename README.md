@@ -161,6 +161,7 @@ The concise product workflow remains:
 
 ```bash
 aiba init
+aiba agent-protocol --json
 aiba list
 aiba show vehicle-management
 aiba add vehicle-management --solution

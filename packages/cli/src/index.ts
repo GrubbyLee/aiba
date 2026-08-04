@@ -6,6 +6,8 @@ import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Command } from "commander";
 import {
+  AibaError,
+  ProtocolValidationError,
   finalizeCapability,
   finalizeUpgrade,
   createCapabilityBundle,
@@ -14,6 +16,7 @@ import {
   checkSolution,
   advanceSolutionInstallation,
   createBehaviorProof,
+  describeAgentProtocol,
   describeCatalogItem,
   doctorProject,
   discoverCatalog,
@@ -34,6 +37,7 @@ import {
   verifyBehaviorProof,
   verifyProject,
 } from "aiba-core";
+import { AIBA_API_VERSION, type AibaErrorEnvelope } from "aiba-spec";
 import { createRegistryServer } from "aiba-registry-server";
 import {
   renderDiff,
@@ -78,6 +82,25 @@ program
   .name("aiba")
   .description("Install, verify, trace, and upgrade application capabilities")
   .version(packageVersion());
+
+program
+  .command("agent-protocol")
+  .description("Negotiate the stable machine-readable AIBA Agent protocol")
+  .option("--json", "print machine-readable JSON")
+  .action((options: { json?: boolean }) => {
+    const result = describeAgentProtocol(packageVersion());
+    if (options.json) {
+      process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+      return;
+    }
+    process.stdout.write([
+      `AIBA Agent protocol ${result.protocolVersion}`,
+      `CLI: ${result.cliVersion}`,
+      `Capabilities: ${result.capabilities.join(", ")}`,
+      `Commands: ${result.commands.map((item) => item.name).join(", ")}`,
+      "Use --json for the stable negotiation document.",
+    ].join("\n") + "\n");
+  });
 
 program
   .command("status")
@@ -1119,6 +1142,23 @@ program
 
 program.parseAsync().catch((error: unknown) => {
   const message = error instanceof Error ? error.message : String(error);
-  process.stderr.write(`aiba: ${message}\n`);
+  if (process.argv.includes("--json")) {
+    const details = error instanceof ProtocolValidationError
+      ? { documentType: error.documentType, validationErrors: error.validationErrors }
+      : undefined;
+    const envelope: AibaErrorEnvelope = {
+      apiVersion: AIBA_API_VERSION,
+      kind: "AibaErrorEnvelope",
+      ok: false,
+      error: {
+        code: error instanceof AibaError ? error.code : "COMMAND_FAILED",
+        message,
+        ...(details ? { details } : {}),
+      },
+    };
+    process.stderr.write(`${JSON.stringify(envelope, null, 2)}\n`);
+  } else {
+    process.stderr.write(`aiba: ${message}\n`);
+  }
   process.exitCode = 1;
 });

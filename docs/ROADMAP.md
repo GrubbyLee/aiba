@@ -129,9 +129,9 @@ commands in Core.
 
 ## M11: Agent Adapter Protocol
 
-- [ ] Publish a machine-readable Agent capability and error envelope.
-- [ ] Add protocol negotiation and consistent Codex/Claude adapter guidance.
-- [ ] Test every advertised command and structured failure contract.
+- [x] Publish a machine-readable Agent capability and error envelope.
+- [x] Add protocol negotiation and consistent Codex/Claude adapter guidance.
+- [x] Test every advertised command and structured failure contract.
 
 ## M12: Capability Authoring SDK
 

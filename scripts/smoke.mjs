@@ -33,6 +33,8 @@ function run(name, args, expectedStatus, environment = {}) {
 }
 
 run("inspect", ["inspect", "fixtures/review-access-reference", "--json"], 0);
+run("negotiate Agent protocol", ["agent-protocol", "--json"], 0);
+run("structured Agent error", ["show", "missing-capability", "--json"], 1);
 run("list verified catalog", ["list", "--json"], 0);
 run("show verified capability", ["show", "vehicle-records", "--json"], 0);
 run("show verified solution", ["show", "vehicle-management", "--json"], 0);

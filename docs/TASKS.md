@@ -293,3 +293,10 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Add read-only `status`, one-step `continue`, and project `doctor` commands.
 - [x] Reject stale plans, drifted constituents, and exact-version mismatches.
 - [x] Preserve old `add --solution` compatibility and explicit finalization.
+
+### Completed: M11 Agent Adapter Protocol
+
+- [x] Publish `AgentProtocolDescriptor` and `AibaErrorEnvelope` JSON Schemas.
+- [x] Add `agent-protocol --json` negotiation with command mutation metadata.
+- [x] Return stable error codes on stderr for failed JSON commands.
+- [x] Align the portable Codex/Claude Skill with workflow and behavior proofs.

@@ -662,8 +662,49 @@ export interface BehaviorRunnerTrustPolicy {
   }>;
 }
 
+export interface AgentProtocolDescriptor {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "AgentProtocolDescriptor";
+  cliVersion: string;
+  protocolVersion: "0.1.0";
+  capabilities: Array<
+    | "catalog-discovery"
+    | "project-inspection"
+    | "capability-install"
+    | "solution-workflow"
+    | "evidence-verification"
+    | "behavior-proof"
+    | "customization-upgrade"
+    | "registry"
+    | "governance"
+  >;
+  commands: Array<{
+    name: string;
+    mutatesProject: boolean;
+    resumable: boolean;
+    json: boolean;
+  }>;
+  envelopes: {
+    success: "command-specific-json";
+    error: "AibaErrorEnvelope";
+  };
+}
+
+export interface AibaErrorEnvelope {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "AibaErrorEnvelope";
+  ok: false;
+  error: {
+    code: string;
+    message: string;
+    details?: Record<string, unknown>;
+  };
+}
+
 export type ProtocolSchemaName =
   | "ancestry.schema.json"
+  | "agent-protocol.schema.json"
+  | "error-envelope.schema.json"
   | "behavior-challenge.schema.json"
   | "behavior-proof.schema.json"
   | "behavior-runner-trust-policy.schema.json"

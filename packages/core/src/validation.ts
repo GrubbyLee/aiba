@@ -3,6 +3,7 @@ import {
   loadInterfaceSchema,
   loadProtocolSchema,
   type AuditEvent,
+  type AgentProtocolDescriptor,
   type AuthorizationDecision,
   type BehaviorChallenge,
   type BehaviorProof,
@@ -101,6 +102,9 @@ const wechatMiniProgramLoginResultValidator = ajv.compile<WechatMiniProgramLogin
 const capabilityValidator = ajv.compile<CapabilityManifest>(
   loadProtocolSchema("capability.schema.json"),
 );
+const agentProtocolValidator = ajv.compile<AgentProtocolDescriptor>(
+  loadProtocolSchema("agent-protocol.schema.json"),
+);
 const behaviorChallengeValidator = ajv.compile<BehaviorChallenge>(
   loadProtocolSchema("behavior-challenge.schema.json"),
 );
@@ -188,6 +192,11 @@ function assertValid<T>(
 export function validateCapabilityManifest(value: unknown): CapabilityManifest {
   assertValid(capabilityValidator, value, "capability manifest");
   return value as CapabilityManifest;
+}
+
+export function validateAgentProtocolDescriptor(value: unknown): AgentProtocolDescriptor {
+  assertValid(agentProtocolValidator, value, "Agent protocol descriptor");
+  return value as AgentProtocolDescriptor;
 }
 
 export function validateBehaviorChallenge(value: unknown): BehaviorChallenge {

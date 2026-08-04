@@ -4,6 +4,8 @@ import { loadInterfaceSchema, loadProtocolSchema } from "./index.js";
 describe("protocol schemas", () => {
   it.each([
     "ancestry.schema.json",
+    "agent-protocol.schema.json",
+    "error-envelope.schema.json",
     "behavior-challenge.schema.json",
     "behavior-proof.schema.json",
     "behavior-runner-trust-policy.schema.json",
