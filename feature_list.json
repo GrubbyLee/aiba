@@ -39,8 +39,8 @@
       "description": "Provide signed webhook delivery with trusted destinations, replay defense, retries, and audit-safe records.",
       "file": "capabilities/webhooks/capability.yaml",
       "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
-      "passes": false,
-      "verification": ""
+      "passes": true,
+      "verification": "Pack quality 100; Spec 54, Core 134, and reference 99 tests pass; signature, stale timestamp, and replay attacks are rejected; pnpm check passes."
     },
     {
       "id": "m17-feature-flags",

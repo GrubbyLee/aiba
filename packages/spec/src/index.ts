@@ -153,6 +153,25 @@ export interface ScheduledJobRecord {
   completedAt?: string;
 }
 
+export interface WebhookDeliveryCommand {
+  subscriptionId: string;
+  eventType: string;
+  resourceId: string;
+  idempotencyKey: string;
+}
+
+export interface WebhookDeliveryRecord {
+  deliveryId: string;
+  subscriptionId: string;
+  eventType: string;
+  status: "pending" | "delivering" | "retrying" | "delivered" | "failed";
+  attempt: number;
+  maximumAttempts: number;
+  createdAt: string;
+  deliveredAt?: string;
+  errorCode?: string;
+}
+
 export interface FileAssetUploadCommand {
   fileName: string;
   contentType: string;
@@ -879,6 +898,8 @@ export type InterfaceSchemaName =
   | "resource-query.schema.json"
   | "scheduled-job-command.schema.json"
   | "scheduled-job-record.schema.json"
+  | "webhook-delivery-command.schema.json"
+  | "webhook-delivery-record.schema.json"
   | "vehicle-create-command.schema.json"
   | "vehicle-record.schema.json"
   | "vehicle-update-command.schema.json"

@@ -1,0 +1,39 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: webhooks
+  version: 0.1.0
+  title: Webhooks
+  layer: platform-integration
+  description: Signed event delivery to trusted subscriptions with server-owned projections, replay defense, durable idempotency, bounded retries, and minimized records.
+spec:
+  interfaces: [authorization.decision, audit.event, webhooks.delivery-command, webhooks.delivery-record]
+  dependencies:
+    - { id: authorization, version: ^0.1.0, optional: false }
+    - { id: audit, version: ^0.1.0, optional: false }
+  invariants:
+    - id: destinations-and-secrets-are-trusted
+      title: Destinations and secrets are trusted
+      description: Commands select tenant-bound subscriptions and cannot provide URLs, credentials, headers, or signing secrets.
+      severity: critical
+      evidence: &evidence { acceptedTypes: [source, test, config, document], requiredTypes: [source, test], minimum: 2, requireHash: true }
+    - id: event-projections-are-server-owned
+      title: Event projections are server owned
+      description: Event types and payload projections are allowlisted server behavior rather than arbitrary caller payloads.
+      severity: critical
+      evidence: *evidence
+    - id: deliveries-are-signed-and-fresh
+      title: Deliveries are signed and fresh
+      description: Canonical body, delivery identity, and timestamp are authenticated, time bounded, and rejected on replay.
+      severity: critical
+      evidence: *evidence
+    - id: delivery-is-authorized-and-idempotent
+      title: Delivery is authorized and idempotent
+      description: Tenant scope and authorization are trusted and one scoped key binds to one exact event request.
+      severity: critical
+      evidence: *evidence
+    - id: retries-and-records-are-bounded
+      title: Retries and records are bounded
+      description: Attempts have trusted limits and portable records omit URLs, payloads, secrets, response bodies, and provider errors.
+      severity: critical
+      evidence: *evidence

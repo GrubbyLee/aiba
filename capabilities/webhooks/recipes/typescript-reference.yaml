@@ -1,0 +1,35 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Webhook Boundary
+  description: Framework-neutral guidance for secure outbound webhook delivery and receiver verification.
+spec:
+  capability: { id: webhooks, version: 0.1.0 }
+  compatibility: { languages: [TypeScript], frameworks: [] }
+  writeScope: { allowedPatterns: [src/**, server/**, test/**, tests/**, workers/**] }
+  operations:
+    - id: enqueue-trusted-event
+      intent: Authorize and deduplicate an event selected from trusted subscription and projection registries.
+      requiredInterfaces: [webhooks.delivery-command, webhooks.delivery-record, authorization.decision, audit.event]
+      invariants: [destinations-and-secrets-are-trusted, event-projections-are-server-owned, delivery-is-authorized-and-idempotent]
+      guidance:
+        - Resolve tenant, HTTPS URL, secret, allowed event types, and projection from server configuration.
+        - Bind the scoped idempotency key before acknowledging enqueue.
+    - id: sign-deliver-and-verify
+      intent: Deliver a canonical signed body and reject stale, tampered, or replayed receiver requests.
+      requiredInterfaces: [webhooks.delivery-record, audit.event]
+      invariants: [deliveries-are-signed-and-fresh, retries-and-records-are-bounded]
+      guidance:
+        - Sign the exact timestamp, unique delivery ID, and raw body; compare signatures in constant time.
+        - Persist receiver replay state for at least the accepted timestamp window and minimize failure records.
+  evidence:
+    - invariant: destinations-and-secrets-are-trusted
+      suggestions: &suggestions
+        - { type: source, pathPattern: "src/**/*.ts", description: "Webhook subscription, delivery, and receiver boundary." }
+        - { type: test, pathPattern: "src/**/*.test.ts", description: "Destination, signature, freshness, replay, retry, idempotency, and redaction tests." }
+    - { invariant: event-projections-are-server-owned, suggestions: *suggestions }
+    - { invariant: deliveries-are-signed-and-fresh, suggestions: *suggestions }
+    - { invariant: delivery-is-authorized-and-idempotent, suggestions: *suggestions }
+    - { invariant: retries-and-records-are-bounded, suggestions: *suggestions }

@@ -22,6 +22,8 @@ import {
   validateVerificationChallengeIssueCommand,
   validateVerificationChallengeRecord,
   validateVerificationChallengeVerifyCommand,
+  validateWebhookDeliveryCommand,
+  validateWebhookDeliveryRecord,
   validateWechatMiniProgramLoginCommand,
   validateWechatMiniProgramLoginResult,
 } from "./validation.js";
@@ -188,6 +190,32 @@ describe("core portable interfaces", () => {
       scheduledFor: "2026-08-05T01:00:00Z",
       idempotencyKey: "schedule-0001",
       handler: "curl https://example.test/secret",
+    })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+  });
+
+  it("validates webhook selectors without accepting destinations or secrets", () => {
+    expect(validateWebhookDeliveryCommand({
+      subscriptionId: "subscription_0001",
+      eventType: "vehicle.updated",
+      resourceId: "vehicle-1",
+      idempotencyKey: "webhook-0001",
+    }).eventType).toBe("vehicle.updated");
+    expect(validateWebhookDeliveryRecord({
+      deliveryId: "delivery_0001",
+      subscriptionId: "subscription_0001",
+      eventType: "vehicle.updated",
+      status: "pending",
+      attempt: 0,
+      maximumAttempts: 3,
+      createdAt: "2026-08-05T01:00:00Z",
+    }).status).toBe("pending");
+    expect(() => validateWebhookDeliveryCommand({
+      subscriptionId: "subscription_0001",
+      eventType: "vehicle.updated",
+      resourceId: "vehicle-1",
+      idempotencyKey: "webhook-0001",
+      url: "http://169.254.169.254/latest/meta-data",
+      secret: "caller-secret",
     })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 

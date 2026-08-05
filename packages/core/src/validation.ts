@@ -39,6 +39,8 @@ import {
   type ResourceQuery,
   type ScheduledJobCommand,
   type ScheduledJobRecord,
+  type WebhookDeliveryCommand,
+  type WebhookDeliveryRecord,
   type SignedSolutionEnvelope,
   type SolutionPublisherTrustPolicy,
   type SolutionVerificationState,
@@ -93,6 +95,12 @@ const scheduledJobCommandValidator = ajv.compile<ScheduledJobCommand>(
 );
 const scheduledJobRecordValidator = ajv.compile<ScheduledJobRecord>(
   loadInterfaceSchema("scheduled-job-record.schema.json"),
+);
+const webhookDeliveryCommandValidator = ajv.compile<WebhookDeliveryCommand>(
+  loadInterfaceSchema("webhook-delivery-command.schema.json"),
+);
+const webhookDeliveryRecordValidator = ajv.compile<WebhookDeliveryRecord>(
+  loadInterfaceSchema("webhook-delivery-record.schema.json"),
 );
 const fileAssetUploadCommandValidator = ajv.compile<FileAssetUploadCommand>(
   loadInterfaceSchema("file-asset-upload-command.schema.json"),
@@ -394,6 +402,16 @@ export function validateScheduledJobCommand(value: unknown): ScheduledJobCommand
 export function validateScheduledJobRecord(value: unknown): ScheduledJobRecord {
   assertValid(scheduledJobRecordValidator, value, "scheduled job record interface");
   return value as ScheduledJobRecord;
+}
+
+export function validateWebhookDeliveryCommand(value: unknown): WebhookDeliveryCommand {
+  assertValid(webhookDeliveryCommandValidator, value, "webhook delivery command interface");
+  return value as WebhookDeliveryCommand;
+}
+
+export function validateWebhookDeliveryRecord(value: unknown): WebhookDeliveryRecord {
+  assertValid(webhookDeliveryRecordValidator, value, "webhook delivery record interface");
+  return value as WebhookDeliveryRecord;
 }
 
 export function validateFileAssetUploadCommand(value: unknown): FileAssetUploadCommand {

@@ -253,6 +253,26 @@ Progress: 3/13
 Next: m17-webhooks
 
 ----------------------------------------
+Session #12 - m17-webhooks
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added strict delivery selector and minimized lifecycle record interfaces.
+  [x] Kept destinations, credentials, event allowlists, and payload projections server owned.
+  [x] Added canonical HMAC signatures, freshness checks, and receiver replay defense.
+  [x] Added authorization, idempotency, bounded retry, terminal-state, and redaction tests.
+
+Verification:
+  - pnpm check: passed
+  - Pack lint and test-pack: score 100
+  - Spec: 54 tests; Core: 134 tests; reference fixture: 99 tests
+  - Four npm tarballs installed and exercised in a clean consumer
+
+Progress: 4/13
+Next: m17-feature-flags
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05
