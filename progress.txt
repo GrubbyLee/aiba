@@ -353,6 +353,26 @@ Progress: 8/13
 Next: m18-reporting
 
 ----------------------------------------
+Session #17 - m18-reporting
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added strict report request and minimized lifecycle record interfaces.
+  [x] Kept query logic, formats, parameters, projections, limits, and storage server owned.
+  [x] Added authorized idempotent requests, row limits, timeout cancellation, and private assets.
+  [x] Added SQL/path injection, sensitive projection, raw output, and failure redaction tests.
+
+Verification:
+  - pnpm check: passed
+  - Pack lint and test-pack: score 100
+  - Spec: 65 tests; Core: 139 tests; reference fixture: 123 tests
+  - Four npm tarballs installed and exercised in a clean consumer
+
+Progress: 9/13
+Next: m18-workflow-approval
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05

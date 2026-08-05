@@ -44,6 +44,8 @@ import {
   type ProjectManifest,
   type ResourcePage,
   type ResourceQuery,
+  type ReportRunCommand,
+  type ReportRunRecord,
   type ScheduledJobCommand,
   type ScheduledJobRecord,
   type SearchPage,
@@ -108,6 +110,8 @@ const resourcePageValidator = ajv.compile<ResourcePage>(
 const resourceQueryValidator = ajv.compile<ResourceQuery>(
   loadInterfaceSchema("resource-query.schema.json"),
 );
+const reportRunCommandValidator = ajv.compile<ReportRunCommand>(loadInterfaceSchema("report-run-command.schema.json"));
+const reportRunRecordValidator = ajv.compile<ReportRunRecord>(loadInterfaceSchema("report-run-record.schema.json"));
 const scheduledJobCommandValidator = ajv.compile<ScheduledJobCommand>(
   loadInterfaceSchema("scheduled-job-command.schema.json"),
 );
@@ -443,6 +447,16 @@ export function validateResourcePage(value: unknown): ResourcePage {
 export function validateResourceQuery(value: unknown): ResourceQuery {
   assertValid(resourceQueryValidator, value, "resource query interface");
   return value as ResourceQuery;
+}
+
+export function validateReportRunCommand(value: unknown): ReportRunCommand {
+  assertValid(reportRunCommandValidator, value, "report run command interface");
+  return value as ReportRunCommand;
+}
+
+export function validateReportRunRecord(value: unknown): ReportRunRecord {
+  assertValid(reportRunRecordValidator, value, "report run record interface");
+  return value as ReportRunRecord;
 }
 
 export function validateScheduledJobCommand(value: unknown): ScheduledJobCommand {

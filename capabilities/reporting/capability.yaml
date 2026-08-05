@@ -1,0 +1,46 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: reporting
+  version: 0.1.0
+  title: Reporting
+  layer: business-capability
+  description: Authorized server-defined report execution with allowlisted parameters and projections, fixed row and time bounds, private output assets, idempotency, and minimized records.
+spec:
+  interfaces: [authorization.decision, audit.event, reporting.run-command, reporting.run-record, file-assets.record]
+  dependencies:
+    - { id: authorization, version: ^0.1.0, optional: false }
+    - { id: audit, version: ^0.1.0, optional: false }
+    - { id: file-assets, version: ^0.1.0, optional: false }
+    - { id: scheduled-jobs, version: ^0.1.0, optional: false }
+  invariants:
+    - id: definitions-and-scope-are-trusted
+      title: Definitions and scope are trusted
+      description: Tenant, query logic, output fields, formats, parameter schema, limits, and storage policy come from trusted server definitions.
+      severity: critical
+      evidence: &evidence { acceptedTypes: [source, test, config, document], requiredTypes: [source, test], minimum: 2, requireHash: true }
+    - id: report-execution-is-authorized
+      title: Report execution is authorized
+      description: Every report request receives an explicit decision over its trusted definition and tenant context.
+      severity: critical
+      evidence: *evidence
+    - id: report-execution-is-bounded
+      title: Report execution is bounded
+      description: Trusted row, duration, format, and parameter limits fail closed before output publication.
+      severity: critical
+      evidence: *evidence
+    - id: report-requests-are-idempotent
+      title: Report requests are idempotent
+      description: A tenant-scoped idempotency key binds to one exact definition, format, and parameter set.
+      severity: critical
+      evidence: *evidence
+    - id: outputs-are-private-and-projected
+      title: Outputs are private and projected
+      description: Only server-allowlisted fields enter private file assets; raw rows and storage locations are not public records.
+      severity: critical
+      evidence: *evidence
+    - id: report-records-are-minimized
+      title: Report records are minimized
+      description: Portable records omit parameters, SQL, raw rows, sensitive fields, paths, stack traces, and provider errors.
+      severity: critical
+      evidence: *evidence

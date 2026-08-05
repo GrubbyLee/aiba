@@ -21,6 +21,8 @@ import {
   validatePrincipal,
   validateResourcePage,
   validateResourceQuery,
+  validateReportRunCommand,
+  validateReportRunRecord,
   validateScheduledJobCommand,
   validateScheduledJobRecord,
   validateSearchPage,
@@ -264,6 +266,12 @@ describe("core portable interfaces", () => {
     expect(validateSearchPage({ items: [{ resourceType: "vehicle", resourceId: "vehicle-1", title: "EV 01", snippet: "Electric fleet" }], hasMore: false }).hasMore).toBe(false);
     expect(() => validateSearchQuery({ term: "*", resourceTypes: ["vehicle"], pageSize: 20, tenantId: "tenant-b", rawQuery: "*:*" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
     expect(() => validateSearchQuery({ term: "x", resourceTypes: ["vehicle"], pageSize: 200 })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+  });
+
+  it("validates report selectors without accepting SQL or output paths", () => {
+    expect(validateReportRunCommand({ definitionId: "fleet-summary", format: "csv", parameters: { status: "active" }, idempotencyKey: "report-run-0001" }).format).toBe("csv");
+    expect(validateReportRunRecord({ reportId: "report_0001", definitionId: "fleet-summary", format: "csv", status: "succeeded", assetId: "asset_report_001", rowCount: 12, createdAt: "2026-08-05T01:00:00Z", completedAt: "2026-08-05T01:01:00Z" }).status).toBe("succeeded");
+    expect(() => validateReportRunCommand({ definitionId: "fleet-summary", format: "csv", parameters: {}, idempotencyKey: "report-run-0001", sql: "select * from users", outputPath: "/tmp/leak" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 
   it("rejects unbounded queries, caller-owned scope, invalid cursors, and empty controls", () => {

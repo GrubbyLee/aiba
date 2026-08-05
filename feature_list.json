@@ -89,8 +89,8 @@
       "description": "Provide authorized server-defined reports with bounded execution, private outputs, and minimized records.",
       "file": "capabilities/reporting/capability.yaml",
       "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
-      "passes": false,
-      "verification": ""
+      "passes": true,
+      "verification": "Pack quality 100; Spec 65, Core 139, and reference 123 tests pass; SQL/path injection, authorization, parameter, row-limit, timeout, projection, and redaction behavior verified; pnpm check passes."
     },
     {
       "id": "m18-workflow-approval",

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/report-run-record.schema.json",
+  "title": "AIBA Report Run Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["reportId", "definitionId", "format", "status", "createdAt"],
+  "properties": {
+    "reportId": { "type": "string", "pattern": "^[A-Za-z0-9_-]{8,160}$" },
+    "definitionId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,79}$" },
+    "format": { "enum": ["csv", "json", "pdf"] },
+    "status": { "enum": ["queued", "running", "succeeded", "failed"] },
+    "assetId": { "type": "string", "pattern": "^[A-Za-z0-9_-]{8,160}$" },
+    "rowCount": { "type": "integer", "minimum": 0, "maximum": 1000000 },
+    "errorCode": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,79}$" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "completedAt": { "type": "string", "format": "date-time" }
+  }
+}

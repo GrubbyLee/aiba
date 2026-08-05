@@ -57,6 +57,8 @@ describe("protocol schemas", () => {
     "principal.schema.json",
     "resource-page.schema.json",
     "resource-query.schema.json",
+    "report-run-command.schema.json",
+    "report-run-record.schema.json",
     "scheduled-job-command.schema.json",
     "scheduled-job-record.schema.json",
     "search-page.schema.json",

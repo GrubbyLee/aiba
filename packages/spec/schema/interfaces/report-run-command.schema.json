@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/report-run-command.schema.json",
+  "title": "AIBA Report Run Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["definitionId", "format", "parameters", "idempotencyKey"],
+  "properties": {
+    "definitionId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,79}$" },
+    "format": { "enum": ["csv", "json", "pdf"] },
+    "parameters": { "type": "object", "maxProperties": 20, "additionalProperties": { "oneOf": [{ "type": "string", "maxLength": 500 }, { "type": "number" }, { "type": "boolean" }, { "type": "null" }] }, "propertyNames": { "pattern": "^[a-z][A-Za-z0-9]{0,63}$" } },
+    "idempotencyKey": { "type": "string", "minLength": 8, "maxLength": 200, "pattern": "^[A-Za-z0-9._:-]+$" }
+  }
+}

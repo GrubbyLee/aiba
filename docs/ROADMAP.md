@@ -190,7 +190,7 @@ generated applications without imposing a database, queue, provider, or UI.
 Goal: provide higher-level application behavior that composes the common
 protocol and operational capabilities.
 
-- [ ] Deliver `reporting` with server-owned definitions, authorization, bounded execution,
+- [x] Deliver `reporting` with server-owned definitions, authorization, bounded execution,
   private outputs, and sensitive-field minimization.
 - [ ] Deliver `workflow-approval` with explicit state transitions, separation of duties,
   optimistic concurrency, and immutable decisions.

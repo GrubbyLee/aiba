@@ -1,0 +1,36 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Reporting Boundary
+  description: Framework-neutral guidance for bounded private report generation.
+spec:
+  capability: { id: reporting, version: 0.1.0 }
+  compatibility: { languages: [TypeScript], frameworks: [] }
+  writeScope: { allowedPatterns: [src/**, server/**, workers/**, test/**, tests/**] }
+  operations:
+    - id: request-trusted-report
+      intent: Authorize and deduplicate one request against a server-owned report definition.
+      requiredInterfaces: [reporting.run-command, reporting.run-record, authorization.decision, audit.event]
+      invariants: [definitions-and-scope-are-trusted, report-execution-is-authorized, report-requests-are-idempotent]
+      guidance:
+        - Validate only declared parameter keys and formats; never accept SQL, templates, output fields, or paths.
+        - Bind tenant-scoped idempotency before acknowledging the queued record.
+    - id: execute-bounded-report
+      intent: Execute with trusted time and row limits, project allowlisted fields, and publish a private asset.
+      requiredInterfaces: [reporting.run-record, file-assets.record, audit.event]
+      invariants: [report-execution-is-bounded, outputs-are-private-and-projected, report-records-are-minimized]
+      guidance:
+        - Enforce datastore limits as well as worker timeout and cancellation.
+        - Store output privately and return an opaque asset reference governed by file-assets authorization.
+  evidence:
+    - invariant: definitions-and-scope-are-trusted
+      suggestions: &suggestions
+        - { type: source, pathPattern: "src/**/*.ts", description: "Report definition, execution, projection, and private output boundary." }
+        - { type: test, pathPattern: "src/**/*.test.ts", description: "Authorization, injection, bounds, timeout, projection, idempotency, privacy, and redaction tests." }
+    - { invariant: report-execution-is-authorized, suggestions: *suggestions }
+    - { invariant: report-execution-is-bounded, suggestions: *suggestions }
+    - { invariant: report-requests-are-idempotent, suggestions: *suggestions }
+    - { invariant: outputs-are-private-and-projected, suggestions: *suggestions }
+    - { invariant: report-records-are-minimized, suggestions: *suggestions }

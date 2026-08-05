@@ -259,6 +259,25 @@ export interface SearchPage {
   nextCursor?: string;
 }
 
+export interface ReportRunCommand {
+  definitionId: string;
+  format: "csv" | "json" | "pdf";
+  parameters: Record<string, string | number | boolean | null>;
+  idempotencyKey: string;
+}
+
+export interface ReportRunRecord {
+  reportId: string;
+  definitionId: string;
+  format: "csv" | "json" | "pdf";
+  status: "queued" | "running" | "succeeded" | "failed";
+  assetId?: string;
+  rowCount?: number;
+  errorCode?: string;
+  createdAt: string;
+  completedAt?: string;
+}
+
 export interface FileAssetUploadCommand {
   fileName: string;
   contentType: string;
@@ -990,6 +1009,8 @@ export type InterfaceSchemaName =
   | "principal.schema.json"
   | "resource-page.schema.json"
   | "resource-query.schema.json"
+  | "report-run-command.schema.json"
+  | "report-run-record.schema.json"
   | "scheduled-job-command.schema.json"
   | "scheduled-job-record.schema.json"
   | "search-page.schema.json"
