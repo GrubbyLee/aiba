@@ -24,11 +24,10 @@ AIBA is application-building infrastructure for AI agents. It helps agents add,
 verify, trace, and upgrade complete software capabilities without forcing
 projects into a fixed application framework, provider, or visual system.
 
-The initial capability set covers `review-access`, `identity`, `audit`,
-`authorization`, `users`, `notification`, `file-assets`, `import-export`, and
-`vehicle-records`. `wechat-miniprogram-auth` is the first provider-facing
-platform integration.
-The catalog grows through five layers: application foundations, platform
+The official catalog now contains 19 capabilities covering identity, access,
+verification, files, notifications, jobs, flags, organizations, webhooks,
+comments, search, import/export, reporting, approvals, and domain records. They
+are organized across five layers: application foundations, platform
 integrations, reusable business capabilities, engineering governance, and
 composed industry solutions.
 AIBA currently supports Agent-assisted install, deterministic evidence and provenance verification,
@@ -43,6 +42,8 @@ application.
 
 [Start with the ten-minute Quick Start](docs/QUICKSTART.md) to verify the npm
 CLI in a clean project and hand the first bounded plan to an Agent.
+Read the [Capability Model](docs/CAPABILITY_MODEL.md) for the complete catalog,
+composition rules, Agent workflow, and trust boundaries.
 
 ## Principles
 

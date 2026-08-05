@@ -187,8 +187,10 @@ accepted only after target verification succeeds.
 Within that scope, `ok` proves structural validity, safe evidence paths, source
 and evidence hashes, dependency closure, receipts, ancestry, and governance
 bindings. It does not prove that project tests ran or that runtime behavior
-satisfies an invariant. Behavioral conformance requires a future, separately
-named test-proof protocol; Core must never silently widen the meaning of `ok`.
+satisfies an invariant. Behavioral conformance uses the separately named
+`test`, `attest`, and `verify-behavior` proof protocol. An external trusted
+runner executes the bound command; Core verifies its signed, source-bound proof
+and never silently widens the meaning of `ok`.
 
 Registry state is a mutable trust checkpoint rather than provenance evidence.
 Keep it in persistent trusted project or CI storage and review sequence changes;

@@ -457,3 +457,25 @@ Commits: 7a7f224, 8a2baf1, c5068a0, 3a7e677
 
 Progress: 7/7
 Next: external launch gates only; human beta remains intentionally incomplete
+
+----------------------------------------
+Session #21 - m18-documentation
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Documented AIBA as Agent-native low-code infrastructure in English and Chinese.
+  [x] Defined common protocols, capability contracts, industry Solutions, and admission rules.
+  [x] Published the five-layer catalog with all 19 capabilities and the current Solution.
+  [x] Documented selection, composition, Agent workflow, trust boundaries, and extension.
+  [x] Updated bilingual READMEs, architecture, roadmap, and task status.
+
+Verification:
+  - pnpm check: passed
+  - Spec: 70 tests, including catalog coverage and local-link checks
+  - Core: 141 tests; reference fixture: 129 tests
+  - Registry Server: 8 tests; CLI: 10 tests
+  - Source smoke, workflow checks, four npm tarballs, and clean consumer: passed
+
+Progress: 13/13
+Next: push and confirm the remote Linux, macOS, Windows, Pages, and Gitee workflows

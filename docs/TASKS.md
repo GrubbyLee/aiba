@@ -333,7 +333,7 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Validate workflows and add macOS and Windows portability jobs alongside
   the Linux Node.js 22 and 24 matrix.
 
-## Active Development: M16-M18 Agent-Native Low Code
+## Completed: M16-M18 Agent-Native Low Code
 
 ### M16 Common Application Protocol
 
@@ -357,5 +357,6 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Add `workflow-approval` contract, recipe, reference boundary, and attack tests.
 - [x] Upgrade `notification` semantics and preserve upgrade provenance.
 - [x] Update Catalog, Agent Skill, fixture receipts, package checks, and smoke.
-- [ ] Update bilingual capability-model and catalog documentation.
-- [ ] Pass `pnpm check` and the full remote portability matrix.
+- [x] Update bilingual capability-model and catalog documentation.
+- [x] Pass `pnpm check` locally.
+- [ ] Confirm the full remote portability matrix after push.

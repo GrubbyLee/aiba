@@ -23,11 +23,9 @@
 AIBA 是一套面向 AI Agent 的应用构建基础设施。它帮助 Agent 为项目添加、验证、
 追踪和升级完整的软件能力，同时不把项目锁定在固定的应用框架、服务商或视觉体系中。
 
-首批能力包括 `review-access`、`identity`、`audit`、`authorization`、
-`users`、`notification`、`file-assets`、`import-export` 和 `vehicle-records`。
-`wechat-miniprogram-auth` 是首个平台服务商集成能力。
-能力目录按五层扩展：
-应用基础能力、平台集成能力、业务通用能力、工程治理能力和行业组合方案。AIBA
+官方目录现有 19 项能力，覆盖身份、访问、验证、文件、通知、任务、功能开关、组织、
+Webhook、评论、搜索、导入导出、报表、审批和领域记录。能力按五层组织：应用基础能力、
+平台集成能力、业务通用能力、工程治理能力和行业组合方案。AIBA
 目前支持 Agent 辅助安装、确定性的证据与来源验证、漂移检查、感知定制的升级、签名能力包、
 私有 Registry 认证下载、验证缓存和防回滚解析。可选的项目治理机制还能为安装和
 升级的最终确认增加带签名、绑定证据的团队审批。
@@ -37,6 +35,8 @@ AIBA 是一套面向 AI Agent 的应用构建基础设施。它帮助 Agent 为�
 
 [从十分钟快速上手开始](docs/QUICKSTART.zh-CN.md)，在全新项目中验证 npm CLI，并把
 第一个有边界的计划交给 Agent。
+[能力模型](docs/CAPABILITY_MODEL.zh-CN.md)完整说明了能力目录、组合规则、Agent 工作流和
+信任边界。
 
 ## 原则
 

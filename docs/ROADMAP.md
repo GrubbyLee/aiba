@@ -198,7 +198,7 @@ protocol and operational capabilities.
   delivery lifecycle, and minimized receipts.
 - [x] Integrate every new pack into discovery, Agent guidance, reference fixtures,
   deterministic npm tarballs, and smoke tests.
-- [ ] Publish the expanded capability model and catalog in bilingual documentation.
+- [x] Publish the expanded capability model and catalog in bilingual documentation.
 
 M16-M18 are complete when every public interface is schema validated, each
 capability has a framework-neutral recipe and executable positive and adversarial

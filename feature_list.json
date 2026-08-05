@@ -129,8 +129,8 @@
       "description": "Document the agent-native low-code model, capability rules, and catalog in English and Chinese.",
       "file": "docs/CAPABILITY_MODEL.md",
       "steps": ["Add architecture guidance.", "Update bilingual README.", "Update task status.", "Record verification."],
-      "passes": false,
-      "verification": ""
+      "passes": true,
+      "verification": "Bilingual capability model documents the five layers, 19-capability catalog, contracts, composition, Agent workflow, and trust boundaries; executable coverage and link checks pass; pnpm check and clean npm consumer pass."
     }
   ]
 }
