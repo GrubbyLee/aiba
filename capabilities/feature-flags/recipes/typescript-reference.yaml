@@ -1,0 +1,29 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Feature Flag Boundary
+  description: Framework-neutral guidance for deterministic feature evaluation.
+spec:
+  capability: { id: feature-flags, version: 0.1.0 }
+  compatibility: { languages: [TypeScript], frameworks: [] }
+  writeScope: { allowedPatterns: [src/**, server/**, test/**, tests/**] }
+  operations:
+    - id: evaluate-revisioned-policy
+      intent: Resolve trusted context and one tenant-bound policy revision into a minimized decision.
+      requiredInterfaces: [feature-flags.evaluation-command, feature-flags.evaluation-result]
+      invariants: [context-is-trusted, policy-is-revisioned, rollout-is-deterministic, allocation-is-bounded, evaluation-is-minimized]
+      guidance:
+        - Derive tenant, stable subject key, and allowlisted attributes from authenticated server state.
+        - Hash a secret server salt, flag key, and stable subject into a fixed 10000-bucket rollout.
+        - Reject stale expected revisions and invalid allocation; never expose targeting inputs or salts.
+  evidence:
+    - invariant: context-is-trusted
+      suggestions: &suggestions
+        - { type: source, pathPattern: "src/**/*.ts", description: "Trusted context and deterministic evaluation boundary." }
+        - { type: test, pathPattern: "src/**/*.test.ts", description: "Scope, revision, targeting, determinism, allocation, and minimization tests." }
+    - { invariant: policy-is-revisioned, suggestions: *suggestions }
+    - { invariant: rollout-is-deterministic, suggestions: *suggestions }
+    - { invariant: allocation-is-bounded, suggestions: *suggestions }
+    - { invariant: evaluation-is-minimized, suggestions: *suggestions }

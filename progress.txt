@@ -273,6 +273,26 @@ Progress: 4/13
 Next: m17-feature-flags
 
 ----------------------------------------
+Session #13 - m17-feature-flags
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added strict evaluation command and minimized result interfaces.
+  [x] Kept tenant, stable subject, attributes, rules, and rollout salt in trusted state.
+  [x] Added deterministic 10000-bucket rollout and explicit disabled/default behavior.
+  [x] Added policy revision conflict, invalid allocation, scope, and injection tests.
+
+Verification:
+  - pnpm check: passed
+  - Pack lint and test-pack: score 100
+  - Spec: 56 tests; Core: 135 tests; reference fixture: 104 tests
+  - Four npm tarballs installed and exercised in a clean consumer
+
+Progress: 5/13
+Next: m17-organization
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05

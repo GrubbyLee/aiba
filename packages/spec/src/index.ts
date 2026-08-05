@@ -172,6 +172,20 @@ export interface WebhookDeliveryRecord {
   errorCode?: string;
 }
 
+export interface FeatureFlagEvaluationCommand {
+  flagKey: string;
+  expectedRevision?: number;
+}
+
+export interface FeatureFlagEvaluationResult {
+  flagKey: string;
+  enabled: boolean;
+  variant: string;
+  reason: "disabled" | "target-match" | "rollout" | "default";
+  policyRevision: number;
+  evaluatedAt: string;
+}
+
 export interface FileAssetUploadCommand {
   fileName: string;
   contentType: string;
@@ -889,6 +903,8 @@ export type InterfaceSchemaName =
   | "data-import-command.schema.json"
   | "file-asset-record.schema.json"
   | "file-asset-upload-command.schema.json"
+  | "feature-flag-evaluation-command.schema.json"
+  | "feature-flag-evaluation-result.schema.json"
   | "import-export-job-record.schema.json"
   | "notification-command.schema.json"
   | "notification-receipt.schema.json"

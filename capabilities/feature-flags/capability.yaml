@@ -1,0 +1,37 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: feature-flags
+  version: 0.1.0
+  title: Feature Flags
+  layer: application-foundation
+  description: Deterministic, revisioned feature evaluation over trusted tenant, subject, and targeting context without prescribing storage or UI.
+spec:
+  interfaces: [feature-flags.evaluation-command, feature-flags.evaluation-result]
+  dependencies: []
+  invariants:
+    - id: context-is-trusted
+      title: Evaluation context is trusted
+      description: Tenant, subject identity, and targeting attributes come from authenticated server context rather than command fields.
+      severity: critical
+      evidence: &evidence { acceptedTypes: [source, test, config, document], requiredTypes: [source, test], minimum: 2, requireHash: true }
+    - id: policy-is-revisioned
+      title: Policy is revisioned
+      description: Every result identifies the exact positive policy revision and expected-revision conflicts fail explicitly.
+      severity: critical
+      evidence: *evidence
+    - id: rollout-is-deterministic
+      title: Rollout is deterministic
+      description: The same trusted subject, flag, salt, and revision produce the same bounded rollout result.
+      severity: critical
+      evidence: *evidence
+    - id: allocation-is-bounded
+      title: Allocation is bounded
+      description: Invalid negative or excessive rollout allocation is rejected rather than normalized silently.
+      severity: critical
+      evidence: *evidence
+    - id: evaluation-is-minimized
+      title: Evaluation is minimized
+      description: Results omit subject identifiers, targeting attributes, salts, and complete policy rules.
+      severity: critical
+      evidence: *evidence

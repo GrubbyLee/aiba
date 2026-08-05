@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/feature-flag-evaluation-result.schema.json",
+  "title": "AIBA Feature Flag Evaluation Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["flagKey", "enabled", "variant", "reason", "policyRevision", "evaluatedAt"],
+  "properties": {
+    "flagKey": { "type": "string", "pattern": "^[a-z][a-z0-9.-]{2,119}$" },
+    "enabled": { "type": "boolean" },
+    "variant": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,79}$" },
+    "reason": { "enum": ["disabled", "target-match", "rollout", "default"] },
+    "policyRevision": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+    "evaluatedAt": { "type": "string", "format": "date-time" }
+  }
+}

@@ -26,6 +26,8 @@ import {
   type DataImportCommand,
   type FileAssetRecord,
   type FileAssetUploadCommand,
+  type FeatureFlagEvaluationCommand,
+  type FeatureFlagEvaluationResult,
   type ImportExportJobRecord,
   type OperationPlan,
   type NotificationCommand,
@@ -104,6 +106,12 @@ const webhookDeliveryRecordValidator = ajv.compile<WebhookDeliveryRecord>(
 );
 const fileAssetUploadCommandValidator = ajv.compile<FileAssetUploadCommand>(
   loadInterfaceSchema("file-asset-upload-command.schema.json"),
+);
+const featureFlagEvaluationCommandValidator = ajv.compile<FeatureFlagEvaluationCommand>(
+  loadInterfaceSchema("feature-flag-evaluation-command.schema.json"),
+);
+const featureFlagEvaluationResultValidator = ajv.compile<FeatureFlagEvaluationResult>(
+  loadInterfaceSchema("feature-flag-evaluation-result.schema.json"),
 );
 const fileAssetRecordValidator = ajv.compile<FileAssetRecord>(
   loadInterfaceSchema("file-asset-record.schema.json"),
@@ -417,6 +425,16 @@ export function validateWebhookDeliveryRecord(value: unknown): WebhookDeliveryRe
 export function validateFileAssetUploadCommand(value: unknown): FileAssetUploadCommand {
   assertValid(fileAssetUploadCommandValidator, value, "file asset upload command interface");
   return value as FileAssetUploadCommand;
+}
+
+export function validateFeatureFlagEvaluationCommand(value: unknown): FeatureFlagEvaluationCommand {
+  assertValid(featureFlagEvaluationCommandValidator, value, "feature flag evaluation command interface");
+  return value as FeatureFlagEvaluationCommand;
+}
+
+export function validateFeatureFlagEvaluationResult(value: unknown): FeatureFlagEvaluationResult {
+  assertValid(featureFlagEvaluationResultValidator, value, "feature flag evaluation result interface");
+  return value as FeatureFlagEvaluationResult;
 }
 
 export function validateFileAssetRecord(value: unknown): FileAssetRecord {

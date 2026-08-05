@@ -7,6 +7,8 @@ import {
   validateDataImportCommand,
   validateFileAssetRecord,
   validateFileAssetUploadCommand,
+  validateFeatureFlagEvaluationCommand,
+  validateFeatureFlagEvaluationResult,
   validateImportExportJobRecord,
   validateNotificationCommand,
   validateNotificationReceipt,
@@ -216,6 +218,23 @@ describe("core portable interfaces", () => {
       idempotencyKey: "webhook-0001",
       url: "http://169.254.169.254/latest/meta-data",
       secret: "caller-secret",
+    })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+  });
+
+  it("validates feature flag selectors without caller-owned targeting context", () => {
+    expect(validateFeatureFlagEvaluationCommand({ flagKey: "vehicle.beta", expectedRevision: 3 }).expectedRevision).toBe(3);
+    expect(validateFeatureFlagEvaluationResult({
+      flagKey: "vehicle.beta",
+      enabled: true,
+      variant: "compact",
+      reason: "rollout",
+      policyRevision: 3,
+      evaluatedAt: "2026-08-05T01:00:00Z",
+    }).variant).toBe("compact");
+    expect(() => validateFeatureFlagEvaluationCommand({
+      flagKey: "vehicle.beta",
+      attributes: { plan: "enterprise" },
+      subjectId: "chosen-subject",
     })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 
