@@ -68,6 +68,47 @@ export interface NotificationReceipt {
   createdAt: string;
 }
 
+export type ResourceFilterOperator =
+  | "eq"
+  | "ne"
+  | "lt"
+  | "lte"
+  | "gt"
+  | "gte"
+  | "in"
+  | "contains"
+  | "prefix";
+
+export type ResourceFilterValue = string | number | boolean | null | Array<string | number | boolean>;
+
+export interface ResourceFilter {
+  field: string;
+  operator: ResourceFilterOperator;
+  value: ResourceFilterValue;
+}
+
+export interface ResourceQuery {
+  pageSize: number;
+  cursor?: string;
+  filters: ResourceFilter[];
+  sort: Array<{
+    field: string;
+    direction: "asc" | "desc";
+  }>;
+}
+
+export interface ResourcePage<T extends object = Record<string, unknown>> {
+  items: T[];
+  hasMore: boolean;
+  nextCursor?: string;
+  total?: number;
+}
+
+export interface OperationControl {
+  idempotencyKey?: string;
+  expectedRevision?: number;
+}
+
 export interface FileAssetUploadCommand {
   fileName: string;
   contentType: string;
@@ -788,7 +829,10 @@ export type InterfaceSchemaName =
   | "import-export-job-record.schema.json"
   | "notification-command.schema.json"
   | "notification-receipt.schema.json"
+  | "operation-control.schema.json"
   | "principal.schema.json"
+  | "resource-page.schema.json"
+  | "resource-query.schema.json"
   | "vehicle-create-command.schema.json"
   | "vehicle-record.schema.json"
   | "vehicle-update-command.schema.json"

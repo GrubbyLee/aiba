@@ -30,10 +30,13 @@ import {
   type OperationPlan,
   type NotificationCommand,
   type NotificationReceipt,
+  type OperationControl,
   type Principal,
   type PublisherTrustPolicy,
   type ProjectLock,
   type ProjectManifest,
+  type ResourcePage,
+  type ResourceQuery,
   type SignedSolutionEnvelope,
   type SolutionPublisherTrustPolicy,
   type SolutionVerificationState,
@@ -70,6 +73,15 @@ const notificationCommandValidator = ajv.compile<NotificationCommand>(
 );
 const notificationReceiptValidator = ajv.compile<NotificationReceipt>(
   loadInterfaceSchema("notification-receipt.schema.json"),
+);
+const operationControlValidator = ajv.compile<OperationControl>(
+  loadInterfaceSchema("operation-control.schema.json"),
+);
+const resourcePageValidator = ajv.compile<ResourcePage>(
+  loadInterfaceSchema("resource-page.schema.json"),
+);
+const resourceQueryValidator = ajv.compile<ResourceQuery>(
+  loadInterfaceSchema("resource-query.schema.json"),
 );
 const fileAssetUploadCommandValidator = ajv.compile<FileAssetUploadCommand>(
   loadInterfaceSchema("file-asset-upload-command.schema.json"),
@@ -337,6 +349,21 @@ export function validateNotificationCommand(value: unknown): NotificationCommand
 export function validateNotificationReceipt(value: unknown): NotificationReceipt {
   assertValid(notificationReceiptValidator, value, "notification receipt interface");
   return value as NotificationReceipt;
+}
+
+export function validateOperationControl(value: unknown): OperationControl {
+  assertValid(operationControlValidator, value, "operation control interface");
+  return value as OperationControl;
+}
+
+export function validateResourcePage(value: unknown): ResourcePage {
+  assertValid(resourcePageValidator, value, "resource page interface");
+  return value as ResourcePage;
+}
+
+export function validateResourceQuery(value: unknown): ResourceQuery {
+  assertValid(resourceQueryValidator, value, "resource query interface");
+  return value as ResourceQuery;
 }
 
 export function validateFileAssetUploadCommand(value: unknown): FileAssetUploadCommand {

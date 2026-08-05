@@ -10,7 +10,10 @@ import {
   validateImportExportJobRecord,
   validateNotificationCommand,
   validateNotificationReceipt,
+  validateOperationControl,
   validatePrincipal,
+  validateResourcePage,
+  validateResourceQuery,
   validateVehicleCreateCommand,
   validateVehicleRecord,
   validateVehicleUpdateCommand,
@@ -141,6 +144,45 @@ describe("core portable interfaces", () => {
       idempotencyKey: "workflow-00000001",
       providerSecret: "secret",
     })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+  });
+
+  it("validates bounded resource queries, pages, and mutation controls", () => {
+    expect(validateResourceQuery({
+      pageSize: 50,
+      filters: [{ field: "status", operator: "in", value: ["active", "pending"] }],
+      sort: [{ field: "createdAt", direction: "desc" }],
+    }).pageSize).toBe(50);
+    expect(validateResourcePage({
+      items: [{ resourceId: "resource-1" }],
+      hasMore: true,
+      nextCursor: "cursor_part.signature_part",
+    }).hasMore).toBe(true);
+    expect(validateOperationControl({
+      idempotencyKey: "operation-0001",
+      expectedRevision: 3,
+    }).expectedRevision).toBe(3);
+  });
+
+  it("rejects unbounded queries, caller-owned scope, invalid cursors, and empty controls", () => {
+    expect(() => validateResourceQuery({
+      pageSize: 1000,
+      filters: [],
+      sort: [{ field: "createdAt", direction: "desc" }],
+    })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+    expect(() => validateResourceQuery({
+      pageSize: 20,
+      filters: [],
+      sort: [{ field: "createdAt", direction: "desc" }],
+      tenantId: "tenant-b",
+      rawWhere: "1=1",
+    })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+    expect(() => validateResourcePage({
+      items: [],
+      hasMore: false,
+      nextCursor: "cursor_part.signature_part",
+    })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+    expect(() => validateOperationControl({}))
+      .toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 
   it("validates bounded file asset commands and minimized records", () => {

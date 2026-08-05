@@ -168,9 +168,9 @@ launch gates rather than claims made by the open-source implementation.
 Goal: standardize repeated application semantics before they fragment across
 capability packs.
 
-- [ ] Define bounded resource query, filter, sort, cursor, and page contracts.
-- [ ] Define reusable idempotency and optimistic revision fields for mutations.
-- [ ] Add strict JSON Schemas, TypeScript bindings, validators, and malformed-input tests.
+- [x] Define bounded resource query, filter, sort, cursor, and page contracts.
+- [x] Define reusable idempotency and optimistic revision fields for mutations.
+- [x] Add strict JSON Schemas, TypeScript bindings, validators, and malformed-input tests.
 
 ## M17: Reusable Application Operations
 

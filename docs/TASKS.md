@@ -337,9 +337,9 @@ negative tests, packaged distribution, and user documentation agree.
 
 ### M16 Common Application Protocol
 
-- [ ] Add bounded filters, stable sorting, opaque cursors, and page metadata.
-- [ ] Add reusable idempotency and optimistic-revision semantics.
-- [ ] Validate every shared interface and reject unknown or caller-owned scope fields.
+- [x] Add bounded filters, stable sorting, opaque cursors, and page metadata.
+- [x] Add reusable idempotency and optimistic-revision semantics.
+- [x] Validate every shared interface and reject unknown or caller-owned scope fields.
 
 ### M17 Reusable Application Operations
 

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/resource-query.schema.json",
+  "title": "AIBA Resource Query",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pageSize", "filters", "sort"],
+  "properties": {
+    "pageSize": { "type": "integer", "minimum": 1, "maximum": 200 },
+    "cursor": {
+      "type": "string",
+      "minLength": 16,
+      "maxLength": 1024,
+      "pattern": "^[A-Za-z0-9._-]+$"
+    },
+    "filters": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "operator", "value"],
+        "properties": {
+          "field": { "type": "string", "pattern": "^[a-z][A-Za-z0-9.]{0,63}$" },
+          "operator": { "enum": ["eq", "ne", "lt", "lte", "gt", "gte", "in", "contains", "prefix"] },
+          "value": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "number" },
+              { "type": "boolean" },
+              { "type": "null" },
+              {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 50,
+                "uniqueItems": true,
+                "items": {
+                  "oneOf": [
+                    { "type": "string" },
+                    { "type": "number" },
+                    { "type": "boolean" }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "sort": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "direction"],
+        "properties": {
+          "field": { "type": "string", "pattern": "^[a-z][A-Za-z0-9.]{0,63}$" },
+          "direction": { "enum": ["asc", "desc"] }
+        }
+      }
+    }
+  }
+}

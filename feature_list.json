@@ -9,8 +9,8 @@
       "description": "Define bounded filtering, stable sorting, opaque cursors, page metadata, idempotency, and revision semantics.",
       "file": "packages/spec/schema/interfaces/resource-query.schema.json",
       "steps": ["Define schemas.", "Add bindings and validators.", "Reject unsafe scope.", "Document composition."],
-      "passes": false,
-      "verification": ""
+      "passes": true,
+      "verification": "Spec 47, Core 130, and reference 84 tests pass; pnpm check and clean npm consumer pass."
     },
     {
       "id": "m17-verification-challenge",

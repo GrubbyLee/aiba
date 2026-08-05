@@ -195,6 +195,25 @@ Progress: 0/13
 Next: m16-common-query
 
 ----------------------------------------
+Session #9 - m16-common-query
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added ResourceQuery, ResourcePage, and OperationControl public interfaces.
+  [x] Added Core validators with strict unknown-field and bound rejection.
+  [x] Added allowlisted query normalization and HMAC-bound opaque cursors.
+  [x] Added tamper, cross-scope, unstable-sort, and excessive-page tests.
+
+Verification:
+  - pnpm check: passed
+  - Spec: 47 tests; Core: 130 tests; reference fixture: 84 tests
+  - Four npm tarballs installed and exercised in a clean consumer
+
+Progress: 1/13
+Next: m17-verification-challenge
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05
