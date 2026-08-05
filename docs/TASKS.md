@@ -349,7 +349,7 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Add `feature-flags` contract, recipe, reference boundary, and attack tests.
 - [x] Add `organization` contract, recipe, reference boundary, and attack tests.
 - [x] Add `comments-activity` contract, recipe, reference boundary, and attack tests.
-- [ ] Add `search` contract, recipe, reference boundary, and attack tests.
+- [x] Add `search` contract, recipe, reference boundary, and attack tests.
 
 ### M18 Business Workflow Foundation
 

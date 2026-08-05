@@ -333,6 +333,26 @@ Progress: 7/13
 Next: m17-search
 
 ----------------------------------------
+Session #16 - m17-search
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added bounded search query, result projection, and page interfaces.
+  [x] Applied trusted tenant and authorization filters before matching and pagination.
+  [x] Added stable ordering and HMAC cursors bound to tenant, principal, and normalized query.
+  [x] Added unauthorized-result leakage, cursor tamper, cross-principal, and bound tests.
+
+Verification:
+  - pnpm check: passed
+  - Pack lint and test-pack: score 100
+  - Spec: 63 tests; Core: 138 tests; reference fixture: 118 tests
+  - Four npm tarballs installed and exercised in a clean consumer
+
+Progress: 8/13
+Next: m18-reporting
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05

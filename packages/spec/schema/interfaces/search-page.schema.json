@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/search-page.schema.json",
+  "title": "AIBA Search Page",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["items", "hasMore"],
+  "properties": {
+    "items": { "type": "array", "maxItems": 50, "items": {
+      "type": "object", "additionalProperties": false,
+      "required": ["resourceType", "resourceId", "title", "snippet"],
+      "properties": {
+        "resourceType": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,79}$" },
+        "resourceId": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "snippet": { "type": "string", "maxLength": 500 }
+      }
+    } },
+    "hasMore": { "type": "boolean" },
+    "nextCursor": { "type": "string", "minLength": 16, "maxLength": 1024, "pattern": "^[A-Za-z0-9._-]+$" }
+  },
+  "oneOf": [
+    { "properties": { "hasMore": { "const": true }, "nextCursor": true }, "required": ["hasMore", "nextCursor"] },
+    { "properties": { "hasMore": { "const": false } }, "required": ["hasMore"], "not": { "properties": { "nextCursor": {} }, "required": ["nextCursor"] } }
+  ]
+}

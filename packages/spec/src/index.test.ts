@@ -59,6 +59,8 @@ describe("protocol schemas", () => {
     "resource-query.schema.json",
     "scheduled-job-command.schema.json",
     "scheduled-job-record.schema.json",
+    "search-page.schema.json",
+    "search-query.schema.json",
     "webhook-delivery-command.schema.json",
     "webhook-delivery-record.schema.json",
     "vehicle-create-command.schema.json",

@@ -23,6 +23,8 @@ import {
   validateResourceQuery,
   validateScheduledJobCommand,
   validateScheduledJobRecord,
+  validateSearchPage,
+  validateSearchQuery,
   validateVehicleCreateCommand,
   validateVehicleRecord,
   validateVehicleUpdateCommand,
@@ -255,6 +257,13 @@ describe("core portable interfaces", () => {
     expect(validateCommentRecord({ commentId: "comment_0001", resourceType: "vehicle", resourceId: "vehicle-1", authorId: "user-1", status: "deleted", mentionUserIds: [], revision: 2, createdAt: "2026-08-05T01:00:00Z", updatedAt: "2026-08-05T01:01:00Z" }).status).toBe("deleted");
     expect(validateActivityRecord({ activityId: "activity_001", resourceType: "vehicle", resourceId: "vehicle-1", actorId: "user-1", action: "comment-created", occurredAt: "2026-08-05T01:00:00Z", correlationId: "request-1" }).action).toBe("comment-created");
     expect(() => validateCommentCommand({ action: "create", resourceType: "vehicle", resourceId: "vehicle-1", body: "hello", idempotencyKey: "comment-create-1", authorId: "admin", tenantId: "tenant-b" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+  });
+
+  it("validates bounded search without accepting tenant or raw query language", () => {
+    expect(validateSearchQuery({ term: "electric", resourceTypes: ["vehicle"], pageSize: 20 }).pageSize).toBe(20);
+    expect(validateSearchPage({ items: [{ resourceType: "vehicle", resourceId: "vehicle-1", title: "EV 01", snippet: "Electric fleet" }], hasMore: false }).hasMore).toBe(false);
+    expect(() => validateSearchQuery({ term: "*", resourceTypes: ["vehicle"], pageSize: 20, tenantId: "tenant-b", rawQuery: "*:*" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+    expect(() => validateSearchQuery({ term: "x", resourceTypes: ["vehicle"], pageSize: 200 })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 
   it("rejects unbounded queries, caller-owned scope, invalid cursors, and empty controls", () => {

@@ -183,7 +183,7 @@ generated applications without imposing a database, queue, provider, or UI.
 - [x] Deliver `feature-flags` with trusted targeting, deterministic rollout, and revisioned policy.
 - [x] Deliver `organization` with tenant-derived membership and last-owner protection.
 - [x] Deliver `comments-activity` with attributable, revisioned, soft-deleted discussion records.
-- [ ] Deliver `search` with bounded queries, authorization-first filtering, and opaque cursors.
+- [x] Deliver `search` with bounded queries, authorization-first filtering, and opaque cursors.
 
 ## M18: Business Workflow Foundation
 

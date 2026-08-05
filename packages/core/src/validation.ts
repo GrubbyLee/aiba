@@ -46,6 +46,8 @@ import {
   type ResourceQuery,
   type ScheduledJobCommand,
   type ScheduledJobRecord,
+  type SearchPage,
+  type SearchQuery,
   type WebhookDeliveryCommand,
   type WebhookDeliveryRecord,
   type SignedSolutionEnvelope,
@@ -112,6 +114,8 @@ const scheduledJobCommandValidator = ajv.compile<ScheduledJobCommand>(
 const scheduledJobRecordValidator = ajv.compile<ScheduledJobRecord>(
   loadInterfaceSchema("scheduled-job-record.schema.json"),
 );
+const searchPageValidator = ajv.compile<SearchPage>(loadInterfaceSchema("search-page.schema.json"));
+const searchQueryValidator = ajv.compile<SearchQuery>(loadInterfaceSchema("search-query.schema.json"));
 const webhookDeliveryCommandValidator = ajv.compile<WebhookDeliveryCommand>(
   loadInterfaceSchema("webhook-delivery-command.schema.json"),
 );
@@ -449,6 +453,16 @@ export function validateScheduledJobCommand(value: unknown): ScheduledJobCommand
 export function validateScheduledJobRecord(value: unknown): ScheduledJobRecord {
   assertValid(scheduledJobRecordValidator, value, "scheduled job record interface");
   return value as ScheduledJobRecord;
+}
+
+export function validateSearchPage(value: unknown): SearchPage {
+  assertValid(searchPageValidator, value, "search page interface");
+  return value as SearchPage;
+}
+
+export function validateSearchQuery(value: unknown): SearchQuery {
+  assertValid(searchQueryValidator, value, "search query interface");
+  return value as SearchQuery;
 }
 
 export function validateWebhookDeliveryCommand(value: unknown): WebhookDeliveryCommand {

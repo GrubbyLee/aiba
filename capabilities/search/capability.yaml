@@ -1,0 +1,38 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: search
+  version: 0.1.0
+  title: Search
+  layer: application-foundation
+  description: Bounded multi-resource search with trusted tenant scope, authorization-first filtering, allowlisted projections, stable ordering, and opaque bound cursors.
+spec:
+  interfaces: [authorization.decision, search.query, search.page]
+  dependencies:
+    - { id: authorization, version: ^0.1.0, optional: false }
+  invariants:
+    - id: search-scope-is-trusted
+      title: Search scope is trusted
+      description: Tenant and principal come from authenticated context and searchable resource types are server allowlisted.
+      severity: critical
+      evidence: &evidence { acceptedTypes: [source, test, config, document], requiredTypes: [source, test], minimum: 2, requireHash: true }
+    - id: authorization-precedes-ranking
+      title: Authorization precedes ranking
+      description: Tenant and resource authorization filters run before matching, ranking, counting, pagination, snippets, or cursor creation.
+      severity: critical
+      evidence: *evidence
+    - id: query-and-output-are-bounded
+      title: Query and output are bounded
+      description: Terms, resource types, page sizes, titles, snippets, and returned item counts have fixed limits.
+      severity: critical
+      evidence: *evidence
+    - id: cursors-are-opaque-and-bound
+      title: Cursors are opaque and bound
+      description: Signed cursors bind position to tenant, principal, normalized query, and resource types and reject tampering or reuse.
+      severity: critical
+      evidence: *evidence
+    - id: search-projections-are-safe
+      title: Search projections are safe
+      description: Results use server-defined searchable and display fields and never expose raw index documents or unauthorized totals.
+      severity: critical
+      evidence: *evidence

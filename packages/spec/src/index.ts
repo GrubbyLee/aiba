@@ -239,6 +239,26 @@ export interface ActivityRecord {
   correlationId: string;
 }
 
+export interface SearchQuery {
+  term: string;
+  resourceTypes: string[];
+  pageSize: number;
+  cursor?: string;
+}
+
+export interface SearchResultItem {
+  resourceType: string;
+  resourceId: string;
+  title: string;
+  snippet: string;
+}
+
+export interface SearchPage {
+  items: SearchResultItem[];
+  hasMore: boolean;
+  nextCursor?: string;
+}
+
 export interface FileAssetUploadCommand {
   fileName: string;
   contentType: string;
@@ -972,6 +992,8 @@ export type InterfaceSchemaName =
   | "resource-query.schema.json"
   | "scheduled-job-command.schema.json"
   | "scheduled-job-record.schema.json"
+  | "search-page.schema.json"
+  | "search-query.schema.json"
   | "webhook-delivery-command.schema.json"
   | "webhook-delivery-record.schema.json"
   | "vehicle-create-command.schema.json"
