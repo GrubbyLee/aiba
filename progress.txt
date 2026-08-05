@@ -313,6 +313,26 @@ Progress: 6/13
 Next: m17-comments-activity
 
 ----------------------------------------
+Session #15 - m17-comments-activity
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added bounded comment commands, revisioned records, and attributable activity records.
+  [x] Derived authorship and tenant scope from trusted context with resource authorization.
+  [x] Added tenant mention validation, idempotent edits, and content-removing soft deletion.
+  [x] Added append-only activity creation and authorized tenant-scoped activity reads.
+
+Verification:
+  - pnpm check: passed
+  - Pack lint and test-pack: score 100
+  - Spec: 61 tests; Core: 137 tests; reference fixture: 114 tests
+  - Four npm tarballs installed and exercised in a clean consumer
+
+Progress: 7/13
+Next: m17-search
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/activity-record.schema.json",
+  "title": "AIBA Activity Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["activityId", "resourceType", "resourceId", "actorId", "action", "occurredAt", "correlationId"],
+  "properties": {
+    "activityId": { "type": "string", "pattern": "^[A-Za-z0-9_-]{8,160}$" },
+    "resourceType": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,79}$" },
+    "resourceId": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "actorId": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "action": { "enum": ["comment-created", "comment-edited", "comment-deleted"] },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "correlationId": { "type": "string", "minLength": 1, "maxLength": 160 }
+  }
+}

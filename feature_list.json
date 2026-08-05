@@ -69,8 +69,8 @@
       "description": "Provide attributable comments and activity with bounded content, revisions, mentions, and soft deletion.",
       "file": "capabilities/comments-activity/capability.yaml",
       "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
-      "passes": false,
-      "verification": ""
+      "passes": true,
+      "verification": "Pack quality 100; Spec 61, Core 137, and reference 114 tests pass; impersonation, scope, mention, control-character, stale revision, and idempotency attacks are rejected; pnpm check passes."
     },
     {
       "id": "m17-search",

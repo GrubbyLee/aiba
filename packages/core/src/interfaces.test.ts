@@ -1,7 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  validateActivityRecord,
   validateAuditEvent,
   validateAuthorizationDecision,
+  validateCommentCommand,
+  validateCommentRecord,
   validateCapabilityManifest,
   validateDataExportCommand,
   validateDataImportCommand,
@@ -245,6 +248,13 @@ describe("core portable interfaces", () => {
     expect(validateOrganizationMembershipRecord({ membershipId: "membership_001", organizationId: "organization-1", userId: "user-2", roleId: "manager", status: "active", revision: 3, createdAt: "2026-08-05T01:00:00Z", updatedAt: "2026-08-05T01:01:00Z" }).revision).toBe(3);
     expect(() => validateOrganizationMembershipCommand({ action: "add", userId: "user-2", roleId: "owner", idempotencyKey: "member-change-1", tenantId: "tenant-b", organizationId: "organization-b" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
     expect(() => validateOrganizationMembershipCommand({ action: "remove", userId: "user-2", roleId: "owner", idempotencyKey: "member-change-1" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+  });
+
+  it("validates bounded comments and attributable activity", () => {
+    expect(validateCommentCommand({ action: "create", resourceType: "vehicle", resourceId: "vehicle-1", body: "Ready for review", mentionUserIds: ["user-2"], idempotencyKey: "comment-create-1" }).body).toBe("Ready for review");
+    expect(validateCommentRecord({ commentId: "comment_0001", resourceType: "vehicle", resourceId: "vehicle-1", authorId: "user-1", status: "deleted", mentionUserIds: [], revision: 2, createdAt: "2026-08-05T01:00:00Z", updatedAt: "2026-08-05T01:01:00Z" }).status).toBe("deleted");
+    expect(validateActivityRecord({ activityId: "activity_001", resourceType: "vehicle", resourceId: "vehicle-1", actorId: "user-1", action: "comment-created", occurredAt: "2026-08-05T01:00:00Z", correlationId: "request-1" }).action).toBe("comment-created");
+    expect(() => validateCommentCommand({ action: "create", resourceType: "vehicle", resourceId: "vehicle-1", body: "hello", idempotencyKey: "comment-create-1", authorId: "admin", tenantId: "tenant-b" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 
   it("rejects unbounded queries, caller-owned scope, invalid cursors, and empty controls", () => {

@@ -1,10 +1,13 @@
 import { Ajv2020, type ErrorObject, type ValidateFunction } from "ajv/dist/2020.js";
 import {
+  type ActivityRecord,
   loadInterfaceSchema,
   loadProtocolSchema,
   type AuditEvent,
   type AgentProtocolDescriptor,
   type AuthorizationDecision,
+  type CommentCommand,
+  type CommentRecord,
   type BehaviorChallenge,
   type BehaviorProof,
   type BehaviorRunnerTrustPolicy,
@@ -76,6 +79,9 @@ const principalValidator = ajv.compile<Principal>(
 const authorizationDecisionValidator = ajv.compile<AuthorizationDecision>(
   loadInterfaceSchema("authorization-decision.schema.json"),
 );
+const activityRecordValidator = ajv.compile<ActivityRecord>(loadInterfaceSchema("activity-record.schema.json"));
+const commentCommandValidator = ajv.compile<CommentCommand>(loadInterfaceSchema("comment-command.schema.json"));
+const commentRecordValidator = ajv.compile<CommentRecord>(loadInterfaceSchema("comment-record.schema.json"));
 const auditEventValidator = ajv.compile<AuditEvent>(
   loadInterfaceSchema("audit-event.schema.json"),
 );
@@ -378,6 +384,21 @@ export function validatePrincipal(value: unknown): Principal {
 export function validateAuthorizationDecision(value: unknown): AuthorizationDecision {
   assertValid(authorizationDecisionValidator, value, "authorization decision interface");
   return value as AuthorizationDecision;
+}
+
+export function validateActivityRecord(value: unknown): ActivityRecord {
+  assertValid(activityRecordValidator, value, "activity record interface");
+  return value as ActivityRecord;
+}
+
+export function validateCommentCommand(value: unknown): CommentCommand {
+  assertValid(commentCommandValidator, value, "comment command interface");
+  return value as CommentCommand;
+}
+
+export function validateCommentRecord(value: unknown): CommentRecord {
+  assertValid(commentRecordValidator, value, "comment record interface");
+  return value as CommentRecord;
 }
 
 export function validateAuditEvent(value: unknown): AuditEvent {

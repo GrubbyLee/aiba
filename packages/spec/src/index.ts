@@ -205,6 +205,40 @@ export interface OrganizationMembershipRecord {
   updatedAt: string;
 }
 
+export interface CommentCommand {
+  action: "create" | "edit" | "delete";
+  resourceType: string;
+  resourceId: string;
+  commentId?: string;
+  body?: string;
+  mentionUserIds?: string[];
+  expectedRevision?: number;
+  idempotencyKey: string;
+}
+
+export interface CommentRecord {
+  commentId: string;
+  resourceType: string;
+  resourceId: string;
+  authorId: string;
+  body?: string;
+  status: "active" | "deleted";
+  mentionUserIds: string[];
+  revision: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ActivityRecord {
+  activityId: string;
+  resourceType: string;
+  resourceId: string;
+  actorId: string;
+  action: "comment-created" | "comment-edited" | "comment-deleted";
+  occurredAt: string;
+  correlationId: string;
+}
+
 export interface FileAssetUploadCommand {
   fileName: string;
   contentType: string;
@@ -916,8 +950,11 @@ export type ProtocolSchemaName =
   | "upgrade-plan.schema.json";
 
 export type InterfaceSchemaName =
+  | "activity-record.schema.json"
   | "audit-event.schema.json"
   | "authorization-decision.schema.json"
+  | "comment-command.schema.json"
+  | "comment-record.schema.json"
   | "data-export-command.schema.json"
   | "data-import-command.schema.json"
   | "file-asset-record.schema.json"

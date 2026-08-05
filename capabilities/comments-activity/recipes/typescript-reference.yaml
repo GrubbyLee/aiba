@@ -1,0 +1,35 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Comments and Activity Boundary
+  description: Framework-neutral guidance for revisioned comments and append-only activity.
+spec:
+  capability: { id: comments-activity, version: 0.1.0 }
+  compatibility: { languages: [TypeScript], frameworks: [] }
+  writeScope: { allowedPatterns: [src/**, server/**, test/**, tests/**] }
+  operations:
+    - id: mutate-comment
+      intent: Authorize, validate, deduplicate, and apply one revisioned comment mutation.
+      requiredInterfaces: [comments.command, comments.record, activity.record, authorization.decision, audit.event]
+      invariants: [authorship-and-scope-are-trusted, content-and-mentions-are-bounded, comment-mutations-are-safe, activity-is-append-only]
+      guidance:
+        - Derive actor and tenant from the session and validate mentioned users in the same tenant.
+        - Commit the comment mutation, idempotency binding, and new activity row atomically.
+        - Soft deletion removes body and mentions while retaining identity and lifecycle activity.
+    - id: list-authorized-activity
+      intent: Return append-only activity only after resource authorization and tenant filtering.
+      requiredInterfaces: [activity.record, authorization.decision]
+      invariants: [activity-is-tenant-scoped]
+      guidance:
+        - Apply tenant and authorization predicates before pagination or result materialization.
+  evidence:
+    - invariant: authorship-and-scope-are-trusted
+      suggestions: &suggestions
+        - { type: source, pathPattern: "src/**/*.ts", description: "Comment mutation and authorized activity boundary." }
+        - { type: test, pathPattern: "src/**/*.test.ts", description: "Authorship, scope, content, mention, revision, deletion, idempotency, and activity tests." }
+    - { invariant: content-and-mentions-are-bounded, suggestions: *suggestions }
+    - { invariant: comment-mutations-are-safe, suggestions: *suggestions }
+    - { invariant: activity-is-append-only, suggestions: *suggestions }
+    - { invariant: activity-is-tenant-scoped, suggestions: *suggestions }

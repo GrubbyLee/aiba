@@ -37,8 +37,11 @@ describe("protocol schemas", () => {
   });
 
   it.each([
+    "activity-record.schema.json",
     "audit-event.schema.json",
     "authorization-decision.schema.json",
+    "comment-command.schema.json",
+    "comment-record.schema.json",
     "data-export-command.schema.json",
     "data-import-command.schema.json",
     "file-asset-record.schema.json",

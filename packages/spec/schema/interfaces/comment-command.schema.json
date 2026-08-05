@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/comment-command.schema.json",
+  "title": "AIBA Comment Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action", "resourceType", "resourceId", "idempotencyKey"],
+  "properties": {
+    "action": { "enum": ["create", "edit", "delete"] },
+    "resourceType": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,79}$" },
+    "resourceId": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "commentId": { "type": "string", "pattern": "^[A-Za-z0-9_-]{8,160}$" },
+    "body": { "type": "string", "minLength": 1, "maxLength": 5000 },
+    "mentionUserIds": { "type": "array", "maxItems": 20, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 160 } },
+    "expectedRevision": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+    "idempotencyKey": { "type": "string", "minLength": 8, "maxLength": 200, "pattern": "^[A-Za-z0-9._:-]+$" }
+  },
+  "allOf": [
+    { "if": { "properties": { "action": { "const": "create" } } }, "then": { "properties": { "body": {}, "mentionUserIds": {} }, "required": ["body"] } },
+    { "if": { "properties": { "action": { "enum": ["edit", "delete"] } } }, "then": { "properties": { "commentId": {}, "expectedRevision": {} }, "required": ["commentId", "expectedRevision"] } },
+    { "if": { "properties": { "action": { "const": "delete" } } }, "then": { "not": { "properties": { "body": {} }, "required": ["body"] } } }
+  ]
+}

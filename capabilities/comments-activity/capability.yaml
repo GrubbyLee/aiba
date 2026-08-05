@@ -1,0 +1,40 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: comments-activity
+  version: 0.1.0
+  title: Comments and Activity
+  layer: business-capability
+  description: Attributable bounded comments with validated mentions, optimistic revisions, soft deletion, and an append-only tenant-scoped activity stream.
+spec:
+  interfaces: [authorization.decision, audit.event, comments.command, comments.record, activity.record]
+  dependencies:
+    - { id: authorization, version: ^0.1.0, optional: false }
+    - { id: audit, version: ^0.1.0, optional: false }
+    - { id: users, version: ^0.1.0, optional: false }
+  invariants:
+    - id: authorship-and-scope-are-trusted
+      title: Authorship and scope are trusted
+      description: Tenant and actor come from authenticated context and resource access is authorized before comment or activity access.
+      severity: critical
+      evidence: &evidence { acceptedTypes: [source, test, config, document], requiredTypes: [source, test], minimum: 2, requireHash: true }
+    - id: content-and-mentions-are-bounded
+      title: Content and mentions are bounded
+      description: Comment content has strict size and character limits and mentioned users resolve inside trusted tenant scope.
+      severity: critical
+      evidence: *evidence
+    - id: comment-mutations-are-safe
+      title: Comment mutations are safe
+      description: Updates require an exact revision, commands are idempotent, and deletion removes content without erasing attribution.
+      severity: critical
+      evidence: *evidence
+    - id: activity-is-append-only
+      title: Activity is append only
+      description: Comment lifecycle events are server-created immutable records with trusted actor, time, and correlation.
+      severity: critical
+      evidence: *evidence
+    - id: activity-is-tenant-scoped
+      title: Activity is tenant scoped
+      description: Activity listing is authorized and cannot return records from another tenant or resource.
+      severity: critical
+      evidence: *evidence
