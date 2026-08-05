@@ -186,6 +186,25 @@ export interface FeatureFlagEvaluationResult {
   evaluatedAt: string;
 }
 
+export interface OrganizationMembershipCommand {
+  action: "add" | "change-role" | "remove";
+  userId: string;
+  roleId?: string;
+  expectedRevision?: number;
+  idempotencyKey: string;
+}
+
+export interface OrganizationMembershipRecord {
+  membershipId: string;
+  organizationId: string;
+  userId: string;
+  roleId: string;
+  status: "active" | "removed";
+  revision: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface FileAssetUploadCommand {
   fileName: string;
   contentType: string;
@@ -908,6 +927,8 @@ export type InterfaceSchemaName =
   | "import-export-job-record.schema.json"
   | "notification-command.schema.json"
   | "notification-receipt.schema.json"
+  | "organization-membership-command.schema.json"
+  | "organization-membership-record.schema.json"
   | "operation-control.schema.json"
   | "principal.schema.json"
   | "resource-page.schema.json"

@@ -59,8 +59,8 @@
       "description": "Provide tenant-derived organization membership with authorization, revision checks, and last-owner safety.",
       "file": "capabilities/organization/capability.yaml",
       "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
-      "passes": false,
-      "verification": ""
+      "passes": true,
+      "verification": "Pack quality 100; Spec 58, Core 136, and reference 109 tests pass; scope injection, stale revision, invalid roles, idempotency conflict, and last-owner attacks are rejected; pnpm check passes."
     },
     {
       "id": "m17-comments-activity",

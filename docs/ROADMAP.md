@@ -181,7 +181,7 @@ generated applications without imposing a database, queue, provider, or UI.
 - [x] Deliver `scheduled-jobs` with leases, bounded retries, and idempotent execution.
 - [x] Deliver `webhooks` with trusted destinations, signatures, replay defense, and delivery state.
 - [x] Deliver `feature-flags` with trusted targeting, deterministic rollout, and revisioned policy.
-- [ ] Deliver `organization` with tenant-derived membership and last-owner protection.
+- [x] Deliver `organization` with tenant-derived membership and last-owner protection.
 - [ ] Deliver `comments-activity` with attributable, revisioned, soft-deleted discussion records.
 - [ ] Deliver `search` with bounded queries, authorization-first filtering, and opaque cursors.
 

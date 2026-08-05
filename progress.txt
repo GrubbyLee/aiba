@@ -293,6 +293,26 @@ Progress: 5/13
 Next: m17-organization
 
 ----------------------------------------
+Session #14 - m17-organization
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added strict membership mutation and revisioned record interfaces.
+  [x] Derived tenant and organization scope from trusted execution context.
+  [x] Validated tenant users and server-owned roles with explicit authorization.
+  [x] Added idempotency, optimistic revision, and last-owner safety behavior.
+
+Verification:
+  - pnpm check: passed
+  - Pack lint and test-pack: score 100
+  - Spec: 58 tests; Core: 136 tests; reference fixture: 109 tests
+  - Four npm tarballs installed and exercised in a clean consumer
+
+Progress: 6/13
+Next: m17-comments-activity
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05

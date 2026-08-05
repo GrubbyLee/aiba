@@ -1,0 +1,45 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: organization
+  version: 0.1.0
+  title: Organization
+  layer: application-foundation
+  description: Authorized organization membership with trusted scope, server-defined roles, idempotent mutations, optimistic revisions, and last-owner protection.
+spec:
+  interfaces: [authorization.decision, audit.event, organization.membership-command, organization.membership-record]
+  dependencies:
+    - { id: authorization, version: ^0.1.0, optional: false }
+    - { id: audit, version: ^0.1.0, optional: false }
+    - { id: users, version: ^0.1.0, optional: false }
+  invariants:
+    - id: scope-is-context-derived
+      title: Scope is context derived
+      description: Tenant and organization identifiers come from authenticated server context and cannot be selected by mutation commands.
+      severity: critical
+      evidence: &evidence { acceptedTypes: [source, test, config, document], requiredTypes: [source, test], minimum: 2, requireHash: true }
+    - id: membership-mutations-are-authorized
+      title: Membership mutations are authorized
+      description: Add, role change, and removal each require an explicit decision over the trusted organization and target user.
+      severity: critical
+      evidence: *evidence
+    - id: users-and-roles-are-trusted
+      title: Users and roles are trusted
+      description: Target users must exist in tenant scope and requested roles must resolve from the organization's server-owned role registry.
+      severity: critical
+      evidence: *evidence
+    - id: mutations-are-revisioned-and-idempotent
+      title: Mutations are revisioned and idempotent
+      description: Existing records require an exact revision and scoped idempotency keys bind to one exact mutation.
+      severity: critical
+      evidence: *evidence
+    - id: last-owner-is-preserved
+      title: Last owner is preserved
+      description: Removal or demotion cannot leave an organization without an active owner.
+      severity: critical
+      evidence: *evidence
+    - id: membership-audit-is-minimized
+      title: Membership audit is minimized
+      description: Portable records and audit omit tenant internals, policy internals, credentials, and personal profile data.
+      severity: critical
+      evidence: *evidence

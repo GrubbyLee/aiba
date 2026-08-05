@@ -1,0 +1,30 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Organization Boundary
+  description: Framework-neutral guidance for safe organization membership mutations.
+spec:
+  capability: { id: organization, version: 0.1.0 }
+  compatibility: { languages: [TypeScript], frameworks: [] }
+  writeScope: { allowedPatterns: [src/**, server/**, test/**, tests/**] }
+  operations:
+    - id: mutate-membership
+      intent: Add, change, or remove one member within trusted tenant and organization scope.
+      requiredInterfaces: [organization.membership-command, organization.membership-record, authorization.decision, audit.event]
+      invariants: [scope-is-context-derived, membership-mutations-are-authorized, users-and-roles-are-trusted, mutations-are-revisioned-and-idempotent, last-owner-is-preserved, membership-audit-is-minimized]
+      guidance:
+        - Resolve scope from authenticated context and validate users and roles against tenant-bound stores.
+        - Compare revision, enforce last-owner count, mutate, and bind idempotency in one transaction.
+        - Return stable conflict codes and minimized membership records.
+  evidence:
+    - invariant: scope-is-context-derived
+      suggestions: &suggestions
+        - { type: source, pathPattern: "src/**/*.ts", description: "Organization membership boundary and transactional storage." }
+        - { type: test, pathPattern: "src/**/*.test.ts", description: "Scope, authorization, role, revision, idempotency, last-owner, and redaction tests." }
+    - { invariant: membership-mutations-are-authorized, suggestions: *suggestions }
+    - { invariant: users-and-roles-are-trusted, suggestions: *suggestions }
+    - { invariant: mutations-are-revisioned-and-idempotent, suggestions: *suggestions }
+    - { invariant: last-owner-is-preserved, suggestions: *suggestions }
+    - { invariant: membership-audit-is-minimized, suggestions: *suggestions }

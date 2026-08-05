@@ -347,7 +347,7 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Add `scheduled-jobs` contract, recipe, reference boundary, and attack tests.
 - [x] Add `webhooks` contract, recipe, reference boundary, and attack tests.
 - [x] Add `feature-flags` contract, recipe, reference boundary, and attack tests.
-- [ ] Add `organization` contract, recipe, reference boundary, and attack tests.
+- [x] Add `organization` contract, recipe, reference boundary, and attack tests.
 - [ ] Add `comments-activity` contract, recipe, reference boundary, and attack tests.
 - [ ] Add `search` contract, recipe, reference boundary, and attack tests.
 

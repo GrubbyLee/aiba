@@ -32,6 +32,8 @@ import {
   type OperationPlan,
   type NotificationCommand,
   type NotificationReceipt,
+  type OrganizationMembershipCommand,
+  type OrganizationMembershipRecord,
   type OperationControl,
   type Principal,
   type PublisherTrustPolicy,
@@ -82,6 +84,12 @@ const notificationCommandValidator = ajv.compile<NotificationCommand>(
 );
 const notificationReceiptValidator = ajv.compile<NotificationReceipt>(
   loadInterfaceSchema("notification-receipt.schema.json"),
+);
+const organizationMembershipCommandValidator = ajv.compile<OrganizationMembershipCommand>(
+  loadInterfaceSchema("organization-membership-command.schema.json"),
+);
+const organizationMembershipRecordValidator = ajv.compile<OrganizationMembershipRecord>(
+  loadInterfaceSchema("organization-membership-record.schema.json"),
 );
 const operationControlValidator = ajv.compile<OperationControl>(
   loadInterfaceSchema("operation-control.schema.json"),
@@ -385,6 +393,16 @@ export function validateNotificationCommand(value: unknown): NotificationCommand
 export function validateNotificationReceipt(value: unknown): NotificationReceipt {
   assertValid(notificationReceiptValidator, value, "notification receipt interface");
   return value as NotificationReceipt;
+}
+
+export function validateOrganizationMembershipCommand(value: unknown): OrganizationMembershipCommand {
+  assertValid(organizationMembershipCommandValidator, value, "organization membership command interface");
+  return value as OrganizationMembershipCommand;
+}
+
+export function validateOrganizationMembershipRecord(value: unknown): OrganizationMembershipRecord {
+  assertValid(organizationMembershipRecordValidator, value, "organization membership record interface");
+  return value as OrganizationMembershipRecord;
 }
 
 export function validateOperationControl(value: unknown): OperationControl {

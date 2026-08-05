@@ -13,6 +13,8 @@ import {
   validateNotificationCommand,
   validateNotificationReceipt,
   validateOperationControl,
+  validateOrganizationMembershipCommand,
+  validateOrganizationMembershipRecord,
   validatePrincipal,
   validateResourcePage,
   validateResourceQuery,
@@ -236,6 +238,13 @@ describe("core portable interfaces", () => {
       attributes: { plan: "enterprise" },
       subjectId: "chosen-subject",
     })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+  });
+
+  it("validates organization membership mutations without caller-owned scope", () => {
+    expect(validateOrganizationMembershipCommand({ action: "change-role", userId: "user-2", roleId: "manager", expectedRevision: 2, idempotencyKey: "member-change-1" }).roleId).toBe("manager");
+    expect(validateOrganizationMembershipRecord({ membershipId: "membership_001", organizationId: "organization-1", userId: "user-2", roleId: "manager", status: "active", revision: 3, createdAt: "2026-08-05T01:00:00Z", updatedAt: "2026-08-05T01:01:00Z" }).revision).toBe(3);
+    expect(() => validateOrganizationMembershipCommand({ action: "add", userId: "user-2", roleId: "owner", idempotencyKey: "member-change-1", tenantId: "tenant-b", organizationId: "organization-b" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+    expect(() => validateOrganizationMembershipCommand({ action: "remove", userId: "user-2", roleId: "owner", idempotencyKey: "member-change-1" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 
   it("rejects unbounded queries, caller-owned scope, invalid cursors, and empty controls", () => {

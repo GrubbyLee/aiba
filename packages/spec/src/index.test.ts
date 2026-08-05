@@ -48,6 +48,8 @@ describe("protocol schemas", () => {
     "import-export-job-record.schema.json",
     "notification-command.schema.json",
     "notification-receipt.schema.json",
+    "organization-membership-command.schema.json",
+    "organization-membership-record.schema.json",
     "operation-control.schema.json",
     "principal.schema.json",
     "resource-page.schema.json",
