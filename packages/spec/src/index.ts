@@ -134,6 +134,25 @@ export interface VerificationChallengeRecord {
   verifiedAt?: string;
 }
 
+export interface ScheduledJobCommand {
+  definitionId: string;
+  scheduledFor: string;
+  idempotencyKey: string;
+}
+
+export interface ScheduledJobRecord {
+  jobId: string;
+  definitionId: string;
+  status: "queued" | "running" | "retrying" | "succeeded" | "failed";
+  attempt: number;
+  maximumAttempts: number;
+  scheduledFor: string;
+  leaseExpiresAt?: string;
+  errorCode?: string;
+  createdAt: string;
+  completedAt?: string;
+}
+
 export interface FileAssetUploadCommand {
   fileName: string;
   contentType: string;
@@ -858,6 +877,8 @@ export type InterfaceSchemaName =
   | "principal.schema.json"
   | "resource-page.schema.json"
   | "resource-query.schema.json"
+  | "scheduled-job-command.schema.json"
+  | "scheduled-job-record.schema.json"
   | "vehicle-create-command.schema.json"
   | "vehicle-record.schema.json"
   | "vehicle-update-command.schema.json"

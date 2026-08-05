@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/scheduled-job-record.schema.json",
+  "title": "AIBA Scheduled Job Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["jobId", "definitionId", "status", "attempt", "maximumAttempts", "scheduledFor", "createdAt"],
+  "properties": {
+    "jobId": { "type": "string", "pattern": "^[A-Za-z0-9_-]{8,160}$" },
+    "definitionId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,79}$" },
+    "status": { "enum": ["queued", "running", "retrying", "succeeded", "failed"] },
+    "attempt": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "maximumAttempts": { "type": "integer", "minimum": 1, "maximum": 100 },
+    "scheduledFor": { "type": "string", "format": "date-time" },
+    "leaseExpiresAt": { "type": "string", "format": "date-time" },
+    "errorCode": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,79}$" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "completedAt": { "type": "string", "format": "date-time" }
+  }
+}

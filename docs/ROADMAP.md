@@ -178,7 +178,7 @@ Goal: cover operational capabilities repeatedly rebuilt in ordinary Agent-
 generated applications without imposing a database, queue, provider, or UI.
 
 - [x] Deliver `verification-challenge` for single-use email, SMS, and authenticator challenges.
-- [ ] Deliver `scheduled-jobs` with leases, bounded retries, and idempotent execution.
+- [x] Deliver `scheduled-jobs` with leases, bounded retries, and idempotent execution.
 - [ ] Deliver `webhooks` with trusted destinations, signatures, replay defense, and delivery state.
 - [ ] Deliver `feature-flags` with trusted targeting, deterministic rollout, and revisioned policy.
 - [ ] Deliver `organization` with tenant-derived membership and last-owner protection.

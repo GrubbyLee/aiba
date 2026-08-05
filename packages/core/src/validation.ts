@@ -37,6 +37,8 @@ import {
   type ProjectManifest,
   type ResourcePage,
   type ResourceQuery,
+  type ScheduledJobCommand,
+  type ScheduledJobRecord,
   type SignedSolutionEnvelope,
   type SolutionPublisherTrustPolicy,
   type SolutionVerificationState,
@@ -85,6 +87,12 @@ const resourcePageValidator = ajv.compile<ResourcePage>(
 );
 const resourceQueryValidator = ajv.compile<ResourceQuery>(
   loadInterfaceSchema("resource-query.schema.json"),
+);
+const scheduledJobCommandValidator = ajv.compile<ScheduledJobCommand>(
+  loadInterfaceSchema("scheduled-job-command.schema.json"),
+);
+const scheduledJobRecordValidator = ajv.compile<ScheduledJobRecord>(
+  loadInterfaceSchema("scheduled-job-record.schema.json"),
 );
 const fileAssetUploadCommandValidator = ajv.compile<FileAssetUploadCommand>(
   loadInterfaceSchema("file-asset-upload-command.schema.json"),
@@ -376,6 +384,16 @@ export function validateResourcePage(value: unknown): ResourcePage {
 export function validateResourceQuery(value: unknown): ResourceQuery {
   assertValid(resourceQueryValidator, value, "resource query interface");
   return value as ResourceQuery;
+}
+
+export function validateScheduledJobCommand(value: unknown): ScheduledJobCommand {
+  assertValid(scheduledJobCommandValidator, value, "scheduled job command interface");
+  return value as ScheduledJobCommand;
+}
+
+export function validateScheduledJobRecord(value: unknown): ScheduledJobRecord {
+  assertValid(scheduledJobRecordValidator, value, "scheduled job record interface");
+  return value as ScheduledJobRecord;
 }
 
 export function validateFileAssetUploadCommand(value: unknown): FileAssetUploadCommand {

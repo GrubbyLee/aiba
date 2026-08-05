@@ -29,8 +29,8 @@
       "description": "Provide leased, idempotent scheduled execution with bounded retries and minimized failure records.",
       "file": "capabilities/scheduled-jobs/capability.yaml",
       "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
-      "passes": false,
-      "verification": ""
+      "passes": true,
+      "verification": "Pack quality 100; Spec 52, Core 133, and reference 94 tests pass; active-lease race is rejected; pnpm check passes."
     },
     {
       "id": "m17-webhooks",

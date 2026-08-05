@@ -1,0 +1,59 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: scheduled-jobs
+  version: 0.1.0
+  title: Scheduled Jobs
+  layer: application-foundation
+  description: >-
+    Authorized deferred execution from server-owned definitions with durable
+    idempotency, due-time checks, execution leases, bounded retries, minimized
+    failure records, and audit.
+spec:
+  interfaces:
+    - authorization.decision
+    - audit.event
+    - scheduled-jobs.command
+    - scheduled-jobs.record
+  dependencies:
+    - id: authorization
+      version: ^0.1.0
+      optional: false
+    - id: audit
+      version: ^0.1.0
+      optional: false
+  invariants:
+    - id: definitions-are-server-owned
+      title: Definitions are server owned
+      description: Commands select enabled trusted definitions and cannot provide executable code, handlers, credentials, retry policy, or lease policy.
+      severity: critical
+      evidence: &sourceAndTest
+        acceptedTypes: [source, test, config, document]
+        requiredTypes: [source, test]
+        minimum: 2
+        requireHash: true
+    - id: scheduling-is-authorized-and-scoped
+      title: Scheduling is authorized and scoped
+      description: Tenant and actor scope come from trusted context and every schedule command receives an explicit authorization decision.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: scheduling-is-idempotent
+      title: Scheduling is idempotent
+      description: A tenant-scoped idempotency key is durably bound to one exact command and cannot create duplicate jobs.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: execution-is-due-and-leased
+      title: Execution is due and leased
+      description: Workers execute only due runnable jobs after acquiring one expiring lease, preventing concurrent duplicate execution.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: retries-are-bounded
+      title: Retries are bounded
+      description: Attempt limits come from the trusted definition and terminal jobs cannot be replayed.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: job-records-are-minimized
+      title: Job records are minimized
+      description: Public records and audit omit tenant internals, worker identities, payloads, stack traces, credentials, and provider errors.
+      severity: critical
+      evidence: *sourceAndTest

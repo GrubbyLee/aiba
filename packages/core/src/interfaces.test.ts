@@ -14,6 +14,8 @@ import {
   validatePrincipal,
   validateResourcePage,
   validateResourceQuery,
+  validateScheduledJobCommand,
+  validateScheduledJobRecord,
   validateVehicleCreateCommand,
   validateVehicleRecord,
   validateVehicleUpdateCommand,
@@ -164,6 +166,29 @@ describe("core portable interfaces", () => {
       idempotencyKey: "operation-0001",
       expectedRevision: 3,
     }).expectedRevision).toBe(3);
+  });
+
+  it("validates scheduled job commands and minimized records", () => {
+    expect(validateScheduledJobCommand({
+      definitionId: "daily-report",
+      scheduledFor: "2026-08-05T01:00:00Z",
+      idempotencyKey: "schedule-0001",
+    }).definitionId).toBe("daily-report");
+    expect(validateScheduledJobRecord({
+      jobId: "job_daily_0001",
+      definitionId: "daily-report",
+      status: "queued",
+      attempt: 0,
+      maximumAttempts: 2,
+      scheduledFor: "2026-08-05T01:00:00Z",
+      createdAt: "2026-08-05T00:59:00Z",
+    }).status).toBe("queued");
+    expect(() => validateScheduledJobCommand({
+      definitionId: "daily-report",
+      scheduledFor: "2026-08-05T01:00:00Z",
+      idempotencyKey: "schedule-0001",
+      handler: "curl https://example.test/secret",
+    })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 
   it("rejects unbounded queries, caller-owned scope, invalid cursors, and empty controls", () => {
@@ -352,6 +377,32 @@ describe("core portable interfaces", () => {
       expiresAt: "2026-08-05T00:05:00Z",
       destination: "private@example.com",
       responseDigest: "secret",
+    })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+  });
+
+  it("validates server-defined scheduled job commands and minimized state", () => {
+    expect(validateScheduledJobCommand({
+      definitionId: "daily-report",
+      scheduledFor: "2026-08-05T01:00:00Z",
+      idempotencyKey: "schedule-0001",
+    }).definitionId).toBe("daily-report");
+    expect(validateScheduledJobRecord({
+      jobId: "job_daily_0001",
+      definitionId: "daily-report",
+      status: "retrying",
+      attempt: 1,
+      maximumAttempts: 3,
+      scheduledFor: "2026-08-05T01:00:00Z",
+      errorCode: "execution-failed",
+      createdAt: "2026-08-05T00:00:00Z",
+    }).attempt).toBe(1);
+    expect(() => validateScheduledJobCommand({
+      definitionId: "daily-report",
+      scheduledFor: "2026-08-05T01:00:00Z",
+      idempotencyKey: "schedule-0001",
+      command: "curl attacker.example",
+      callbackUrl: "https://attacker.example",
+      tenantId: "tenant-b",
     })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 });

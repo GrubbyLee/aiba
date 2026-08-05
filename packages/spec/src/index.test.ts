@@ -50,6 +50,8 @@ describe("protocol schemas", () => {
     "principal.schema.json",
     "resource-page.schema.json",
     "resource-query.schema.json",
+    "scheduled-job-command.schema.json",
+    "scheduled-job-record.schema.json",
     "vehicle-create-command.schema.json",
     "vehicle-record.schema.json",
     "vehicle-update-command.schema.json",

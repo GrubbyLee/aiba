@@ -233,6 +233,26 @@ Progress: 2/13
 Next: m17-scheduled-jobs
 
 ----------------------------------------
+Session #11 - m17-scheduled-jobs
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added strict scheduled command and minimized record interfaces.
+  [x] Added authorized server-owned definitions and durable idempotency semantics.
+  [x] Added due-time checks, execution leases, bounded retries, and terminal replay rejection.
+  [x] Found and fixed a real async worker-claim race with a concurrent lease test.
+
+Verification:
+  - pnpm check: passed
+  - Pack lint and test-pack: score 100
+  - Spec: 52 tests; Core: 133 tests; reference fixture: 94 tests
+  - Four npm tarballs installed and exercised in a clean consumer
+
+Progress: 3/13
+Next: m17-webhooks
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05

@@ -1,0 +1,50 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Scheduled Jobs Boundary
+  description: Framework-neutral guidance for authorized, leased deferred execution in TypeScript.
+spec:
+  capability:
+    id: scheduled-jobs
+    version: 0.1.0
+  compatibility:
+    languages: [TypeScript]
+    frameworks: []
+  writeScope:
+    allowedPatterns: [src/**, server/**, test/**, tests/**, workers/**]
+  operations:
+    - id: schedule-trusted-definition
+      intent: Authorize and persist one due-time request for a server-owned job definition.
+      requiredInterfaces: [scheduled-jobs.command, scheduled-jobs.record, authorization.decision, audit.event]
+      invariants: [definitions-are-server-owned, scheduling-is-authorized-and-scoped, scheduling-is-idempotent]
+      guidance:
+        - Resolve tenant, handler, retry limit, and lease duration from trusted server state.
+        - Bind a scoped idempotency key to the exact validated command before acknowledging it.
+    - id: lease-and-run-due-job
+      intent: Atomically lease one due runnable job and execute its trusted handler.
+      requiredInterfaces: [scheduled-jobs.record, audit.event]
+      invariants: [execution-is-due-and-leased, retries-are-bounded, job-records-are-minimized]
+      guidance:
+        - Acquire the lease and increment the attempt in one transaction or compare-and-swap operation.
+        - Store allowlisted failure codes; keep exceptions, payloads, credentials, and worker identifiers private.
+  evidence:
+    - invariant: definitions-are-server-owned
+      suggestions: &evidence
+        - type: source
+          pathPattern: src/**/*.ts
+          description: Scheduled job boundary and trusted definition registry.
+        - type: test
+          pathPattern: src/**/*.test.ts
+          description: Authorization, due-time, lease, replay, retry, idempotency, and redaction tests.
+    - invariant: scheduling-is-authorized-and-scoped
+      suggestions: *evidence
+    - invariant: scheduling-is-idempotent
+      suggestions: *evidence
+    - invariant: execution-is-due-and-leased
+      suggestions: *evidence
+    - invariant: retries-are-bounded
+      suggestions: *evidence
+    - invariant: job-records-are-minimized
+      suggestions: *evidence

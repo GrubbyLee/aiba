@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/scheduled-job-command.schema.json",
+  "title": "AIBA Scheduled Job Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["definitionId", "scheduledFor", "idempotencyKey"],
+  "properties": {
+    "definitionId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,79}$" },
+    "scheduledFor": { "type": "string", "format": "date-time" },
+    "idempotencyKey": { "type": "string", "minLength": 8, "maxLength": 200, "pattern": "^[A-Za-z0-9._:-]+$" }
+  }
+}
