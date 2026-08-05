@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   validateActivityRecord,
+  validateApprovalDecisionCommand,
+  validateApprovalRequestCommand,
+  validateApprovalWorkflowRecord,
   validateAuditEvent,
   validateAuthorizationDecision,
   validateCommentCommand,
@@ -272,6 +275,13 @@ describe("core portable interfaces", () => {
     expect(validateReportRunCommand({ definitionId: "fleet-summary", format: "csv", parameters: { status: "active" }, idempotencyKey: "report-run-0001" }).format).toBe("csv");
     expect(validateReportRunRecord({ reportId: "report_0001", definitionId: "fleet-summary", format: "csv", status: "succeeded", assetId: "asset_report_001", rowCount: 12, createdAt: "2026-08-05T01:00:00Z", completedAt: "2026-08-05T01:01:00Z" }).status).toBe("succeeded");
     expect(() => validateReportRunCommand({ definitionId: "fleet-summary", format: "csv", parameters: {}, idempotencyKey: "report-run-0001", sql: "select * from users", outputPath: "/tmp/leak" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+  });
+
+  it("validates explicit approval transitions without caller-owned actors", () => {
+    expect(validateApprovalRequestCommand({ definitionId: "vehicle-publish", resourceType: "vehicle", resourceId: "vehicle-1", idempotencyKey: "approval-request-1" }).definitionId).toBe("vehicle-publish");
+    expect(validateApprovalDecisionCommand({ workflowId: "workflow_001", decision: "approve", expectedRevision: 1, idempotencyKey: "approval-decision-1" }).decision).toBe("approve");
+    expect(validateApprovalWorkflowRecord({ workflowId: "workflow_001", definitionId: "vehicle-publish", resourceType: "vehicle", resourceId: "vehicle-1", requesterId: "user-1", status: "pending", requiredApprovals: 2, revision: 1, decisions: [], createdAt: "2026-08-05T01:00:00Z", updatedAt: "2026-08-05T01:00:00Z" }).status).toBe("pending");
+    expect(() => validateApprovalDecisionCommand({ workflowId: "workflow_001", decision: "approve", expectedRevision: 1, idempotencyKey: "approval-decision-1", actorId: "admin", force: true })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 
   it("rejects unbounded queries, caller-owned scope, invalid cursors, and empty controls", () => {

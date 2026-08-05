@@ -192,7 +192,7 @@ protocol and operational capabilities.
 
 - [x] Deliver `reporting` with server-owned definitions, authorization, bounded execution,
   private outputs, and sensitive-field minimization.
-- [ ] Deliver `workflow-approval` with explicit state transitions, separation of duties,
+- [x] Deliver `workflow-approval` with explicit state transitions, separation of duties,
   optimistic concurrency, and immutable decisions.
 - [ ] Upgrade `notification` with template versions, preferences, durable deduplication,
   delivery lifecycle, and minimized receipts.

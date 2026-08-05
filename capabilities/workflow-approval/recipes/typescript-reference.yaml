@@ -1,0 +1,36 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Workflow Approval Boundary
+  description: Framework-neutral guidance for explicit immutable approval state transitions.
+spec:
+  capability: { id: workflow-approval, version: 0.1.0 }
+  compatibility: { languages: [TypeScript], frameworks: [] }
+  writeScope: { allowedPatterns: [src/**, server/**, test/**, tests/**] }
+  operations:
+    - id: request-approval
+      intent: Authorize and create one pending workflow from a server-owned definition.
+      requiredInterfaces: [workflow-approval.request-command, workflow-approval.record, authorization.decision, audit.event]
+      invariants: [definitions-and-actors-are-trusted, transitions-are-explicit-and-authorized, transitions-are-revisioned-and-idempotent]
+      guidance:
+        - Resolve requester, tenant, required approvals, eligible actors, and transition policy from trusted state.
+        - Bind request idempotency in the same transaction that creates pending state.
+    - id: record-immutable-decision
+      intent: Atomically authorize and append one decision against the exact current revision.
+      requiredInterfaces: [workflow-approval.decision-command, workflow-approval.record, authorization.decision, audit.event]
+      invariants: [duties-are-separated, decisions-are-immutable, transitions-are-revisioned-and-idempotent, terminal-state-is-final]
+      guidance:
+        - Recheck pending state, revision, actor uniqueness, and self-approval after every async boundary and inside the write transaction.
+        - Append the decision and derive terminal state; never update or delete prior decisions.
+  evidence:
+    - invariant: definitions-and-actors-are-trusted
+      suggestions: &suggestions
+        - { type: source, pathPattern: "src/**/*.ts", description: "Approval definition and atomic state transition boundary." }
+        - { type: test, pathPattern: "src/**/*.test.ts", description: "Authorization, impersonation, self-approval, duplicate actor, revision race, idempotency, immutability, and terminal tests." }
+    - { invariant: transitions-are-explicit-and-authorized, suggestions: *suggestions }
+    - { invariant: duties-are-separated, suggestions: *suggestions }
+    - { invariant: decisions-are-immutable, suggestions: *suggestions }
+    - { invariant: transitions-are-revisioned-and-idempotent, suggestions: *suggestions }
+    - { invariant: terminal-state-is-final, suggestions: *suggestions }

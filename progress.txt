@@ -373,6 +373,26 @@ Progress: 9/13
 Next: m18-workflow-approval
 
 ----------------------------------------
+Session #18 - m18-workflow-approval
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added explicit request, decision, and revisioned workflow interfaces.
+  [x] Kept definitions, actors, eligibility, counts, and self-approval policy trusted.
+  [x] Added immutable decisions, separation of duties, optimistic concurrency, and terminal states.
+  [x] Added idempotent terminal retries and concurrent stale-decision rejection.
+
+Verification:
+  - pnpm check: passed
+  - Pack lint and test-pack: score 100
+  - Spec: 68 tests; Core: 140 tests; reference fixture: 128 tests
+  - Four npm tarballs installed and exercised in a clean consumer
+
+Progress: 10/13
+Next: m18-notification-v2
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05

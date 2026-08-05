@@ -1,0 +1,44 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: workflow-approval
+  version: 0.1.0
+  title: Workflow Approval
+  layer: business-capability
+  description: Explicit approval state machines with trusted definitions, authorized requests and decisions, separation of duties, immutable decisions, optimistic revisions, and idempotency.
+spec:
+  interfaces: [authorization.decision, audit.event, workflow-approval.request-command, workflow-approval.decision-command, workflow-approval.record]
+  dependencies:
+    - { id: authorization, version: ^0.1.0, optional: false }
+    - { id: audit, version: ^0.1.0, optional: false }
+  invariants:
+    - id: definitions-and-actors-are-trusted
+      title: Definitions and actors are trusted
+      description: Workflow rules come from enabled server definitions and requester and approver identities come from authenticated context.
+      severity: critical
+      evidence: &evidence { acceptedTypes: [source, test, config, document], requiredTypes: [source, test], minimum: 2, requireHash: true }
+    - id: transitions-are-explicit-and-authorized
+      title: Transitions are explicit and authorized
+      description: Requests, approvals, and rejections each require authorization and only declared pending-to-terminal transitions are accepted.
+      severity: critical
+      evidence: *evidence
+    - id: duties-are-separated
+      title: Duties are separated
+      description: Unless a trusted definition explicitly permits it, requesters cannot approve their own requests and one actor cannot count twice.
+      severity: critical
+      evidence: *evidence
+    - id: decisions-are-immutable
+      title: Decisions are immutable
+      description: Every accepted decision is appended with trusted actor and time and cannot be edited, removed, or replaced.
+      severity: critical
+      evidence: *evidence
+    - id: transitions-are-revisioned-and-idempotent
+      title: Transitions are revisioned and idempotent
+      description: Decisions require an exact workflow revision and scoped idempotency keys bind to exact commands.
+      severity: critical
+      evidence: *evidence
+    - id: terminal-state-is-final
+      title: Terminal state is final
+      description: Approved and rejected workflows reject new decisions while exact acknowledged retries return the prior result.
+      severity: critical
+      evidence: *evidence

@@ -1,6 +1,9 @@
 import { Ajv2020, type ErrorObject, type ValidateFunction } from "ajv/dist/2020.js";
 import {
   type ActivityRecord,
+  type ApprovalDecisionCommand,
+  type ApprovalRequestCommand,
+  type ApprovalWorkflowRecord,
   loadInterfaceSchema,
   loadProtocolSchema,
   type AuditEvent,
@@ -84,6 +87,9 @@ const authorizationDecisionValidator = ajv.compile<AuthorizationDecision>(
   loadInterfaceSchema("authorization-decision.schema.json"),
 );
 const activityRecordValidator = ajv.compile<ActivityRecord>(loadInterfaceSchema("activity-record.schema.json"));
+const approvalDecisionCommandValidator = ajv.compile<ApprovalDecisionCommand>(loadInterfaceSchema("approval-decision-command.schema.json"));
+const approvalRequestCommandValidator = ajv.compile<ApprovalRequestCommand>(loadInterfaceSchema("approval-request-command.schema.json"));
+const approvalWorkflowRecordValidator = ajv.compile<ApprovalWorkflowRecord>(loadInterfaceSchema("approval-workflow-record.schema.json"));
 const commentCommandValidator = ajv.compile<CommentCommand>(loadInterfaceSchema("comment-command.schema.json"));
 const commentRecordValidator = ajv.compile<CommentRecord>(loadInterfaceSchema("comment-record.schema.json"));
 const auditEventValidator = ajv.compile<AuditEvent>(
@@ -398,6 +404,10 @@ export function validateActivityRecord(value: unknown): ActivityRecord {
   assertValid(activityRecordValidator, value, "activity record interface");
   return value as ActivityRecord;
 }
+
+export function validateApprovalDecisionCommand(value: unknown): ApprovalDecisionCommand { assertValid(approvalDecisionCommandValidator, value, "approval decision command interface"); return value as ApprovalDecisionCommand; }
+export function validateApprovalRequestCommand(value: unknown): ApprovalRequestCommand { assertValid(approvalRequestCommandValidator, value, "approval request command interface"); return value as ApprovalRequestCommand; }
+export function validateApprovalWorkflowRecord(value: unknown): ApprovalWorkflowRecord { assertValid(approvalWorkflowRecordValidator, value, "approval workflow record interface"); return value as ApprovalWorkflowRecord; }
 
 export function validateCommentCommand(value: unknown): CommentCommand {
   assertValid(commentCommandValidator, value, "comment command interface");

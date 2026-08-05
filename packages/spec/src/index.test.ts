@@ -38,6 +38,9 @@ describe("protocol schemas", () => {
 
   it.each([
     "activity-record.schema.json",
+    "approval-decision-command.schema.json",
+    "approval-request-command.schema.json",
+    "approval-workflow-record.schema.json",
     "audit-event.schema.json",
     "authorization-decision.schema.json",
     "comment-command.schema.json",

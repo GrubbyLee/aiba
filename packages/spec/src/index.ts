@@ -278,6 +278,15 @@ export interface ReportRunRecord {
   completedAt?: string;
 }
 
+export interface ApprovalRequestCommand { definitionId: string; resourceType: string; resourceId: string; idempotencyKey: string }
+export interface ApprovalDecisionCommand { workflowId: string; decision: "approve" | "reject"; reason?: string; expectedRevision: number; idempotencyKey: string }
+export interface ApprovalDecisionRecord { decisionId: string; actorId: string; decision: "approve" | "reject"; reason?: string; decidedAt: string }
+export interface ApprovalWorkflowRecord {
+  workflowId: string; definitionId: string; resourceType: string; resourceId: string; requesterId: string;
+  status: "pending" | "approved" | "rejected"; requiredApprovals: number; revision: number;
+  decisions: ApprovalDecisionRecord[]; createdAt: string; updatedAt: string;
+}
+
 export interface FileAssetUploadCommand {
   fileName: string;
   contentType: string;
@@ -990,6 +999,9 @@ export type ProtocolSchemaName =
 
 export type InterfaceSchemaName =
   | "activity-record.schema.json"
+  | "approval-decision-command.schema.json"
+  | "approval-request-command.schema.json"
+  | "approval-workflow-record.schema.json"
   | "audit-event.schema.json"
   | "authorization-decision.schema.json"
   | "comment-command.schema.json"
