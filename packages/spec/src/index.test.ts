@@ -53,6 +53,9 @@ describe("protocol schemas", () => {
     "vehicle-create-command.schema.json",
     "vehicle-record.schema.json",
     "vehicle-update-command.schema.json",
+    "verification-challenge-issue-command.schema.json",
+    "verification-challenge-record.schema.json",
+    "verification-challenge-verify-command.schema.json",
     "wechat-miniprogram-login-command.schema.json",
     "wechat-miniprogram-login-result.schema.json",
   ] as const)("loads interface schema %s", (name) => {

@@ -45,6 +45,9 @@ import {
   type VehicleCreateCommand,
   type VehicleRecord,
   type VehicleUpdateCommand,
+  type VerificationChallengeIssueCommand,
+  type VerificationChallengeRecord,
+  type VerificationChallengeVerifyCommand,
   type WechatMiniProgramLoginCommand,
   type WechatMiniProgramLoginResult,
 } from "aiba-spec";
@@ -106,6 +109,15 @@ const vehicleUpdateCommandValidator = ajv.compile<VehicleUpdateCommand>(
 );
 const vehicleRecordValidator = ajv.compile<VehicleRecord>(
   loadInterfaceSchema("vehicle-record.schema.json"),
+);
+const verificationChallengeIssueCommandValidator = ajv.compile<VerificationChallengeIssueCommand>(
+  loadInterfaceSchema("verification-challenge-issue-command.schema.json"),
+);
+const verificationChallengeRecordValidator = ajv.compile<VerificationChallengeRecord>(
+  loadInterfaceSchema("verification-challenge-record.schema.json"),
+);
+const verificationChallengeVerifyCommandValidator = ajv.compile<VerificationChallengeVerifyCommand>(
+  loadInterfaceSchema("verification-challenge-verify-command.schema.json"),
 );
 const wechatMiniProgramLoginCommandValidator = ajv.compile<WechatMiniProgramLoginCommand>(
   loadInterfaceSchema("wechat-miniprogram-login-command.schema.json"),
@@ -404,6 +416,37 @@ export function validateVehicleUpdateCommand(value: unknown): VehicleUpdateComma
 export function validateVehicleRecord(value: unknown): VehicleRecord {
   assertValid(vehicleRecordValidator, value, "vehicle record interface");
   return value as VehicleRecord;
+}
+
+export function validateVerificationChallengeIssueCommand(
+  value: unknown,
+): VerificationChallengeIssueCommand {
+  assertValid(
+    verificationChallengeIssueCommandValidator,
+    value,
+    "verification challenge issue command interface",
+  );
+  return value as VerificationChallengeIssueCommand;
+}
+
+export function validateVerificationChallengeRecord(value: unknown): VerificationChallengeRecord {
+  assertValid(
+    verificationChallengeRecordValidator,
+    value,
+    "verification challenge record interface",
+  );
+  return value as VerificationChallengeRecord;
+}
+
+export function validateVerificationChallengeVerifyCommand(
+  value: unknown,
+): VerificationChallengeVerifyCommand {
+  assertValid(
+    verificationChallengeVerifyCommandValidator,
+    value,
+    "verification challenge verify command interface",
+  );
+  return value as VerificationChallengeVerifyCommand;
 }
 
 export function validateWechatMiniProgramLoginCommand(

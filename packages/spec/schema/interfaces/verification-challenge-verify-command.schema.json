@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/verification-challenge-verify-command.schema.json",
+  "title": "AIBA Verification Challenge Verify Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["challengeId", "response"],
+  "properties": {
+    "challengeId": { "type": "string", "pattern": "^[A-Za-z0-9_-]{8,160}$" },
+    "response": { "type": "string", "minLength": 4, "maxLength": 128 }
+  }
+}

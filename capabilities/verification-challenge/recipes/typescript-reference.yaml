@@ -1,0 +1,66 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Verification Challenge Boundary
+  description: Framework-neutral guidance for secure single-use verification in TypeScript.
+spec:
+  capability:
+    id: verification-challenge
+    version: 0.1.0
+  compatibility:
+    languages: [TypeScript]
+    frameworks: []
+  writeScope:
+    allowedPatterns: [src/**, server/**, test/**, tests/**, cloudfunctions/**]
+  operations:
+    - id: issue-indistinguishable-challenge
+      intent: Resolve a recipient in trusted scope, create one bounded challenge, and return a minimized record without account enumeration.
+      requiredInterfaces: [verification-challenge.issue-command, verification-challenge.record]
+      invariants: [challenge-identifiers-do-not-enumerate-accounts, tenant-and-purpose-come-from-trusted-policy]
+      guidance:
+        - Keep tenant, provider destination, template, expiry, attempts, and eligibility in trusted server policy.
+        - Create equivalent phantom state for unknown recipients and return the same public shape and errors.
+    - id: protect-and-deliver-response
+      intent: Store only a keyed response digest and deliver plaintext through the configured notification boundary.
+      requiredInterfaces: [notification.command, audit.event]
+      invariants: [responses-are-held-as-keyed-digests, attempts-and-issuance-are-bounded, challenge-audit-is-minimized]
+      guidance:
+        - Use a separately managed high-entropy pepper and constant-time digest comparison.
+        - Rate-limit trusted actor and recipient scopes before delivery and never log provider inputs.
+    - id: consume-challenge-once
+      intent: Atomically verify pending state, expiry, attempts, and the response before recording terminal success.
+      requiredInterfaces: [verification-challenge.verify-command, verification-challenge.record]
+      invariants: [challenges-are-single-use-and-expiring, attempts-and-issuance-are-bounded]
+      guidance:
+        - Lock or compare-and-swap the record so concurrent verification cannot succeed twice.
+        - Use one public failure for missing, expired, locked, already-used, and wrong responses.
+    - id: deduplicate-issuance
+      intent: Bind one tenant and purpose scoped idempotency key to the exact command and delivery.
+      requiredInterfaces: [verification-challenge.issue-command]
+      invariants: [issuance-is-idempotent]
+      guidance:
+        - Persist the command fingerprint and result before acknowledging successful issuance.
+        - Reject reuse of the key with a changed recipient, purpose, or channel.
+  evidence:
+    - invariant: challenge-identifiers-do-not-enumerate-accounts
+      suggestions: &evidence
+        - type: source
+          pathPattern: src/**/*.ts
+          description: Verification challenge implementation.
+        - type: test
+          pathPattern: src/**/*.test.ts
+          description: Success, enumeration, replay, expiry, limits, idempotency, and redaction tests.
+    - invariant: responses-are-held-as-keyed-digests
+      suggestions: *evidence
+    - invariant: challenges-are-single-use-and-expiring
+      suggestions: *evidence
+    - invariant: attempts-and-issuance-are-bounded
+      suggestions: *evidence
+    - invariant: issuance-is-idempotent
+      suggestions: *evidence
+    - invariant: tenant-and-purpose-come-from-trusted-policy
+      suggestions: *evidence
+    - invariant: challenge-audit-is-minimized
+      suggestions: *evidence

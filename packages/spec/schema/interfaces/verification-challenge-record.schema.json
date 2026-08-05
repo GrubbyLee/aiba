@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/verification-challenge-record.schema.json",
+  "title": "AIBA Verification Challenge Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["challengeId", "channel", "purpose", "status", "attemptsRemaining", "createdAt", "expiresAt"],
+  "properties": {
+    "challengeId": { "type": "string", "pattern": "^[A-Za-z0-9_-]{8,160}$" },
+    "channel": { "enum": ["email", "sms", "authenticator"] },
+    "purpose": { "type": "string", "pattern": "^[a-z][a-z0-9:-]{1,79}$" },
+    "status": { "enum": ["pending", "verified", "expired", "locked"] },
+    "attemptsRemaining": { "type": "integer", "minimum": 0, "maximum": 20 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "expiresAt": { "type": "string", "format": "date-time" },
+    "verifiedAt": { "type": "string", "format": "date-time" }
+  }
+}

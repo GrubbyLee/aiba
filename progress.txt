@@ -214,6 +214,25 @@ Progress: 1/13
 Next: m17-verification-challenge
 
 ----------------------------------------
+Session #10 - m17-verification-challenge
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added issue, verify, and minimized record interfaces.
+  [x] Added enumeration resistance, keyed digests, expiry, attempt, rate, and replay rules.
+  [x] Added a framework-neutral recipe and TypeScript reference boundary.
+  [x] Added success, unknown-recipient, expiry, lockout, idempotency, and redaction tests.
+
+Verification:
+  - pnpm check: passed
+  - Pack lint and test-pack: score 100
+  - Spec: 50 tests; Core: 131 tests; reference fixture: 89 tests
+
+Progress: 2/13
+Next: m17-scheduled-jobs
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05

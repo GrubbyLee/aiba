@@ -109,6 +109,31 @@ export interface OperationControl {
   expectedRevision?: number;
 }
 
+export type VerificationChallengeChannel = "email" | "sms" | "authenticator";
+
+export interface VerificationChallengeIssueCommand {
+  recipientId: string;
+  channel: VerificationChallengeChannel;
+  purpose: string;
+  idempotencyKey: string;
+}
+
+export interface VerificationChallengeVerifyCommand {
+  challengeId: string;
+  response: string;
+}
+
+export interface VerificationChallengeRecord {
+  challengeId: string;
+  channel: VerificationChallengeChannel;
+  purpose: string;
+  status: "pending" | "verified" | "expired" | "locked";
+  attemptsRemaining: number;
+  createdAt: string;
+  expiresAt: string;
+  verifiedAt?: string;
+}
+
 export interface FileAssetUploadCommand {
   fileName: string;
   contentType: string;
@@ -836,6 +861,9 @@ export type InterfaceSchemaName =
   | "vehicle-create-command.schema.json"
   | "vehicle-record.schema.json"
   | "vehicle-update-command.schema.json"
+  | "verification-challenge-issue-command.schema.json"
+  | "verification-challenge-record.schema.json"
+  | "verification-challenge-verify-command.schema.json"
   | "wechat-miniprogram-login-command.schema.json"
   | "wechat-miniprogram-login-result.schema.json";
 

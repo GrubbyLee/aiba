@@ -1,0 +1,65 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: verification-challenge
+  version: 0.1.0
+  title: Verification Challenge
+  layer: application-foundation
+  description: >-
+    Single-use verification challenges for email, SMS, and authenticators with
+    generic public outcomes, server-held digests, expiry, bounded attempts,
+    rate limits, idempotent issuance, and redacted audit.
+spec:
+  interfaces:
+    - audit.event
+    - notification.command
+    - verification-challenge.issue-command
+    - verification-challenge.verify-command
+    - verification-challenge.record
+  dependencies:
+    - id: audit
+      version: ^0.1.0
+      optional: false
+    - id: notification
+      version: ^0.1.0
+      optional: false
+  invariants:
+    - id: challenge-identifiers-do-not-enumerate-accounts
+      title: Challenge identifiers do not enumerate accounts
+      description: Known, unknown, disabled, and ineligible recipients receive indistinguishable public issuance and verification outcomes.
+      severity: critical
+      evidence: &sourceAndTest
+        acceptedTypes: [source, test, config, document]
+        requiredTypes: [source, test]
+        minimum: 2
+        requireHash: true
+    - id: responses-are-held-as-keyed-digests
+      title: Responses are held as keyed digests
+      description: Reusable responses are never stored in plaintext and digest comparison does not disclose matching prefixes.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: challenges-are-single-use-and-expiring
+      title: Challenges are single use and expiring
+      description: Successful, expired, locked, or superseded challenges cannot be consumed again.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: attempts-and-issuance-are-bounded
+      title: Attempts and issuance are bounded
+      description: Trusted actor and recipient scopes enforce issuance limits, attempt limits, and fixed maximum lifetimes.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: issuance-is-idempotent
+      title: Issuance is idempotent
+      description: A scoped idempotency key is bound to one exact issue command and cannot create duplicate challenges or deliveries.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: tenant-and-purpose-come-from-trusted-policy
+      title: Tenant and purpose come from trusted policy
+      description: Callers cannot use challenge fields to change tenant, destination, provider, template, expiry, or attempt policy.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: challenge-audit-is-minimized
+      title: Challenge audit is minimized
+      description: Audit, logs, records, and errors exclude responses, digests, destinations, recipient identifiers, provider secrets, and reusable tokens.
+      severity: critical
+      evidence: *sourceAndTest

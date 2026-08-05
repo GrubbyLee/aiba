@@ -17,6 +17,9 @@ import {
   validateVehicleCreateCommand,
   validateVehicleRecord,
   validateVehicleUpdateCommand,
+  validateVerificationChallengeIssueCommand,
+  validateVerificationChallengeRecord,
+  validateVerificationChallengeVerifyCommand,
   validateWechatMiniProgramLoginCommand,
   validateWechatMiniProgramLoginResult,
 } from "./validation.js";
@@ -316,6 +319,39 @@ describe("core portable interfaces", () => {
       principal: { type: "user", subject: "user-42", tenantId: "tenant-a" },
       issuedAt: "2026-08-04T00:00:00Z",
       sessionKey: "provider-session-key-0001",
+    })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+  });
+
+  it("validates minimized verification challenge commands and records", () => {
+    expect(validateVerificationChallengeIssueCommand({
+      recipientId: "user-42",
+      channel: "email",
+      purpose: "identity:login",
+      idempotencyKey: "challenge-0001",
+    }).purpose).toBe("identity:login");
+    expect(validateVerificationChallengeVerifyCommand({
+      challengeId: "challenge_0001",
+      response: "123456",
+    }).response).toBe("123456");
+    expect(validateVerificationChallengeRecord({
+      challengeId: "challenge_0001",
+      channel: "email",
+      purpose: "identity:login",
+      status: "pending",
+      attemptsRemaining: 5,
+      createdAt: "2026-08-05T00:00:00Z",
+      expiresAt: "2026-08-05T00:05:00Z",
+    }).status).toBe("pending");
+    expect(() => validateVerificationChallengeRecord({
+      challengeId: "challenge_0001",
+      channel: "email",
+      purpose: "identity:login",
+      status: "pending",
+      attemptsRemaining: 5,
+      createdAt: "2026-08-05T00:00:00Z",
+      expiresAt: "2026-08-05T00:05:00Z",
+      destination: "private@example.com",
+      responseDigest: "secret",
     })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 });
