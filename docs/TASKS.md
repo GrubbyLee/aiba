@@ -359,4 +359,4 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Update Catalog, Agent Skill, fixture receipts, package checks, and smoke.
 - [x] Update bilingual capability-model and catalog documentation.
 - [x] Pass `pnpm check` locally.
-- [ ] Confirm the full remote portability matrix after push.
+- [x] Confirm the full remote portability matrix after push.

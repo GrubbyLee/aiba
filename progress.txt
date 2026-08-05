@@ -476,6 +476,9 @@ Verification:
   - Core: 141 tests; reference fixture: 129 tests
   - Registry Server: 8 tests; CLI: 10 tests
   - Source smoke, workflow checks, four npm tarballs, and clean consumer: passed
+  - GitHub CI 31030938226: Linux Node 22/24, macOS, and Windows passed
+  - GitHub Pages 31030936692: passed
+  - Gitee sync 31030938248: passed
 
 Progress: 13/13
-Next: push and confirm the remote Linux, macOS, Windows, Pages, and Gitee workflows
+Next: M16-M18 are complete; define the next product milestone before adding scope
