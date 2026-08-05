@@ -15,15 +15,24 @@ const packsDirectory = join(workspace, "capabilities");
 const requireFromCore = createRequire(join(workspace, "packages", "core", "package.json"));
 const { parse, stringify } = requireFromCore("yaml");
 const capabilities = [
-  "identity",
   "audit",
-  "wechat-miniprogram-auth",
+  "identity",
   "authorization",
   "users",
   "notification",
+  "verification-challenge",
   "file-assets",
+  "scheduled-jobs",
+  "feature-flags",
+  "organization",
+  "search",
+  "webhooks",
+  "comments-activity",
   "import-export",
+  "reporting",
+  "workflow-approval",
   "vehicle-records",
+  "wechat-miniprogram-auth",
 ];
 
 function instant(offset) {

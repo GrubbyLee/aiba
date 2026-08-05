@@ -1,0 +1,75 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: organization
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:20:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/organization.yaml
+  planSha256: e90b5dd0a8717eb0a03e469d5dd639820ae87ea92dc5d52e613e97bf7158c214
+  ancestry: .aiba/ancestry/organization.json
+  ancestrySha256: a41e7951965db5bf93e1e1528ae87abe54d59c99354675b0951e26f2f8c378fb
+invariants:
+  - id: scope-is-context-derived
+    evidence:
+      - type: source
+        path: src/organization.ts
+        ownership: shared
+        sha256: 576605587fd39746e61f6ca6cde94aff197c93b4007d15acb36066846c14656a
+      - type: test
+        path: src/organization.test.ts
+        ownership: shared
+        sha256: ec20ab733e86cf872316c3a8511c5950a8f71df337a720754ef20b66b5f1348e
+  - id: membership-mutations-are-authorized
+    evidence:
+      - type: source
+        path: src/organization.ts
+        ownership: shared
+        sha256: 576605587fd39746e61f6ca6cde94aff197c93b4007d15acb36066846c14656a
+      - type: test
+        path: src/organization.test.ts
+        ownership: shared
+        sha256: ec20ab733e86cf872316c3a8511c5950a8f71df337a720754ef20b66b5f1348e
+  - id: users-and-roles-are-trusted
+    evidence:
+      - type: source
+        path: src/organization.ts
+        ownership: shared
+        sha256: 576605587fd39746e61f6ca6cde94aff197c93b4007d15acb36066846c14656a
+      - type: test
+        path: src/organization.test.ts
+        ownership: shared
+        sha256: ec20ab733e86cf872316c3a8511c5950a8f71df337a720754ef20b66b5f1348e
+  - id: mutations-are-revisioned-and-idempotent
+    evidence:
+      - type: source
+        path: src/organization.ts
+        ownership: shared
+        sha256: 576605587fd39746e61f6ca6cde94aff197c93b4007d15acb36066846c14656a
+      - type: test
+        path: src/organization.test.ts
+        ownership: shared
+        sha256: ec20ab733e86cf872316c3a8511c5950a8f71df337a720754ef20b66b5f1348e
+  - id: last-owner-is-preserved
+    evidence:
+      - type: source
+        path: src/organization.ts
+        ownership: shared
+        sha256: 576605587fd39746e61f6ca6cde94aff197c93b4007d15acb36066846c14656a
+      - type: test
+        path: src/organization.test.ts
+        ownership: shared
+        sha256: ec20ab733e86cf872316c3a8511c5950a8f71df337a720754ef20b66b5f1348e
+  - id: membership-audit-is-minimized
+    evidence:
+      - type: source
+        path: src/organization.ts
+        ownership: shared
+        sha256: 576605587fd39746e61f6ca6cde94aff197c93b4007d15acb36066846c14656a
+      - type: test
+        path: src/organization.test.ts
+        ownership: shared
+        sha256: ec20ab733e86cf872316c3a8511c5950a8f71df337a720754ef20b66b5f1348e

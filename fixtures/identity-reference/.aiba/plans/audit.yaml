@@ -2,7 +2,7 @@ apiVersion: aiba.dev/v0alpha1
 kind: OperationPlan
 metadata:
   id: audit-install
-  createdAt: 2026-07-26T00:03:00.000Z
+  createdAt: 2026-07-26T00:01:00.000Z
 capability:
   id: audit
   version: 0.1.0

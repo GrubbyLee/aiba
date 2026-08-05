@@ -1,0 +1,75 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: scheduled-jobs
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:16:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/scheduled-jobs.yaml
+  planSha256: 1e0c88871a4a726638bd7930486e4f0dc0b5908b75517fa271f45bddad98fbde
+  ancestry: .aiba/ancestry/scheduled-jobs.json
+  ancestrySha256: 06624f69d48789015329536a403485ad70a4246aef3776920b7cb2f71ab2e469
+invariants:
+  - id: definitions-are-server-owned
+    evidence:
+      - type: source
+        path: src/scheduled-jobs.ts
+        ownership: shared
+        sha256: b03b927e3d8c86a2143670e2c05834dd1cbd87fd038708170054930ff5cba10f
+      - type: test
+        path: src/scheduled-jobs.test.ts
+        ownership: shared
+        sha256: 586e9e0679510bacd3ca36b200276052682bd91c454551053c9dadcef50acf27
+  - id: scheduling-is-authorized-and-scoped
+    evidence:
+      - type: source
+        path: src/scheduled-jobs.ts
+        ownership: shared
+        sha256: b03b927e3d8c86a2143670e2c05834dd1cbd87fd038708170054930ff5cba10f
+      - type: test
+        path: src/scheduled-jobs.test.ts
+        ownership: shared
+        sha256: 586e9e0679510bacd3ca36b200276052682bd91c454551053c9dadcef50acf27
+  - id: scheduling-is-idempotent
+    evidence:
+      - type: source
+        path: src/scheduled-jobs.ts
+        ownership: shared
+        sha256: b03b927e3d8c86a2143670e2c05834dd1cbd87fd038708170054930ff5cba10f
+      - type: test
+        path: src/scheduled-jobs.test.ts
+        ownership: shared
+        sha256: 586e9e0679510bacd3ca36b200276052682bd91c454551053c9dadcef50acf27
+  - id: execution-is-due-and-leased
+    evidence:
+      - type: source
+        path: src/scheduled-jobs.ts
+        ownership: shared
+        sha256: b03b927e3d8c86a2143670e2c05834dd1cbd87fd038708170054930ff5cba10f
+      - type: test
+        path: src/scheduled-jobs.test.ts
+        ownership: shared
+        sha256: 586e9e0679510bacd3ca36b200276052682bd91c454551053c9dadcef50acf27
+  - id: retries-are-bounded
+    evidence:
+      - type: source
+        path: src/scheduled-jobs.ts
+        ownership: shared
+        sha256: b03b927e3d8c86a2143670e2c05834dd1cbd87fd038708170054930ff5cba10f
+      - type: test
+        path: src/scheduled-jobs.test.ts
+        ownership: shared
+        sha256: 586e9e0679510bacd3ca36b200276052682bd91c454551053c9dadcef50acf27
+  - id: job-records-are-minimized
+    evidence:
+      - type: source
+        path: src/scheduled-jobs.ts
+        ownership: shared
+        sha256: b03b927e3d8c86a2143670e2c05834dd1cbd87fd038708170054930ff5cba10f
+      - type: test
+        path: src/scheduled-jobs.test.ts
+        ownership: shared
+        sha256: 586e9e0679510bacd3ca36b200276052682bd91c454551053c9dadcef50acf27

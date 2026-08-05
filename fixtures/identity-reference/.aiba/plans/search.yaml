@@ -1,0 +1,115 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: search-install
+  createdAt: 2026-07-26T00:21:00.000Z
+capability:
+  id: search
+  version: 0.1.0
+  manifestSha256: 93aaa306c00359a9fa31072d2d6153ec2a248473b31c2615718a834d190d9ff9
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: bddd6b3dc65f4d3a9108c5eb9c65f79b693055c68c7d287e1dc1bf89dcef40c4
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+operations:
+  - id: search-authorized-resources
+    intent: Apply trusted tenant and authorization predicates before matching and
+      paginating allowlisted projections.
+    requiredInterfaces:
+      - search.query
+      - search.page
+      - authorization.decision
+    invariants:
+      - search-scope-is-trusted
+      - authorization-precedes-ranking
+      - query-and-output-are-bounded
+      - cursors-are-opaque-and-bound
+      - search-projections-are-safe
+    guidance:
+      - Compile principal and tenant authorization into the datastore query
+        before ranking when possible.
+      - Bind signed cursor state to normalized query, resource types, tenant,
+        and principal.
+      - Return only allowlisted title and snippet projections; omit unauthorized
+        totals and facets.
+evidence:
+  - invariant: search-scope-is-trusted
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Tenant-scoped authorization-first search and cursor boundary.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Scope, authorization leakage, bounds, projection, cursor tamper,
+          and replay tests.
+    items:
+      - type: source
+        path: src/search.ts
+        ownership: shared
+      - type: test
+        path: src/search.test.ts
+        ownership: shared
+  - invariant: authorization-precedes-ranking
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/search.ts
+        ownership: shared
+      - type: test
+        path: src/search.test.ts
+        ownership: shared
+  - invariant: query-and-output-are-bounded
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/search.ts
+        ownership: shared
+      - type: test
+        path: src/search.test.ts
+        ownership: shared
+  - invariant: cursors-are-opaque-and-bound
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/search.ts
+        ownership: shared
+      - type: test
+        path: src/search.test.ts
+        ownership: shared
+  - invariant: search-projections-are-safe
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/search.ts
+        ownership: shared
+      - type: test
+        path: src/search.test.ts
+        ownership: shared

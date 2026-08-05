@@ -119,8 +119,8 @@
       "description": "Integrate all capabilities into discovery, dependency order, Agent guidance, fixtures, and npm tarballs.",
       "file": "capabilities/catalog.yaml",
       "steps": ["Update catalog.", "Update Agent adapter.", "Generate fixture state.", "Exercise installed CLI."],
-      "passes": false,
-      "verification": ""
+      "passes": true,
+      "verification": "Official catalog exposes 19 dependency-ordered capabilities; 18-capability fixture provenance, Agent Skill, smoke discovery, schema/capability tarball assertions, and installed CLI show commands pass; Core 141 and pnpm check pass."
     },
     {
       "id": "m18-documentation",

@@ -5,13 +5,13 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-26T00:16:00.000Z
+  createdAt: 2026-07-26T00:28:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/import-export.yaml
-  planSha256: 3ab60cdd9355ee12c29c0dbc84d8c5d3c4905e0797fa46237fd39f35f205721a
+  planSha256: 61d0cbbab2b29a11099841ef7ed13e554f590fb276ce9a2a9a410a6baa80f106
   ancestry: .aiba/ancestry/import-export.json
-  ancestrySha256: b3a9a1d1d86161b88a47ba97628a39a45590c170f22b10714eac8e25f94ea71a
+  ancestrySha256: 2855591be5ce4bf3f2ae46a65043f6fcb490ed96d8ea616bbd822f78f18f4b75
 invariants:
   - id: exchange-operations-are-authorized
     evidence:

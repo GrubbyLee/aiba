@@ -5,13 +5,13 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-26T00:06:00.000Z
+  createdAt: 2026-07-26T00:36:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/wechat-miniprogram-auth.yaml
-  planSha256: c18b64e198139c3dfb2103f21ef3624595771ff5d5f6ac0c054c257dc293729d
+  planSha256: ae8ca67b9387609ac4d26ef948e8bf864024a65dd56805632b87869613b0b6ab
   ancestry: .aiba/ancestry/wechat-miniprogram-auth.json
-  ancestrySha256: a4fa96e69abaf3ea7febef38355056afe9fa3c01538671f22e831c4840404857
+  ancestrySha256: 51a6a7d1c57454c56dc451d5be79fc45d1d03364795ca8f4bd7b3666ab125376
 invariants:
   - id: login-code-is-exchanged-server-side
     evidence:

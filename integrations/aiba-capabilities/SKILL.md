@@ -1,6 +1,6 @@
 ---
 name: aiba-capabilities
-description: Install, adapt, compose, finalize, fetch, and verify AIBA software capabilities through the provider-independent AIBA CLI. Use when a user asks Codex or Claude Code to add capabilities such as review access, identity, authorization, audit, users, notifications, file assets, import/export, vehicle records, or WeChat Mini Program authentication to an existing project; check an industry solution; inspect or verify a project's `.aiba` state; or fetch a verified capability pack from a private registry.
+description: Install, adapt, compose, finalize, fetch, and verify AIBA software capabilities through the provider-independent AIBA CLI. Use when a user asks Codex or Claude Code to add identity, authorization, audit, users, notifications, verification, files, jobs, webhooks, flags, organizations, comments, activity, search, import/export, reporting, approvals, review access, business records, or Mini Program authentication; inspect an industry solution or `.aiba` state; or fetch a verified capability pack.
 ---
 
 # AIBA Capabilities
@@ -42,6 +42,14 @@ Then inspect the target project:
 ```bash
 aiba inspect --json
 ```
+
+Prefer shared foundations (`verification-challenge`, `scheduled-jobs`,
+`feature-flags`, `organization`, `search`) for cross-domain behavior;
+platform integrations (`webhooks`, `wechat-miniprogram-auth`) for external
+boundaries; and business capabilities (`comments-activity`, `reporting`,
+`workflow-approval`, `import-export`) for higher-level workflows. Inspect the
+selected manifest because these labels do not replace its interfaces,
+dependencies, or invariants.
 
 If AIBA state is absent and installation is requested, run `aiba init`. If the
 capability is already installed, run verification instead of preparing a second

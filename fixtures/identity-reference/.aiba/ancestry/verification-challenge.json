@@ -1,0 +1,61 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "verification-challenge",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:12:00.000Z",
+  "files": [
+    {
+      "path": "src/verification-challenge.test.ts",
+      "installedSha256": "689cd5d50e4b66f407b3630143ddafec89661024f7987adefe5d7b1d45b9d5ac",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "challenge-identifiers-do-not-enumerate-accounts",
+        "responses-are-held-as-keyed-digests",
+        "challenges-are-single-use-and-expiring",
+        "attempts-and-issuance-are-bounded",
+        "issuance-is-idempotent",
+        "tenant-and-purpose-come-from-trusted-policy",
+        "challenge-audit-is-minimized"
+      ],
+      "operations": [
+        "issue-indistinguishable-challenge",
+        "protect-and-deliver-response",
+        "consume-challenge-once",
+        "deduplicate-issuance"
+      ]
+    },
+    {
+      "path": "src/verification-challenge.ts",
+      "installedSha256": "e9b64070a806f584f0ed3908b9b71889bf55d5e83a48208c5bd7a12e057e3607",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "challenge-identifiers-do-not-enumerate-accounts",
+        "responses-are-held-as-keyed-digests",
+        "challenges-are-single-use-and-expiring",
+        "attempts-and-issuance-are-bounded",
+        "issuance-is-idempotent",
+        "tenant-and-purpose-come-from-trusted-policy",
+        "challenge-audit-is-minimized"
+      ],
+      "operations": [
+        "issue-indistinguishable-challenge",
+        "protect-and-deliver-response",
+        "consume-challenge-once",
+        "deduplicate-issuance"
+      ]
+    }
+  ]
+}

@@ -4,25 +4,52 @@ capabilities:
   - id: audit
     version: 0.1.0
     layer: engineering-governance
+  - id: identity
+    version: 0.1.0
+    layer: application-foundation
   - id: authorization
+    version: 0.1.0
+    layer: application-foundation
+  - id: users
+    version: 0.1.0
+    layer: application-foundation
+  - id: notification
+    version: 0.2.0
+    layer: application-foundation
+  - id: verification-challenge
     version: 0.1.0
     layer: application-foundation
   - id: file-assets
     version: 0.1.0
     layer: application-foundation
-  - id: identity
+  - id: scheduled-jobs
     version: 0.1.0
     layer: application-foundation
+  - id: feature-flags
+    version: 0.1.0
+    layer: application-foundation
+  - id: organization
+    version: 0.1.0
+    layer: application-foundation
+  - id: search
+    version: 0.1.0
+    layer: application-foundation
+  - id: webhooks
+    version: 0.1.0
+    layer: platform-integration
+  - id: comments-activity
+    version: 0.1.0
+    layer: business-capability
   - id: import-export
     version: 0.1.0
     layer: business-capability
-  - id: notification
-    version: 0.2.0
-    layer: application-foundation
-  - id: review-access
+  - id: reporting
     version: 0.1.0
-    layer: application-foundation
-  - id: users
+    layer: business-capability
+  - id: workflow-approval
+    version: 0.1.0
+    layer: business-capability
+  - id: review-access
     version: 0.1.0
     layer: application-foundation
   - id: vehicle-records

@@ -1,0 +1,139 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: workflow-approval-install
+  createdAt: 2026-07-26T00:31:00.000Z
+capability:
+  id: workflow-approval
+  version: 0.1.0
+  manifestSha256: d67dd36583fa95e1ce7a06330fb847bc3e78c525d7035dad5a902606fcb8e149
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: ab057d146eb27c8d869b5459658862bb2e449dc56c76dbfedd55d2cb588c8212
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+operations:
+  - id: request-approval
+    intent: Authorize and create one pending workflow from a server-owned definition.
+    requiredInterfaces:
+      - workflow-approval.request-command
+      - workflow-approval.record
+      - authorization.decision
+      - audit.event
+    invariants:
+      - definitions-and-actors-are-trusted
+      - transitions-are-explicit-and-authorized
+      - transitions-are-revisioned-and-idempotent
+    guidance:
+      - Resolve requester, tenant, required approvals, eligible actors, and
+        transition policy from trusted state.
+      - Bind request idempotency in the same transaction that creates pending
+        state.
+  - id: record-immutable-decision
+    intent: Atomically authorize and append one decision against the exact current
+      revision.
+    requiredInterfaces:
+      - workflow-approval.decision-command
+      - workflow-approval.record
+      - authorization.decision
+      - audit.event
+    invariants:
+      - duties-are-separated
+      - decisions-are-immutable
+      - transitions-are-revisioned-and-idempotent
+      - terminal-state-is-final
+    guidance:
+      - Recheck pending state, revision, actor uniqueness, and self-approval
+        after every async boundary and inside the write transaction.
+      - Append the decision and derive terminal state; never update or delete
+        prior decisions.
+evidence:
+  - invariant: definitions-and-actors-are-trusted
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Approval definition and atomic state transition boundary.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Authorization, impersonation, self-approval, duplicate actor,
+          revision race, idempotency, immutability, and terminal tests.
+    items:
+      - type: source
+        path: src/workflow-approval.ts
+        ownership: shared
+      - type: test
+        path: src/workflow-approval.test.ts
+        ownership: shared
+  - invariant: transitions-are-explicit-and-authorized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/workflow-approval.ts
+        ownership: shared
+      - type: test
+        path: src/workflow-approval.test.ts
+        ownership: shared
+  - invariant: duties-are-separated
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/workflow-approval.ts
+        ownership: shared
+      - type: test
+        path: src/workflow-approval.test.ts
+        ownership: shared
+  - invariant: decisions-are-immutable
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/workflow-approval.ts
+        ownership: shared
+      - type: test
+        path: src/workflow-approval.test.ts
+        ownership: shared
+  - invariant: transitions-are-revisioned-and-idempotent
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/workflow-approval.ts
+        ownership: shared
+      - type: test
+        path: src/workflow-approval.test.ts
+        ownership: shared
+  - invariant: terminal-state-is-final
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/workflow-approval.ts
+        ownership: shared
+      - type: test
+        path: src/workflow-approval.test.ts
+        ownership: shared

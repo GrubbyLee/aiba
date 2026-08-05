@@ -1,0 +1,65 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: search
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:22:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/search.yaml
+  planSha256: 8807ceab758ca2b340d475f3d11e99b27e2f9d6be9a3cbab3f74943af05e7fc3
+  ancestry: .aiba/ancestry/search.json
+  ancestrySha256: fb8eed0be2c8278b725f43cbe5abd99672da7c7b2dec252308f2667c31359e06
+invariants:
+  - id: search-scope-is-trusted
+    evidence:
+      - type: source
+        path: src/search.ts
+        ownership: shared
+        sha256: 36bcbc30f991c65e96dd01a45ed7d8cee1e153457da0ff8f23b9685c75ca8267
+      - type: test
+        path: src/search.test.ts
+        ownership: shared
+        sha256: fcab72dbeb4279341f9fe3c898ccb9b81b35a0a974f74011c9a95315b6937335
+  - id: authorization-precedes-ranking
+    evidence:
+      - type: source
+        path: src/search.ts
+        ownership: shared
+        sha256: 36bcbc30f991c65e96dd01a45ed7d8cee1e153457da0ff8f23b9685c75ca8267
+      - type: test
+        path: src/search.test.ts
+        ownership: shared
+        sha256: fcab72dbeb4279341f9fe3c898ccb9b81b35a0a974f74011c9a95315b6937335
+  - id: query-and-output-are-bounded
+    evidence:
+      - type: source
+        path: src/search.ts
+        ownership: shared
+        sha256: 36bcbc30f991c65e96dd01a45ed7d8cee1e153457da0ff8f23b9685c75ca8267
+      - type: test
+        path: src/search.test.ts
+        ownership: shared
+        sha256: fcab72dbeb4279341f9fe3c898ccb9b81b35a0a974f74011c9a95315b6937335
+  - id: cursors-are-opaque-and-bound
+    evidence:
+      - type: source
+        path: src/search.ts
+        ownership: shared
+        sha256: 36bcbc30f991c65e96dd01a45ed7d8cee1e153457da0ff8f23b9685c75ca8267
+      - type: test
+        path: src/search.test.ts
+        ownership: shared
+        sha256: fcab72dbeb4279341f9fe3c898ccb9b81b35a0a974f74011c9a95315b6937335
+  - id: search-projections-are-safe
+    evidence:
+      - type: source
+        path: src/search.ts
+        ownership: shared
+        sha256: 36bcbc30f991c65e96dd01a45ed7d8cee1e153457da0ff8f23b9685c75ca8267
+      - type: test
+        path: src/search.test.ts
+        ownership: shared
+        sha256: fcab72dbeb4279341f9fe3c898ccb9b81b35a0a974f74011c9a95315b6937335

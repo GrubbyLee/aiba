@@ -1,0 +1,65 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: comments-activity
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:26:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/comments-activity.yaml
+  planSha256: f57589fe029e92a278ba2bfaa944504d9adbd267021d772aab22b6c2a8c85c63
+  ancestry: .aiba/ancestry/comments-activity.json
+  ancestrySha256: 1b1c975013189344320a25211f0720cd9cd3defeda2d2b5ec33c50eb1f4eb40e
+invariants:
+  - id: authorship-and-scope-are-trusted
+    evidence:
+      - type: source
+        path: src/comments-activity.ts
+        ownership: shared
+        sha256: cc997b03d031f04d81e0f8a8ececc4906bf288e19c4045cc625d19f78393058c
+      - type: test
+        path: src/comments-activity.test.ts
+        ownership: shared
+        sha256: e8ce04797b1cbfecaf1d0c53ea282d1c754580e692c2e11db81e1b6fb7d4e690
+  - id: content-and-mentions-are-bounded
+    evidence:
+      - type: source
+        path: src/comments-activity.ts
+        ownership: shared
+        sha256: cc997b03d031f04d81e0f8a8ececc4906bf288e19c4045cc625d19f78393058c
+      - type: test
+        path: src/comments-activity.test.ts
+        ownership: shared
+        sha256: e8ce04797b1cbfecaf1d0c53ea282d1c754580e692c2e11db81e1b6fb7d4e690
+  - id: comment-mutations-are-safe
+    evidence:
+      - type: source
+        path: src/comments-activity.ts
+        ownership: shared
+        sha256: cc997b03d031f04d81e0f8a8ececc4906bf288e19c4045cc625d19f78393058c
+      - type: test
+        path: src/comments-activity.test.ts
+        ownership: shared
+        sha256: e8ce04797b1cbfecaf1d0c53ea282d1c754580e692c2e11db81e1b6fb7d4e690
+  - id: activity-is-append-only
+    evidence:
+      - type: source
+        path: src/comments-activity.ts
+        ownership: shared
+        sha256: cc997b03d031f04d81e0f8a8ececc4906bf288e19c4045cc625d19f78393058c
+      - type: test
+        path: src/comments-activity.test.ts
+        ownership: shared
+        sha256: e8ce04797b1cbfecaf1d0c53ea282d1c754580e692c2e11db81e1b6fb7d4e690
+  - id: activity-is-tenant-scoped
+    evidence:
+      - type: source
+        path: src/comments-activity.ts
+        ownership: shared
+        sha256: cc997b03d031f04d81e0f8a8ececc4906bf288e19c4045cc625d19f78393058c
+      - type: test
+        path: src/comments-activity.test.ts
+        ownership: shared
+        sha256: e8ce04797b1cbfecaf1d0c53ea282d1c754580e692c2e11db81e1b6fb7d4e690

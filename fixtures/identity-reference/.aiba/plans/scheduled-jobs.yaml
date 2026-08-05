@@ -1,0 +1,137 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: scheduled-jobs-install
+  createdAt: 2026-07-26T00:15:00.000Z
+capability:
+  id: scheduled-jobs
+  version: 0.1.0
+  manifestSha256: fbf49b1b57907281171f39bcd6c71e103f03f2a2559e6322d0d23c2f5edef52b
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: a1839170d7acd2f10243ca113f89b49e3533b64daae6bd16c965b8f0a627472f
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+    - workers/**
+operations:
+  - id: schedule-trusted-definition
+    intent: Authorize and persist one due-time request for a server-owned job
+      definition.
+    requiredInterfaces:
+      - scheduled-jobs.command
+      - scheduled-jobs.record
+      - authorization.decision
+      - audit.event
+    invariants:
+      - definitions-are-server-owned
+      - scheduling-is-authorized-and-scoped
+      - scheduling-is-idempotent
+    guidance:
+      - Resolve tenant, handler, retry limit, and lease duration from trusted
+        server state.
+      - Bind a scoped idempotency key to the exact validated command before
+        acknowledging it.
+  - id: lease-and-run-due-job
+    intent: Atomically lease one due runnable job and execute its trusted handler.
+    requiredInterfaces:
+      - scheduled-jobs.record
+      - audit.event
+    invariants:
+      - execution-is-due-and-leased
+      - retries-are-bounded
+      - job-records-are-minimized
+    guidance:
+      - Acquire the lease and increment the attempt in one transaction or
+        compare-and-swap operation.
+      - Store allowlisted failure codes; keep exceptions, payloads, credentials,
+        and worker identifiers private.
+evidence:
+  - invariant: definitions-are-server-owned
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Scheduled job boundary and trusted definition registry.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Authorization, due-time, lease, replay, retry, idempotency, and
+          redaction tests.
+    items:
+      - type: source
+        path: src/scheduled-jobs.ts
+        ownership: shared
+      - type: test
+        path: src/scheduled-jobs.test.ts
+        ownership: shared
+  - invariant: scheduling-is-authorized-and-scoped
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/scheduled-jobs.ts
+        ownership: shared
+      - type: test
+        path: src/scheduled-jobs.test.ts
+        ownership: shared
+  - invariant: scheduling-is-idempotent
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/scheduled-jobs.ts
+        ownership: shared
+      - type: test
+        path: src/scheduled-jobs.test.ts
+        ownership: shared
+  - invariant: execution-is-due-and-leased
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/scheduled-jobs.ts
+        ownership: shared
+      - type: test
+        path: src/scheduled-jobs.test.ts
+        ownership: shared
+  - invariant: retries-are-bounded
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/scheduled-jobs.ts
+        ownership: shared
+      - type: test
+        path: src/scheduled-jobs.test.ts
+        ownership: shared
+  - invariant: job-records-are-minimized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/scheduled-jobs.ts
+        ownership: shared
+      - type: test
+        path: src/scheduled-jobs.test.ts
+        ownership: shared

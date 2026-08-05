@@ -1,0 +1,55 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "reporting",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:30:00.000Z",
+  "files": [
+    {
+      "path": "src/reporting.test.ts",
+      "installedSha256": "2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "definitions-and-scope-are-trusted",
+        "report-execution-is-authorized",
+        "report-execution-is-bounded",
+        "report-requests-are-idempotent",
+        "outputs-are-private-and-projected",
+        "report-records-are-minimized"
+      ],
+      "operations": [
+        "request-trusted-report",
+        "execute-bounded-report"
+      ]
+    },
+    {
+      "path": "src/reporting.ts",
+      "installedSha256": "57418b71f7e3fd1124ca92442469764f8a900e5a11b736b165d47ff080d2c246",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "definitions-and-scope-are-trusted",
+        "report-execution-is-authorized",
+        "report-execution-is-bounded",
+        "report-requests-are-idempotent",
+        "outputs-are-private-and-projected",
+        "report-records-are-minimized"
+      ],
+      "operations": [
+        "request-trusted-report",
+        "execute-bounded-report"
+      ]
+    }
+  ]
+}

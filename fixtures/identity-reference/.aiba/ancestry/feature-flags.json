@@ -1,0 +1,51 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "feature-flags",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:18:00.000Z",
+  "files": [
+    {
+      "path": "src/feature-flags.test.ts",
+      "installedSha256": "bae3377d240fad5483e45a924c3a18c8ccbe4c46aa3c6661752f55d414e00a7a",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "context-is-trusted",
+        "policy-is-revisioned",
+        "rollout-is-deterministic",
+        "allocation-is-bounded",
+        "evaluation-is-minimized"
+      ],
+      "operations": [
+        "evaluate-revisioned-policy"
+      ]
+    },
+    {
+      "path": "src/feature-flags.ts",
+      "installedSha256": "e0fe4f9b5560be406c57c3feb55ea1ee90b9419210158342ca94421bed1ed8cd",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "context-is-trusted",
+        "policy-is-revisioned",
+        "rollout-is-deterministic",
+        "allocation-is-bounded",
+        "evaluation-is-minimized"
+      ],
+      "operations": [
+        "evaluate-revisioned-policy"
+      ]
+    }
+  ]
+}

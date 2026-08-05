@@ -1,0 +1,170 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: verification-challenge-install
+  createdAt: 2026-07-26T00:11:00.000Z
+capability:
+  id: verification-challenge
+  version: 0.1.0
+  manifestSha256: 22b64fd91600a6db70546159c50130ac150aaf30a4fdcb011d05b0a083971235
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: 92e111c2d030b09a2c945629115e45696e3f6ed7b406a932d233cf39e263422d
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+    - cloudfunctions/**
+operations:
+  - id: issue-indistinguishable-challenge
+    intent: Resolve a recipient in trusted scope, create one bounded challenge, and
+      return a minimized record without account enumeration.
+    requiredInterfaces:
+      - verification-challenge.issue-command
+      - verification-challenge.record
+    invariants:
+      - challenge-identifiers-do-not-enumerate-accounts
+      - tenant-and-purpose-come-from-trusted-policy
+    guidance:
+      - Keep tenant, provider destination, template, expiry, attempts, and
+        eligibility in trusted server policy.
+      - Create equivalent phantom state for unknown recipients and return the
+        same public shape and errors.
+  - id: protect-and-deliver-response
+    intent: Store only a keyed response digest and deliver plaintext through the
+      configured notification boundary.
+    requiredInterfaces:
+      - notification.command
+      - audit.event
+    invariants:
+      - responses-are-held-as-keyed-digests
+      - attempts-and-issuance-are-bounded
+      - challenge-audit-is-minimized
+    guidance:
+      - Use a separately managed high-entropy pepper and constant-time digest
+        comparison.
+      - Rate-limit trusted actor and recipient scopes before delivery and never
+        log provider inputs.
+  - id: consume-challenge-once
+    intent: Atomically verify pending state, expiry, attempts, and the response
+      before recording terminal success.
+    requiredInterfaces:
+      - verification-challenge.verify-command
+      - verification-challenge.record
+    invariants:
+      - challenges-are-single-use-and-expiring
+      - attempts-and-issuance-are-bounded
+    guidance:
+      - Lock or compare-and-swap the record so concurrent verification cannot
+        succeed twice.
+      - Use one public failure for missing, expired, locked, already-used, and
+        wrong responses.
+  - id: deduplicate-issuance
+    intent: Bind one tenant and purpose scoped idempotency key to the exact command
+      and delivery.
+    requiredInterfaces:
+      - verification-challenge.issue-command
+    invariants:
+      - issuance-is-idempotent
+    guidance:
+      - Persist the command fingerprint and result before acknowledging
+        successful issuance.
+      - Reject reuse of the key with a changed recipient, purpose, or channel.
+evidence:
+  - invariant: challenge-identifiers-do-not-enumerate-accounts
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Verification challenge implementation.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Success, enumeration, replay, expiry, limits, idempotency, and
+          redaction tests.
+    items:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+  - invariant: responses-are-held-as-keyed-digests
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+  - invariant: challenges-are-single-use-and-expiring
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+  - invariant: attempts-and-issuance-are-bounded
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+  - invariant: issuance-is-idempotent
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+  - invariant: tenant-and-purpose-come-from-trusted-policy
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+  - invariant: challenge-audit-is-minimized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared

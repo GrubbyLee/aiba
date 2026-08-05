@@ -8,15 +8,12 @@ project:
       - JavaScript
     frameworks: []
 capabilities:
-  - id: identity
-    version: 0.1.0
-    receipt: .aiba/receipts/identity.yaml
   - id: audit
     version: 0.1.0
     receipt: .aiba/receipts/audit.yaml
-  - id: wechat-miniprogram-auth
+  - id: identity
     version: 0.1.0
-    receipt: .aiba/receipts/wechat-miniprogram-auth.yaml
+    receipt: .aiba/receipts/identity.yaml
   - id: authorization
     version: 0.1.0
     receipt: .aiba/receipts/authorization.yaml
@@ -26,12 +23,42 @@ capabilities:
   - id: notification
     version: 0.2.0
     receipt: .aiba/receipts/notification.yaml
+  - id: verification-challenge
+    version: 0.1.0
+    receipt: .aiba/receipts/verification-challenge.yaml
   - id: file-assets
     version: 0.1.0
     receipt: .aiba/receipts/file-assets.yaml
+  - id: scheduled-jobs
+    version: 0.1.0
+    receipt: .aiba/receipts/scheduled-jobs.yaml
+  - id: feature-flags
+    version: 0.1.0
+    receipt: .aiba/receipts/feature-flags.yaml
+  - id: organization
+    version: 0.1.0
+    receipt: .aiba/receipts/organization.yaml
+  - id: search
+    version: 0.1.0
+    receipt: .aiba/receipts/search.yaml
+  - id: webhooks
+    version: 0.1.0
+    receipt: .aiba/receipts/webhooks.yaml
+  - id: comments-activity
+    version: 0.1.0
+    receipt: .aiba/receipts/comments-activity.yaml
   - id: import-export
     version: 0.1.0
     receipt: .aiba/receipts/import-export.yaml
+  - id: reporting
+    version: 0.1.0
+    receipt: .aiba/receipts/reporting.yaml
+  - id: workflow-approval
+    version: 0.1.0
+    receipt: .aiba/receipts/workflow-approval.yaml
   - id: vehicle-records
     version: 0.1.0
     receipt: .aiba/receipts/vehicle-records.yaml
+  - id: wechat-miniprogram-auth
+    version: 0.1.0
+    receipt: .aiba/receipts/wechat-miniprogram-auth.yaml

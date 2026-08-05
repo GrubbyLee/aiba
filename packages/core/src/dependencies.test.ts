@@ -115,14 +115,23 @@ describe("core capability dependencies", () => {
     const expected = new Map([
       ["audit", "engineering-governance"],
       ["authorization", "application-foundation"],
+      ["comments-activity", "business-capability"],
+      ["feature-flags", "application-foundation"],
       ["file-assets", "application-foundation"],
       ["identity", "application-foundation"],
       ["import-export", "business-capability"],
       ["notification", "application-foundation"],
+      ["organization", "application-foundation"],
+      ["reporting", "business-capability"],
       ["review-access", "application-foundation"],
+      ["scheduled-jobs", "application-foundation"],
+      ["search", "application-foundation"],
       ["users", "application-foundation"],
       ["vehicle-records", "business-capability"],
+      ["verification-challenge", "application-foundation"],
+      ["webhooks", "platform-integration"],
       ["wechat-miniprogram-auth", "platform-integration"],
+      ["workflow-approval", "business-capability"],
     ]);
     const catalog = await loadCapabilityCatalog(join(workspace, "capabilities"));
     expect(catalog.capabilities).toHaveLength(expected.size);
@@ -132,6 +141,17 @@ describe("core capability dependencies", () => {
       const manifest = await loadCapabilityManifest(join(workspace, "capabilities"), id);
       expect(entry.version, id).toBe(manifest.metadata.version);
       if (manifest.metadata.layer) expect(manifest.metadata.layer, id).toBe(entry.layer);
+    }
+  });
+
+  it("orders the official catalog after every required dependency", async () => {
+    const catalog = await loadCapabilityCatalog(join(workspace, "capabilities"));
+    const positions = new Map(catalog.capabilities.map((entry, index) => [entry.id, index]));
+    for (const entry of catalog.capabilities) {
+      const manifest = await loadCapabilityManifest(join(workspace, "capabilities"), entry.id);
+      for (const dependency of manifest.spec.dependencies.filter((item) => !item.optional)) {
+        expect(positions.get(dependency.id), `${entry.id} dependency ${dependency.id}`).toBeLessThan(positions.get(entry.id)!);
+      }
     }
   });
 

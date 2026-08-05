@@ -1,0 +1,75 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: reporting
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:30:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/reporting.yaml
+  planSha256: fcc109b8a6ad7d3c80344b9e953168b255fb5350a70618aa55c0f527443c7c89
+  ancestry: .aiba/ancestry/reporting.json
+  ancestrySha256: b9c26fdcbde59460f0ca3a7cf6e2353b4dad4a19dc33e84c4503eea46cedf940
+invariants:
+  - id: definitions-and-scope-are-trusted
+    evidence:
+      - type: source
+        path: src/reporting.ts
+        ownership: shared
+        sha256: 57418b71f7e3fd1124ca92442469764f8a900e5a11b736b165d47ff080d2c246
+      - type: test
+        path: src/reporting.test.ts
+        ownership: shared
+        sha256: 2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2
+  - id: report-execution-is-authorized
+    evidence:
+      - type: source
+        path: src/reporting.ts
+        ownership: shared
+        sha256: 57418b71f7e3fd1124ca92442469764f8a900e5a11b736b165d47ff080d2c246
+      - type: test
+        path: src/reporting.test.ts
+        ownership: shared
+        sha256: 2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2
+  - id: report-execution-is-bounded
+    evidence:
+      - type: source
+        path: src/reporting.ts
+        ownership: shared
+        sha256: 57418b71f7e3fd1124ca92442469764f8a900e5a11b736b165d47ff080d2c246
+      - type: test
+        path: src/reporting.test.ts
+        ownership: shared
+        sha256: 2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2
+  - id: report-requests-are-idempotent
+    evidence:
+      - type: source
+        path: src/reporting.ts
+        ownership: shared
+        sha256: 57418b71f7e3fd1124ca92442469764f8a900e5a11b736b165d47ff080d2c246
+      - type: test
+        path: src/reporting.test.ts
+        ownership: shared
+        sha256: 2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2
+  - id: outputs-are-private-and-projected
+    evidence:
+      - type: source
+        path: src/reporting.ts
+        ownership: shared
+        sha256: 57418b71f7e3fd1124ca92442469764f8a900e5a11b736b165d47ff080d2c246
+      - type: test
+        path: src/reporting.test.ts
+        ownership: shared
+        sha256: 2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2
+  - id: report-records-are-minimized
+    evidence:
+      - type: source
+        path: src/reporting.ts
+        ownership: shared
+        sha256: 57418b71f7e3fd1124ca92442469764f8a900e5a11b736b165d47ff080d2c246
+      - type: test
+        path: src/reporting.test.ts
+        ownership: shared
+        sha256: 2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2

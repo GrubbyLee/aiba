@@ -57,6 +57,14 @@ try {
   if (!cliFiles.includes("package/capabilities/wechat-miniprogram-auth/capability.yaml")) {
     throw new Error("@grubbylee/aiba does not contain the WeChat Mini Program auth capability");
   }
+  for (const capability of [
+    "verification-challenge", "scheduled-jobs", "webhooks", "feature-flags",
+    "organization", "comments-activity", "search", "reporting", "workflow-approval",
+  ]) {
+    if (!cliFiles.includes(`package/capabilities/${capability}/capability.yaml`)) {
+      throw new Error(`@grubbylee/aiba does not contain the ${capability} capability`);
+    }
+  }
   if (!cliFiles.includes("package/solutions/vehicle-management/solution.yaml")) {
     throw new Error("@grubbylee/aiba does not contain the vehicle-management solution");
   }
@@ -77,6 +85,16 @@ try {
   }
   if (!specFiles.includes("package/schema/interfaces/wechat-miniprogram-login-result.schema.json")) {
     throw new Error("aiba-spec does not contain WeChat Mini Program auth interfaces");
+  }
+  for (const schema of [
+    "verification-challenge-record.schema.json", "scheduled-job-record.schema.json",
+    "webhook-delivery-record.schema.json", "feature-flag-evaluation-result.schema.json",
+    "organization-membership-record.schema.json", "activity-record.schema.json",
+    "search-page.schema.json", "report-run-record.schema.json", "approval-workflow-record.schema.json",
+  ]) {
+    if (!specFiles.includes(`package/schema/interfaces/${schema}`)) {
+      throw new Error(`aiba-spec does not contain ${schema}`);
+    }
   }
   if (!cliFiles.includes("package/GENERATED_OUTPUT_EXCEPTION.md")) {
     throw new Error("@grubbylee/aiba does not contain the generated-output exception");
@@ -157,6 +175,9 @@ try {
   runCli(["init", app, "--json"]);
   runCli(["list", "--json"]);
   runCli(["show", "vehicle-management", "--json"]);
+  for (const capability of ["verification-challenge", "scheduled-jobs", "webhooks", "feature-flags", "organization", "comments-activity", "search", "reporting", "workflow-approval"]) {
+    runCli(["show", capability, "--json"]);
+  }
   runCli(["inspect", app, "--json"]);
   runCli(["doctor", "--root", app, "--json"]);
   runCli(["agent-protocol", "--json"]);

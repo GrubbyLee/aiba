@@ -1,0 +1,53 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "comments-activity",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:26:00.000Z",
+  "files": [
+    {
+      "path": "src/comments-activity.test.ts",
+      "installedSha256": "e8ce04797b1cbfecaf1d0c53ea282d1c754580e692c2e11db81e1b6fb7d4e690",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "authorship-and-scope-are-trusted",
+        "content-and-mentions-are-bounded",
+        "comment-mutations-are-safe",
+        "activity-is-append-only",
+        "activity-is-tenant-scoped"
+      ],
+      "operations": [
+        "mutate-comment",
+        "list-authorized-activity"
+      ]
+    },
+    {
+      "path": "src/comments-activity.ts",
+      "installedSha256": "cc997b03d031f04d81e0f8a8ececc4906bf288e19c4045cc625d19f78393058c",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "authorship-and-scope-are-trusted",
+        "content-and-mentions-are-bounded",
+        "comment-mutations-are-safe",
+        "activity-is-append-only",
+        "activity-is-tenant-scoped"
+      ],
+      "operations": [
+        "mutate-comment",
+        "list-authorized-activity"
+      ]
+    }
+  ]
+}

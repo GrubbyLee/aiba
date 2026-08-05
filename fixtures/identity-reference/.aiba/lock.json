@@ -1,17 +1,8 @@
 {
   "apiVersion": "aiba.dev/v0alpha1",
   "kind": "Lock",
-  "generatedAt": "2026-07-26T00:18:00.000Z",
+  "generatedAt": "2026-07-26T00:36:00.000Z",
   "capabilities": [
-    {
-      "id": "identity",
-      "version": "0.1.0",
-      "manifestSha256": "683b7789a650ca13493854fe552bf8120535491fea125d84f5ca172da38a362a",
-      "recipe": {
-        "id": "typescript-reference",
-        "sha256": "20aaf49fbac386d31df1808440bcf5ab9a289b5b725170b6e79145fd5b17f50d"
-      }
-    },
     {
       "id": "audit",
       "version": "0.1.0",
@@ -22,12 +13,12 @@
       }
     },
     {
-      "id": "wechat-miniprogram-auth",
+      "id": "identity",
       "version": "0.1.0",
-      "manifestSha256": "a9548b412326c85df788e8110e817763f94d20d6f41b1534a41308777afaba7b",
+      "manifestSha256": "683b7789a650ca13493854fe552bf8120535491fea125d84f5ca172da38a362a",
       "recipe": {
         "id": "typescript-reference",
-        "sha256": "9039110056825f2dc2935b2650cf93498da2f7f31865e787b128e221820787ae"
+        "sha256": "20aaf49fbac386d31df1808440bcf5ab9a289b5b725170b6e79145fd5b17f50d"
       }
     },
     {
@@ -58,12 +49,75 @@
       }
     },
     {
+      "id": "verification-challenge",
+      "version": "0.1.0",
+      "manifestSha256": "22b64fd91600a6db70546159c50130ac150aaf30a4fdcb011d05b0a083971235",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "92e111c2d030b09a2c945629115e45696e3f6ed7b406a932d233cf39e263422d"
+      }
+    },
+    {
       "id": "file-assets",
       "version": "0.1.0",
       "manifestSha256": "29176ec35d328b6e5fe03f9528926a035859305944dc7e5a511e6138b38d7565",
       "recipe": {
         "id": "typescript-reference",
         "sha256": "bbd2d8bd6440d096596218682f99173ea28d381d24bf211d545dcbacc4dab1e1"
+      }
+    },
+    {
+      "id": "scheduled-jobs",
+      "version": "0.1.0",
+      "manifestSha256": "fbf49b1b57907281171f39bcd6c71e103f03f2a2559e6322d0d23c2f5edef52b",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "a1839170d7acd2f10243ca113f89b49e3533b64daae6bd16c965b8f0a627472f"
+      }
+    },
+    {
+      "id": "feature-flags",
+      "version": "0.1.0",
+      "manifestSha256": "4accb66df80c0720a8b4c6d1414bf0829e9dda09f9688c8dda90210c9a565c3f",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "fc9b04f3ec54f7e2251451d24ed226801df3fbaf0a243e54c1e3743387a052ed"
+      }
+    },
+    {
+      "id": "organization",
+      "version": "0.1.0",
+      "manifestSha256": "a88da97a8c5c274f9c64fc4d89a39c6349fa6de30f93e6a6d7119a0d845eef62",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "bc8a0a907f6534698e30f06b313bae16f072c655ce9886fa3f7565f6c4db9f3e"
+      }
+    },
+    {
+      "id": "search",
+      "version": "0.1.0",
+      "manifestSha256": "93aaa306c00359a9fa31072d2d6153ec2a248473b31c2615718a834d190d9ff9",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "bddd6b3dc65f4d3a9108c5eb9c65f79b693055c68c7d287e1dc1bf89dcef40c4"
+      }
+    },
+    {
+      "id": "webhooks",
+      "version": "0.1.0",
+      "manifestSha256": "bf387544b85bd60e9a82dd07e4f2356dd0cf68f1c0235d7775eb5ba101c49f96",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "e080bfb07bd4c4a6c674f8b5bd8332e2a76209b1f46add8bb39d17f6734a99f8"
+      }
+    },
+    {
+      "id": "comments-activity",
+      "version": "0.1.0",
+      "manifestSha256": "269edac5f620235261e58f68db50addf20bbe5734afa3ad0e4086cc823d05816",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "b8fe668f1f0383295f31c0d62377af4b56cdaa5bc4f612a99f0eeea961eff208"
       }
     },
     {
@@ -76,12 +130,39 @@
       }
     },
     {
+      "id": "reporting",
+      "version": "0.1.0",
+      "manifestSha256": "62a05a72d00378d0a6b116dd00072e11b954c94fd06d325b154da8c8fba47b60",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "18633441ca1386ffd3688be10f81e66d0922459e1e09760df8744a284bb13963"
+      }
+    },
+    {
+      "id": "workflow-approval",
+      "version": "0.1.0",
+      "manifestSha256": "d67dd36583fa95e1ce7a06330fb847bc3e78c525d7035dad5a902606fcb8e149",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "ab057d146eb27c8d869b5459658862bb2e449dc56c76dbfedd55d2cb588c8212"
+      }
+    },
+    {
       "id": "vehicle-records",
       "version": "0.1.0",
       "manifestSha256": "752e5d3507fc028244ee5c15f14afdc50238fc0c2f77fc40797d63a0ec16e741",
       "recipe": {
         "id": "typescript-reference",
         "sha256": "8c4ae0064814253a2644db84e9167253a7d85b03ad84d485891de48cb22a1ad8"
+      }
+    },
+    {
+      "id": "wechat-miniprogram-auth",
+      "version": "0.1.0",
+      "manifestSha256": "a9548b412326c85df788e8110e817763f94d20d6f41b1534a41308777afaba7b",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "9039110056825f2dc2935b2650cf93498da2f7f31865e787b128e221820787ae"
       }
     }
   ]

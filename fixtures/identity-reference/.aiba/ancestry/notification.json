@@ -9,7 +9,7 @@
     "id": "typescript-reference",
     "version": "0.2.0"
   },
-  "createdAt": "2026-07-26T00:12:00.000Z",
+  "createdAt": "2026-07-26T00:10:00.000Z",
   "files": [
     {
       "path": "src/notification.test.ts",

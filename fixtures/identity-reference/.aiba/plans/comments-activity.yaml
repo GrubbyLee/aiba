@@ -1,0 +1,127 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: comments-activity-install
+  createdAt: 2026-07-26T00:25:00.000Z
+capability:
+  id: comments-activity
+  version: 0.1.0
+  manifestSha256: 269edac5f620235261e58f68db50addf20bbe5734afa3ad0e4086cc823d05816
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: b8fe668f1f0383295f31c0d62377af4b56cdaa5bc4f612a99f0eeea961eff208
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+operations:
+  - id: mutate-comment
+    intent: Authorize, validate, deduplicate, and apply one revisioned comment
+      mutation.
+    requiredInterfaces:
+      - comments.command
+      - comments.record
+      - activity.record
+      - authorization.decision
+      - audit.event
+    invariants:
+      - authorship-and-scope-are-trusted
+      - content-and-mentions-are-bounded
+      - comment-mutations-are-safe
+      - activity-is-append-only
+    guidance:
+      - Derive actor and tenant from the session and validate mentioned users in
+        the same tenant.
+      - Commit the comment mutation, idempotency binding, and new activity row
+        atomically.
+      - Soft deletion removes body and mentions while retaining identity and
+        lifecycle activity.
+  - id: list-authorized-activity
+    intent: Return append-only activity only after resource authorization and tenant
+      filtering.
+    requiredInterfaces:
+      - activity.record
+      - authorization.decision
+    invariants:
+      - activity-is-tenant-scoped
+    guidance:
+      - Apply tenant and authorization predicates before pagination or result
+        materialization.
+evidence:
+  - invariant: authorship-and-scope-are-trusted
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Comment mutation and authorized activity boundary.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Authorship, scope, content, mention, revision, deletion,
+          idempotency, and activity tests.
+    items:
+      - type: source
+        path: src/comments-activity.ts
+        ownership: shared
+      - type: test
+        path: src/comments-activity.test.ts
+        ownership: shared
+  - invariant: content-and-mentions-are-bounded
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/comments-activity.ts
+        ownership: shared
+      - type: test
+        path: src/comments-activity.test.ts
+        ownership: shared
+  - invariant: comment-mutations-are-safe
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/comments-activity.ts
+        ownership: shared
+      - type: test
+        path: src/comments-activity.test.ts
+        ownership: shared
+  - invariant: activity-is-append-only
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/comments-activity.ts
+        ownership: shared
+      - type: test
+        path: src/comments-activity.test.ts
+        ownership: shared
+  - invariant: activity-is-tenant-scoped
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/comments-activity.ts
+        ownership: shared
+      - type: test
+        path: src/comments-activity.test.ts
+        ownership: shared

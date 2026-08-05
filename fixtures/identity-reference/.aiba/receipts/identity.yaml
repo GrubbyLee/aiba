@@ -5,13 +5,13 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-26T00:02:00.000Z
+  createdAt: 2026-07-26T00:04:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/identity.yaml
-  planSha256: 808167e3bab32a96083d6b18a44195f97c932bf76c1efaf9cfb52eb1ba8547e1
+  planSha256: 762fe197264cee6802da7fb66b35b2cb6a2aace6626f2e0404a2b03daaaed5ee
   ancestry: .aiba/ancestry/identity.json
-  ancestrySha256: 752ebe00fc97f91c99a950e6f03ef381983490e6728b10968afde9151fc77d4b
+  ancestrySha256: cfd36252e191f3de978948167cd542265dcff74ca726752b33d543b3c7e0786f
 invariants:
   - id: credentials-are-one-way
     evidence:

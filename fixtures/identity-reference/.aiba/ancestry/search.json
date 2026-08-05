@@ -1,0 +1,51 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "search",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:22:00.000Z",
+  "files": [
+    {
+      "path": "src/search.test.ts",
+      "installedSha256": "fcab72dbeb4279341f9fe3c898ccb9b81b35a0a974f74011c9a95315b6937335",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "search-scope-is-trusted",
+        "authorization-precedes-ranking",
+        "query-and-output-are-bounded",
+        "cursors-are-opaque-and-bound",
+        "search-projections-are-safe"
+      ],
+      "operations": [
+        "search-authorized-resources"
+      ]
+    },
+    {
+      "path": "src/search.ts",
+      "installedSha256": "36bcbc30f991c65e96dd01a45ed7d8cee1e153457da0ff8f23b9685c75ca8267",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "search-scope-is-trusted",
+        "authorization-precedes-ranking",
+        "query-and-output-are-bounded",
+        "cursors-are-opaque-and-bound",
+        "search-projections-are-safe"
+      ],
+      "operations": [
+        "search-authorized-resources"
+      ]
+    }
+  ]
+}

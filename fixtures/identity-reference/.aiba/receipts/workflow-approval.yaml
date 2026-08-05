@@ -1,0 +1,75 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: workflow-approval
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:32:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/workflow-approval.yaml
+  planSha256: 105b42fcc7c99fd653d1126b2069263aef28015ae03c73530b589927ea22add0
+  ancestry: .aiba/ancestry/workflow-approval.json
+  ancestrySha256: 83eb37de7162f19e8e98642803fb6ac23768b7e6d1c9a8fd601a85f881a1cc88
+invariants:
+  - id: definitions-and-actors-are-trusted
+    evidence:
+      - type: source
+        path: src/workflow-approval.ts
+        ownership: shared
+        sha256: 53d11d9c55ae37f0676cf10995ea919c2fcfee0a67e07a66074466dfe5ed80f1
+      - type: test
+        path: src/workflow-approval.test.ts
+        ownership: shared
+        sha256: ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f
+  - id: transitions-are-explicit-and-authorized
+    evidence:
+      - type: source
+        path: src/workflow-approval.ts
+        ownership: shared
+        sha256: 53d11d9c55ae37f0676cf10995ea919c2fcfee0a67e07a66074466dfe5ed80f1
+      - type: test
+        path: src/workflow-approval.test.ts
+        ownership: shared
+        sha256: ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f
+  - id: duties-are-separated
+    evidence:
+      - type: source
+        path: src/workflow-approval.ts
+        ownership: shared
+        sha256: 53d11d9c55ae37f0676cf10995ea919c2fcfee0a67e07a66074466dfe5ed80f1
+      - type: test
+        path: src/workflow-approval.test.ts
+        ownership: shared
+        sha256: ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f
+  - id: decisions-are-immutable
+    evidence:
+      - type: source
+        path: src/workflow-approval.ts
+        ownership: shared
+        sha256: 53d11d9c55ae37f0676cf10995ea919c2fcfee0a67e07a66074466dfe5ed80f1
+      - type: test
+        path: src/workflow-approval.test.ts
+        ownership: shared
+        sha256: ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f
+  - id: transitions-are-revisioned-and-idempotent
+    evidence:
+      - type: source
+        path: src/workflow-approval.ts
+        ownership: shared
+        sha256: 53d11d9c55ae37f0676cf10995ea919c2fcfee0a67e07a66074466dfe5ed80f1
+      - type: test
+        path: src/workflow-approval.test.ts
+        ownership: shared
+        sha256: ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f
+  - id: terminal-state-is-final
+    evidence:
+      - type: source
+        path: src/workflow-approval.ts
+        ownership: shared
+        sha256: 53d11d9c55ae37f0676cf10995ea919c2fcfee0a67e07a66074466dfe5ed80f1
+      - type: test
+        path: src/workflow-approval.test.ts
+        ownership: shared
+        sha256: ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f

@@ -1,0 +1,137 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: reporting-install
+  createdAt: 2026-07-26T00:29:00.000Z
+capability:
+  id: reporting
+  version: 0.1.0
+  manifestSha256: 62a05a72d00378d0a6b116dd00072e11b954c94fd06d325b154da8c8fba47b60
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: 18633441ca1386ffd3688be10f81e66d0922459e1e09760df8744a284bb13963
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - workers/**
+    - test/**
+    - tests/**
+operations:
+  - id: request-trusted-report
+    intent: Authorize and deduplicate one request against a server-owned report
+      definition.
+    requiredInterfaces:
+      - reporting.run-command
+      - reporting.run-record
+      - authorization.decision
+      - audit.event
+    invariants:
+      - definitions-and-scope-are-trusted
+      - report-execution-is-authorized
+      - report-requests-are-idempotent
+    guidance:
+      - Validate only declared parameter keys and formats; never accept SQL,
+        templates, output fields, or paths.
+      - Bind tenant-scoped idempotency before acknowledging the queued record.
+  - id: execute-bounded-report
+    intent: Execute with trusted time and row limits, project allowlisted fields,
+      and publish a private asset.
+    requiredInterfaces:
+      - reporting.run-record
+      - file-assets.record
+      - audit.event
+    invariants:
+      - report-execution-is-bounded
+      - outputs-are-private-and-projected
+      - report-records-are-minimized
+    guidance:
+      - Enforce datastore limits as well as worker timeout and cancellation.
+      - Store output privately and return an opaque asset reference governed by
+        file-assets authorization.
+evidence:
+  - invariant: definitions-and-scope-are-trusted
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Report definition, execution, projection, and private output boundary.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Authorization, injection, bounds, timeout, projection, idempotency,
+          privacy, and redaction tests.
+    items:
+      - type: source
+        path: src/reporting.ts
+        ownership: shared
+      - type: test
+        path: src/reporting.test.ts
+        ownership: shared
+  - invariant: report-execution-is-authorized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reporting.ts
+        ownership: shared
+      - type: test
+        path: src/reporting.test.ts
+        ownership: shared
+  - invariant: report-execution-is-bounded
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reporting.ts
+        ownership: shared
+      - type: test
+        path: src/reporting.test.ts
+        ownership: shared
+  - invariant: report-requests-are-idempotent
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reporting.ts
+        ownership: shared
+      - type: test
+        path: src/reporting.test.ts
+        ownership: shared
+  - invariant: outputs-are-private-and-projected
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reporting.ts
+        ownership: shared
+      - type: test
+        path: src/reporting.test.ts
+        ownership: shared
+  - invariant: report-records-are-minimized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/reporting.ts
+        ownership: shared
+      - type: test
+        path: src/reporting.test.ts
+        ownership: shared

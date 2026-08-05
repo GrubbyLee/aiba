@@ -2,7 +2,7 @@ apiVersion: aiba.dev/v0alpha1
 kind: OperationPlan
 metadata:
   id: notification-install
-  createdAt: 2026-07-26T00:11:00.000Z
+  createdAt: 2026-07-26T00:09:00.000Z
 capability:
   id: notification
   version: 0.2.0

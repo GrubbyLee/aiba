@@ -1,0 +1,55 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "scheduled-jobs",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:16:00.000Z",
+  "files": [
+    {
+      "path": "src/scheduled-jobs.test.ts",
+      "installedSha256": "586e9e0679510bacd3ca36b200276052682bd91c454551053c9dadcef50acf27",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "definitions-are-server-owned",
+        "scheduling-is-authorized-and-scoped",
+        "scheduling-is-idempotent",
+        "execution-is-due-and-leased",
+        "retries-are-bounded",
+        "job-records-are-minimized"
+      ],
+      "operations": [
+        "schedule-trusted-definition",
+        "lease-and-run-due-job"
+      ]
+    },
+    {
+      "path": "src/scheduled-jobs.ts",
+      "installedSha256": "b03b927e3d8c86a2143670e2c05834dd1cbd87fd038708170054930ff5cba10f",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "definitions-are-server-owned",
+        "scheduling-is-authorized-and-scoped",
+        "scheduling-is-idempotent",
+        "execution-is-due-and-leased",
+        "retries-are-bounded",
+        "job-records-are-minimized"
+      ],
+      "operations": [
+        "schedule-trusted-definition",
+        "lease-and-run-due-job"
+      ]
+    }
+  ]
+}

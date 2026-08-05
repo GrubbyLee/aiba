@@ -21,7 +21,7 @@ spec:
       version: ^0.1.0
       optional: false
     - id: notification
-      version: ^0.1.0
+      version: ^0.2.0
       optional: false
   invariants:
     - id: challenge-identifiers-do-not-enumerate-accounts

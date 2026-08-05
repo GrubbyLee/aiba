@@ -20,6 +20,8 @@ describe("portable AIBA Agent Skill", () => {
     expect(skill).toContain("aiba status <solution> --json");
     expect(skill).toContain("aiba continue <solution> --json");
     expect(skill).toContain("AibaErrorEnvelope");
+    expect(skill).toContain("`scheduled-jobs`");
+    expect(skill).toContain("`workflow-approval`");
     expect(skill).toContain("Never\nedit a receipt, lock hash, or verifier output");
     expect(metadata).toContain("$aiba-capabilities");
   });

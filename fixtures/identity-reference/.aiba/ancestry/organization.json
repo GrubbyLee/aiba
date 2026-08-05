@@ -1,0 +1,53 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "organization",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:20:00.000Z",
+  "files": [
+    {
+      "path": "src/organization.test.ts",
+      "installedSha256": "ec20ab733e86cf872316c3a8511c5950a8f71df337a720754ef20b66b5f1348e",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "scope-is-context-derived",
+        "membership-mutations-are-authorized",
+        "users-and-roles-are-trusted",
+        "mutations-are-revisioned-and-idempotent",
+        "last-owner-is-preserved",
+        "membership-audit-is-minimized"
+      ],
+      "operations": [
+        "mutate-membership"
+      ]
+    },
+    {
+      "path": "src/organization.ts",
+      "installedSha256": "576605587fd39746e61f6ca6cde94aff197c93b4007d15acb36066846c14656a",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "scope-is-context-derived",
+        "membership-mutations-are-authorized",
+        "users-and-roles-are-trusted",
+        "mutations-are-revisioned-and-idempotent",
+        "last-owner-is-preserved",
+        "membership-audit-is-minimized"
+      ],
+      "operations": [
+        "mutate-membership"
+      ]
+    }
+  ]
+}

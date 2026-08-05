@@ -414,6 +414,28 @@ Progress: 11/13
 Next: m18-catalog-integration
 
 ----------------------------------------
+Session #20 - m18-catalog-integration
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Published 19 capabilities in required-dependency order in the official catalog.
+  [x] Added catalog classification, exact-version, and dependency-order tests.
+  [x] Expanded the Agent Skill, source smoke, and installed npm CLI discovery checks.
+  [x] Regenerated and verified 18 capability receipts in the reference fixture.
+  [x] Asserted every new pack and representative interface Schema in npm tarballs.
+
+Verification:
+  - pnpm check: passed
+  - All ten new or upgraded packs: lint and test-pack score 100
+  - Spec: 68 tests; Core: 141 tests; reference fixture: 129 tests
+  - Source and installed CLI discover all nine new packs
+  - Four deterministic npm tarballs installed and exercised in a clean consumer
+
+Progress: 12/13
+Next: m18-documentation
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05

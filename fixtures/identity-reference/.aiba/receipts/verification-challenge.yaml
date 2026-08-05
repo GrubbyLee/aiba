@@ -1,0 +1,85 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: verification-challenge
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:12:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/verification-challenge.yaml
+  planSha256: 39a57cba1db2d7731d55bf3f27d21b9118f4f9504b76da3c31410a3182ddf496
+  ancestry: .aiba/ancestry/verification-challenge.json
+  ancestrySha256: 834c43a47b3da98a7255eeb577359374a9ded1338e1f6107f97a6d1d030d7280
+invariants:
+  - id: challenge-identifiers-do-not-enumerate-accounts
+    evidence:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+        sha256: e9b64070a806f584f0ed3908b9b71889bf55d5e83a48208c5bd7a12e057e3607
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+        sha256: 689cd5d50e4b66f407b3630143ddafec89661024f7987adefe5d7b1d45b9d5ac
+  - id: responses-are-held-as-keyed-digests
+    evidence:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+        sha256: e9b64070a806f584f0ed3908b9b71889bf55d5e83a48208c5bd7a12e057e3607
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+        sha256: 689cd5d50e4b66f407b3630143ddafec89661024f7987adefe5d7b1d45b9d5ac
+  - id: challenges-are-single-use-and-expiring
+    evidence:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+        sha256: e9b64070a806f584f0ed3908b9b71889bf55d5e83a48208c5bd7a12e057e3607
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+        sha256: 689cd5d50e4b66f407b3630143ddafec89661024f7987adefe5d7b1d45b9d5ac
+  - id: attempts-and-issuance-are-bounded
+    evidence:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+        sha256: e9b64070a806f584f0ed3908b9b71889bf55d5e83a48208c5bd7a12e057e3607
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+        sha256: 689cd5d50e4b66f407b3630143ddafec89661024f7987adefe5d7b1d45b9d5ac
+  - id: issuance-is-idempotent
+    evidence:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+        sha256: e9b64070a806f584f0ed3908b9b71889bf55d5e83a48208c5bd7a12e057e3607
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+        sha256: 689cd5d50e4b66f407b3630143ddafec89661024f7987adefe5d7b1d45b9d5ac
+  - id: tenant-and-purpose-come-from-trusted-policy
+    evidence:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+        sha256: e9b64070a806f584f0ed3908b9b71889bf55d5e83a48208c5bd7a12e057e3607
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+        sha256: 689cd5d50e4b66f407b3630143ddafec89661024f7987adefe5d7b1d45b9d5ac
+  - id: challenge-audit-is-minimized
+    evidence:
+      - type: source
+        path: src/verification-challenge.ts
+        ownership: shared
+        sha256: e9b64070a806f584f0ed3908b9b71889bf55d5e83a48208c5bd7a12e057e3607
+      - type: test
+        path: src/verification-challenge.test.ts
+        ownership: shared
+        sha256: 689cd5d50e4b66f407b3630143ddafec89661024f7987adefe5d7b1d45b9d5ac

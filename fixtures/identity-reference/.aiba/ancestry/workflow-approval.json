@@ -1,0 +1,55 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "workflow-approval",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:32:00.000Z",
+  "files": [
+    {
+      "path": "src/workflow-approval.test.ts",
+      "installedSha256": "ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "definitions-and-actors-are-trusted",
+        "transitions-are-explicit-and-authorized",
+        "duties-are-separated",
+        "decisions-are-immutable",
+        "transitions-are-revisioned-and-idempotent",
+        "terminal-state-is-final"
+      ],
+      "operations": [
+        "request-approval",
+        "record-immutable-decision"
+      ]
+    },
+    {
+      "path": "src/workflow-approval.ts",
+      "installedSha256": "53d11d9c55ae37f0676cf10995ea919c2fcfee0a67e07a66074466dfe5ed80f1",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "definitions-and-actors-are-trusted",
+        "transitions-are-explicit-and-authorized",
+        "duties-are-separated",
+        "decisions-are-immutable",
+        "transitions-are-revisioned-and-idempotent",
+        "terminal-state-is-final"
+      ],
+      "operations": [
+        "request-approval",
+        "record-immutable-decision"
+      ]
+    }
+  ]
+}

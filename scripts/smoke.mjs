@@ -54,6 +54,12 @@ for (const shell of ["bash", "zsh", "fish"]) {
 }
 run("list verified catalog", ["list", "--json"], 0);
 run("show verified capability", ["show", "vehicle-records", "--json"], 0);
+for (const capability of [
+  "verification-challenge", "scheduled-jobs", "webhooks", "feature-flags",
+  "organization", "comments-activity", "search", "reporting", "workflow-approval",
+]) {
+  run(`show ${capability} capability`, ["show", capability, "--json"], 0);
+}
 run("show verified solution", ["show", "vehicle-management", "--json"], 0);
 
 const authoringFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-authoring-"));

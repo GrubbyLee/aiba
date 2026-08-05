@@ -1,0 +1,126 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: organization-install
+  createdAt: 2026-07-26T00:19:00.000Z
+capability:
+  id: organization
+  version: 0.1.0
+  manifestSha256: a88da97a8c5c274f9c64fc4d89a39c6349fa6de30f93e6a6d7119a0d845eef62
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: bc8a0a907f6534698e30f06b313bae16f072c655ce9886fa3f7565f6c4db9f3e
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+operations:
+  - id: mutate-membership
+    intent: Add, change, or remove one member within trusted tenant and organization
+      scope.
+    requiredInterfaces:
+      - organization.membership-command
+      - organization.membership-record
+      - authorization.decision
+      - audit.event
+    invariants:
+      - scope-is-context-derived
+      - membership-mutations-are-authorized
+      - users-and-roles-are-trusted
+      - mutations-are-revisioned-and-idempotent
+      - last-owner-is-preserved
+      - membership-audit-is-minimized
+    guidance:
+      - Resolve scope from authenticated context and validate users and roles
+        against tenant-bound stores.
+      - Compare revision, enforce last-owner count, mutate, and bind idempotency
+        in one transaction.
+      - Return stable conflict codes and minimized membership records.
+evidence:
+  - invariant: scope-is-context-derived
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Organization membership boundary and transactional storage.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Scope, authorization, role, revision, idempotency, last-owner, and
+          redaction tests.
+    items:
+      - type: source
+        path: src/organization.ts
+        ownership: shared
+      - type: test
+        path: src/organization.test.ts
+        ownership: shared
+  - invariant: membership-mutations-are-authorized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/organization.ts
+        ownership: shared
+      - type: test
+        path: src/organization.test.ts
+        ownership: shared
+  - invariant: users-and-roles-are-trusted
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/organization.ts
+        ownership: shared
+      - type: test
+        path: src/organization.test.ts
+        ownership: shared
+  - invariant: mutations-are-revisioned-and-idempotent
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/organization.ts
+        ownership: shared
+      - type: test
+        path: src/organization.test.ts
+        ownership: shared
+  - invariant: last-owner-is-preserved
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/organization.ts
+        ownership: shared
+      - type: test
+        path: src/organization.test.ts
+        ownership: shared
+  - invariant: membership-audit-is-minimized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/organization.ts
+        ownership: shared
+      - type: test
+        path: src/organization.test.ts
+        ownership: shared
