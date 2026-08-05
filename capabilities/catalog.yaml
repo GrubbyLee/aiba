@@ -17,7 +17,7 @@ capabilities:
     version: 0.1.0
     layer: business-capability
   - id: notification
-    version: 0.1.0
+    version: 0.2.0
     layer: application-foundation
   - id: review-access
     version: 0.1.0

@@ -109,8 +109,8 @@
       "description": "Add template versions, preferences, durable deduplication, delivery lifecycle, and minimized receipts.",
       "file": "capabilities/notification/capability.yaml",
       "steps": ["Evolve interfaces.", "Add migration guidance.", "Upgrade reference boundary.", "Add attack tests."],
-      "passes": false,
-      "verification": ""
+      "passes": true,
+      "verification": "Pack quality 100; Spec 68, Core 140, and reference 129 tests pass; explicit versions, preferences, atomic lifecycle, failure receipts, migration, Solution hash, and regenerated fixture provenance verified; pnpm check passes."
     },
     {
       "id": "m18-catalog-integration",

@@ -4,11 +4,12 @@
   "title": "AIBA Notification Command",
   "type": "object",
   "additionalProperties": false,
-  "required": ["recipientId", "channel", "templateId", "parameters", "idempotencyKey"],
+  "required": ["recipientId", "channel", "templateId", "templateVersion", "parameters", "idempotencyKey"],
   "properties": {
     "recipientId": { "type": "string", "minLength": 1, "maxLength": 255 },
     "channel": { "enum": ["in-app", "email", "sms", "wechat-template"] },
     "templateId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+    "templateVersion": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
     "parameters": {
       "type": "object",
       "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$" },

@@ -147,6 +147,7 @@ describe("core portable interfaces", () => {
       recipientId: "user-42",
       channel: "wechat-template",
       templateId: "account-disabled",
+      templateVersion: 2,
       parameters: { displayName: "User" },
       idempotencyKey: "workflow-00000001",
     }).channel).toBe("wechat-template");
@@ -155,12 +156,16 @@ describe("core portable interfaces", () => {
       status: "sent",
       channel: "wechat-template",
       templateId: "account-disabled",
+      templateVersion: 2,
+      attempt: 1,
       createdAt: "2026-07-26T00:00:00Z",
+      updatedAt: "2026-07-26T00:00:01Z",
     }).status).toBe("sent");
     expect(() => validateNotificationCommand({
       recipientId: "user-42",
       channel: "wechat-template",
       templateId: "account-disabled",
+      templateVersion: 2,
       parameters: {},
       idempotencyKey: "workflow-00000001",
       providerSecret: "secret",

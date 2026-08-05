@@ -194,7 +194,7 @@ protocol and operational capabilities.
   private outputs, and sensitive-field minimization.
 - [x] Deliver `workflow-approval` with explicit state transitions, separation of duties,
   optimistic concurrency, and immutable decisions.
-- [ ] Upgrade `notification` with template versions, preferences, durable deduplication,
+- [x] Upgrade `notification` with template versions, preferences, durable deduplication,
   delivery lifecycle, and minimized receipts.
 - [ ] Integrate every new pack into discovery, Agent guidance, reference fixtures,
   deterministic npm tarballs, smoke tests, and bilingual documentation.

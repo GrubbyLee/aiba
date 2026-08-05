@@ -355,6 +355,6 @@ negative tests, packaged distribution, and user documentation agree.
 
 - [x] Add `reporting` contract, recipe, reference boundary, and attack tests.
 - [x] Add `workflow-approval` contract, recipe, reference boundary, and attack tests.
-- [ ] Upgrade `notification` semantics and preserve upgrade provenance.
+- [x] Upgrade `notification` semantics and preserve upgrade provenance.
 - [ ] Update Catalog, Agent Skill, fixture receipts, package checks, smoke, and docs.
 - [ ] Pass `pnpm check` and the full remote portability matrix.

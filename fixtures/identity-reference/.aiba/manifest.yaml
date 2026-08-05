@@ -24,7 +24,7 @@ capabilities:
     version: 0.1.0
     receipt: .aiba/receipts/users.yaml
   - id: notification
-    version: 0.1.0
+    version: 0.2.0
     receipt: .aiba/receipts/notification.yaml
   - id: file-assets
     version: 0.1.0

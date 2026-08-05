@@ -28,8 +28,8 @@ spec:
       manifestSha256: e824c50cd80f86ba48116a4d09281a65386658d146859e89ad7c56f53e6b26fb
       purpose: Manage operator lifecycle without weakening identity boundaries.
     - id: notification
-      version: 0.1.0
-      manifestSha256: e1ca75df0c7eb3c2257fab702e27450cbc7e6845242b03a04ed7f853bb68470b
+      version: 0.2.0
+      manifestSha256: 3f148b85199870ada652dc01f24b42f53969464d0d3180c3e4d32b25ab84e23b
       purpose: Deliver controlled vehicle and account workflow messages.
     - id: file-assets
       version: 0.1.0

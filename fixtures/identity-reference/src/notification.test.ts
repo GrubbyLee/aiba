@@ -20,10 +20,12 @@ class MemoryAuditStore implements AuditStore {
 
 class MemoryGate implements NotificationDeliveryGate {
   private readonly records = new Map<string, { fingerprint: string; receipt: NotificationReceipt }>();
+  readonly transitions: NotificationReceipt[] = [];
   async execute(
     key: string,
     fingerprint: string,
-    deliver: () => Promise<NotificationReceipt>,
+    initial: NotificationReceipt,
+    deliver: (update: (receipt: NotificationReceipt) => Promise<void>) => Promise<NotificationReceipt>,
   ): Promise<NotificationReceipt> {
     const existing = this.records.get(key);
     if (existing) {
@@ -32,8 +34,12 @@ class MemoryGate implements NotificationDeliveryGate {
       }
       return existing.receipt;
     }
-    const receipt = await deliver();
-    this.records.set(key, { fingerprint, receipt });
+    this.records.set(key, { fingerprint, receipt: initial });
+    this.transitions.push(initial);
+    const receipt = await deliver(async (next) => {
+      this.records.set(key, { fingerprint, receipt: next });
+      this.transitions.push(next);
+    });
     return receipt;
   }
 }
@@ -51,10 +57,12 @@ function createFixture(options: { consented?: boolean; allowed?: boolean } = {})
   };
   const principal: Principal = { type: "service", subject: "workflow", tenantId: "tenant-a" };
   const allowed = options.allowed ?? true;
+  const deliveries = new MemoryGate();
   const service = createNotificationService({
     directory: {
       loadTemplate: async (_tenantId, templateId) => ({
         id: templateId,
+        version: 2,
         channel: "wechat-template",
         enabled: true,
         parameterKeys: ["displayName"],
@@ -66,6 +74,7 @@ function createFixture(options: { consented?: boolean; allowed?: boolean } = {})
         destination: "openid-sensitive-value",
         consented: options.consented ?? true,
       }),
+      loadPreference: async () => ({ enabled: options.consented ?? true }),
     },
     authorization: {
       decide: async (context, input): Promise<AuthorizationDecision> => ({
@@ -80,7 +89,7 @@ function createFixture(options: { consented?: boolean; allowed?: boolean } = {})
       }),
     },
     audit,
-    deliveries: new MemoryGate(),
+    deliveries,
     provider,
     now: () => new Date("2026-07-26T00:00:00Z"),
     notificationId: () => "notification-0001",
@@ -90,10 +99,11 @@ function createFixture(options: { consented?: boolean; allowed?: boolean } = {})
     recipientId: "user-42",
     channel: "wechat-template",
     templateId: "account-disabled",
+    templateVersion: 2,
     parameters: { displayName: "User" },
     idempotencyKey: "workflow-event-0001",
   };
-  return { auditStore, command, context, provider, providerCalls, service };
+  return { auditStore, command, context, deliveries, provider, providerCalls, service };
 }
 
 describe("notification reference boundary", () => {
@@ -105,12 +115,16 @@ describe("notification reference boundary", () => {
       status: "sent",
       channel: "wechat-template",
       templateId: "account-disabled",
+      templateVersion: 2,
+      attempt: 1,
       createdAt: "2026-07-26T00:00:00.000Z",
+      updatedAt: "2026-07-26T00:00:00.000Z",
     });
     expect(fixture.providerCalls).toHaveLength(1);
     expect(fixture.providerCalls[0]).toMatchObject({
       destination: "openid-sensitive-value",
       templateId: "account-disabled",
+      templateVersion: 2,
       parameters: { displayName: "User" },
       idempotencyKey: expect.stringMatching(/^[a-f0-9]{64}$/),
     });
@@ -125,6 +139,7 @@ describe("notification reference boundary", () => {
     const second = await fixture.service.send(fixture.context, fixture.command);
     expect(second).toEqual(first);
     expect(fixture.providerCalls).toHaveLength(1);
+    expect(fixture.deliveries.transitions.map((item) => item.status)).toEqual(["queued", "delivering", "sent"]);
     expect(fixture.auditStore.events).toHaveLength(1);
   });
 
@@ -169,11 +184,17 @@ describe("notification reference boundary", () => {
     })).rejects.toMatchObject({ code: "invalid-request" });
   });
 
-  it("surfaces provider failure and records no sent receipt", async () => {
+  it("rejects a stale or unknown template version", async () => {
+    const fixture = createFixture();
+    await expect(fixture.service.send(fixture.context, { ...fixture.command, templateVersion: 1 }))
+      .rejects.toMatchObject({ code: "invalid-request" });
+  });
+
+  it("records provider failure as a minimized terminal lifecycle receipt", async () => {
     const fixture = createFixture();
     fixture.provider.send = async () => { throw new Error("provider unavailable"); };
     await expect(fixture.service.send(fixture.context, fixture.command))
-      .rejects.toMatchObject({ code: "delivery-failed" });
+      .resolves.toMatchObject({ status: "failed", errorCode: "provider-failed", attempt: 1 });
     expect(fixture.auditStore.events).toContainEqual(expect.objectContaining({
       outcome: "failed",
       reasonCode: "provider-failed",
@@ -184,7 +205,7 @@ describe("notification reference boundary", () => {
     const fixture = createFixture();
     fixture.auditStore.append = async () => { throw new Error("audit unavailable"); };
     await expect(fixture.service.send(fixture.context, fixture.command))
-      .rejects.toMatchObject({ code: "delivery-failed" });
+      .resolves.toMatchObject({ status: "failed", errorCode: "audit-failed" });
     expect(fixture.providerCalls).toHaveLength(1);
   });
 });

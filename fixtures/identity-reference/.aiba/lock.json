@@ -50,11 +50,11 @@
     },
     {
       "id": "notification",
-      "version": "0.1.0",
-      "manifestSha256": "e1ca75df0c7eb3c2257fab702e27450cbc7e6845242b03a04ed7f853bb68470b",
+      "version": "0.2.0",
+      "manifestSha256": "3f148b85199870ada652dc01f24b42f53969464d0d3180c3e4d32b25ab84e23b",
       "recipe": {
         "id": "typescript-reference",
-        "sha256": "d3c7003c91046defcc47adcd57cfb69552df2b66d19d8eb9d6b92b4d59dd4896"
+        "sha256": "476cdce42d449591f4c522f80fe916f8b41fecfbfe4050f65227feab00a21cc9"
       }
     },
     {

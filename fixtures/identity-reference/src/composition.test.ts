@@ -125,10 +125,13 @@ describe("core capability composition", () => {
 
     const deliveries = new Map<string, { fingerprint: string; receipt: NotificationReceipt }>();
     const gate: NotificationDeliveryGate = {
-      execute: async (key, fingerprint, deliver) => {
+      execute: async (key, fingerprint, initial, deliver) => {
         const existing = deliveries.get(key);
         if (existing) return existing.receipt;
-        const receipt = await deliver();
+        deliveries.set(key, { fingerprint, receipt: initial });
+        const receipt = await deliver(async (next) => {
+          deliveries.set(key, { fingerprint, receipt: next });
+        });
         deliveries.set(key, { fingerprint, receipt });
         return receipt;
       },
@@ -138,6 +141,7 @@ describe("core capability composition", () => {
       directory: {
         loadTemplate: async (_tenantId, id) => ({
           id,
+          version: 1,
           channel: "email",
           enabled: true,
           parameterKeys: ["displayName"],
@@ -149,6 +153,7 @@ describe("core capability composition", () => {
           destination: "member@example.com",
           consented: true,
         }),
+        loadPreference: async () => ({ enabled: true }),
       },
       authorization,
       audit,
@@ -161,6 +166,7 @@ describe("core capability composition", () => {
       recipientId: created.id,
       channel: "email",
       templateId: "user-welcome",
+      templateVersion: 1,
       parameters: { displayName: created.displayName },
       idempotencyKey: "workflow-admin-0001",
     });

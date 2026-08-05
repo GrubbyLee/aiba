@@ -1,0 +1,30 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityMigration
+metadata:
+  id: notification-lifecycle-v2
+  version: 0.2.0
+  title: Notification Lifecycle v2
+  description: Add explicit template versions, preferences, atomic lifecycle persistence, and minimized failure receipts.
+spec:
+  capability:
+    id: notification
+    fromVersion: 0.1.0
+    toVersion: 0.2.0
+  operations:
+    - id: version-templates
+      intent: Assign immutable positive versions to trusted templates and require commands to select one exact version.
+      affectedInvariants: [content-uses-trusted-templates, template-version-is-explicit]
+      guidance:
+        - Add templateVersion to commands, fingerprints, provider calls, and receipts.
+        - Preserve old template bytes as their assigned version instead of editing them in place.
+    - id: persist-preferences
+      intent: Resolve tenant-scoped recipient preferences before provider delivery.
+      affectedInvariants: [consent-is-enforced, preferences-are-enforced]
+      guidance:
+        - Migrate existing consent into an explicit channel preference without enabling previously disabled delivery.
+    - id: persist-lifecycle
+      intent: Atomically claim delivery keys and persist every lifecycle transition and minimized failure.
+      affectedInvariants: [delivery-is-idempotent, delivery-lifecycle-is-durable, delivery-failure-is-visible, receipts-and-audit-are-minimized]
+      guidance:
+        - Add status, attempt, updated time, and allowlisted error code columns to durable delivery state.
+        - Backfill old sent and suppressed receipts with attempt and updated time while keeping destinations and parameters private.

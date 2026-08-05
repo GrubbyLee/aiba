@@ -393,6 +393,27 @@ Progress: 10/13
 Next: m18-notification-v2
 
 ----------------------------------------
+Session #19 - m18-notification-v2
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Added exact template versions to commands, provider calls, fingerprints, and receipts.
+  [x] Added trusted recipient preferences and atomic durable delivery lifecycle transitions.
+  [x] Added minimized failed receipts without returning false sent outcomes.
+  [x] Added a 0.1.0-to-0.2.0 migration and regenerated exact Solution and fixture provenance.
+
+Verification:
+  - pnpm check: passed
+  - Pack lint and test-pack: score 100
+  - Spec: 68 tests; Core: 140 tests; reference fixture: 129 tests
+  - Vehicle management Solution and nine-capability fixture verify exactly
+  - Four npm tarballs installed and exercised in a clean consumer
+
+Progress: 11/13
+Next: m18-catalog-integration
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05

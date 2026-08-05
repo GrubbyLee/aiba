@@ -56,16 +56,21 @@ export interface NotificationCommand {
   recipientId: string;
   channel: NotificationChannel;
   templateId: string;
+  templateVersion: number;
   parameters: Record<string, string>;
   idempotencyKey: string;
 }
 
 export interface NotificationReceipt {
   notificationId: string;
-  status: "sent" | "suppressed";
+  status: "queued" | "delivering" | "sent" | "suppressed" | "failed";
   channel: NotificationChannel;
   templateId: string;
+  templateVersion: number;
+  attempt: number;
+  errorCode?: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export type ResourceFilterOperator =

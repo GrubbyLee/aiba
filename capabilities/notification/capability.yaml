@@ -2,8 +2,9 @@ apiVersion: aiba.dev/v0alpha1
 kind: Capability
 metadata:
   id: notification
-  version: 0.1.0
+  version: 0.2.0
   title: Notification
+  layer: application-foundation
   description: >-
     Authorized, tenant-scoped template delivery with trusted recipient
     resolution, consent, durable idempotency, minimized receipts, and audit.
@@ -44,6 +45,11 @@ spec:
       description: Commands select enabled server templates and bounded parameter keys instead of arbitrary message content.
       severity: critical
       evidence: *sourceAndTest
+    - id: template-version-is-explicit
+      title: Template version is explicit
+      description: Every command and receipt binds to one enabled immutable server template version.
+      severity: critical
+      evidence: *sourceAndTest
     - id: recipient-destination-is-server-resolved
       title: Recipient destination is server resolved
       description: Provider destinations and credentials are resolved in trusted adapters, never command fields.
@@ -54,9 +60,19 @@ spec:
       description: A disabled channel or absent recipient consent suppresses provider delivery.
       severity: critical
       evidence: *sourceAndTest
+    - id: preferences-are-enforced
+      title: Preferences are enforced
+      description: Tenant and recipient channel and template preferences suppress delivery before provider invocation.
+      severity: critical
+      evidence: *sourceAndTest
     - id: delivery-is-idempotent
       title: Delivery is idempotent
       description: A tenant-scoped key is durably bound to one command and propagated to an idempotent provider adapter.
+      severity: critical
+      evidence: *sourceAndTest
+    - id: delivery-lifecycle-is-durable
+      title: Delivery lifecycle is durable
+      description: Queued, delivering, sent, suppressed, and failed transitions are persisted through an atomic claim boundary.
       severity: critical
       evidence: *sourceAndTest
     - id: delivery-failure-is-visible

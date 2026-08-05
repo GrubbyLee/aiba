@@ -2,94 +2,124 @@ apiVersion: aiba.dev/v0alpha1
 kind: CapabilityReceipt
 capability:
   id: notification
-  version: 0.1.0
+  version: 0.2.0
 installation:
   method: agent
   createdAt: 2026-07-26T00:12:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/notification.yaml
-  planSha256: 1d087b09479f91dc0262f8100a6f857a784861709d65184b0925f566e10e3441
+  planSha256: b7626ed432c03d67503cb4a48d5f9850fa74d2e95a68d48fe9dce0bb5aa0ac18
   ancestry: .aiba/ancestry/notification.json
-  ancestrySha256: 6cf804eeab98612e301b78372eedc210bdf1d2550f31c5f2d5082cf458cec953
+  ancestrySha256: 1d82f9e5fc6d653093964d0516a069565f8b26a6b8bc9c7bdb293bff4144e4fe
 invariants:
   - id: send-is-authorized
     evidence:
       - type: source
         path: src/notification.ts
         ownership: shared
-        sha256: 52b4939f6f58e8cbfdcdddcb61e8cbd221b17ec62c131c5baa728d27be796b2f
+        sha256: 6706e3cce901ed8050b5fea6b0ea34f6fe5b93bf3b0cde0e9c7b880c54c31b8a
       - type: test
         path: src/notification.test.ts
         ownership: shared
-        sha256: d878d126a41d180aee6e2a9b83eff767dd3a6d40601b01b76f67b07a441c9465
+        sha256: 2abd54b0b21ebd8d7ea7a2824e42f3f3933564c8134e34cc72f443d91f0507f4
   - id: tenant-comes-from-trusted-context
     evidence:
       - type: source
         path: src/notification.ts
         ownership: shared
-        sha256: 52b4939f6f58e8cbfdcdddcb61e8cbd221b17ec62c131c5baa728d27be796b2f
+        sha256: 6706e3cce901ed8050b5fea6b0ea34f6fe5b93bf3b0cde0e9c7b880c54c31b8a
       - type: test
         path: src/notification.test.ts
         ownership: shared
-        sha256: d878d126a41d180aee6e2a9b83eff767dd3a6d40601b01b76f67b07a441c9465
+        sha256: 2abd54b0b21ebd8d7ea7a2824e42f3f3933564c8134e34cc72f443d91f0507f4
   - id: content-uses-trusted-templates
     evidence:
       - type: source
         path: src/notification.ts
         ownership: shared
-        sha256: 52b4939f6f58e8cbfdcdddcb61e8cbd221b17ec62c131c5baa728d27be796b2f
+        sha256: 6706e3cce901ed8050b5fea6b0ea34f6fe5b93bf3b0cde0e9c7b880c54c31b8a
       - type: test
         path: src/notification.test.ts
         ownership: shared
-        sha256: d878d126a41d180aee6e2a9b83eff767dd3a6d40601b01b76f67b07a441c9465
+        sha256: 2abd54b0b21ebd8d7ea7a2824e42f3f3933564c8134e34cc72f443d91f0507f4
+  - id: template-version-is-explicit
+    evidence:
+      - type: source
+        path: src/notification.ts
+        ownership: shared
+        sha256: 6706e3cce901ed8050b5fea6b0ea34f6fe5b93bf3b0cde0e9c7b880c54c31b8a
+      - type: test
+        path: src/notification.test.ts
+        ownership: shared
+        sha256: 2abd54b0b21ebd8d7ea7a2824e42f3f3933564c8134e34cc72f443d91f0507f4
   - id: recipient-destination-is-server-resolved
     evidence:
       - type: source
         path: src/notification.ts
         ownership: shared
-        sha256: 52b4939f6f58e8cbfdcdddcb61e8cbd221b17ec62c131c5baa728d27be796b2f
+        sha256: 6706e3cce901ed8050b5fea6b0ea34f6fe5b93bf3b0cde0e9c7b880c54c31b8a
       - type: test
         path: src/notification.test.ts
         ownership: shared
-        sha256: d878d126a41d180aee6e2a9b83eff767dd3a6d40601b01b76f67b07a441c9465
+        sha256: 2abd54b0b21ebd8d7ea7a2824e42f3f3933564c8134e34cc72f443d91f0507f4
   - id: consent-is-enforced
     evidence:
       - type: source
         path: src/notification.ts
         ownership: shared
-        sha256: 52b4939f6f58e8cbfdcdddcb61e8cbd221b17ec62c131c5baa728d27be796b2f
+        sha256: 6706e3cce901ed8050b5fea6b0ea34f6fe5b93bf3b0cde0e9c7b880c54c31b8a
       - type: test
         path: src/notification.test.ts
         ownership: shared
-        sha256: d878d126a41d180aee6e2a9b83eff767dd3a6d40601b01b76f67b07a441c9465
+        sha256: 2abd54b0b21ebd8d7ea7a2824e42f3f3933564c8134e34cc72f443d91f0507f4
+  - id: preferences-are-enforced
+    evidence:
+      - type: source
+        path: src/notification.ts
+        ownership: shared
+        sha256: 6706e3cce901ed8050b5fea6b0ea34f6fe5b93bf3b0cde0e9c7b880c54c31b8a
+      - type: test
+        path: src/notification.test.ts
+        ownership: shared
+        sha256: 2abd54b0b21ebd8d7ea7a2824e42f3f3933564c8134e34cc72f443d91f0507f4
   - id: delivery-is-idempotent
     evidence:
       - type: source
         path: src/notification.ts
         ownership: shared
-        sha256: 52b4939f6f58e8cbfdcdddcb61e8cbd221b17ec62c131c5baa728d27be796b2f
+        sha256: 6706e3cce901ed8050b5fea6b0ea34f6fe5b93bf3b0cde0e9c7b880c54c31b8a
       - type: test
         path: src/notification.test.ts
         ownership: shared
-        sha256: d878d126a41d180aee6e2a9b83eff767dd3a6d40601b01b76f67b07a441c9465
+        sha256: 2abd54b0b21ebd8d7ea7a2824e42f3f3933564c8134e34cc72f443d91f0507f4
+  - id: delivery-lifecycle-is-durable
+    evidence:
+      - type: source
+        path: src/notification.ts
+        ownership: shared
+        sha256: 6706e3cce901ed8050b5fea6b0ea34f6fe5b93bf3b0cde0e9c7b880c54c31b8a
+      - type: test
+        path: src/notification.test.ts
+        ownership: shared
+        sha256: 2abd54b0b21ebd8d7ea7a2824e42f3f3933564c8134e34cc72f443d91f0507f4
   - id: delivery-failure-is-visible
     evidence:
       - type: source
         path: src/notification.ts
         ownership: shared
-        sha256: 52b4939f6f58e8cbfdcdddcb61e8cbd221b17ec62c131c5baa728d27be796b2f
+        sha256: 6706e3cce901ed8050b5fea6b0ea34f6fe5b93bf3b0cde0e9c7b880c54c31b8a
       - type: test
         path: src/notification.test.ts
         ownership: shared
-        sha256: d878d126a41d180aee6e2a9b83eff767dd3a6d40601b01b76f67b07a441c9465
+        sha256: 2abd54b0b21ebd8d7ea7a2824e42f3f3933564c8134e34cc72f443d91f0507f4
   - id: receipts-and-audit-are-minimized
     evidence:
       - type: source
         path: src/notification.ts
         ownership: shared
-        sha256: 52b4939f6f58e8cbfdcdddcb61e8cbd221b17ec62c131c5baa728d27be796b2f
+        sha256: 6706e3cce901ed8050b5fea6b0ea34f6fe5b93bf3b0cde0e9c7b880c54c31b8a
       - type: test
         path: src/notification.test.ts
         ownership: shared
-        sha256: d878d126a41d180aee6e2a9b83eff767dd3a6d40601b01b76f67b07a441c9465
+        sha256: 2abd54b0b21ebd8d7ea7a2824e42f3f3933564c8134e34cc72f443d91f0507f4

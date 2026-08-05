@@ -3,17 +3,17 @@
   "kind": "CapabilityAncestry",
   "capability": {
     "id": "notification",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "recipe": {
     "id": "typescript-reference",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "createdAt": "2026-07-26T00:12:00.000Z",
   "files": [
     {
       "path": "src/notification.test.ts",
-      "installedSha256": "d878d126a41d180aee6e2a9b83eff767dd3a6d40601b01b76f67b07a441c9465",
+      "installedSha256": "2abd54b0b21ebd8d7ea7a2824e42f3f3933564c8134e34cc72f443d91f0507f4",
       "ownership": "shared",
       "evidenceTypes": [
         "test"
@@ -22,9 +22,12 @@
         "send-is-authorized",
         "tenant-comes-from-trusted-context",
         "content-uses-trusted-templates",
+        "template-version-is-explicit",
         "recipient-destination-is-server-resolved",
         "consent-is-enforced",
+        "preferences-are-enforced",
         "delivery-is-idempotent",
+        "delivery-lifecycle-is-durable",
         "delivery-failure-is-visible",
         "receipts-and-audit-are-minimized"
       ],
@@ -37,7 +40,7 @@
     },
     {
       "path": "src/notification.ts",
-      "installedSha256": "52b4939f6f58e8cbfdcdddcb61e8cbd221b17ec62c131c5baa728d27be796b2f",
+      "installedSha256": "6706e3cce901ed8050b5fea6b0ea34f6fe5b93bf3b0cde0e9c7b880c54c31b8a",
       "ownership": "shared",
       "evidenceTypes": [
         "source"
@@ -46,9 +49,12 @@
         "send-is-authorized",
         "tenant-comes-from-trusted-context",
         "content-uses-trusted-templates",
+        "template-version-is-explicit",
         "recipient-destination-is-server-resolved",
         "consent-is-enforced",
+        "preferences-are-enforced",
         "delivery-is-idempotent",
+        "delivery-lifecycle-is-durable",
         "delivery-failure-is-visible",
         "receipts-and-audit-are-minimized"
       ],
