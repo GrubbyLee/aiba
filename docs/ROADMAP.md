@@ -162,3 +162,44 @@ commands ship in npm tarballs, adversarial tests pass in CI, and the documented
 clean-project path is reproducible. Hosted multi-tenancy, billing, production
 key custody, qualified legal review, and invited human beta remain external
 launch gates rather than claims made by the open-source implementation.
+
+## M16: Common Application Protocol
+
+Goal: standardize repeated application semantics before they fragment across
+capability packs.
+
+- [ ] Define bounded resource query, filter, sort, cursor, and page contracts.
+- [ ] Define reusable idempotency and optimistic revision fields for mutations.
+- [ ] Add strict JSON Schemas, TypeScript bindings, validators, and malformed-input tests.
+
+## M17: Reusable Application Operations
+
+Goal: cover operational capabilities repeatedly rebuilt in ordinary Agent-
+generated applications without imposing a database, queue, provider, or UI.
+
+- [ ] Deliver `verification-challenge` for single-use email, SMS, and authenticator challenges.
+- [ ] Deliver `scheduled-jobs` with leases, bounded retries, and idempotent execution.
+- [ ] Deliver `webhooks` with trusted destinations, signatures, replay defense, and delivery state.
+- [ ] Deliver `feature-flags` with trusted targeting, deterministic rollout, and revisioned policy.
+- [ ] Deliver `organization` with tenant-derived membership and last-owner protection.
+- [ ] Deliver `comments-activity` with attributable, revisioned, soft-deleted discussion records.
+- [ ] Deliver `search` with bounded queries, authorization-first filtering, and opaque cursors.
+
+## M18: Business Workflow Foundation
+
+Goal: provide higher-level application behavior that composes the common
+protocol and operational capabilities.
+
+- [ ] Deliver `reporting` with server-owned definitions, authorization, bounded execution,
+  private outputs, and sensitive-field minimization.
+- [ ] Deliver `workflow-approval` with explicit state transitions, separation of duties,
+  optimistic concurrency, and immutable decisions.
+- [ ] Upgrade `notification` with template versions, preferences, durable deduplication,
+  delivery lifecycle, and minimized receipts.
+- [ ] Integrate every new pack into discovery, Agent guidance, reference fixtures,
+  deterministic npm tarballs, smoke tests, and bilingual documentation.
+
+M16-M18 are complete when every public interface is schema validated, each
+capability has a framework-neutral recipe and executable positive and adversarial
+reference tests, all packs are discoverable from the installed CLI, and `pnpm
+check` plus the Linux/macOS/Windows CI matrix pass.

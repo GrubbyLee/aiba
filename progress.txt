@@ -182,6 +182,19 @@ Progress: 7/7
 Next: external launch gates only; human beta remains intentionally incomplete
 
 ----------------------------------------
+Session #8 - M16-M18 planning
+----------------------------------------
+Date: 2026-08-05
+
+Completed:
+  [x] Separated shared application protocols from installable capabilities.
+  [x] Defined M16 common-query, M17 reusable operations, and M18 business workflows.
+  [x] Created thirteen executable feature records with security and distribution exits.
+
+Progress: 0/13
+Next: m16-common-query
+
+----------------------------------------
 Post-completion portability audit
 ----------------------------------------
 Date: 2026-08-05

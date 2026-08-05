@@ -1,76 +1,136 @@
 {
-  "project": "AIBA Beta-Ready Development",
-  "description": "Complete M9-M15 as verifiable open-source product capabilities without claiming external launch gates.",
+  "project": "AIBA Agent-Native Low-Code Foundation",
+  "description": "Complete M16-M18 as common protocols and verifiable reusable application capabilities.",
   "features": [
     {
-      "id": "m9-behavior-proofs",
-      "category": "verification",
+      "id": "m16-common-query",
+      "category": "protocol",
       "priority": 1,
-      "description": "Bind signed external behavioral test results to exact project snapshots and trusted runners.",
-      "file": "packages/core/src/behavior.ts",
-      "steps": ["Define public protocols.", "Implement signed proof lifecycle.", "Expose CLI commands.", "Add adversarial tests."],
-      "passes": true,
-      "verification": "Protocol, Core, CLI, package and adversarial tests pass; pnpm check passes."
+      "description": "Define bounded filtering, stable sorting, opaque cursors, page metadata, idempotency, and revision semantics.",
+      "file": "packages/spec/schema/interfaces/resource-query.schema.json",
+      "steps": ["Define schemas.", "Add bindings and validators.", "Reject unsafe scope.", "Document composition."],
+      "passes": false,
+      "verification": ""
     },
     {
-      "id": "m10-orchestration",
-      "category": "workflow",
+      "id": "m17-verification-challenge",
+      "category": "application-foundation",
       "priority": 2,
-      "description": "Provide resumable, inspectable one-step Solution orchestration and diagnostics.",
-      "file": "packages/core/src/workflow.ts",
-      "steps": ["Derive workflow status.", "Implement status, continue, and doctor.", "Reject stale state.", "Add recovery tests."],
-      "passes": true,
-      "verification": "Clean and interrupted workflows report deterministic state in tests and smoke."
+      "description": "Provide single-use, expiring, rate-limited verification challenges without leaking identifiers or codes.",
+      "file": "capabilities/verification-challenge/capability.yaml",
+      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "passes": false,
+      "verification": ""
     },
     {
-      "id": "m11-agent-protocol",
-      "category": "agent",
+      "id": "m17-scheduled-jobs",
+      "category": "application-foundation",
       "priority": 3,
-      "description": "Publish a stable machine-readable Agent protocol with negotiation and error envelopes.",
-      "file": "packages/spec/schema/agent-protocol.schema.json",
-      "steps": ["Define protocol envelopes.", "Expose negotiation.", "Align adapters.", "Test structured errors."],
-      "passes": true,
-      "verification": "Schema, adapter contract, and CLI JSON tests pass."
+      "description": "Provide leased, idempotent scheduled execution with bounded retries and minimized failure records.",
+      "file": "capabilities/scheduled-jobs/capability.yaml",
+      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "passes": false,
+      "verification": ""
     },
     {
-      "id": "m12-authoring-sdk",
-      "category": "ecosystem",
+      "id": "m17-webhooks",
+      "category": "platform-integration",
       "priority": 4,
-      "description": "Scaffold and validate third-party capabilities and Solutions from safe built-in templates.",
-      "file": "packages/core/src/authoring.ts",
-      "steps": ["Add scaffolds.", "Add lint and test-pack.", "Validate quality requirements.", "Reject unsafe output."],
-      "passes": true,
-      "verification": "Generated artifacts validate and unsafe packs fail closed."
+      "description": "Provide signed webhook delivery with trusted destinations, replay defense, retries, and audit-safe records.",
+      "file": "capabilities/webhooks/capability.yaml",
+      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "passes": false,
+      "verification": ""
     },
     {
-      "id": "m13-signed-solutions",
-      "category": "distribution",
+      "id": "m17-feature-flags",
+      "category": "application-foundation",
       "priority": 5,
-      "description": "Enable independently signed Solution distribution with trust, revocation, expiry, and anti-rollback.",
-      "file": "packages/core/src/solution-signing.ts",
-      "steps": ["Define signed protocols.", "Implement signing and verification.", "Enforce trust lifecycle.", "Add attack tests."],
-      "passes": true,
-      "verification": "Valid Solutions verify and attack cases fail without state advancement."
+      "description": "Provide deterministic feature evaluation from trusted context and revisioned policy.",
+      "file": "capabilities/feature-flags/capability.yaml",
+      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "passes": false,
+      "verification": ""
     },
     {
-      "id": "m14-registry-operations",
-      "category": "operations",
+      "id": "m17-organization",
+      "category": "application-foundation",
       "priority": 6,
-      "description": "Add production-oriented Registry observability, backup, restore, retention, and deployment assets.",
-      "file": "packages/registry-server/src/index.ts",
-      "steps": ["Add health and metrics.", "Add backup and restore.", "Add retention and audit.", "Ship deployment assets."],
-      "passes": true,
-      "verification": "Operations tests cover authentication, tamper, paths, restore conflicts and metrics."
+      "description": "Provide tenant-derived organization membership with authorization, revision checks, and last-owner safety.",
+      "file": "capabilities/organization/capability.yaml",
+      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "passes": false,
+      "verification": ""
     },
     {
-      "id": "m15-developer-experience",
-      "category": "distribution",
+      "id": "m17-comments-activity",
+      "category": "business-capability",
       "priority": 7,
-      "description": "Close the beta-ready developer path with diagnostics, completion, docs, and cross-platform CI.",
-      "file": "docs/QUICKSTART.md",
-      "steps": ["Add Quick Start.", "Complete JSON and diagnostics.", "Add cross-platform CI.", "Verify npm path."],
-      "passes": true,
-      "verification": "pnpm check, package verification, smoke, workflows and documented commands pass."
+      "description": "Provide attributable comments and activity with bounded content, revisions, mentions, and soft deletion.",
+      "file": "capabilities/comments-activity/capability.yaml",
+      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "passes": false,
+      "verification": ""
+    },
+    {
+      "id": "m17-search",
+      "category": "application-foundation",
+      "priority": 8,
+      "description": "Provide bounded tenant-scoped search with authorization-first filtering and opaque cursors.",
+      "file": "capabilities/search/capability.yaml",
+      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "passes": false,
+      "verification": ""
+    },
+    {
+      "id": "m18-reporting",
+      "category": "business-capability",
+      "priority": 9,
+      "description": "Provide authorized server-defined reports with bounded execution, private outputs, and minimized records.",
+      "file": "capabilities/reporting/capability.yaml",
+      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "passes": false,
+      "verification": ""
+    },
+    {
+      "id": "m18-workflow-approval",
+      "category": "business-capability",
+      "priority": 10,
+      "description": "Provide explicit approval state transitions with separation of duties and immutable decisions.",
+      "file": "capabilities/workflow-approval/capability.yaml",
+      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "passes": false,
+      "verification": ""
+    },
+    {
+      "id": "m18-notification-v2",
+      "category": "application-foundation",
+      "priority": 11,
+      "description": "Add template versions, preferences, durable deduplication, delivery lifecycle, and minimized receipts.",
+      "file": "capabilities/notification/capability.yaml",
+      "steps": ["Evolve interfaces.", "Add migration guidance.", "Upgrade reference boundary.", "Add attack tests."],
+      "passes": false,
+      "verification": ""
+    },
+    {
+      "id": "m18-catalog-integration",
+      "category": "distribution",
+      "priority": 12,
+      "description": "Integrate all capabilities into discovery, dependency order, Agent guidance, fixtures, and npm tarballs.",
+      "file": "capabilities/catalog.yaml",
+      "steps": ["Update catalog.", "Update Agent adapter.", "Generate fixture state.", "Exercise installed CLI."],
+      "passes": false,
+      "verification": ""
+    },
+    {
+      "id": "m18-documentation",
+      "category": "documentation",
+      "priority": 13,
+      "description": "Document the agent-native low-code model, capability rules, and catalog in English and Chinese.",
+      "file": "docs/CAPABILITY_MODEL.md",
+      "steps": ["Add architecture guidance.", "Update bilingual README.", "Update task status.", "Record verification."],
+      "passes": false,
+      "verification": ""
     }
   ]
 }

@@ -332,3 +332,29 @@ negative tests, packaged distribution, and user documentation agree.
   from clean npm tarball installations.
 - [x] Validate workflows and add macOS and Windows portability jobs alongside
   the Linux Node.js 22 and 24 matrix.
+
+## Active Development: M16-M18 Agent-Native Low Code
+
+### M16 Common Application Protocol
+
+- [ ] Add bounded filters, stable sorting, opaque cursors, and page metadata.
+- [ ] Add reusable idempotency and optimistic-revision semantics.
+- [ ] Validate every shared interface and reject unknown or caller-owned scope fields.
+
+### M17 Reusable Application Operations
+
+- [ ] Add `verification-challenge` contract, recipe, reference boundary, and attack tests.
+- [ ] Add `scheduled-jobs` contract, recipe, reference boundary, and attack tests.
+- [ ] Add `webhooks` contract, recipe, reference boundary, and attack tests.
+- [ ] Add `feature-flags` contract, recipe, reference boundary, and attack tests.
+- [ ] Add `organization` contract, recipe, reference boundary, and attack tests.
+- [ ] Add `comments-activity` contract, recipe, reference boundary, and attack tests.
+- [ ] Add `search` contract, recipe, reference boundary, and attack tests.
+
+### M18 Business Workflow Foundation
+
+- [ ] Add `reporting` contract, recipe, reference boundary, and attack tests.
+- [ ] Add `workflow-approval` contract, recipe, reference boundary, and attack tests.
+- [ ] Upgrade `notification` semantics and preserve upgrade provenance.
+- [ ] Update Catalog, Agent Skill, fixture receipts, package checks, smoke, and docs.
+- [ ] Pass `pnpm check` and the full remote portability matrix.
