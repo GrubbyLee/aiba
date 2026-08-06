@@ -1,6 +1,6 @@
 {
   "name": "aiba-spec",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Language-neutral protocol schemas and TypeScript bindings for AIBA",
   "type": "module",
   "license": "Apache-2.0",
@@ -18,7 +18,13 @@
     "access": "public",
     "provenance": true
   },
-  "keywords": ["aiba", "ai-agent", "json-schema", "capability", "provenance"],
+  "keywords": [
+    "aiba",
+    "ai-agent",
+    "json-schema",
+    "capability",
+    "provenance"
+  ],
   "sideEffects": false,
   "files": [
     "dist",

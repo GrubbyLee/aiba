@@ -1,6 +1,6 @@
 {
   "name": "aiba-core",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Deterministic capability verification, provenance, and upgrade engine for AIBA",
   "type": "module",
   "license": "AGPL-3.0-only",
@@ -18,9 +18,17 @@
     "access": "public",
     "provenance": true
   },
-  "keywords": ["aiba", "ai-agent", "verification", "provenance", "security"],
+  "keywords": [
+    "aiba",
+    "ai-agent",
+    "verification",
+    "provenance",
+    "security"
+  ],
   "sideEffects": false,
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": {
       "types": "./src/index.ts",

@@ -1,6 +1,6 @@
 {
   "name": "@grubbylee/aiba",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Agent infrastructure for building applications with verifiable, traceable, and upgradeable capabilities",
   "type": "module",
   "license": "AGPL-3.0-only",
@@ -18,8 +18,19 @@
     "access": "public",
     "provenance": true
   },
-  "keywords": ["aiba", "ai-agent", "cli", "capability", "miniprogram"],
-  "files": ["dist", "capabilities", "solutions", "GENERATED_OUTPUT_EXCEPTION.md"],
+  "keywords": [
+    "aiba",
+    "ai-agent",
+    "cli",
+    "capability",
+    "miniprogram"
+  ],
+  "files": [
+    "dist",
+    "capabilities",
+    "solutions",
+    "GENERATED_OUTPUT_EXCEPTION.md"
+  ],
   "bin": {
     "aiba": "dist/index.js"
   },

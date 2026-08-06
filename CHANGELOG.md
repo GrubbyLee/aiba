@@ -5,6 +5,48 @@ Changelog, and package versions follow Semantic Versioning.
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-08-06
+
+### Added
+
+- Add ten new verified capabilities: verification-challenge, scheduled-jobs,
+  webhooks, feature-flags, organization, comments-activity, search, reporting,
+  workflow-approval, and notification (v2 template-versioned), each with strict
+  Schemas, Core validators, reference implementations, attack tests, recipes,
+  and security plans.
+- Define a five-layer capability model in bilingual documentation covering
+  protocol layer, capability layer, composition layer, Solution layer, and
+  Agent integration layer, with explicit trust boundaries and composition rules.
+- Publish the complete official capability catalog with 19 dependency-ordered
+  capabilities plus the vehicle-management Solution.
+- Add a documentation conformance test that ensures every official capability
+  is represented in both English and Chinese capability-model docs with valid
+  local links.
+- Add common query, pagination, cursor, idempotency, and optimistic concurrency
+  protocols to the spec package for consistent cross-capability APIs.
+
+### Changed
+
+- Expand notification capability to 0.2.0 with explicit template versions,
+  persisted atomic lifecycle, minimized failure modes, and a migration recipe
+  from 0.1.0.
+- Extend the Agent Skill catalog and fixture generator to cover all 19
+  capabilities, and expand smoke, registry, and dependency resolution tests.
+- Update the identity-reference fixture to demonstrate end-to-end composition
+  across identity, policy, users, audit, search, workflow, notification,
+  scheduled jobs, webhooks, and organization boundaries.
+
+### Security
+
+- Add signed webhooks with replay defense and strict signature verification.
+- Bound search cursors and reporting queries to prevent authorization bypass and
+  resource exhaustion.
+- Enforce last-owner safety in organization membership and immutable approval
+  workflow state transitions.
+- Ensure attribute-based comments and activity remain auditable and
+  non-attributable to client-supplied identities.
+
+
 ## [0.1.2] - 2026-08-04
 
 ### Added
