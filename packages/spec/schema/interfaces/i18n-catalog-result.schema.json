@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/i18n-catalog-result.schema.json",
+  "title": "AIBA i18n Catalog Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["locale", "revision", "namespaces", "loadedAt"],
+  "properties": {
+    "locale": { "type": "string", "pattern": "^[a-z]{2,3}(-[A-Z][a-z]{3})?(-[A-Z]{2}|-[0-9]{3})?(-[a-z0-9]+)*$" },
+    "revision": { "type": "string", "pattern": "^[a-f0-9]{16,64}$" },
+    "namespaces": {
+      "type": "object",
+      "maxProperties": 100,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "messages": {
+            "type": "object",
+            "maxProperties": 1000,
+            "additionalProperties": { "type": "string" }
+          },
+          "plurals": {
+            "type": "object",
+            "maxProperties": 1000,
+            "additionalProperties": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "zero": { "type": "string" },
+                "one": { "type": "string" },
+                "two": { "type": "string" },
+                "few": { "type": "string" },
+                "many": { "type": "string" },
+                "other": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "loadedAt": { "type": "string", "format": "date-time" }
+  }
+}

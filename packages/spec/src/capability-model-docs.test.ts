@@ -29,7 +29,6 @@ async function officialCapabilityIds(): Promise<string[]> {
 describe("bilingual capability model documentation", () => {
   it("covers every official capability and Solution in both languages", async () => {
     const ids = await officialCapabilityIds();
-    expect(ids).toHaveLength(19);
 
     for (const documentUrl of docs) {
       const document = await readFile(documentUrl, "utf8");

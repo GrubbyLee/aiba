@@ -28,6 +28,9 @@ capabilities:
   - id: feature-flags
     version: 0.1.0
     layer: application-foundation
+  - id: i18n
+    version: 0.1.0
+    layer: application-foundation
   - id: organization
     version: 0.1.0
     layer: application-foundation

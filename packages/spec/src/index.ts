@@ -190,6 +190,58 @@ export interface FeatureFlagEvaluationResult {
   policyRevision: number;
   evaluatedAt: string;
 }
+export interface I18nTranslateKeyCommand {
+  key: string;
+  params?: Record<string, string | number | boolean | null>;
+  count?: number;
+  fallback?: string;
+}
+
+export interface I18nTranslateCommand {
+  keys: I18nTranslateKeyCommand[];
+  expectedRevision?: string;
+}
+
+export interface I18nTranslateKeyResult {
+  key: string;
+  value: string;
+  source: "exact" | "fallback-namespace" | "fallback-locale" | "default";
+  pluralForm?: "zero" | "one" | "two" | "few" | "many" | "other";
+}
+
+export interface I18nTranslateResult {
+  locale: string;
+  catalogRevision: string;
+  translations: I18nTranslateKeyResult[];
+  resolvedAt: string;
+}
+
+export interface I18nCatalogCommand {
+  locale: string;
+  namespace?: string;
+  revision?: string;
+}
+
+export interface I18nCatalogPluralForms {
+  zero?: string;
+  one?: string;
+  two?: string;
+  few?: string;
+  many?: string;
+  other?: string;
+}
+
+export interface I18nCatalogNamespace {
+  messages?: Record<string, string>;
+  plurals?: Record<string, I18nCatalogPluralForms>;
+}
+
+export interface I18nCatalogResult {
+  locale: string;
+  revision: string;
+  namespaces: Record<string, I18nCatalogNamespace>;
+  loadedAt: string;
+}
 
 export interface OrganizationMembershipCommand {
   action: "add" | "change-role" | "remove";
@@ -1017,6 +1069,10 @@ export type InterfaceSchemaName =
   | "file-asset-upload-command.schema.json"
   | "feature-flag-evaluation-command.schema.json"
   | "feature-flag-evaluation-result.schema.json"
+  | "i18n-catalog-command.schema.json"
+  | "i18n-catalog-result.schema.json"
+  | "i18n-translate-command.schema.json"
+  | "i18n-translate-result.schema.json"
   | "import-export-job-record.schema.json"
   | "notification-command.schema.json"
   | "notification-receipt.schema.json"

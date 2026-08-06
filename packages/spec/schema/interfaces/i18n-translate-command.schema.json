@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/i18n-translate-command.schema.json",
+  "title": "AIBA i18n Translate Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["keys"],
+  "properties": {
+    "keys": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key"],
+        "properties": {
+          "key": { "type": "string", "pattern": "^[a-z][a-z0-9.-]{2,119}(:[a-z][a-z0-9.-]{0,119})*$" },
+          "params": {
+            "type": "object",
+            "additionalProperties": { "type": ["string", "number", "boolean", "null"] },
+            "maxProperties": 32
+          },
+          "count": { "type": "integer", "minimum": 0, "maximum": 9007199254740991 },
+          "fallback": { "type": "string", "maxLength": 1000 }
+        }
+      }
+    },
+    "expectedRevision": { "type": "string", "pattern": "^[a-f0-9]{16,64}$" }
+  }
+}

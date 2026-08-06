@@ -19,7 +19,7 @@ describe("verified catalog discovery", () => {
       layer: "platform-integration",
       dependencies: ["identity@^0.1.0", "audit@^0.1.0"],
     }));
-    expect(result.capabilities).toHaveLength(19);
+    expect(result.capabilities).toHaveLength(20);
     expect(result.capabilities).toContainEqual(expect.objectContaining({
       id: "reporting",
       layer: "business-capability",

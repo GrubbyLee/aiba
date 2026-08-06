@@ -1,0 +1,42 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: i18n
+  version: 0.1.0
+  title: Internationalization (i18n)
+  layer: application-foundation
+  description: Namespaced, revisioned translation catalogs with deterministic locale resolution, fallback chains, and parameter interpolation — without prescribing storage, UI, or message format.
+spec:
+  interfaces: [i18n.translate-command, i18n.translate-result, i18n.catalog-command, i18n.catalog-result]
+  dependencies: []
+  invariants:
+    - id: locale-is-trusted
+      title: Resolved locale is server-side trusted
+      description: The final locale used for translation is derived from authenticated preferences, tenant defaults, and accept-language headers on the server, not from unchecked client input.
+      severity: critical
+      evidence: &evidence { acceptedTypes: [source, test, config, document], requiredTypes: [source, test], minimum: 2, requireHash: true }
+    - id: keys-are-namespaced
+      title: Translation keys are namespaced and bounded
+      description: Keys must match a bounded namespaced pattern and unknown keys return a defined fallback rather than leaking internal identifiers.
+      severity: error
+      evidence: *evidence
+    - id: interpolation-is-sanitized
+      title: Parameter interpolation is sanitized
+      description: Interpolation values are escaped or validated before insertion to prevent injection in rendered output.
+      severity: critical
+      evidence: *evidence
+    - id: catalog-is-revisioned
+      title: Catalogs are revisioned and immutable per release
+      description: Each translation bundle has a content-addressable revision and active bundles cannot be mutated under the same revision.
+      severity: error
+      evidence: *evidence
+    - id: fallback-is-deterministic
+      title: Fallback chain is deterministic and bounded
+      description: Missing keys follow a bounded, predictable fallback chain (key → namespace default → source locale) without unbounded recursion.
+      severity: warning
+      evidence: *evidence
+    - id: plural-rules-are-validated
+      title: Plural rules are validated against locale
+      description: Plural forms used in a bundle must match the CLDR plural categories of their declared locale.
+      severity: warning
+      evidence: *evidence

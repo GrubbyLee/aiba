@@ -1,6 +1,6 @@
 {
   "project": "AIBA Agent-Native Low-Code Foundation",
-  "description": "Complete M16-M18 as common protocols and verifiable reusable application capabilities.",
+  "description": "M19: expand general-purpose low-code capabilities with i18n, data-dict, form-engine, inbox, and tags.",
   "features": [
     {
       "id": "m16-common-query",
@@ -8,7 +8,12 @@
       "priority": 1,
       "description": "Define bounded filtering, stable sorting, opaque cursors, page metadata, idempotency, and revision semantics.",
       "file": "packages/spec/schema/interfaces/resource-query.schema.json",
-      "steps": ["Define schemas.", "Add bindings and validators.", "Reject unsafe scope.", "Document composition."],
+      "steps": [
+        "Define schemas.",
+        "Add bindings and validators.",
+        "Reject unsafe scope.",
+        "Document composition."
+      ],
       "passes": true,
       "verification": "Spec 47, Core 130, and reference 84 tests pass; pnpm check and clean npm consumer pass."
     },
@@ -18,7 +23,12 @@
       "priority": 2,
       "description": "Provide single-use, expiring, rate-limited verification challenges without leaking identifiers or codes.",
       "file": "capabilities/verification-challenge/capability.yaml",
-      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "steps": [
+        "Define interfaces.",
+        "Add pack and recipe.",
+        "Implement reference boundary.",
+        "Add attack tests."
+      ],
       "passes": true,
       "verification": "Pack quality 100; Spec 50, Core 131, and reference 89 tests pass; pnpm check passes."
     },
@@ -28,7 +38,12 @@
       "priority": 3,
       "description": "Provide leased, idempotent scheduled execution with bounded retries and minimized failure records.",
       "file": "capabilities/scheduled-jobs/capability.yaml",
-      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "steps": [
+        "Define interfaces.",
+        "Add pack and recipe.",
+        "Implement reference boundary.",
+        "Add attack tests."
+      ],
       "passes": true,
       "verification": "Pack quality 100; Spec 52, Core 133, and reference 94 tests pass; active-lease race is rejected; pnpm check passes."
     },
@@ -38,7 +53,12 @@
       "priority": 4,
       "description": "Provide signed webhook delivery with trusted destinations, replay defense, retries, and audit-safe records.",
       "file": "capabilities/webhooks/capability.yaml",
-      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "steps": [
+        "Define interfaces.",
+        "Add pack and recipe.",
+        "Implement reference boundary.",
+        "Add attack tests."
+      ],
       "passes": true,
       "verification": "Pack quality 100; Spec 54, Core 134, and reference 99 tests pass; signature, stale timestamp, and replay attacks are rejected; pnpm check passes."
     },
@@ -48,7 +68,12 @@
       "priority": 5,
       "description": "Provide deterministic feature evaluation from trusted context and revisioned policy.",
       "file": "capabilities/feature-flags/capability.yaml",
-      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "steps": [
+        "Define interfaces.",
+        "Add pack and recipe.",
+        "Implement reference boundary.",
+        "Add attack tests."
+      ],
       "passes": true,
       "verification": "Pack quality 100; Spec 56, Core 135, and reference 104 tests pass; trusted context, deterministic rollout, revision conflicts, and allocation bounds verified; pnpm check passes."
     },
@@ -58,7 +83,12 @@
       "priority": 6,
       "description": "Provide tenant-derived organization membership with authorization, revision checks, and last-owner safety.",
       "file": "capabilities/organization/capability.yaml",
-      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "steps": [
+        "Define interfaces.",
+        "Add pack and recipe.",
+        "Implement reference boundary.",
+        "Add attack tests."
+      ],
       "passes": true,
       "verification": "Pack quality 100; Spec 58, Core 136, and reference 109 tests pass; scope injection, stale revision, invalid roles, idempotency conflict, and last-owner attacks are rejected; pnpm check passes."
     },
@@ -68,7 +98,12 @@
       "priority": 7,
       "description": "Provide attributable comments and activity with bounded content, revisions, mentions, and soft deletion.",
       "file": "capabilities/comments-activity/capability.yaml",
-      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "steps": [
+        "Define interfaces.",
+        "Add pack and recipe.",
+        "Implement reference boundary.",
+        "Add attack tests."
+      ],
       "passes": true,
       "verification": "Pack quality 100; Spec 61, Core 137, and reference 114 tests pass; impersonation, scope, mention, control-character, stale revision, and idempotency attacks are rejected; pnpm check passes."
     },
@@ -78,7 +113,12 @@
       "priority": 8,
       "description": "Provide bounded tenant-scoped search with authorization-first filtering and opaque cursors.",
       "file": "capabilities/search/capability.yaml",
-      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "steps": [
+        "Define interfaces.",
+        "Add pack and recipe.",
+        "Implement reference boundary.",
+        "Add attack tests."
+      ],
       "passes": true,
       "verification": "Pack quality 100; Spec 63, Core 138, and reference 118 tests pass; authorization leakage, raw scope injection, excessive pages, cursor tamper, and cross-principal replay are rejected; pnpm check passes."
     },
@@ -88,7 +128,12 @@
       "priority": 9,
       "description": "Provide authorized server-defined reports with bounded execution, private outputs, and minimized records.",
       "file": "capabilities/reporting/capability.yaml",
-      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "steps": [
+        "Define interfaces.",
+        "Add pack and recipe.",
+        "Implement reference boundary.",
+        "Add attack tests."
+      ],
       "passes": true,
       "verification": "Pack quality 100; Spec 65, Core 139, and reference 123 tests pass; SQL/path injection, authorization, parameter, row-limit, timeout, projection, and redaction behavior verified; pnpm check passes."
     },
@@ -98,7 +143,12 @@
       "priority": 10,
       "description": "Provide explicit approval state transitions with separation of duties and immutable decisions.",
       "file": "capabilities/workflow-approval/capability.yaml",
-      "steps": ["Define interfaces.", "Add pack and recipe.", "Implement reference boundary.", "Add attack tests."],
+      "steps": [
+        "Define interfaces.",
+        "Add pack and recipe.",
+        "Implement reference boundary.",
+        "Add attack tests."
+      ],
       "passes": true,
       "verification": "Pack quality 100; Spec 68, Core 140, and reference 128 tests pass; actor injection, self approval, duplicate actor, stale concurrency, terminal replay, immutability, and idempotency verified; pnpm check passes."
     },
@@ -108,7 +158,12 @@
       "priority": 11,
       "description": "Add template versions, preferences, durable deduplication, delivery lifecycle, and minimized receipts.",
       "file": "capabilities/notification/capability.yaml",
-      "steps": ["Evolve interfaces.", "Add migration guidance.", "Upgrade reference boundary.", "Add attack tests."],
+      "steps": [
+        "Evolve interfaces.",
+        "Add migration guidance.",
+        "Upgrade reference boundary.",
+        "Add attack tests."
+      ],
       "passes": true,
       "verification": "Pack quality 100; Spec 68, Core 140, and reference 129 tests pass; explicit versions, preferences, atomic lifecycle, failure receipts, migration, Solution hash, and regenerated fixture provenance verified; pnpm check passes."
     },
@@ -118,7 +173,12 @@
       "priority": 12,
       "description": "Integrate all capabilities into discovery, dependency order, Agent guidance, fixtures, and npm tarballs.",
       "file": "capabilities/catalog.yaml",
-      "steps": ["Update catalog.", "Update Agent adapter.", "Generate fixture state.", "Exercise installed CLI."],
+      "steps": [
+        "Update catalog.",
+        "Update Agent adapter.",
+        "Generate fixture state.",
+        "Exercise installed CLI."
+      ],
       "passes": true,
       "verification": "Official catalog exposes 19 dependency-ordered capabilities; 18-capability fixture provenance, Agent Skill, smoke discovery, schema/capability tarball assertions, and installed CLI show commands pass; Core 141 and pnpm check pass."
     },
@@ -128,9 +188,56 @@
       "priority": 13,
       "description": "Document the agent-native low-code model, capability rules, and catalog in English and Chinese.",
       "file": "docs/CAPABILITY_MODEL.md",
-      "steps": ["Add architecture guidance.", "Update bilingual README.", "Update task status.", "Record verification."],
+      "steps": [
+        "Add architecture guidance.",
+        "Update bilingual README.",
+        "Update task status.",
+        "Record verification."
+      ],
       "passes": true,
       "verification": "Bilingual capability model documents the five layers, 19-capability catalog, contracts, composition, Agent workflow, and trust boundaries; executable coverage and link checks pass; pnpm check and clean npm consumer pass."
+    },
+    {
+      "id": "m19-i18n",
+      "name": "i18n / 国际化多语言",
+      "passes": false,
+      "evidence": "",
+      "commit": ""
+    },
+    {
+      "id": "m19-data-dict",
+      "name": "数据字典 / 系统枚举管理",
+      "passes": false,
+      "evidence": "",
+      "commit": ""
+    },
+    {
+      "id": "m19-form-engine",
+      "name": "动态表单引擎",
+      "passes": false,
+      "evidence": "",
+      "commit": ""
+    },
+    {
+      "id": "m19-inbox",
+      "name": "站内消息 / 通知中心",
+      "passes": false,
+      "evidence": "",
+      "commit": ""
+    },
+    {
+      "id": "m19-tags",
+      "name": "标签系统",
+      "passes": false,
+      "evidence": "",
+      "commit": ""
+    },
+    {
+      "id": "m19-documentation",
+      "name": "M19 文档与目录同步",
+      "passes": false,
+      "evidence": "",
+      "commit": ""
     }
   ]
 }
