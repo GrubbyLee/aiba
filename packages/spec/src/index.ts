@@ -177,6 +177,41 @@ export interface WebhookDeliveryRecord {
   errorCode?: string;
 }
 
+
+export interface DataDictItemRecord {
+  itemId: string;
+  dictCode: string;
+  parentId?: string;
+  value: string | number | boolean;
+  valueType: "string" | "number" | "boolean";
+  label: string;
+  sortOrder: number;
+  status: "enabled" | "disabled";
+  revision: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface DataDictQueryCommand {
+  dictCode: string;
+  parentId?: string;
+  keyword?: string;
+  includeDisabled?: boolean;
+  pageSize?: number;
+  page?: number;
+  expectedRevision?: number;
+}
+
+export interface DataDictQueryResult {
+  dictCode: string;
+  revision: number;
+  items: DataDictItemRecord[];
+  page: number;
+  pageSize: number;
+  total: number;
+  queriedAt: string;
+}
+
 export interface FeatureFlagEvaluationCommand {
   flagKey: string;
   expectedRevision?: number;
@@ -1065,6 +1100,9 @@ export type InterfaceSchemaName =
   | "comment-record.schema.json"
   | "data-export-command.schema.json"
   | "data-import-command.schema.json"
+  | "data-dict-item-record.schema.json"
+  | "data-dict-query-command.schema.json"
+  | "data-dict-query-result.schema.json"
   | "file-asset-record.schema.json"
   | "file-asset-upload-command.schema.json"
   | "feature-flag-evaluation-command.schema.json"

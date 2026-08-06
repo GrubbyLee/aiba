@@ -1,0 +1,37 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: data-dict
+  version: 0.1.0
+  title: Data Dictionary
+  layer: application-foundation
+  description: Revisioned typed enum and lookup dictionaries for selectable values, classifications, and status codes, with server-side validation and tenant isolation.
+spec:
+  interfaces: [data-dict.query-command, data-dict.query-result, data-dict.item-record]
+  dependencies: []
+  invariants:
+    - id: values-are-bound
+      title: Dictionary values are bounded and typed
+      description: Every item belongs to a typed dictionary with declared value type, and values are validated against that type before storage.
+      severity: critical
+      evidence: &evidence { acceptedTypes: [source, test, config, document], requiredTypes: [source, test], minimum: 2, requireHash: true }
+    - id: tenant-isolation
+      title: Dictionaries are tenant-isolated
+      description: Dictionary items are scoped by tenant and cross-tenant reads or writes are rejected at the service boundary.
+      severity: critical
+      evidence: *evidence
+    - id: revisions-are-immutable
+      title: Dictionary revisions are immutable
+      description: Every dictionary change produces a new revision and active records reference the revision they were validated against.
+      severity: error
+      evidence: *evidence
+    - id: disabled-items-excluded
+      title: Disabled items are excluded from user queries
+      description: Items marked disabled are not returned in listing or lookup results for unprivileged callers, preventing stale enum use.
+      severity: error
+      evidence: *evidence
+    - id: labels-are-sanitized
+      title: Display labels are sanitized
+      description: Display labels from dictionary items are escaped before rendering to prevent injection in UI or exports.
+      severity: error
+      evidence: *evidence

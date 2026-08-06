@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/data-dict-query-command.schema.json",
+  "title": "AIBA Data Dictionary Query Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["dictCode"],
+  "properties": {
+    "dictCode": { "type": "string", "pattern": "^[a-z][a-z0-9.-]{2,62}$" },
+    "parentId": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}$" },
+    "keyword": { "type": "string", "maxLength": 100 },
+    "includeDisabled": { "type": "boolean" },
+    "pageSize": { "type": "integer", "minimum": 1, "maximum": 200 },
+    "page": { "type": "integer", "minimum": 1, "maximum": 10000 },
+    "expectedRevision": { "type": "integer", "minimum": 1, "maximum": 2147483647 }
+  }
+}

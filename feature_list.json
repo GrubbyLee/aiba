@@ -200,9 +200,9 @@
     {
       "id": "m19-i18n",
       "name": "i18n / 国际化多语言",
-      "passes": false,
-      "evidence": "",
-      "commit": ""
+      "passes": true,
+      "evidence": "spec schema load test + core catalog validation + identity-reference i18n service test (10 tests) + bilingual capability model coverage",
+      "commit": "54e5e31"
     },
     {
       "id": "m19-data-dict",

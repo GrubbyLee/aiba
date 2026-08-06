@@ -31,6 +31,9 @@ capabilities:
   - id: i18n
     version: 0.1.0
     layer: application-foundation
+  - id: data-dict
+    version: 0.1.0
+    layer: application-foundation
   - id: organization
     version: 0.1.0
     layer: application-foundation
