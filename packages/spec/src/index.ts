@@ -766,6 +766,41 @@ export interface ApplicationPlan {
   tasks: ApplicationPlanTask[];
 }
 
+export interface ApplicationTaskCustomization {
+  taskId: string;
+  ownership: "project";
+  note: string;
+  evidencePaths: string[];
+}
+
+export type ApplicationBlueprintChangeCategory =
+  | "additive"
+  | "breaking"
+  | "security-sensitive"
+  | "conflict";
+
+export interface ApplicationBlueprintUpgradePlan {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "ApplicationBlueprintUpgradePlan";
+  metadata: {
+    id: string;
+    blueprintId: string;
+    from: { version: string; sha256: string; planSha256: string };
+    to: { version: string; sha256: string; planSha256: string };
+  };
+  changes: Array<{
+    id: string;
+    category: ApplicationBlueprintChangeCategory;
+    targetType: "capability" | "resource" | "field" | "relationship" | "state-machine"
+      | "operation" | "event" | "ui" | "acceptance" | "adaptation" | "customization";
+    target: string;
+    summary: string;
+    requiresResolution: boolean;
+  }>;
+  preservedCustomizations: ApplicationTaskCustomization[];
+  requiredResolutions: string[];
+}
+
 export interface CapabilityInvariant {
   id: string;
   title: string;
@@ -1371,6 +1406,7 @@ export type ProtocolSchemaName =
   | "agent-protocol.schema.json"
   | "application-blueprint.schema.json"
   | "application-plan.schema.json"
+  | "application-blueprint-upgrade-plan.schema.json"
   | "error-envelope.schema.json"
   | "signed-solution.schema.json"
   | "solution-trust-policy.schema.json"

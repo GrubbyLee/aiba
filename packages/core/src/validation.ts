@@ -6,6 +6,7 @@ import {
   type ApprovalWorkflowRecord,
   type ApplicationBlueprint,
   type ApplicationPlan,
+  type ApplicationBlueprintUpgradePlan,
   loadInterfaceSchema,
   loadProtocolSchema,
   type AuditEvent,
@@ -195,6 +196,9 @@ const applicationBlueprintValidator = ajv.compile<ApplicationBlueprint>(
 const applicationPlanValidator = ajv.compile<ApplicationPlan>(
   loadProtocolSchema("application-plan.schema.json"),
 );
+const applicationBlueprintUpgradePlanValidator = ajv.compile<ApplicationBlueprintUpgradePlan>(
+  loadProtocolSchema("application-blueprint-upgrade-plan.schema.json"),
+);
 const signedSolutionValidator = ajv.compile<SignedSolutionEnvelope>(
   loadProtocolSchema("signed-solution.schema.json"),
 );
@@ -322,6 +326,17 @@ export function validateApplicationBlueprint(value: unknown): ApplicationBluepri
 export function validateApplicationPlan(value: unknown): ApplicationPlan {
   assertValid(applicationPlanValidator, value, "application plan");
   return value as ApplicationPlan;
+}
+
+export function validateApplicationBlueprintUpgradePlan(
+  value: unknown,
+): ApplicationBlueprintUpgradePlan {
+  assertValid(
+    applicationBlueprintUpgradePlanValidator,
+    value,
+    "application Blueprint upgrade plan",
+  );
+  return value as ApplicationBlueprintUpgradePlan;
 }
 
 export function validateSignedSolutionEnvelope(value: unknown): SignedSolutionEnvelope {

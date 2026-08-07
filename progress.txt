@@ -700,3 +700,24 @@ Verification:
 Commit: d57fea1
 Progress: 23/25
 Next: m20-blueprint-upgrade
+
+----------------------------------------
+Session #32 - m20-blueprint-upgrade
+----------------------------------------
+Date: 2026-08-07
+
+Completed:
+  [x] Added a strict public Application Blueprint upgrade-plan protocol.
+  [x] Classified additive, breaking, security-sensitive, and conflicting changes.
+  [x] Preserved compatible project-owned task customizations and evidence paths.
+  [x] Required explicit resolution for security and breaking conflicts.
+  [x] Rejected stale Blueprint hashes, changed target plans, downgrades, and unsafe paths.
+
+Verification:
+  - pnpm check: passed
+  - Spec: 93 tests; Core: 152 tests; reference fixture: 164 tests
+  - Registry Server: 8 tests; CLI: 11 tests
+  - Upgrade planning modifies no application code and executes no pack content
+
+Progress: 24/25
+Next: m20-blueprint-integration

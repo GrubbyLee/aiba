@@ -2,6 +2,7 @@ export * from "./errors.js";
 export * from "./add.js";
 export * from "./agent-protocol.js";
 export * from "./application-blueprint.js";
+export * from "./application-blueprint-upgrade.js";
 export * from "./application-planner.js";
 export * from "./authoring.js";
 export * from "./bundle.js";

@@ -7,6 +7,7 @@ describe("protocol schemas", () => {
     "agent-protocol.schema.json",
     "application-blueprint.schema.json",
     "application-plan.schema.json",
+    "application-blueprint-upgrade-plan.schema.json",
     "error-envelope.schema.json",
     "signed-solution.schema.json",
     "solution-trust-policy.schema.json",

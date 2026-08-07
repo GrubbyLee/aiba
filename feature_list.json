@@ -311,7 +311,7 @@
         "Preserve project-owned task resolutions across compatible revisions.",
         "Reject stale plans and unresolved breaking or security-sensitive changes."
       ],
-      "passes": false,
+      "passes": true,
       "verification": "v1-to-v2 tests preserve project-owned resolutions, surface security changes, reject stale source and unresolved conflicts, and never modify application code."
     },
     {
