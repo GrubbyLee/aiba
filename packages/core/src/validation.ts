@@ -4,6 +4,7 @@ import {
   type ApprovalDecisionCommand,
   type ApprovalRequestCommand,
   type ApprovalWorkflowRecord,
+  type ApplicationBlueprint,
   loadInterfaceSchema,
   loadProtocolSchema,
   type AuditEvent,
@@ -187,6 +188,9 @@ const capabilityCatalogValidator = ajv.compile<CapabilityCatalog>(
 const capabilitySolutionValidator = ajv.compile<CapabilitySolution>(
   loadProtocolSchema("solution.schema.json"),
 );
+const applicationBlueprintValidator = ajv.compile<ApplicationBlueprint>(
+  loadProtocolSchema("application-blueprint.schema.json"),
+);
 const signedSolutionValidator = ajv.compile<SignedSolutionEnvelope>(
   loadProtocolSchema("signed-solution.schema.json"),
 );
@@ -304,6 +308,11 @@ export function validateCapabilityCatalog(value: unknown): CapabilityCatalog {
 export function validateCapabilitySolution(value: unknown): CapabilitySolution {
   assertValid(capabilitySolutionValidator, value, "capability solution");
   return value as CapabilitySolution;
+}
+
+export function validateApplicationBlueprint(value: unknown): ApplicationBlueprint {
+  assertValid(applicationBlueprintValidator, value, "application Blueprint");
+  return value as ApplicationBlueprint;
 }
 
 export function validateSignedSolutionEnvelope(value: unknown): SignedSolutionEnvelope {

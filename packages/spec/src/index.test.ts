@@ -5,6 +5,7 @@ describe("protocol schemas", () => {
   it.each([
     "ancestry.schema.json",
     "agent-protocol.schema.json",
+    "application-blueprint.schema.json",
     "error-envelope.schema.json",
     "signed-solution.schema.json",
     "solution-trust-policy.schema.json",

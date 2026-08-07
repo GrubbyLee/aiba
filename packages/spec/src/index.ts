@@ -625,6 +625,109 @@ export interface WechatMiniProgramLoginResult {
   issuedAt: string;
 }
 
+export type ApplicationFieldType =
+  | "string"
+  | "text"
+  | "integer"
+  | "number"
+  | "boolean"
+  | "date"
+  | "datetime"
+  | "enum"
+  | "asset"
+  | "tags"
+  | "reference";
+
+export interface ApplicationBlueprintField {
+  id: string;
+  type: ApplicationFieldType;
+  required: boolean;
+  sensitive: boolean;
+  unique?: boolean;
+  dictionary?: string;
+  targetResource?: string;
+  minimum?: number;
+  maximum?: number;
+  maxLength?: number;
+}
+
+export interface ApplicationBlueprintResource {
+  id: string;
+  title: string;
+  fields: ApplicationBlueprintField[];
+  relationships: Array<{
+    id: string;
+    targetResource: string;
+    kind: "one-to-one" | "one-to-many" | "many-to-many";
+    onDelete: "restrict" | "detach" | "cascade";
+  }>;
+  stateMachine?: {
+    initial: string;
+    states: Array<{ id: string; terminal: boolean }>;
+    transitions: Array<{ id: string; from: string; to: string; operation: string }>;
+  };
+}
+
+export interface ApplicationBlueprintOperation {
+  id: string;
+  resource: string;
+  kind: "create" | "read" | "update" | "delete" | "list" | "transition" | "custom";
+  authorization: { action: string };
+  inputFields: string[];
+  outputFields: string[];
+  idempotent: boolean;
+  emits: string[];
+}
+
+export interface ApplicationBlueprintEvent {
+  id: string;
+  operation: string;
+  payloadFields: string[];
+  triggers: Array<{
+    capability: string;
+    action: string;
+    delivery: "synchronous" | "asynchronous";
+  }>;
+}
+
+export interface ApplicationBlueprint {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "ApplicationBlueprint";
+  metadata: {
+    id: string;
+    version: string;
+    title: string;
+    description: string;
+  };
+  spec: {
+    requirements: Array<{ capability: string; version: string; reason: string }>;
+    resources: ApplicationBlueprintResource[];
+    operations: ApplicationBlueprintOperation[];
+    events: ApplicationBlueprintEvent[];
+    ui: {
+      surfaces: Array<{
+        id: string;
+        kind: "list" | "detail" | "form" | "dashboard";
+        resource?: string;
+        fields: string[];
+        operations: string[];
+        features: Array<"search" | "filters" | "pagination" | "bulk-actions" | "tags">;
+      }>;
+    };
+    acceptance: Array<{
+      id: string;
+      title: string;
+      severity: InvariantSeverity;
+      evidence: {
+        requiredTypes: EvidenceType[];
+        minimum: number;
+        pathPatterns: string[];
+      };
+    }>;
+    adaptation: { writeScopes: string[] };
+  };
+}
+
 export interface CapabilityInvariant {
   id: string;
   title: string;
@@ -1226,6 +1329,7 @@ export interface SolutionVerificationState {
 export type ProtocolSchemaName =
   | "ancestry.schema.json"
   | "agent-protocol.schema.json"
+  | "application-blueprint.schema.json"
   | "error-envelope.schema.json"
   | "signed-solution.schema.json"
   | "solution-trust-policy.schema.json"

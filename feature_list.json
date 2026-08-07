@@ -266,7 +266,7 @@
         "Add positive and malformed-document tests.",
         "Document that blueprints express intent rather than executable code."
       ],
-      "passes": false,
+      "passes": true,
       "verification": "Schema and binding accept complete domain-neutral blueprints and reject unknown fields, dangling references, unsafe paths, unbounded values, and executable commands."
     },
     {

@@ -625,3 +625,26 @@ Verification:
 Commit: fa7328d
 Progress: 20/25
 Next: m20-blueprint-protocol
+
+----------------------------------------
+Session #29 - m20-blueprint-protocol
+----------------------------------------
+Date: 2026-08-07
+
+Completed:
+  [x] Added the strict public ApplicationBlueprint JSON Schema and TypeScript bindings.
+  [x] Covered resources, fields, relationships, state machines, operations,
+      authorization intent, events, triggers, UI intent, evidence, and write scopes.
+  [x] Added Core loading and semantic validation for every cross-document reference.
+  [x] Rejected commands, unsafe paths, unknown fields, duplicates, dangling
+      references, inconsistent field constraints, and broken event/state graphs.
+  [x] Recorded the intent-only and domain-neutral boundary in RFC 0021.
+
+Verification:
+  - pnpm check: passed
+  - Spec: 91 tests; Core: 143 tests; reference fixture: 164 tests
+  - Registry Server: 8 tests; CLI: 10 tests
+  - Four deterministic npm tarballs and clean external consumer passed
+
+Progress: 21/25
+Next: m20-blueprint-planner

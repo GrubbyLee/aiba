@@ -4,6 +4,7 @@ import { validRange } from "semver";
 import { parse } from "yaml";
 import type {
   CapabilityCatalog,
+  ApplicationBlueprint,
   CapabilityManifest,
   CapabilityAncestry,
   CapabilityMigration,
@@ -16,8 +17,10 @@ import type {
   UpgradePlan,
 } from "aiba-spec";
 import { AibaError } from "./errors.js";
+import { assertApplicationBlueprintSemantics } from "./application-blueprint.js";
 import { resolveExistingProjectPath } from "./paths.js";
 import {
+  validateApplicationBlueprint,
   validateCapabilityCatalog,
   validateCapabilityManifest,
   validateCapabilityAncestry,
@@ -150,6 +153,12 @@ export async function loadCapabilitySolution(
     );
   }
   return solution;
+}
+
+export async function loadApplicationBlueprint(path: string): Promise<ApplicationBlueprint> {
+  return assertApplicationBlueprintSemantics(
+    validateApplicationBlueprint(await readYaml(resolve(path))),
+  );
 }
 
 export async function loadProjectManifest(
