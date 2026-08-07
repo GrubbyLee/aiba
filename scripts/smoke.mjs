@@ -85,10 +85,26 @@ run("lint Solution scaffold", [
 run("create application Blueprint", [
   "create", "app", "operations-hub", "--out", authoringFixture, "--json",
 ], 0);
+const applicationBlueprintPath = join(authoringFixture, "operations-hub", "app.yaml");
 run("plan application Blueprint", [
-  "plan", join(authoringFixture, "operations-hub", "app.yaml"),
+  "plan", applicationBlueprintPath,
   "--packs-dir", join(workspace, "capabilities"), "--json",
 ], 0);
+run("plan domain-neutral golden Blueprint", [
+  "plan", join(workspace, "fixtures", "application-blueprint", "work-hub.yaml"),
+  "--packs-dir", join(workspace, "capabilities"), "--json",
+], 0);
+run("plan upgraded domain-neutral Blueprint", [
+  "plan", join(workspace, "fixtures", "application-blueprint", "work-hub-v2.yaml"),
+  "--packs-dir", join(workspace, "capabilities"), "--json",
+], 0);
+const unsafeBlueprint = parse(readFileSync(applicationBlueprintPath, "utf8"));
+unsafeBlueprint.spec.adaptation.writeScopes = ["../outside/**"];
+writeFileSync(applicationBlueprintPath, stringify(unsafeBlueprint));
+run("reject unsafe application Blueprint", [
+  "plan", applicationBlueprintPath,
+  "--packs-dir", join(workspace, "capabilities"), "--json",
+], 1);
 run("reject application scaffold overwrite", [
   "create", "app", "operations-hub", "--out", authoringFixture, "--json",
 ], 1);

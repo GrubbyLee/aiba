@@ -1,0 +1,174 @@
+apiVersion: aiba.dev/v0alpha1
+kind: ApplicationBlueprint
+metadata:
+  id: work-hub
+  version: 0.2.0
+  title: Work Hub
+  description: A domain-neutral application for coordinating structured work.
+spec:
+  requirements:
+    - capability: notification
+      version: ^0.2.0
+      reason: Notify assigned actors when work changes.
+    - capability: comments-activity
+      version: ^0.1.0
+      reason: Keep attributable discussion and activity.
+    - capability: workflow-approval
+      version: ^0.1.0
+      reason: Review selected state transitions.
+    - capability: inbox
+      version: ^0.1.0
+      reason: Present application messages to signed-in actors.
+    - capability: reporting
+      version: ^0.1.0
+      reason: Produce bounded operational summaries.
+    - capability: import-export
+      version: ^0.1.0
+      reason: Exchange policy-filtered work data.
+  resources:
+    - id: workspace
+      title: Workspace
+      fields:
+        - id: name
+          type: string
+          required: true
+          sensitive: false
+          maxLength: 120
+      relationships: []
+    - id: work-item
+      title: Work Item
+      fields:
+        - id: title
+          type: string
+          required: true
+          sensitive: false
+          maxLength: 200
+        - id: workspace
+          type: reference
+          required: true
+          sensitive: false
+          targetResource: workspace
+        - id: status
+          type: enum
+          required: true
+          sensitive: false
+          dictionary: work-status
+        - id: priority
+          type: integer
+          required: false
+          sensitive: false
+          minimum: 0
+          maximum: 5
+        - id: attachment
+          type: asset
+          required: false
+          sensitive: true
+        - id: labels
+          type: tags
+          required: false
+          sensitive: false
+      relationships:
+        - id: belongs-to
+          targetResource: workspace
+          kind: one-to-many
+          onDelete: restrict
+      stateMachine:
+        initial: open
+        states:
+          - id: open
+            terminal: false
+          - id: pending
+            terminal: false
+          - id: done
+            terminal: true
+        transitions:
+          - id: submit
+            from: open
+            to: pending
+            operation: submit-item
+          - id: complete
+            from: pending
+            to: done
+            operation: complete-item
+  operations:
+    - id: create-item
+      resource: work-item
+      kind: create
+      authorization:
+        action: work-item.create
+      inputFields: [title, workspace, status, attachment, labels]
+      outputFields: [title, workspace, status, labels]
+      idempotent: true
+      emits: [item-created]
+    - id: submit-item
+      resource: work-item
+      kind: transition
+      authorization:
+        action: work-item.submit
+      inputFields: []
+      outputFields: [status]
+      idempotent: true
+      emits: [item-submitted]
+    - id: complete-item
+      resource: work-item
+      kind: transition
+      authorization:
+        action: work-item.complete
+      inputFields: []
+      outputFields: [status]
+      idempotent: true
+      emits: []
+  events:
+    - id: item-created
+      operation: create-item
+      payloadFields: [title, status]
+      triggers:
+        - capability: notification
+          action: send
+          delivery: asynchronous
+        - capability: inbox
+          action: publish
+          delivery: synchronous
+    - id: item-submitted
+      operation: submit-item
+      payloadFields: [title, status]
+      triggers:
+        - capability: workflow-approval
+          action: request
+          delivery: synchronous
+  ui:
+    surfaces:
+      - id: item-list
+        kind: list
+        resource: work-item
+        fields: [title, status, labels]
+        operations: [create-item, submit-item, complete-item]
+        features: [search, filters, pagination, bulk-actions, tags]
+      - id: item-form
+        kind: form
+        resource: work-item
+        fields: [title, workspace, status, attachment, labels]
+        operations: [create-item]
+        features: [tags]
+      - id: operations-dashboard
+        kind: dashboard
+        fields: []
+        operations: []
+        features: [filters]
+  acceptance:
+    - id: tenant-scope-enforced
+      title: Tenant scope comes only from trusted context
+      severity: critical
+      evidence:
+        requiredTypes: [source, test]
+        minimum: 2
+        pathPatterns: [src/**, test/**]
+    - id: transitions-are-concurrent
+      title: State transitions reject stale revisions
+      severity: error
+      evidence:
+        requiredTypes: [source, test]
+        minimum: 2
+        pathPatterns: [src/**, test/**]
+  adaptation:
+    writeScopes: [src/**, test/**]

@@ -23,6 +23,10 @@
 AIBA 是一套面向 AI Agent 的应用构建基础设施。它帮助 Agent 为项目添加、验证、
 追踪和升级完整的软件能力，同时不把项目锁定在固定的应用框架、服务商或视觉体系中。
 
+用户可以用 Application Blueprint 描述自己项目的资源、工作流、授权意图、事件、界面意图和
+验收证据。AIBA 负责验证这些意图，并确定性地解析出通用能力和有边界、不可执行的 Agent
+任务图。具体业务名词只属于用户项目，绝不会成为 AIBA 内置的产品模型。
+
 官方目录现有 23 项能力，覆盖身份、访问、验证、文件、通知、站内信、任务、功能开关、
 国际化、数据字典、动态表单、标签、组织、Webhook、评论、搜索、导入导出、报表和审批。
 能力按五层组织：应用基础能力、平台集成能力、业务通用能力、工程治理能力和应用组合方案。AIBA
@@ -30,8 +34,8 @@ AIBA 是一套面向 AI Agent 的应用构建基础设施。它帮助 Agent 为�
 私有 Registry 认证下载、验证缓存和防回滚解析。可选的项目治理机制还能为安装和
 升级的最终确认增加带签名、绑定证据的团队审批。
 
-[在线观看外部车辆管理示例](https://grubbylee.github.io/aiba/video/)，了解 AIBA 和 Codex 如何从空目录
-开始，完成一个可操作、可独立验证的管理后台。示例业务领域并未内置到 AIBA 中。
+[历史外部演示](https://grubbylee.github.io/aiba/video/)展示了 AIBA 和 Codex 如何从空目录
+完成一个真实项目。演示中的具体业务只属于文档，不属于 AIBA 协议或官方能力目录。
 
 [从十分钟快速上手开始](docs/QUICKSTART.zh-CN.md)，在全新项目中验证 npm CLI，并把
 第一个有边界的计划交给 Agent。
@@ -54,7 +58,7 @@ AIBA 是一套面向 AI Agent 的应用构建基础设施。它帮助 Agent 为�
 - `packages/cli`：`aiba` 命令行界面。
 - `packages/registry-server`：带认证的只读参考 Registry。
 - `capabilities/`：官方能力包。
-- `solutions/`：绑定精确版本并按依赖顺序排列的行业能力组合。
+- `solutions/`：绑定精确版本并按依赖顺序排列的应用能力组合。
 - `integrations/`：Agent 专用适配器。
 - `fixtures/`：一致性与攻击测试参考项目，包括原生微信小程序和集成核心能力的
   安全测试语料。
@@ -137,6 +141,9 @@ aiba compose secure-workspace
 
 ```bash
 aiba init
+aiba agent-protocol --json
+aiba create app work-hub
+aiba plan applications/work-hub/app.yaml
 aiba list
 aiba show secure-workspace
 aiba add secure-workspace --solution

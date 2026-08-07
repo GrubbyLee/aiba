@@ -722,3 +722,27 @@ Verification:
 Commit: ece7fe7
 Progress: 24/25
 Next: m20-blueprint-integration
+
+----------------------------------------
+Session #33 - m20-blueprint-integration (local)
+----------------------------------------
+Date: 2026-08-07
+
+Completed:
+  [x] Added real v1/v2 domain-neutral work collaboration Blueprints.
+  [x] Verified capability inference, task planning, customization preservation,
+      upgrade acceptance, source immutability, and unsafe-path rejection.
+  [x] Updated bilingual README, capability model, Quick Start, architecture,
+      roadmap, task status, and the portable Agent Skill.
+  [x] Asserted all three Blueprint schemas and Core upgrade exports in clean
+      npm release artifacts and exercised installed CLI planning.
+
+Verification:
+  - pnpm check: passed
+  - Spec: 93 tests; Core: 153 tests; reference fixture: 164 tests
+  - Registry Server: 8 tests; CLI: 11 tests
+  - Source smoke: v1/v2 plans pass and unsafe write scope is rejected
+  - Four deterministic npm tarballs installed and exercised externally
+
+Progress: 24/25
+Next: push and confirm GitHub CI, Pages, and Gitee sync before final completion

@@ -230,3 +230,26 @@ M19 is complete when all 24 official capabilities are dependency ordered and
 discoverable, the 23-capability reference fixture verifies exact source and test
 evidence, all five M19 packs score 100 in authoring checks, and the complete
 local and hosted CI gates pass.
+
+## M20: Domain-Neutral Application Blueprints
+
+Goal: let a user describe a project-specific application while AIBA
+deterministically resolves reusable capabilities and bounded Agent work without
+turning any example business domain into product infrastructure.
+
+- [x] Remove project-specific business models from official protocols, packs,
+  Solutions, executable fixtures, and release artifacts.
+- [x] Define strict Blueprint, Application Plan, and Blueprint Upgrade Plan
+  protocols with language-neutral TypeScript bindings.
+- [x] Compile resources, workflows, authorization intent, events, UI intent,
+  evidence, and write scopes into an exact dependency and Agent task graph.
+- [x] Expose `aiba create app <id>` and read-only `aiba plan <app.yaml>`.
+- [x] Preserve compatible project-owned customization and require explicit
+  decisions for breaking, security-sensitive, and conflicting upgrades.
+- [x] Exercise a domain-neutral collaboration application and adversarial cases.
+- [ ] Confirm the complete hosted portability and mirror workflows after push.
+
+M20 is complete when all three schemas ship in `aiba-spec`, the installed CLI
+can scaffold and plan a Blueprint, v1-to-v2 upgrades preserve project-owned
+customization, unsafe intent is rejected, `pnpm check` passes, and hosted CI
+confirms the same result. Business nouns remain project data at every boundary.

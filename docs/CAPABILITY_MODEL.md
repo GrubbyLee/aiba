@@ -13,7 +13,7 @@ Core commands inspect, verify, trace, and upgrade the result.
 This separates what an application must guarantee from how its code and UI are
 implemented. Generated code remains project-owned.
 
-## The Three Building Blocks
+## The Four Building Blocks
 
 1. **Common protocols** define bounded, language-neutral data semantics such as
    resource queries, opaque pagination cursors, idempotency keys, and optimistic
@@ -22,7 +22,11 @@ implemented. Generated code remains project-owned.
    dependencies, invariants, evidence requirements, recipes, migrations, and
    adversarial test guidance. Packs are untrusted data; Core never executes
    commands supplied by a pack.
-3. **Application Solutions** pin an exact, dependency-ordered composition of
+3. **Application Blueprints** express project-specific resources, workflows,
+   authorization intent, events, UI intent, acceptance evidence, and Agent
+   write scopes. Core compiles them into deterministic capability and task
+   plans without executing tasks or generating framework code.
+4. **Application Solutions** pin an exact, dependency-ordered composition of
    capabilities. Every constituent remains independently verified, and a
    Solution cannot weaken an invariant or hide a failed capability.
 
@@ -60,6 +64,9 @@ widgets, and one-off pages remain project code.
 
 ```bash
 aiba init
+aiba create app work-hub
+# Edit applications/work-hub/app.yaml to describe this project's intent.
+aiba plan applications/work-hub/app.yaml
 aiba list
 aiba show reporting
 aiba add reporting
@@ -68,6 +75,12 @@ aiba add reporting --finalize --agent codex
 aiba inspect
 aiba verify
 ```
+
+The Blueprint is the primary composition surface for a new application. Its
+business nouns remain project-owned. Planning is read-only and produces a
+source-bound capability graph plus non-executable Agent tasks. Blueprint
+upgrades classify additive, breaking, security-sensitive, and customization
+conflicts before project-owned adaptation is accepted.
 
 `add` prepares a plan; it does not silently generate or execute pack code. The
 Agent maps the contract to the project's framework, storage, providers, and UI.
@@ -92,8 +105,9 @@ For example, an Agent can compose `form-engine`, `data-dict`, `file-assets`,
 shared page layout. Each capability keeps its own contract and verification;
 the Agent builds the actual API, persistence, and interface in the host stack.
 
-Use a Solution only when the exact combination itself has durable domain
-meaning. A large bundle of unrelated features is not a Solution.
+Use a Solution only when the exact combination itself is broadly reusable. A
+large bundle of unrelated features or a project-specific data model is not a
+Solution.
 
 ## Trust And Verification
 

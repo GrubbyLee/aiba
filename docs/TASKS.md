@@ -372,3 +372,16 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Exercise all M19 packs through source smoke and clean npm tarballs.
 - [x] Finish bilingual documentation and pass the complete local check.
 - [x] Confirm Linux Node 22/24, macOS, Windows, Pages, and Gitee sync after push.
+
+## In Progress: M20 Domain-Neutral Application Blueprints
+
+- [x] Enforce a regression boundary against project-specific business models in
+  official product surfaces.
+- [x] Add strict Application Blueprint and deterministic Application Plan protocols.
+- [x] Add short `create app` and `plan` CLI workflows for humans and Agents.
+- [x] Add customization-aware Blueprint upgrade planning and stale-plan rejection.
+- [x] Add domain-neutral v1/v2 collaboration fixtures and end-to-end composition tests.
+- [x] Update bilingual product, architecture, Quick Start, and Agent Skill guidance.
+- [x] Assert all Blueprint protocols and workflows in npm release artifacts.
+- [x] Pass the complete local check.
+- [ ] Confirm Linux Node 22/24, macOS, Windows, Pages, and Gitee sync after push.

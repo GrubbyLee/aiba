@@ -42,7 +42,8 @@ try {
     throw new Error("aiba-spec does not contain the capability catalog schema");
   }
   if (!specFiles.includes("package/schema/application-blueprint.schema.json")
-    || !specFiles.includes("package/schema/application-plan.schema.json")) {
+    || !specFiles.includes("package/schema/application-plan.schema.json")
+    || !specFiles.includes("package/schema/application-blueprint-upgrade-plan.schema.json")) {
     throw new Error("aiba-spec does not contain Application Blueprint schemas");
   }
   const cliFiles = runChecked("tar", ["-tzf", cli.path], root);
@@ -140,11 +141,15 @@ try {
 
   writeFileSync(join(consumer, "verify-imports.mjs"), [
     'import { AIBA_API_VERSION, loadProtocolSchema } from "aiba-spec";',
-    'import { inspectProject } from "aiba-core";',
+    'import { inspectProject, planApplicationBlueprintUpgrade } from "aiba-core";',
     'import { createRegistryServer } from "aiba-registry-server";',
     'if (AIBA_API_VERSION !== "aiba.dev/v0alpha1") throw new Error("bad API version");',
     'if (!loadProtocolSchema("capability.schema.json")) throw new Error("schema unavailable");',
+    'for (const schema of ["application-blueprint.schema.json", "application-plan.schema.json", "application-blueprint-upgrade-plan.schema.json"]) {',
+    '  if (!loadProtocolSchema(schema)) throw new Error(`Blueprint schema unavailable: ${schema}`);',
+    '}',
     'if (typeof inspectProject !== "function") throw new Error("Core export unavailable");',
+    'if (typeof planApplicationBlueprintUpgrade !== "function") throw new Error("Blueprint upgrade export unavailable");',
     'if (typeof createRegistryServer !== "function") throw new Error("server export unavailable");',
     'process.stdout.write("library imports: ok\\n");',
     "",

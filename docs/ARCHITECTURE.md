@@ -4,8 +4,9 @@
 
 ```text
 Codex Skill ---------+
-Claude Code Skill ---+--> AIBA CLI/Core --> Capability Packs --> Project
+Claude Code Skill ---+--> Application Blueprint --> AIBA CLI/Core --> Project
 Other Agent Adapter -+          |
+                                +--> Capability Packs / Agent Task Plan
                                 +--> Inspect / Verify / Record / Upgrade
                                            |
                                            +--> CI
@@ -53,18 +54,33 @@ Core rejects duplicate entries, incomplete required dependency closure,
 unsatisfied ranges, and dependencies placed after their consumers. The schema
 has no command, override, optionality, or ignored-invariant field.
 
+An `ApplicationBlueprint` is the project-owned, framework-neutral composition
+contract. It describes resources, relationships, states, operations,
+authorization intent, events, UI intent, acceptance evidence, and bounded Agent
+write scopes. Business nouns are valid only inside the user's Blueprint; they
+do not become official protocols or catalog entries. An `ApplicationPlan` binds
+the exact Blueprint hash to dependency-ordered capabilities and non-executable
+Agent tasks. Upgrade plans classify changes and preserve compatible
+project-owned task customizations.
+
 ### Core
 
-The core loads and validates manifests, inspects projects, resolves capability
+The core loads and validates Blueprints and manifests, inspects projects, resolves capability
 packs, validates evidence, computes hashes, and produces structured diagnostic
-results. It also creates and verifies signed bundle envelopes without importing
-or executing pack content.
+results. Blueprint planning is deterministic and read-only; upgrade acceptance
+requires explicit resolution of breaking, security-sensitive, and customization
+conflicts. Core also creates and verifies signed bundle envelopes without
+importing or executing pack content, Agent tasks, or application code.
 
 ### CLI
 
 The `aiba` binary is the stable human and automation interface. Commands must
 support human-readable output, `--json`, non-interactive execution, and reliable
 exit codes.
+
+`create app <id>` writes an editable Blueprint scaffold. `plan <app.yaml>`
+validates and compiles it, prints the exact capability and task graph, and does
+not mutate the host project.
 
 `compose` is read-only. It first validates the solution graph, then runs the
 ordinary project verifier separately for every exact constituent. It reports

@@ -2,8 +2,8 @@
 
 **English** | [中文](QUICKSTART.zh-CN.md)
 
-This path verifies the installed CLI, creates a clean project, discovers a
-Solution, and hands one bounded implementation step to an AI Agent. The setup
+This path verifies the installed CLI, creates a clean project, authors an
+Application Blueprint, and hands its bounded task graph to an AI Agent. Setup
 and handoff take about ten minutes. Implementing the full application depends on
 the project and is intentionally not hidden behind that estimate.
 
@@ -36,32 +36,37 @@ aiba doctor --root .
 
 `doctor` should report that the project is initialized and ready.
 
-## 3. Select A Verified Solution
+## 3. Describe The Application
 
 ```bash
-aiba list
-aiba show secure-workspace
-aiba add secure-workspace --solution --root .
-aiba status secure-workspace --root .
+aiba create app work-hub
+aiba plan applications/work-hub/app.yaml
+aiba plan applications/work-hub/app.yaml --json
 ```
 
-The last two commands prepare exactly one constituent capability and print its
-plan path. AIBA has not executed pack code or claimed that application behavior
-already exists.
+Edit `applications/work-hub/app.yaml` before planning. Replace the scaffold with
+your resources, fields, states, operations, authorization actions, events, UI
+intent, acceptance evidence, and allowed Agent write scopes. The names are
+project data, not AIBA product models. Planning validates the document, resolves
+exact capability dependencies, and prints a non-executable Agent task graph.
 
 ## 4. Hand The Plan To Your Agent
 
-Ask the Agent to read the generated `.aiba/plans/*.yaml`, implement only that
-step in the current project, add the required evidence, and preserve every
-invariant. Then run:
+Ask the Agent to run `aiba agent-protocol --json`, read the Blueprint and JSON
+plan, implement tasks in dependency order, stay inside each task's write scopes,
+and preserve all listed invariants. AIBA does not execute the tasks or write the
+application implementation.
+
+For each planned reusable capability, use the normal verified lifecycle:
 
 ```bash
-aiba continue secure-workspace --root . --finalize --agent codex
-aiba continue secure-workspace --root .
+aiba add <capability> --root . --json
+# Agent implements the bounded plan and records truthful evidence.
+aiba add <capability> --root . --finalize --agent codex --json
 ```
 
-Repeat the handoff and these two commands for each constituent. Use
-`--agent claude-code` or another stable Agent identifier when appropriate.
+Use `--agent claude-code` or another stable Agent identifier when appropriate.
+Do not copy project-specific resources into an official capability or Solution.
 
 ## 5. Verify The Result
 
@@ -70,11 +75,15 @@ After all constituents are finalized:
 ```bash
 aiba doctor --root .
 aiba verify --root .
-aiba compose secure-workspace --root .
+aiba inspect --root .
 ```
 
 For runtime claims, use the separate signed `test`, `attest`, and
 `verify-behavior` flow. AIBA Core never executes the test command itself.
+
+To install the maintained `secure-workspace` composition instead of authoring a
+Blueprint, use `aiba add secure-workspace --solution --root .`, then advance one
+constituent at a time with `aiba continue secure-workspace --root .`.
 
 ## Standalone CLI Check
 

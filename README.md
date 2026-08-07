@@ -24,6 +24,12 @@ AIBA is application-building infrastructure for AI agents. It helps agents add,
 verify, trace, and upgrade complete software capabilities without forcing
 projects into a fixed application framework, provider, or visual system.
 
+Describe project-specific resources, workflows, authorization intent, events,
+UI intent, and acceptance evidence in an Application Blueprint. AIBA validates
+that intent and deterministically resolves reusable capabilities plus a bounded,
+non-executable Agent task graph. Business nouns remain in the user's project;
+they never become built-in AIBA product models.
+
 The official catalog now contains 23 capabilities covering identity, access,
 verification, files, notifications, inbox, jobs, flags, internationalization,
 data dictionaries, forms, tags, organizations, webhooks, comments, search,
@@ -37,9 +43,9 @@ authenticated private registry fetch, verified caching, and anti-rollback
 resolution. Optional project governance adds signed, evidence-bound team
 approvals to install and upgrade finalization.
 
-[Watch an external vehicle-management example](https://grubbylee.github.io/aiba/video/) to see
-AIBA and Codex move from an empty directory to a working, independently
-verified admin application. The example domain is not built into AIBA.
+A [historical external demonstration](https://grubbylee.github.io/aiba/video/)
+shows AIBA and Codex building one project from an empty directory. Its example
+domain is documentation only and is not part of AIBA's protocol or catalog.
 
 [Start with the ten-minute Quick Start](docs/QUICKSTART.md) to verify the npm
 CLI in a clean project and hand the first bounded plan to an Agent.
@@ -62,7 +68,7 @@ composition rules, Agent workflow, and trust boundaries.
 - `packages/cli`: the `aiba` command-line interface.
 - `packages/registry-server`: authenticated read-only reference registry.
 - `capabilities/`: official capability packs.
-- `solutions/`: exact, dependency-ordered industry capability compositions.
+- `solutions/`: exact, dependency-ordered application capability compositions.
 - `integrations/`: Agent-specific adapters.
 - `fixtures/`: reference projects used for conformance and attack testing,
   including a native WeChat Mini Program and an integrated core-capabilities
@@ -160,6 +166,8 @@ The concise product workflow remains:
 ```bash
 aiba init
 aiba agent-protocol --json
+aiba create app work-hub
+aiba plan applications/work-hub/app.yaml
 aiba create capability appointment-booking
 aiba lint capabilities/appointment-booking
 aiba test-pack capabilities/appointment-booking

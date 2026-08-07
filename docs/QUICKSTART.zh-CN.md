@@ -2,9 +2,9 @@
 
 [English](QUICKSTART.md) | **中文**
 
-这条路径会验证已安装的 CLI、创建一个全新项目、选择一套 Solution，并把一个有边界的
-实现步骤交给 AI Agent。环境准备和首次交接约需十分钟；完整应用的实现时间取决于项目，
-AIBA 不会把这部分时间隐藏在“十分钟”承诺中。
+这条路径会验证已安装的 CLI、创建一个全新项目、编写 Application Blueprint，并把有边界的
+任务图交给 AI Agent。环境准备和首次交接约需十分钟；完整应用的实现时间取决于项目，AIBA
+不会把这部分时间隐藏在“十分钟”承诺中。
 
 ## 准备条件
 
@@ -35,30 +35,33 @@ aiba doctor --root .
 
 `doctor` 应报告项目已经初始化并可以继续。
 
-## 3. 选择经过验证的 Solution
+## 3. 描述应用
 
 ```bash
-aiba list
-aiba show secure-workspace
-aiba add secure-workspace --solution --root .
-aiba status secure-workspace --root .
+aiba create app work-hub
+aiba plan applications/work-hub/app.yaml
+aiba plan applications/work-hub/app.yaml --json
 ```
 
-最后两条命令只会准备一个组成能力，并输出计划文件路径。AIBA 此时没有执行能力包代码，
-也不会声称应用行为已经实现。
+规划前先编辑 `applications/work-hub/app.yaml`，用自己的资源、字段、状态、操作、授权动作、
+事件、界面意图、验收证据和 Agent 写入范围替换脚手架内容。这些名称只属于项目，不是 AIBA
+产品模型。规划会验证文档、解析精确能力依赖，并输出不可执行的 Agent 任务图。
 
 ## 4. 把计划交给 Agent
 
-要求 Agent 读取生成的 `.aiba/plans/*.yaml`，只在当前项目中实现这一步，补充所需证据，
-并保留所有不变量。然后执行：
+要求 Agent 先运行 `aiba agent-protocol --json`，再读取 Blueprint 和 JSON 计划，按依赖顺序
+实现任务，严格遵守每项任务的写入范围和不变量。AIBA 不会执行这些任务，也不会写入应用实现。
+
+对计划解析出的每项通用能力，使用正常的可验证生命周期：
 
 ```bash
-aiba continue secure-workspace --root . --finalize --agent codex
-aiba continue secure-workspace --root .
+aiba add <capability> --root . --json
+# Agent 实现有边界的计划，并登记真实证据。
+aiba add <capability> --root . --finalize --agent codex --json
 ```
 
-为每个组成能力重复交接和这两条命令。使用 Claude Code 时可把 Agent 标识改为
-`--agent claude-code`。
+使用 Claude Code 时可把 Agent 标识改为 `--agent claude-code`。不要把项目专有资源复制到
+官方能力或 Solution 中。
 
 ## 5. 验证结果
 
@@ -67,11 +70,15 @@ aiba continue secure-workspace --root .
 ```bash
 aiba doctor --root .
 aiba verify --root .
-aiba compose secure-workspace --root .
+aiba inspect --root .
 ```
 
 运行时行为声明使用独立的签名 `test`、`attest`、`verify-behavior` 流程；AIBA Core
 自身不会执行测试命令。
+
+如果要安装维护好的 `secure-workspace` 组合，而不是自己编写 Blueprint，可执行
+`aiba add secure-workspace --solution --root .`，再用
+`aiba continue secure-workspace --root .` 每次推进一个组成能力。
 
 ## 不依赖 Agent 的 CLI 验证
 
