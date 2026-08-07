@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/tag-query-command.schema.json",
+  "title": "AIBA Tag Query Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mode", "pageSize"],
+  "properties": {
+    "mode": { "enum": ["catalog", "resource"] },
+    "resourceType": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,79}$" },
+    "resourceId": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "keyword": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "includeArchived": { "type": "boolean" },
+    "pageSize": { "type": "integer", "minimum": 1, "maximum": 100 },
+    "cursor": { "type": "string", "minLength": 16, "maxLength": 1024, "pattern": "^[A-Za-z0-9._-]+$" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "mode": { "const": "resource" } }, "required": ["mode"] },
+      "then": { "required": ["resourceType", "resourceId"] }
+    },
+    {
+      "if": { "properties": { "mode": { "const": "catalog" } }, "required": ["mode"] },
+      "then": { "not": { "anyOf": [{ "required": ["resourceType"] }, { "required": ["resourceId"] }] } }
+    }
+  ]
+}

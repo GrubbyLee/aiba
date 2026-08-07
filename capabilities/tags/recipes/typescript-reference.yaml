@@ -1,0 +1,44 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Tags Boundary
+  description: Framework-neutral guidance for tenant-scoped tag catalogs and assignments.
+spec:
+  capability: { id: tags, version: 0.1.0 }
+  compatibility: { languages: [TypeScript], frameworks: [] }
+  writeScope: { allowedPatterns: [src/**, server/**, test/**, tests/**] }
+  operations:
+    - id: mutate-tag-catalog
+      intent: Authorize and create, update, or archive one tenant-scoped tag.
+      requiredInterfaces: [tags.mutation-command, tags.record, authorization.decision, audit.event]
+      invariants: [tag-scope-is-context-derived, tag-operations-are-authorized, names-are-normalized-and-unique, mutations-are-revisioned-and-idempotent, archival-is-safe, tag-output-is-bounded-and-minimized]
+      guidance:
+        - Normalize names on the server, enforce tenant uniqueness transactionally, and derive stable slugs without accepting HTML or executable metadata.
+        - Compare revisions and bind scoped idempotency before publishing a minimized record.
+    - id: assign-resource-tags
+      intent: Atomically attach or detach a bounded set of tags from one authorized resource.
+      requiredInterfaces: [tags.assignment-command, tags.assignment-result, authorization.decision, audit.event]
+      invariants: [tag-scope-is-context-derived, tag-operations-are-authorized, assignments-are-scoped-and-atomic, mutations-are-revisioned-and-idempotent, archival-is-safe]
+      guidance:
+        - Resolve resource and tags in the context tenant before comparing the assignment revision.
+        - Reject the whole batch on any invalid tag; permit archived tags only for detach cleanup.
+    - id: query-tags
+      intent: List authorized catalog or resource tags using stable signed pagination.
+      requiredInterfaces: [tags.query-command, tags.page, authorization.decision]
+      invariants: [tag-scope-is-context-derived, tag-operations-are-authorized, assignments-are-scoped-and-atomic, tag-output-is-bounded-and-minimized]
+      guidance:
+        - Filter by context scope and authorization before ordering and pagination.
+        - Bind opaque cursor integrity to principal, query mode, resource, filters, and page size.
+  evidence:
+    - invariant: tag-scope-is-context-derived
+      suggestions: &suggestions
+        - { type: source, pathPattern: "src/**/*.ts", description: "Tag normalization, lifecycle, assignment transaction, and signed query boundary." }
+        - { type: test, pathPattern: "src/**/*.test.ts", description: "Scope, authorization, uniqueness, metadata, revision, idempotency, archive, assignment, cursor, and minimization tests." }
+    - { invariant: tag-operations-are-authorized, suggestions: *suggestions }
+    - { invariant: names-are-normalized-and-unique, suggestions: *suggestions }
+    - { invariant: assignments-are-scoped-and-atomic, suggestions: *suggestions }
+    - { invariant: mutations-are-revisioned-and-idempotent, suggestions: *suggestions }
+    - { invariant: archival-is-safe, suggestions: *suggestions }
+    - { invariant: tag-output-is-bounded-and-minimized, suggestions: *suggestions }

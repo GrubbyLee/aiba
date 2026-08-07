@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/tag-mutation-command.schema.json",
+  "title": "AIBA Tag Mutation Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action", "idempotencyKey"],
+  "properties": {
+    "action": { "enum": ["create", "update", "archive"] },
+    "tagId": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+    "expectedRevision": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+    "idempotencyKey": { "type": "string", "minLength": 8, "maxLength": 128, "pattern": "^[A-Za-z0-9._:-]+$" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "action": { "const": "create" } }, "required": ["action"] },
+      "then": { "required": ["name"], "not": { "anyOf": [{ "required": ["tagId"] }, { "required": ["expectedRevision"] }] } }
+    },
+    {
+      "if": { "properties": { "action": { "const": "update" } }, "required": ["action"] },
+      "then": { "required": ["tagId", "expectedRevision"], "anyOf": [{ "required": ["name"] }, { "required": ["color"] }] }
+    },
+    {
+      "if": { "properties": { "action": { "const": "archive" } }, "required": ["action"] },
+      "then": { "required": ["tagId", "expectedRevision"], "not": { "anyOf": [{ "required": ["name"] }, { "required": ["color"] }] } }
+    }
+  ]
+}

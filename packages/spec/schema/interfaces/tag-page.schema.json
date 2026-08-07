@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/tag-page.schema.json",
+  "title": "AIBA Tag Page",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["tags", "hasMore"],
+  "properties": {
+    "tags": { "type": "array", "maxItems": 100, "items": { "$ref": "#/$defs/tag" } },
+    "hasMore": { "type": "boolean" },
+    "nextCursor": { "type": "string", "minLength": 16, "maxLength": 1024, "pattern": "^[A-Za-z0-9._-]+$" },
+    "assignmentRevision": { "type": "integer", "minimum": 0, "maximum": 2147483647 }
+  },
+  "$defs": {
+    "tag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tagId", "name", "slug", "color", "status", "revision", "createdAt", "updatedAt"],
+      "properties": {
+        "tagId": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "slug": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]{1,79}$" },
+        "color": { "type": "string", "pattern": "^#[0-9A-F]{6}$" },
+        "status": { "enum": ["active", "archived"] },
+        "revision": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "archivedAt": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "oneOf": [
+    { "properties": { "hasMore": { "const": true } }, "required": ["nextCursor"] },
+    { "properties": { "hasMore": { "const": false } }, "not": { "required": ["nextCursor"] } }
+  ]
+}

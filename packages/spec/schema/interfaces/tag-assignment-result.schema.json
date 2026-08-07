@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/tag-assignment-result.schema.json",
+  "title": "AIBA Tag Assignment Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["resourceType", "resourceId", "tagIds", "revision", "changedCount", "updatedAt"],
+  "properties": {
+    "resourceType": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,79}$" },
+    "resourceId": { "type": "string", "minLength": 1, "maxLength": 160 },
+    "tagIds": { "type": "array", "maxItems": 500, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 160 } },
+    "revision": { "type": "integer", "minimum": 0, "maximum": 2147483647 },
+    "changedCount": { "type": "integer", "minimum": 0, "maximum": 50 },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  }
+}

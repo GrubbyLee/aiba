@@ -40,6 +40,9 @@ capabilities:
   - id: form-engine
     version: 0.1.0
     layer: business-capability
+  - id: tags
+    version: 0.1.0
+    layer: business-capability
   - id: organization
     version: 0.1.0
     layer: application-foundation

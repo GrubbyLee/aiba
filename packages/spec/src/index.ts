@@ -414,6 +414,65 @@ export interface InboxTransitionResult {
   transitionedAt: string;
 }
 
+export type TagStatus = "active" | "archived";
+export type TagMutationAction = "create" | "update" | "archive";
+
+export interface TagRecord {
+  tagId: string;
+  name: string;
+  slug: string;
+  color: string;
+  status: TagStatus;
+  revision: number;
+  createdAt: string;
+  updatedAt: string;
+  archivedAt?: string;
+}
+
+export interface TagMutationCommand {
+  action: TagMutationAction;
+  tagId?: string;
+  name?: string;
+  color?: string;
+  expectedRevision?: number;
+  idempotencyKey: string;
+}
+
+export interface TagAssignmentCommand {
+  action: "attach" | "detach";
+  resourceType: string;
+  resourceId: string;
+  tagIds: string[];
+  expectedRevision: number;
+  idempotencyKey: string;
+}
+
+export interface TagAssignmentResult {
+  resourceType: string;
+  resourceId: string;
+  tagIds: string[];
+  revision: number;
+  changedCount: number;
+  updatedAt: string;
+}
+
+export interface TagQueryCommand {
+  mode: "catalog" | "resource";
+  resourceType?: string;
+  resourceId?: string;
+  keyword?: string;
+  includeArchived?: boolean;
+  pageSize: number;
+  cursor?: string;
+}
+
+export interface TagPage {
+  tags: TagRecord[];
+  hasMore: boolean;
+  nextCursor?: string;
+  assignmentRevision?: number;
+}
+
 export interface OrganizationMembershipCommand {
   action: "add" | "change-role" | "remove";
   userId: string;
@@ -1271,6 +1330,12 @@ export type InterfaceSchemaName =
   | "scheduled-job-record.schema.json"
   | "search-page.schema.json"
   | "search-query.schema.json"
+  | "tag-assignment-command.schema.json"
+  | "tag-assignment-result.schema.json"
+  | "tag-mutation-command.schema.json"
+  | "tag-page.schema.json"
+  | "tag-query-command.schema.json"
+  | "tag-record.schema.json"
   | "webhook-delivery-command.schema.json"
   | "webhook-delivery-record.schema.json"
   | "vehicle-create-command.schema.json"

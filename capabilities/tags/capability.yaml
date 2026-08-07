@@ -1,0 +1,49 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: tags
+  version: 0.1.0
+  title: Tags
+  layer: business-capability
+  description: Tenant-scoped reusable classification with normalized unique names, authorized resource assignments, optimistic revisions, idempotency, soft archival, and bounded queries.
+spec:
+  interfaces: [authorization.decision, audit.event, tags.mutation-command, tags.record, tags.assignment-command, tags.assignment-result, tags.query-command, tags.page]
+  dependencies:
+    - { id: authorization, version: ^0.1.0, optional: false }
+    - { id: audit, version: ^0.1.0, optional: false }
+  invariants:
+    - id: tag-scope-is-context-derived
+      title: Tag scope is context derived
+      description: Tenant and actor scope come from authenticated server context and cannot be selected by tag commands.
+      severity: critical
+      evidence: &evidence { acceptedTypes: [source, test, config, document], requiredTypes: [source, test], minimum: 2, requireHash: true }
+    - id: tag-operations-are-authorized
+      title: Tag operations are authorized
+      description: Catalog mutation, listing, and resource attach or detach operations each require an explicit authorization decision.
+      severity: critical
+      evidence: *evidence
+    - id: names-are-normalized-and-unique
+      title: Names are normalized and unique
+      description: Bounded display names have one server-defined canonical form and are unique within a tenant regardless of case or whitespace variants.
+      severity: critical
+      evidence: *evidence
+    - id: assignments-are-scoped-and-atomic
+      title: Assignments are scoped and atomic
+      description: Every tag and resource is verified in the same tenant and the complete bounded assignment changes atomically.
+      severity: critical
+      evidence: *evidence
+    - id: mutations-are-revisioned-and-idempotent
+      title: Mutations are revisioned and idempotent
+      description: Existing tags and resource assignments require exact revisions, and scoped idempotency keys bind to exact normalized commands.
+      severity: critical
+      evidence: *evidence
+    - id: archival-is-safe
+      title: Archival is safe
+      description: Archived tags remain historically attributable but cannot be newly attached or silently restored by ordinary mutations.
+      severity: error
+      evidence: *evidence
+    - id: tag-output-is-bounded-and-minimized
+      title: Tag output is bounded and minimized
+      description: Signed-cursor pages and audit records omit tenant internals, actor details, resource payloads, and unsanitized display content.
+      severity: critical
+      evidence: *evidence

@@ -130,6 +130,7 @@ describe("core capability dependencies", () => {
       ["review-access", "application-foundation"],
       ["scheduled-jobs", "application-foundation"],
       ["search", "application-foundation"],
+      ["tags", "business-capability"],
       ["users", "application-foundation"],
       ["vehicle-records", "business-capability"],
       ["verification-challenge", "application-foundation"],
