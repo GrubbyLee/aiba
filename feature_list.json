@@ -312,7 +312,8 @@
         "Reject stale plans and unresolved breaking or security-sensitive changes."
       ],
       "passes": true,
-      "verification": "v1-to-v2 tests preserve project-owned resolutions, surface security changes, reject stale source and unresolved conflicts, and never modify application code."
+      "verification": "v1-to-v2 tests preserve project-owned resolutions, surface security changes, reject stale source and unresolved conflicts, and never modify application code.",
+      "commit": "ece7fe7"
     },
     {
       "id": "m20-blueprint-integration",
