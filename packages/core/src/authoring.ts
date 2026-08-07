@@ -3,12 +3,14 @@ import { basename, dirname, join, resolve } from "node:path";
 import { stringify } from "yaml";
 import {
   AIBA_API_VERSION,
+  type ApplicationBlueprint,
   type CapabilityLayer,
   type CapabilityManifest,
   type CapabilityRecipe,
   type CapabilitySolution,
 } from "aiba-spec";
 import { assertRecipeSemantics } from "./add.js";
+import { assertApplicationBlueprintSemantics } from "./application-blueprint.js";
 import { AibaError, ProtocolValidationError } from "./errors.js";
 import { sha256File } from "./hash.js";
 import {
@@ -17,6 +19,7 @@ import {
   loadCapabilitySolution,
 } from "./loaders.js";
 import { resolveSolution } from "./solution.js";
+import { validateApplicationBlueprint } from "./validation.js";
 
 const ID = /^[a-z][a-z0-9-]{1,62}$/;
 const ALLOWED_PACK_FILES = new Set(["README.md", "capability.yaml", "SECURITY_TESTS.md"]);
@@ -195,6 +198,95 @@ export async function createSolutionScaffold(options: {
     throw new AibaError("Solution scaffold could not be written completely", "AUTHORING_WRITE_FAILED", { cause: error });
   }
   return { directory, solutionPath, capabilities: entries.map((item) => item.id) };
+}
+
+export async function createApplicationScaffold(options: {
+  id: string;
+  outputDirectory: string;
+}): Promise<{ directory: string; blueprintPath: string }> {
+  assertId(options.id);
+  const directory = join(resolve(options.outputDirectory), options.id);
+  await assertNewDirectory(directory);
+  const title = titleFromId(options.id);
+  const blueprint: ApplicationBlueprint = {
+    apiVersion: AIBA_API_VERSION,
+    kind: "ApplicationBlueprint",
+    metadata: {
+      id: options.id,
+      version: "0.1.0",
+      title,
+      description: `${title} application intent. Replace the generic resource with project terms.`,
+    },
+    spec: {
+      requirements: [],
+      resources: [{
+        id: "record",
+        title: "Record",
+        fields: [
+          { id: "title", type: "string", required: true, sensitive: false, maxLength: 200 },
+          { id: "status", type: "enum", required: true, sensitive: false, dictionary: "record-status" },
+        ],
+        relationships: [],
+      }],
+      operations: [{
+        id: "create-record",
+        resource: "record",
+        kind: "create",
+        authorization: { action: "record.create" },
+        inputFields: ["title", "status"],
+        outputFields: ["title", "status"],
+        idempotent: true,
+        emits: [],
+      }, {
+        id: "list-records",
+        resource: "record",
+        kind: "list",
+        authorization: { action: "record.list" },
+        inputFields: [],
+        outputFields: ["title", "status"],
+        idempotent: false,
+        emits: [],
+      }],
+      events: [],
+      ui: {
+        surfaces: [{
+          id: "record-list",
+          kind: "list",
+          resource: "record",
+          fields: ["title", "status"],
+          operations: ["create-record", "list-records"],
+          features: ["filters", "pagination"],
+        }, {
+          id: "record-form",
+          kind: "form",
+          resource: "record",
+          fields: ["title", "status"],
+          operations: ["create-record"],
+          features: [],
+        }],
+      },
+      acceptance: [{
+        id: "trusted-scope-enforced",
+        title: "Authorization and scope come from trusted context",
+        severity: "critical",
+        evidence: {
+          requiredTypes: ["source", "test"],
+          minimum: 2,
+          pathPatterns: ["src/**", "test/**", "tests/**"],
+        },
+      }],
+      adaptation: { writeScopes: ["src/**", "test/**", "tests/**"] },
+    },
+  };
+  assertApplicationBlueprintSemantics(validateApplicationBlueprint(blueprint));
+  const blueprintPath = join(directory, "app.yaml");
+  try {
+    await writeFile(blueprintPath, stringify(blueprint), { flag: "wx", mode: 0o644 });
+  } catch (error) {
+    await rm(directory, { recursive: true, force: true });
+    throw new AibaError("Application scaffold could not be written completely", "AUTHORING_WRITE_FAILED", { cause: error });
+  }
+  return { directory, blueprintPath };
 }
 
 async function safeDirectoryFiles(root: string): Promise<string[]> {

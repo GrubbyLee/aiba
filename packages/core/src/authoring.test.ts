@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   createCapabilityScaffold,
+  createApplicationScaffold,
   createSolutionScaffold,
   lintAuthoringDirectory,
 } from "./authoring.js";
@@ -56,6 +57,17 @@ describe("capability authoring SDK", () => {
       packsDirectory: join(workspace, "capabilities"),
       capabilities: ["authorization", "identity", "audit"],
     })).rejects.toMatchObject({ code: "SOLUTION_DEPENDENCY_ORDER_INVALID" });
+  });
+
+  it("creates a domain-neutral Application Blueprint without executable content", async () => {
+    const root = await temporaryRoot();
+    const created = await createApplicationScaffold({ id: "operations-hub", outputDirectory: root });
+    const source = await readFile(created.blueprintPath, "utf8");
+    expect(source).toContain("kind: ApplicationBlueprint");
+    expect(source).toContain("id: record");
+    expect(source).not.toContain("command:");
+    await expect(createApplicationScaffold({ id: "operations-hub", outputDirectory: root }))
+      .rejects.toMatchObject({ code: "AUTHORING_OUTPUT_EXISTS" });
   });
 
   it("refuses overwrite and traversal identifiers", async () => {

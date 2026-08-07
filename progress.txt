@@ -676,3 +676,26 @@ Verification:
 Commit: ac0393e
 Progress: 22/25
 Next: m20-blueprint-cli
+
+----------------------------------------
+Session #31 - m20-blueprint-cli
+----------------------------------------
+Date: 2026-08-07
+
+Completed:
+  [x] Added aiba create app <id> with a safe, editable, domain-neutral scaffold.
+  [x] Added read-only aiba plan <app.yaml> with human and stable JSON output.
+  [x] Added Application Plan rendering and structured CLI failure behavior.
+  [x] Advertised application-blueprint, application-planning, and plan through
+      Agent protocol negotiation and shell completion.
+  [x] Exercised source and installed CLI scaffold/plan flows in smoke and npm checks.
+
+Verification:
+  - pnpm check: passed
+  - Spec: 92 tests; Core: 148 tests; reference fixture: 164 tests
+  - Registry Server: 8 tests; CLI: 11 tests
+  - Compiled create app and plan human/JSON calls passed
+  - Four deterministic npm tarballs and clean external consumer passed
+
+Progress: 23/25
+Next: m20-blueprint-upgrade

@@ -9,6 +9,7 @@ describe("Agent protocol negotiation", () => {
       "inspect", "doctor", "add", "status", "continue", "verify",
       "test", "attest", "verify-behavior", "upgrade", "fetch",
       "create", "lint", "test-pack",
+      "plan",
     ]));
     expect(descriptor.commands.every((item) => item.json)).toBe(true);
     expect(descriptor.commands.find((item) => item.name === "status")).toMatchObject({

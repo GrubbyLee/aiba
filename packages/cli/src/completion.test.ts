@@ -8,6 +8,7 @@ function testProgram(): Command {
   const create = program.command("create").option("--out <path>");
   create.command("capability");
   create.command("solution");
+  create.command("app");
   return program;
 }
 
@@ -16,7 +17,7 @@ describe("shell completion", () => {
     const script = renderCompletion(testProgram(), "bash");
     expect(script).toContain("complete -F _aiba_completion aiba");
     expect(script).toContain("inspect create --help --version");
-    expect(script).toContain('compgen -W "capability solution"');
+    expect(script).toContain('compgen -W "app capability solution"');
     expect(script).toContain("--max-files");
     expect(script).toContain("--json");
     expect(script).toContain("--out");

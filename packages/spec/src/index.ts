@@ -1293,6 +1293,8 @@ export interface AgentProtocolDescriptor {
     | "customization-upgrade"
     | "registry"
     | "governance"
+    | "application-blueprint"
+    | "application-planning"
   >;
   commands: Array<{
     name: string;

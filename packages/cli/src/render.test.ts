@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  renderApplicationPlan,
   renderCatalog,
   renderCatalogItem,
   renderDiff,
@@ -7,6 +8,43 @@ import {
   renderSolutionInstall,
   renderVerification,
 } from "./render.js";
+
+describe("Application Plan rendering", () => {
+  it("renders capability and non-executable task order", () => {
+    const output = renderApplicationPlan({
+      apiVersion: "aiba.dev/v0alpha1",
+      kind: "ApplicationPlan",
+      metadata: {
+        id: "work-hub-plan",
+        blueprint: { id: "work-hub", version: "0.1.0", sha256: "a".repeat(64) },
+      },
+      capabilities: [{
+        id: "authorization",
+        version: "0.1.0",
+        manifestSha256: "b".repeat(64),
+        dependencies: [],
+        reasons: ["Operations declare authorization intent"],
+        inferred: true,
+      }],
+      tasks: [{
+        id: "adapt-authorization",
+        kind: "capability-adaptation",
+        title: "Adapt Authorization",
+        target: "authorization",
+        dependsOn: [],
+        writeScopes: ["src/**"],
+        requiredCapabilities: ["authorization@0.1.0"],
+        intents: ["Operations declare authorization intent"],
+        invariants: [],
+        evidence: [],
+      }],
+    });
+    expect(output).toContain("Application: work-hub@0.1.0");
+    expect(output).toContain("Capabilities: authorization@0.1.0");
+    expect(output).toContain("adapt-authorization [capability-adaptation]");
+    expect(output).toContain("write scope: src/**");
+  });
+});
 
 describe("catalog rendering", () => {
   it("renders capability layers and verified Solutions", () => {

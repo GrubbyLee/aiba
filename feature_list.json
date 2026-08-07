@@ -296,7 +296,7 @@
         "Provide stable human and JSON output.",
         "Advertise commands through Agent protocol, completion, and npm distribution tests."
       ],
-      "passes": false,
+      "passes": true,
       "verification": "Compiled CLI creates a safe scaffold, plans it deterministically, returns structured errors, and advertises both commands to Agents and shell completion."
     },
     {

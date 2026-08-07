@@ -82,6 +82,16 @@ run("lint Solution scaffold", [
   "lint", join(authoringFixture, "secure-accounts"),
   "--packs-dir", join(workspace, "capabilities"), "--json",
 ], 0);
+run("create application Blueprint", [
+  "create", "app", "operations-hub", "--out", authoringFixture, "--json",
+], 0);
+run("plan application Blueprint", [
+  "plan", join(authoringFixture, "operations-hub", "app.yaml"),
+  "--packs-dir", join(workspace, "capabilities"), "--json",
+], 0);
+run("reject application scaffold overwrite", [
+  "create", "app", "operations-hub", "--out", authoringFixture, "--json",
+], 1);
 rmSync(authoringFixture, { recursive: true, force: true });
 
 const bundleFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-bundle-"));

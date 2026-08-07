@@ -41,6 +41,10 @@ try {
   if (!specFiles.includes("package/schema/capability-catalog.schema.json")) {
     throw new Error("aiba-spec does not contain the capability catalog schema");
   }
+  if (!specFiles.includes("package/schema/application-blueprint.schema.json")
+    || !specFiles.includes("package/schema/application-plan.schema.json")) {
+    throw new Error("aiba-spec does not contain Application Blueprint schemas");
+  }
   const cliFiles = runChecked("tar", ["-tzf", cli.path], root);
   if (!cliFiles.includes("package/capabilities/identity/capability.yaml")) {
     throw new Error("@grubbylee/aiba does not contain official capability packs");
@@ -178,6 +182,10 @@ try {
   runCli(["inspect", app, "--json"]);
   runCli(["doctor", "--root", app, "--json"]);
   runCli(["agent-protocol", "--json"]);
+  const authored = join(consumer, "authored");
+  mkdirSync(authored);
+  runCli(["create", "app", "operations-hub", "--out", authored, "--json"]);
+  runCli(["plan", join(authored, "operations-hub", "app.yaml"), "--json"]);
   runCli(["add", "secure-workspace", "--solution", "--root", app, "--json"]);
   runCli(["status", "secure-workspace", "--root", app, "--json"]);
   runCli(["add", "identity", "--root", app, "--json"]);
@@ -187,8 +195,6 @@ try {
       throw new Error(`Installed CLI returned invalid ${shell} completion`);
     }
   }
-  const authored = join(consumer, "authored");
-  mkdirSync(authored);
   runCli(["create", "capability", "appointment-booking", "--out", authored, "--json"]);
   const authoredCapability = join(authored, "appointment-booking");
   runCli(["lint", authoredCapability, "--json"]);

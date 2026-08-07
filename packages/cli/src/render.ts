@@ -1,3 +1,4 @@
+import type { ApplicationPlan } from "aiba-spec";
 import type {
   CatalogDiscovery,
   CatalogItemDetails,
@@ -7,6 +8,23 @@ import type {
   SolutionInstallResult,
   VerificationReport,
 } from "aiba-core";
+
+export function renderApplicationPlan(plan: ApplicationPlan): string {
+  const lines = [
+    `Application: ${plan.metadata.blueprint.id}@${plan.metadata.blueprint.version}`,
+    `Blueprint SHA-256: ${plan.metadata.blueprint.sha256}`,
+    `Capabilities: ${plan.capabilities.map((item) => `${item.id}@${item.version}`).join(" -> ")}`,
+    `Agent tasks: ${plan.tasks.length}`,
+  ];
+  for (const task of plan.tasks) {
+    lines.push(
+      `${task.id} [${task.kind}]`,
+      `  depends on: ${task.dependsOn.length > 0 ? task.dependsOn.join(", ") : "none"}`,
+      `  write scope: ${task.writeScopes.length > 0 ? task.writeScopes.join(", ") : "read-only"}`,
+    );
+  }
+  return lines.join("\n");
+}
 
 const capabilityLayers = [
   "application-foundation",

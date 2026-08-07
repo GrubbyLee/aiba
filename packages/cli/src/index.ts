@@ -17,6 +17,8 @@ import {
   checkSolution,
   advanceSolutionInstallation,
   createBehaviorProof,
+  compileApplicationBlueprint,
+  createApplicationScaffold,
   createCapabilityScaffold,
   createSolutionScaffold,
   describeAgentProtocol,
@@ -29,10 +31,12 @@ import {
   initializeGovernancePolicy,
   importRegistryBundle,
   inspectProject,
+  loadApplicationBlueprint,
   lintAuthoringDirectory,
   prepareCapability,
   prepareBehaviorChallenge,
   prepareUpgrade,
+  sha256File,
   planRegistryRetention,
   evaluateGovernance,
   fetchRegistryCapability,
@@ -48,6 +52,7 @@ import {
 import { AIBA_API_VERSION, type AibaErrorEnvelope } from "aiba-spec";
 import { createRegistryServer } from "aiba-registry-server";
 import {
+  renderApplicationPlan,
   renderDiff,
   renderCatalog,
   renderCatalogItem,
@@ -208,7 +213,39 @@ program
         });
         process.stdout.write(options.json ? `${JSON.stringify(result, null, 2)}\n` : `Created Solution ${id} at ${result.directory}.\n`);
       }),
+  )
+  .addCommand(
+    new Command("app")
+      .description("Create a domain-neutral Application Blueprint")
+      .argument("<id>", "new application identifier")
+      .option("--out <path>", "parent output directory", "applications")
+      .option("--json", "print machine-readable JSON")
+      .action(async (id: string, options: { out: string; json?: boolean }) => {
+        const result = await createApplicationScaffold({
+          id,
+          outputDirectory: resolve(options.out),
+        });
+        process.stdout.write(options.json
+          ? `${JSON.stringify(result, null, 2)}\n`
+          : `Created application Blueprint ${id} at ${result.blueprintPath}.\n`);
+      }),
   );
+
+program
+  .command("plan")
+  .description("Compile an Application Blueprint into a non-executable Agent task graph")
+  .argument("<blueprint>", "Application Blueprint YAML path")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--json", "print machine-readable JSON")
+  .action(async (blueprintPath: string, options: { packsDir: string; json?: boolean }) => {
+    const absolutePath = resolve(blueprintPath);
+    const plan = await compileApplicationBlueprint({
+      blueprint: await loadApplicationBlueprint(absolutePath),
+      blueprintSha256: await sha256File(absolutePath),
+      packsDirectory: resolve(options.packsDir),
+    });
+    process.stdout.write(`${options.json ? JSON.stringify(plan, null, 2) : renderApplicationPlan(plan)}\n`);
+  });
 
 program
   .command("lint")
