@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 import process from "node:process";
-import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { lstatSync, existsSync, readFileSync } from "node:fs";
+import { mkdir, writeFile } from "node:fs/promises";
+import { dirname, isAbsolute, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Command, CommanderError } from "commander";
 import {
@@ -18,6 +19,10 @@ import {
   advanceSolutionInstallation,
   createBehaviorProof,
   compileApplicationBlueprint,
+  compileApplicationBlueprintPair,
+  diffApplicationBlueprintFiles,
+  acceptCompiledApplicationBlueprintUpgrade,
+  planApplicationBlueprintUpgrade,
   createApplicationScaffold,
   createCapabilityScaffold,
   createSolutionScaffold,
@@ -48,11 +53,19 @@ import {
   verifyBehaviorProof,
   verifyProject,
   verifySignedSolution,
+  validateApplicationBlueprintUpgradePlan,
 } from "aiba-core";
-import { AIBA_API_VERSION, type AibaErrorEnvelope } from "aiba-spec";
+import type { ApplicationBlueprintUpgradeResolution } from "aiba-core";
+import {
+  AIBA_API_VERSION,
+  type AibaErrorEnvelope,
+  type ApplicationBlueprintUpgradePlan,
+  type ApplicationTaskCustomization,
+} from "aiba-spec";
 import { createRegistryServer } from "aiba-registry-server";
 import {
   renderApplicationPlan,
+  renderApplicationBlueprintDiff,
   renderDiff,
   renderCatalog,
   renderCatalogItem,
@@ -90,6 +103,51 @@ function defaultSolutionsDirectory(): string {
   return existsSync(installedSolutionsDirectory)
     ? installedSolutionsDirectory
     : resolve("solutions");
+}
+
+function readJsonFile(path: string): unknown {
+  try {
+    return JSON.parse(readFileSync(resolve(path), "utf8")) as unknown;
+  } catch (error) {
+    throw new AibaError(`Unable to read JSON document ${path}: ${error instanceof Error ? error.message : String(error)}`, "JSON_DOCUMENT_INVALID");
+  }
+}
+
+function assertSafeArtifactPath(path: string): string {
+  const target = resolve(path);
+  const root = resolve(".");
+  const relativePath = relative(root, target);
+  if (relativePath === "" || relativePath.startsWith("..") || isAbsolute(relativePath)) {
+    throw new AibaError(`Artifact output must remain inside the current directory: ${path}`, "ARTIFACT_OUTPUT_UNSAFE");
+  }
+  let cursor = dirname(target);
+  while (cursor !== root && cursor.startsWith(`${root}/`)) {
+    if (existsSync(cursor) && lstatSync(cursor).isSymbolicLink()) {
+      throw new AibaError(`Artifact output cannot traverse a symbolic link: ${path}`, "ARTIFACT_OUTPUT_UNSAFE");
+    }
+    cursor = dirname(cursor);
+  }
+  return target;
+}
+
+async function persistJsonArtifact(path: string, value: unknown): Promise<string> {
+  const target = assertSafeArtifactPath(path);
+  await mkdir(dirname(target), { recursive: true });
+  try {
+    await writeFile(target, `${JSON.stringify(value, null, 2)}\n`, { encoding: "utf8", flag: "wx" });
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "EEXIST") {
+      throw new AibaError(`Artifact output already exists: ${path}`, "ARTIFACT_OUTPUT_EXISTS");
+    }
+    throw error;
+  }
+  return target;
+}
+
+function jsonArray<T>(path: string, label: string): T[] {
+  const value = readJsonFile(path);
+  if (!Array.isArray(value)) throw new AibaError(`${label} must be a JSON array`, "JSON_DOCUMENT_INVALID");
+  return value as T[];
 }
 
 program
@@ -236,15 +294,91 @@ program
   .description("Compile an Application Blueprint into a non-executable Agent task graph")
   .argument("<blueprint>", "Application Blueprint YAML path")
   .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--out <path>", "persist the deterministic plan as JSON")
   .option("--json", "print machine-readable JSON")
-  .action(async (blueprintPath: string, options: { packsDir: string; json?: boolean }) => {
+  .action(async (blueprintPath: string, options: { packsDir: string; out?: string; json?: boolean }) => {
     const absolutePath = resolve(blueprintPath);
     const plan = await compileApplicationBlueprint({
       blueprint: await loadApplicationBlueprint(absolutePath),
       blueprintSha256: await sha256File(absolutePath),
       packsDirectory: resolve(options.packsDir),
     });
+    if (options.out) await persistJsonArtifact(options.out, plan);
     process.stdout.write(`${options.json ? JSON.stringify(plan, null, 2) : renderApplicationPlan(plan)}\n`);
+  });
+
+program
+  .command("app-diff")
+  .description("Compare two Application Blueprints without changing project files")
+  .argument("<previous>", "previous Application Blueprint YAML path")
+  .argument("<next>", "target Application Blueprint YAML path")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--out <path>", "persist the deterministic diff plan as JSON")
+  .option("--json", "print machine-readable JSON")
+  .action(async (previousPath: string, nextPath: string, options: { packsDir: string; out?: string; json?: boolean }) => {
+    const plan = await diffApplicationBlueprintFiles({
+      previousPath,
+      nextPath,
+      packsDirectory: options.packsDir,
+    });
+    if (options.out) await persistJsonArtifact(options.out, plan);
+    process.stdout.write(`${options.json ? JSON.stringify(plan, null, 2) : renderApplicationBlueprintDiff(plan)}\n`);
+  });
+
+program
+  .command("app-upgrade")
+  .description("Plan or explicitly accept an Application Blueprint upgrade")
+  .argument("<previous>", "previous Application Blueprint YAML path")
+  .argument("<next>", "target Application Blueprint YAML path")
+  .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
+  .option("--customizations <path>", "project customization JSON array")
+  .option("--plan <path>", "previously persisted upgrade plan JSON")
+  .option("--resolutions <path>", "explicit upgrade resolution JSON array")
+  .option("--accept", "accept the upgrade after all required resolutions pass")
+  .option("--out <path>", "persist the plan or acceptance result as JSON")
+  .option("--json", "print machine-readable JSON")
+  .action(async (
+    previousPath: string,
+    nextPath: string,
+    options: {
+      packsDir: string;
+      customizations?: string;
+      plan?: string;
+      resolutions?: string;
+      accept?: boolean;
+      out?: string;
+      json?: boolean;
+    },
+  ) => {
+    if (options.plan && !options.accept) {
+      throw new AibaError("--plan requires --accept", "COMMAND_USAGE_ERROR");
+    }
+    const pair = await compileApplicationBlueprintPair({
+      previousPath,
+      nextPath,
+      packsDirectory: options.packsDir,
+    });
+    const customizations = options.customizations
+      ? jsonArray<ApplicationTaskCustomization>(options.customizations, "Customizations")
+      : undefined;
+    const generatedPlan = await planApplicationBlueprintUpgrade({
+      ...pair,
+      ...(customizations ? { customizations } : {}),
+    });
+    const plan = options.plan
+      ? validateApplicationBlueprintUpgradePlan(readJsonFile(options.plan))
+      : generatedPlan;
+    if (!options.accept) {
+      if (options.out) await persistJsonArtifact(options.out, plan);
+      process.stdout.write(`${options.json ? JSON.stringify(plan, null, 2) : renderApplicationBlueprintDiff(plan)}\n`);
+      return;
+    }
+    const resolutions = options.resolutions
+      ? jsonArray<ApplicationBlueprintUpgradeResolution>(options.resolutions, "Resolutions")
+      : [];
+    const accepted = acceptCompiledApplicationBlueprintUpgrade({ pair, plan, resolutions });
+    if (options.out) await persistJsonArtifact(options.out, accepted);
+    process.stdout.write(`${options.json ? JSON.stringify(accepted, null, 2) : `Accepted Blueprint upgrade ${accepted.blueprintId}@${accepted.version}.`}\n`);
   });
 
 program

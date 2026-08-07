@@ -80,7 +80,13 @@ exit codes.
 
 `create app <id>` writes an editable Blueprint scaffold. `plan <app.yaml>`
 validates and compiles it, prints the exact capability and task graph, and does
-not mutate the host project.
+not mutate the host project. `plan --out <plan.json>` persists that exact
+deterministic plan as a JSON artifact inside a safe project-local path.
+
+`app-diff <old.yaml> <new.yaml>` compares two exact Blueprints and renders a
+stable upgrade plan. `app-upgrade <old.yaml> <new.yaml>` can then load a
+persisted plan, require explicit resolutions for non-additive changes, and
+accept the upgrade only when the current source hashes still match.
 
 `compose` is read-only. It first validates the solution graph, then runs the
 ordinary project verifier separately for every exact constituent. It reports

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   renderApplicationPlan,
+  renderApplicationBlueprintDiff,
   renderCatalog,
   renderCatalogItem,
   renderDiff,
@@ -8,6 +9,33 @@ import {
   renderSolutionInstall,
   renderVerification,
 } from "./render.js";
+
+describe("Application Blueprint diff rendering", () => {
+  it("renders stable change classifications and resolution counts", () => {
+    const output = renderApplicationBlueprintDiff({
+      apiVersion: "aiba.dev/v0alpha1",
+      kind: "ApplicationBlueprintUpgradePlan",
+      metadata: {
+        id: "work-hub-upgrade",
+        blueprintId: "work-hub",
+        from: { version: "0.1.0", sha256: "a".repeat(64), planSha256: "b".repeat(64) },
+        to: { version: "0.2.0", sha256: "c".repeat(64), planSha256: "d".repeat(64) },
+      },
+      changes: [{
+        id: "change-001",
+        category: "security-sensitive",
+        targetType: "operation",
+        target: "publish",
+        summary: "Change authorization action",
+        requiresResolution: true,
+      }],
+      preservedCustomizations: [],
+      requiredResolutions: ["change-001"],
+    });
+    expect(output).toContain("[security-sensitive] operation publish (resolution required)");
+    expect(output).toContain("Required resolutions: 1");
+  });
+});
 
 describe("Application Plan rendering", () => {
   it("renders capability and non-executable task order", () => {

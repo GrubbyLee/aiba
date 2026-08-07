@@ -56,6 +56,9 @@ aiba init
 aiba create app work-hub
 # 编辑 applications/work-hub/app.yaml，描述当前项目的意图。
 aiba plan applications/work-hub/app.yaml
+aiba plan applications/work-hub/app.yaml --out .aiba/plans/work-hub.plan.json
+aiba app-diff old.yaml new.yaml
+aiba app-upgrade old.yaml new.yaml --plan .aiba/plans/work-hub.upgrade.json --accept
 aiba list
 aiba show reporting
 aiba add reporting
@@ -67,7 +70,8 @@ aiba verify
 
 Blueprint 是新应用的主要组合入口，其中的业务名词只归项目所有。规划过程只读，输出绑定
 源码哈希的能力图和不可执行的 Agent 任务。Blueprint 升级会先区分新增、破坏性、安全敏感
-和定制冲突，再决定是否接受对项目适配的变更。
+和定制冲突。持久化计划必须写入安全的项目本地路径；接受升级前还要加载已保存的计划，
+并在非增量变更时显式给出决策。
 
 `add` 只准备计划，不会静默生成代码，也不会执行能力包中的内容。Agent 把契约映射到项目
 自己的框架、存储、服务商和界面。Core 验证通过后，最终确认才会计算证据哈希并记录来源。

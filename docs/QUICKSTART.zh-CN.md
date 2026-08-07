@@ -46,6 +46,9 @@ aiba plan applications/work-hub/app.yaml --json
 规划前先编辑 `applications/work-hub/app.yaml`，用自己的资源、字段、状态、操作、授权动作、
 事件、界面意图、验收证据和 Agent 写入范围替换脚手架内容。这些名称只属于项目，不是 AIBA
 产品模型。规划会验证文档、解析精确能力依赖，并输出不可执行的 Agent 任务图。
+如果想保留计划，可加 `--out .aiba/plans/work-hub.plan.json`。比较两个 Blueprint 时使用
+`aiba app-diff old.yaml new.yaml`；接受已保存的升级计划时使用
+`aiba app-upgrade old.yaml new.yaml --plan <plan.json> --accept`。
 
 ## 4. 把计划交给 Agent
 

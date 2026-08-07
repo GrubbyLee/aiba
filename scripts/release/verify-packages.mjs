@@ -141,7 +141,7 @@ try {
 
   writeFileSync(join(consumer, "verify-imports.mjs"), [
     'import { AIBA_API_VERSION, loadProtocolSchema } from "aiba-spec";',
-    'import { inspectProject, planApplicationBlueprintUpgrade } from "aiba-core";',
+    'import { inspectProject, compileApplicationBlueprintPair, diffApplicationBlueprintFiles, planApplicationBlueprintUpgrade, acceptCompiledApplicationBlueprintUpgrade } from "aiba-core";',
     'import { createRegistryServer } from "aiba-registry-server";',
     'if (AIBA_API_VERSION !== "aiba.dev/v0alpha1") throw new Error("bad API version");',
     'if (!loadProtocolSchema("capability.schema.json")) throw new Error("schema unavailable");',
@@ -149,7 +149,10 @@ try {
     '  if (!loadProtocolSchema(schema)) throw new Error(`Blueprint schema unavailable: ${schema}`);',
     '}',
     'if (typeof inspectProject !== "function") throw new Error("Core export unavailable");',
+    'if (typeof compileApplicationBlueprintPair !== "function") throw new Error("Blueprint pair export unavailable");',
+    'if (typeof diffApplicationBlueprintFiles !== "function") throw new Error("Blueprint diff export unavailable");',
     'if (typeof planApplicationBlueprintUpgrade !== "function") throw new Error("Blueprint upgrade export unavailable");',
+    'if (typeof acceptCompiledApplicationBlueprintUpgrade !== "function") throw new Error("Blueprint upgrade acceptance export unavailable");',
     'if (typeof createRegistryServer !== "function") throw new Error("server export unavailable");',
     'process.stdout.write("library imports: ok\\n");',
     "",
@@ -190,7 +193,26 @@ try {
   const authored = join(consumer, "authored");
   mkdirSync(authored);
   runCli(["create", "app", "operations-hub", "--out", authored, "--json"]);
-  runCli(["plan", join(authored, "operations-hub", "app.yaml"), "--json"]);
+  const authoredPlanPath = join(authored, "operations-hub.plan.json");
+  const authoredPlan = runCli(["plan", join(authored, "operations-hub", "app.yaml"), "--packs-dir", join(workspace, "capabilities"), "--out", authoredPlanPath, "--json"]);
+  if (readFileSync(authoredPlanPath, "utf8") !== authoredPlan) {
+    throw new Error("Persisted application plan does not match JSON output");
+  }
+  const blueprintDiffPath = join(consumer, "work-hub.diff.json");
+  const previousBlueprint = join(workspace, "fixtures", "application-blueprint", "work-hub.yaml");
+  const nextBlueprint = join(workspace, "fixtures", "application-blueprint", "work-hub-v2.yaml");
+  const blueprintDiff = runCli(["app-diff", previousBlueprint, nextBlueprint, "--packs-dir", join(workspace, "capabilities"), "--out", blueprintDiffPath, "--json"]);
+  if (!readFileSync(blueprintDiffPath, "utf8").includes('"kind": "ApplicationBlueprintUpgradePlan"')) {
+    throw new Error("Application Blueprint diff was not persisted");
+  }
+  if (!blueprintDiff.includes('"requiredResolutions"')) {
+    throw new Error("Application Blueprint diff output is missing required fields");
+  }
+  const upgradeAcceptancePath = join(consumer, "work-hub.accepted.json");
+  runCli(["app-upgrade", previousBlueprint, nextBlueprint, "--packs-dir", join(workspace, "capabilities"), "--plan", blueprintDiffPath, "--accept", "--out", upgradeAcceptancePath, "--json"]);
+  if (!readFileSync(upgradeAcceptancePath, "utf8").includes('"ok": true')) {
+    throw new Error("Application Blueprint upgrade was not accepted");
+  }
   runCli(["add", "secure-workspace", "--solution", "--root", app, "--json"]);
   runCli(["status", "secure-workspace", "--root", app, "--json"]);
   runCli(["add", "identity", "--root", app, "--json"]);

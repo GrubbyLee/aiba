@@ -9,7 +9,7 @@ const commands: AgentProtocolDescriptor["commands"] = [
   ["test", true, true], ["attest", true, true], ["verify-behavior", false, false],
   ["policy-check", false, false], ["resolve", false, false], ["fetch", true, true],
   ["create", true, false], ["lint", false, false], ["test-pack", false, false],
-  ["plan", false, false],
+  ["plan", true, false], ["app-diff", false, false], ["app-upgrade", true, false],
   ["solution-verify", true, true],
   ["registry-backup", true, true], ["registry-restore", true, true],
   ["registry-gc", true, true],

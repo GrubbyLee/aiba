@@ -67,6 +67,9 @@ aiba init
 aiba create app work-hub
 # Edit applications/work-hub/app.yaml to describe this project's intent.
 aiba plan applications/work-hub/app.yaml
+aiba plan applications/work-hub/app.yaml --out .aiba/plans/work-hub.plan.json
+aiba app-diff old.yaml new.yaml
+aiba app-upgrade old.yaml new.yaml --plan .aiba/plans/work-hub.upgrade.json --accept
 aiba list
 aiba show reporting
 aiba add reporting
@@ -78,9 +81,10 @@ aiba verify
 
 The Blueprint is the primary composition surface for a new application. Its
 business nouns remain project-owned. Planning is read-only and produces a
-source-bound capability graph plus non-executable Agent tasks. Blueprint
-upgrades classify additive, breaking, security-sensitive, and customization
-conflicts before project-owned adaptation is accepted.
+source-bound capability graph plus non-executable Agent tasks. Persisted plans
+must live in safe project-local paths. Blueprint upgrades classify additive,
+breaking, security-sensitive, and customization conflicts before
+project-owned adaptation is accepted.
 
 `add` prepares a plan; it does not silently generate or execute pack code. The
 Agent maps the contract to the project's framework, storage, providers, and UI.

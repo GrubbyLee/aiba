@@ -49,6 +49,10 @@ your resources, fields, states, operations, authorization actions, events, UI
 intent, acceptance evidence, and allowed Agent write scopes. The names are
 project data, not AIBA product models. Planning validates the document, resolves
 exact capability dependencies, and prints a non-executable Agent task graph.
+Add `--out .aiba/plans/work-hub.plan.json` if you want to keep the plan. Use
+`aiba app-diff old.yaml new.yaml` to compare Blueprint revisions, and
+`aiba app-upgrade old.yaml new.yaml --plan <plan.json> --accept` to accept a
+saved upgrade plan explicitly.
 
 ## 4. Hand The Plan To Your Agent
 

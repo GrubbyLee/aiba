@@ -90,6 +90,132 @@ run("plan application Blueprint", [
   "plan", applicationBlueprintPath,
   "--packs-dir", join(workspace, "capabilities"), "--json",
 ], 0);
+const blueprintFixture = mkdtempSync(join(workspace, ".aiba-smoke-blueprint-"));
+copyFileSync(join(workspace, "fixtures", "application-blueprint", "work-hub.yaml"), join(blueprintFixture, "work-hub.yaml"));
+copyFileSync(join(workspace, "fixtures", "application-blueprint", "work-hub-v2.yaml"), join(blueprintFixture, "work-hub-v2.yaml"));
+const previousBlueprintPath = join(blueprintFixture, "work-hub.yaml");
+const nextBlueprintPath = join(blueprintFixture, "work-hub-v2.yaml");
+const diffOutputPath = join(blueprintFixture, "work-hub.diff.json");
+const blueprintUpgradePlanPath = join(blueprintFixture, "work-hub.upgrade.json");
+const blueprintAcceptedPath = join(blueprintFixture, "work-hub.accepted.json");
+const firstDiff = run("persist application Blueprint diff", [
+  "app-diff",
+  previousBlueprintPath,
+  nextBlueprintPath,
+  "--packs-dir", join(workspace, "capabilities"),
+  "--out", diffOutputPath,
+  "--json",
+], 0);
+const secondDiff = run("repeat application Blueprint diff", [
+  "app-diff",
+  previousBlueprintPath,
+  nextBlueprintPath,
+  "--packs-dir", join(workspace, "capabilities"),
+  "--json",
+], 0);
+if (firstDiff.stdout !== secondDiff.stdout) {
+  throw new Error("Application Blueprint diff output is not stable");
+}
+if (readFileSync(diffOutputPath, "utf8") !== firstDiff.stdout) {
+  throw new Error("Persisted Application Blueprint diff does not match JSON output");
+}
+run("reject diff overwrite", [
+  "app-diff",
+  previousBlueprintPath,
+  nextBlueprintPath,
+  "--packs-dir", join(workspace, "capabilities"),
+  "--out", diffOutputPath,
+  "--json",
+], 1);
+run("reject diff traversal", [
+  "app-diff",
+  previousBlueprintPath,
+  nextBlueprintPath,
+  "--packs-dir", join(workspace, "capabilities"),
+  "--out", "../outside.json",
+  "--json",
+], 1);
+run("persist upgrade plan", [
+  "app-upgrade",
+  previousBlueprintPath,
+  nextBlueprintPath,
+  "--packs-dir", join(workspace, "capabilities"),
+  "--out", blueprintUpgradePlanPath,
+  "--json",
+], 0);
+const persistedUpgradePlan = JSON.parse(readFileSync(blueprintUpgradePlanPath, "utf8"));
+if (!Array.isArray(persistedUpgradePlan.requiredResolutions)) {
+  throw new Error("Persisted upgrade plan is missing requiredResolutions");
+}
+run("accept persisted upgrade plan", [
+  "app-upgrade",
+  previousBlueprintPath,
+  nextBlueprintPath,
+  "--packs-dir", join(workspace, "capabilities"),
+  "--plan", blueprintUpgradePlanPath,
+  "--accept",
+  "--out", blueprintAcceptedPath,
+  "--json",
+], 0);
+if (!readFileSync(blueprintAcceptedPath, "utf8").includes("\"ok\": true")) {
+  throw new Error("Accepted upgrade result was not persisted");
+}
+const securityBlueprintFixture = mkdtempSync(join(workspace, ".aiba-smoke-blueprint-security-"));
+copyFileSync(join(workspace, "fixtures", "application-blueprint", "work-hub.yaml"), join(securityBlueprintFixture, "work-hub.yaml"));
+copyFileSync(join(workspace, "fixtures", "application-blueprint", "work-hub-v2.yaml"), join(securityBlueprintFixture, "work-hub-v2.yaml"));
+const securityPreviousBlueprintPath = join(securityBlueprintFixture, "work-hub.yaml");
+const securityNextBlueprintPath = join(securityBlueprintFixture, "work-hub-v2.yaml");
+const securityPlanPath = join(securityBlueprintFixture, "work-hub.security-upgrade.json");
+const securityAcceptedPath = join(securityBlueprintFixture, "work-hub.security-accepted.json");
+const securityNextBlueprint = parse(readFileSync(securityNextBlueprintPath, "utf8"));
+securityNextBlueprint.spec.operations[0].authorization.action = "work-item.admin-create";
+writeFileSync(securityNextBlueprintPath, stringify(securityNextBlueprint));
+const securityPlanRun = run("persist security-sensitive upgrade plan", [
+  "app-upgrade",
+  securityPreviousBlueprintPath,
+  securityNextBlueprintPath,
+  "--packs-dir", join(workspace, "capabilities"),
+  "--out", securityPlanPath,
+  "--json",
+], 0);
+const securityPlan = JSON.parse(securityPlanRun.stdout);
+if (!Array.isArray(securityPlan.requiredResolutions) || securityPlan.requiredResolutions.length === 0) {
+  throw new Error("Expected a security-sensitive upgrade plan that requires resolutions");
+}
+const securityResolutionsPath = join(securityBlueprintFixture, "resolutions.json");
+writeFileSync(securityResolutionsPath, `${JSON.stringify(
+  securityPlan.requiredResolutions.map((changeId) => ({
+    changeId,
+    decision: "adapt",
+    note: "Reviewed and accepted the requested upgrade decision.",
+  })),
+  null,
+  2,
+)}\n`);
+run("accept security-sensitive upgrade plan", [
+  "app-upgrade",
+  securityPreviousBlueprintPath,
+  securityNextBlueprintPath,
+  "--packs-dir", join(workspace, "capabilities"),
+  "--plan", securityPlanPath,
+  "--resolutions", securityResolutionsPath,
+  "--accept",
+  "--out", securityAcceptedPath,
+  "--json",
+], 0);
+const mutatedSecurityNext = parse(readFileSync(securityNextBlueprintPath, "utf8"));
+mutatedSecurityNext.spec.operations[0].authorization.action = "work-item.admin-approve";
+writeFileSync(securityNextBlueprintPath, stringify(mutatedSecurityNext));
+run("reject stale upgrade plan", [
+  "app-upgrade",
+  securityPreviousBlueprintPath,
+  securityNextBlueprintPath,
+  "--packs-dir", join(workspace, "capabilities"),
+  "--plan", securityPlanPath,
+  "--resolutions", securityResolutionsPath,
+  "--accept",
+  "--json",
+], 1);
 run("plan domain-neutral golden Blueprint", [
   "plan", join(workspace, "fixtures", "application-blueprint", "work-hub.yaml"),
   "--packs-dir", join(workspace, "capabilities"), "--json",
@@ -109,6 +235,8 @@ run("reject application scaffold overwrite", [
   "create", "app", "operations-hub", "--out", authoringFixture, "--json",
 ], 1);
 rmSync(authoringFixture, { recursive: true, force: true });
+rmSync(blueprintFixture, { recursive: true, force: true });
+rmSync(securityBlueprintFixture, { recursive: true, force: true });
 
 const bundleFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-bundle-"));
 const keyDirectory = join(bundleFixture, "keys");

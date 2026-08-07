@@ -1,4 +1,4 @@
-import type { ApplicationPlan } from "aiba-spec";
+import type { ApplicationBlueprintUpgradePlan, ApplicationPlan } from "aiba-spec";
 import type {
   CatalogDiscovery,
   CatalogItemDetails,
@@ -23,6 +23,25 @@ export function renderApplicationPlan(plan: ApplicationPlan): string {
       `  write scope: ${task.writeScopes.length > 0 ? task.writeScopes.join(", ") : "read-only"}`,
     );
   }
+  return lines.join("\n");
+}
+
+export function renderApplicationBlueprintDiff(plan: ApplicationBlueprintUpgradePlan): string {
+  const lines = [
+    `Application Blueprint: ${plan.metadata.blueprintId}`,
+    `From: ${plan.metadata.from.version} (${plan.metadata.from.sha256})`,
+    `To: ${plan.metadata.to.version} (${plan.metadata.to.sha256})`,
+    `Changes: ${plan.changes.length}`,
+  ];
+  if (plan.changes.length === 0) lines.push("  none");
+  for (const item of plan.changes) {
+    lines.push(
+      `  [${item.category}] ${item.targetType} ${item.target}`
+        + `${item.requiresResolution ? " (resolution required)" : ""}`,
+      `    ${item.summary}`,
+    );
+  }
+  lines.push(`Required resolutions: ${plan.requiredResolutions.length}`);
   return lines.join("\n");
 }
 
