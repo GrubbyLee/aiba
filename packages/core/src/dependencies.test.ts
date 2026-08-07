@@ -122,6 +122,7 @@ describe("core capability dependencies", () => {
       ["form-engine", "business-capability"],
       ["i18n", "application-foundation"],
       ["identity", "application-foundation"],
+      ["inbox", "application-foundation"],
       ["import-export", "business-capability"],
       ["notification", "application-foundation"],
       ["organization", "application-foundation"],

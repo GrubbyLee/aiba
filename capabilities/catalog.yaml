@@ -16,6 +16,9 @@ capabilities:
   - id: notification
     version: 0.2.0
     layer: application-foundation
+  - id: inbox
+    version: 0.1.0
+    layer: application-foundation
   - id: verification-challenge
     version: 0.1.0
     layer: application-foundation

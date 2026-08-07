@@ -30,7 +30,7 @@ implemented. Generated code remains project-owned.
 
 | Layer | Purpose | Current catalog |
 | --- | --- | --- |
-| Application foundation | Cross-project application boundaries | `identity`, `authorization`, `users`, `notification`, `verification-challenge`, `data-dict`, `file-assets`, `i18n`, `scheduled-jobs`, `feature-flags`, `organization`, `search`, `review-access` |
+| Application foundation | Cross-project application boundaries | `identity`, `authorization`, `users`, `notification`, `inbox`, `verification-challenge`, `data-dict`, `file-assets`, `i18n`, `scheduled-jobs`, `feature-flags`, `organization`, `search`, `review-access` |
 | Platform integration | Provider and external-system boundaries | `webhooks`, `wechat-miniprogram-auth` |
 | Business capability | Reusable business behavior | `comments-activity`, `form-engine`, `import-export`, `reporting`, `workflow-approval`, `vehicle-records` |
 | Engineering governance | Operational, security, and risk controls | `audit` |

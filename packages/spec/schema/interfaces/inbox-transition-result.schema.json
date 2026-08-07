@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/inbox-transition-result.schema.json",
+  "title": "AIBA Inbox Transition Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action", "messages", "changedCount", "transitionedAt"],
+  "properties": {
+    "action": { "enum": ["mark-read", "mark-unread", "archive"] },
+    "messages": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["messageId", "status", "revision", "updatedAt"],
+        "properties": {
+          "messageId": { "type": "string", "minLength": 1, "maxLength": 160 },
+          "status": { "enum": ["unread", "read", "archived"] },
+          "revision": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "changedCount": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "transitionedAt": { "type": "string", "format": "date-time" }
+  }
+}

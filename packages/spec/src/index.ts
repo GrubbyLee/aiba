@@ -357,6 +357,63 @@ export interface I18nCatalogResult {
   loadedAt: string;
 }
 
+export type InboxMessageStatus = "unread" | "read" | "archived";
+export type InboxTransitionAction = "mark-read" | "mark-unread" | "archive";
+
+export interface InboxMessageRecord {
+  messageId: string;
+  category: string;
+  title: string;
+  body: string;
+  status: InboxMessageStatus;
+  resourceType?: string;
+  resourceId?: string;
+  revision: number;
+  createdAt: string;
+  updatedAt: string;
+  readAt?: string;
+  archivedAt?: string;
+}
+
+export interface InboxQueryCommand {
+  statuses?: InboxMessageStatus[];
+  categories?: string[];
+  pageSize: number;
+  cursor?: string;
+}
+
+export interface InboxPage {
+  messages: InboxMessageRecord[];
+  hasMore: boolean;
+  nextCursor?: string;
+  unreadCount: number;
+}
+
+export interface InboxTransitionTarget {
+  messageId: string;
+  expectedRevision: number;
+}
+
+export interface InboxTransitionCommand {
+  action: InboxTransitionAction;
+  targets: InboxTransitionTarget[];
+  idempotencyKey: string;
+}
+
+export interface InboxTransitionRecord {
+  messageId: string;
+  status: InboxMessageStatus;
+  revision: number;
+  updatedAt: string;
+}
+
+export interface InboxTransitionResult {
+  action: InboxTransitionAction;
+  messages: InboxTransitionRecord[];
+  changedCount: number;
+  transitionedAt: string;
+}
+
 export interface OrganizationMembershipCommand {
   action: "add" | "change-role" | "remove";
   userId: string;
@@ -1194,6 +1251,11 @@ export type InterfaceSchemaName =
   | "i18n-catalog-result.schema.json"
   | "i18n-translate-command.schema.json"
   | "i18n-translate-result.schema.json"
+  | "inbox-message-record.schema.json"
+  | "inbox-page.schema.json"
+  | "inbox-query-command.schema.json"
+  | "inbox-transition-command.schema.json"
+  | "inbox-transition-result.schema.json"
   | "import-export-job-record.schema.json"
   | "notification-command.schema.json"
   | "notification-receipt.schema.json"

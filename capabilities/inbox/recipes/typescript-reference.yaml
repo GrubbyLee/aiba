@@ -1,0 +1,43 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Inbox Boundary
+  description: Framework-neutral guidance for a safe user message inbox.
+spec:
+  capability: { id: inbox, version: 0.1.0 }
+  compatibility: { languages: [TypeScript], frameworks: [] }
+  writeScope: { allowedPatterns: [src/**, server/**, workers/**, test/**, tests/**] }
+  operations:
+    - id: ingest-trusted-message
+      intent: Create one recipient-scoped message from a trusted event and immutable server template.
+      requiredInterfaces: [inbox.message-record, audit.event]
+      invariants: [message-content-is-trusted, records-and-audit-are-minimized]
+      guidance:
+        - Accept events only from authenticated internal adapters and resolve versioned templates on the server.
+        - Deduplicate the trusted source event and sanitize bounded rendered text before persistence.
+    - id: list-principal-inbox
+      intent: Authorize and list only the authenticated principal's messages with a signed scoped cursor.
+      requiredInterfaces: [inbox.query-command, inbox.page, authorization.decision]
+      invariants: [inbox-scope-is-context-derived, inbox-operations-are-authorized, pagination-is-bounded-and-scoped, records-and-audit-are-minimized]
+      guidance:
+        - Derive tenant and recipient from authentication and filter before pagination.
+        - Bind cursor integrity to principal, filters, stable sort, and offset.
+    - id: transition-message-state
+      intent: Atomically mark a bounded set of messages read, unread, or archived.
+      requiredInterfaces: [inbox.transition-command, inbox.transition-result, authorization.decision, audit.event]
+      invariants: [inbox-scope-is-context-derived, inbox-operations-are-authorized, transitions-are-revisioned-and-idempotent, records-and-audit-are-minimized]
+      guidance:
+        - Authorize the context-derived inbox, compare every revision, then mutate the complete batch in one transaction.
+        - Bind tenant and principal scoped idempotency to action and targets without auditing message content.
+  evidence:
+    - invariant: inbox-scope-is-context-derived
+      suggestions: &suggestions
+        - { type: source, pathPattern: "src/**/*.ts", description: "Trusted event ingestion, scoped query, cursor, and transition boundary." }
+        - { type: test, pathPattern: "src/**/*.test.ts", description: "Scope injection, authorization, cursor, revision, race, idempotency, and minimization tests." }
+    - { invariant: message-content-is-trusted, suggestions: *suggestions }
+    - { invariant: inbox-operations-are-authorized, suggestions: *suggestions }
+    - { invariant: pagination-is-bounded-and-scoped, suggestions: *suggestions }
+    - { invariant: transitions-are-revisioned-and-idempotent, suggestions: *suggestions }
+    - { invariant: records-and-audit-are-minimized, suggestions: *suggestions }

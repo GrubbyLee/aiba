@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/inbox-query-command.schema.json",
+  "title": "AIBA Inbox Query Command",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pageSize"],
+  "properties": {
+    "statuses": { "type": "array", "maxItems": 3, "uniqueItems": true, "items": { "enum": ["unread", "read", "archived"] } },
+    "categories": { "type": "array", "maxItems": 20, "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9.-]{1,79}$" } },
+    "pageSize": { "type": "integer", "minimum": 1, "maximum": 100 },
+    "cursor": { "type": "string", "minLength": 16, "maxLength": 1024, "pattern": "^[A-Za-z0-9._-]+$" }
+  }
+}

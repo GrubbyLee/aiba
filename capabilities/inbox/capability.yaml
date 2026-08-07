@@ -1,0 +1,45 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: inbox
+  version: 0.1.0
+  title: Inbox
+  layer: application-foundation
+  description: Principal-scoped in-application messages with trusted content, bounded signed-cursor queries, revisioned state transitions, idempotency, and minimized records.
+spec:
+  interfaces: [authorization.decision, audit.event, inbox.query-command, inbox.page, inbox.transition-command, inbox.transition-result, inbox.message-record]
+  dependencies:
+    - { id: authorization, version: ^0.1.0, optional: false }
+    - { id: audit, version: ^0.1.0, optional: false }
+    - { id: notification, version: ^0.2.0, optional: true }
+  invariants:
+    - id: inbox-scope-is-context-derived
+      title: Inbox scope is context derived
+      description: Tenant and recipient scope come only from authenticated server context and are absent from user commands.
+      severity: critical
+      evidence: &evidence { acceptedTypes: [source, test, config, document], requiredTypes: [source, test], minimum: 2, requireHash: true }
+    - id: message-content-is-trusted
+      title: Message content is trusted
+      description: Messages are created from trusted events and versioned server templates rather than caller-selected recipients or arbitrary content.
+      severity: critical
+      evidence: *evidence
+    - id: inbox-operations-are-authorized
+      title: Inbox operations are authorized
+      description: Listing and every state transition require authorization over the context-derived principal inbox.
+      severity: critical
+      evidence: *evidence
+    - id: pagination-is-bounded-and-scoped
+      title: Pagination is bounded and scoped
+      description: Stable opaque cursors are integrity protected and bound to tenant, principal, filters, and page bounds.
+      severity: critical
+      evidence: *evidence
+    - id: transitions-are-revisioned-and-idempotent
+      title: Transitions are revisioned and idempotent
+      description: Batch state changes compare every exact revision atomically and bind a scoped idempotency key to one exact operation.
+      severity: critical
+      evidence: *evidence
+    - id: records-and-audit-are-minimized
+      title: Records and audit are minimized
+      description: Public records omit recipient identifiers, tenant internals, template parameters, destinations, secrets, and provider payloads, and display text is sanitized.
+      severity: critical
+      evidence: *evidence
