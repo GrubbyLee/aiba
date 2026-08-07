@@ -64,7 +64,7 @@ async function assertNewDirectory(path: string): Promise<void> {
 export async function createCapabilityScaffold(options: {
   id: string;
   outputDirectory: string;
-  layer?: Exclude<CapabilityLayer, "industry-solution">;
+  layer?: Exclude<CapabilityLayer, "application-solution" | "industry-solution">;
   language?: string;
 }): Promise<{ directory: string; files: string[] }> {
   assertId(options.id);
@@ -179,7 +179,7 @@ export async function createSolutionScaffold(options: {
       version: "0.1.0",
       title: titleFromId(options.id),
       description: `Exact, dependency-ordered ${titleFromId(options.id)} composition.`,
-      layer: "industry-solution",
+      layer: "application-solution",
     },
     spec: { capabilities: entries },
   };

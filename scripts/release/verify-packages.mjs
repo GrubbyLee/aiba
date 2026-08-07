@@ -51,9 +51,6 @@ try {
   if (!cliFiles.includes("package/capabilities/import-export/capability.yaml")) {
     throw new Error("@grubbylee/aiba does not contain the import-export capability");
   }
-  if (!cliFiles.includes("package/capabilities/vehicle-records/capability.yaml")) {
-    throw new Error("@grubbylee/aiba does not contain the vehicle-records capability");
-  }
   if (!cliFiles.includes("package/capabilities/wechat-miniprogram-auth/capability.yaml")) {
     throw new Error("@grubbylee/aiba does not contain the WeChat Mini Program auth capability");
   }
@@ -66,8 +63,8 @@ try {
       throw new Error(`@grubbylee/aiba does not contain the ${capability} capability`);
     }
   }
-  if (!cliFiles.includes("package/solutions/vehicle-management/solution.yaml")) {
-    throw new Error("@grubbylee/aiba does not contain the vehicle-management solution");
+  if (!cliFiles.includes("package/solutions/secure-workspace/solution.yaml")) {
+    throw new Error("@grubbylee/aiba does not contain the secure-workspace solution");
   }
   if (!cliFiles.includes("package/capabilities/catalog.yaml")) {
     throw new Error("@grubbylee/aiba does not contain the official capability catalog");
@@ -80,9 +77,6 @@ try {
   }
   if (!specFiles.includes("package/schema/solution.schema.json")) {
     throw new Error("aiba-spec does not contain the solution schema");
-  }
-  if (!specFiles.includes("package/schema/interfaces/vehicle-record.schema.json")) {
-    throw new Error("aiba-spec does not contain vehicle record interface schemas");
   }
   if (!specFiles.includes("package/schema/interfaces/wechat-miniprogram-login-result.schema.json")) {
     throw new Error("aiba-spec does not contain WeChat Mini Program auth interfaces");
@@ -177,15 +171,15 @@ try {
   }
   runCli(["init", app, "--json"]);
   runCli(["list", "--json"]);
-  runCli(["show", "vehicle-management", "--json"]);
+  runCli(["show", "secure-workspace", "--json"]);
   for (const capability of ["verification-challenge", "scheduled-jobs", "webhooks", "feature-flags", "organization", "comments-activity", "search", "reporting", "workflow-approval", "i18n", "data-dict", "form-engine", "inbox", "tags"]) {
     runCli(["show", capability, "--json"]);
   }
   runCli(["inspect", app, "--json"]);
   runCli(["doctor", "--root", app, "--json"]);
   runCli(["agent-protocol", "--json"]);
-  runCli(["add", "vehicle-management", "--solution", "--root", app, "--json"]);
-  runCli(["status", "vehicle-management", "--root", app, "--json"]);
+  runCli(["add", "secure-workspace", "--solution", "--root", app, "--json"]);
+  runCli(["status", "secure-workspace", "--root", app, "--json"]);
   runCli(["add", "identity", "--root", app, "--json"]);
   for (const shell of ["bash", "zsh", "fish"]) {
     const completion = JSON.parse(runCli(["completion", shell, "--json"]));

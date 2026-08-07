@@ -17,7 +17,7 @@ Agent 按项目已有的技术栈和设计语言完成适配；确定性的 Core
    数据语义，避免不同能力重复发明不兼容的规则。
 2. **能力包**通过接口、依赖、不变量、证据要求、实现配方、迁移和攻击测试指导，定义一项
    可复用行为。能力包是不可信数据，Core 永远不执行能力包提供的命令。
-3. **行业 Solution**精确绑定一组能力的版本、内容哈希和依赖顺序。每项能力仍须独立通过
+3. **应用 Solution**精确绑定一组能力的版本、内容哈希和依赖顺序。每项能力仍须独立通过
    验证，Solution 不能削弱不变量，也不能掩盖失败的组成能力。
 
 ## 五层能力体系
@@ -26,9 +26,9 @@ Agent 按项目已有的技术栈和设计语言完成适配；确定性的 Core
 | --- | --- | --- |
 | 应用基础能力 | 跨项目复用的应用边界 | `identity`、`authorization`、`users`、`notification`、`inbox`、`verification-challenge`、`data-dict`、`file-assets`、`i18n`、`scheduled-jobs`、`feature-flags`、`organization`、`search`、`review-access` |
 | 平台集成能力 | 服务商和外部系统边界 | `webhooks`、`wechat-miniprogram-auth` |
-| 业务通用能力 | 可跨行业复用的业务行为 | `comments-activity`、`form-engine`、`import-export`、`reporting`、`tags`、`workflow-approval`、`vehicle-records` |
+| 业务通用能力 | 可跨行业复用的业务行为 | `comments-activity`、`form-engine`、`import-export`、`reporting`、`tags`、`workflow-approval` |
 | 工程治理能力 | 运行、安全和风险控制 | `audit` |
-| 行业解决方案 | 面向具体产品领域的精确组合 | `vehicle-management` |
+| 应用组合方案 | 可复用能力的精确组合 | `secure-workspace` |
 
 目录层级只用于发现和理解，不是验证依据。前四层是可独立安装的能力包，第五层是能力组合。
 
@@ -63,8 +63,8 @@ aiba verify
 自己的框架、存储、服务商和界面。Core 验证通过后，最终确认才会计算证据哈希并记录来源。
 `diff` 和 `upgrade` 会比较已记录的生成来源与当前代码，不会把项目定制当成可随意覆盖的产物。
 
-安装组合方案时使用 `aiba add vehicle-management --solution`，然后运行
-`aiba status vehicle-management` 和 `aiba continue vehicle-management`。AIBA 按依赖顺序，
+安装组合方案时使用 `aiba add secure-workspace --solution`，然后运行
+`aiba status secure-workspace` 和 `aiba continue secure-workspace`。AIBA 按依赖顺序，
 每次只推进一项能力。
 
 ## 选择与组合

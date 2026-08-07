@@ -997,7 +997,7 @@ program
 
 program
   .command("list")
-  .description("List verified capabilities and industry Solutions")
+  .description("List verified capabilities and application Solutions")
   .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
   .option("--solutions-dir <path>", "solution definition directory", defaultSolutionsDirectory())
   .option("--json", "print machine-readable JSON")
@@ -1017,7 +1017,7 @@ program
 
 program
   .command("show")
-  .description("Show a verified capability or industry Solution")
+  .description("Show a verified capability or application Solution")
   .argument("<id>", "capability or Solution identifier")
   .option("--packs-dir <path>", "capability pack directory", defaultPacksDirectory())
   .option("--solutions-dir <path>", "solution definition directory", defaultSolutionsDirectory())

@@ -40,9 +40,9 @@ aiba doctor --root .
 
 ```bash
 aiba list
-aiba show vehicle-management
-aiba add vehicle-management --solution --root .
-aiba status vehicle-management --root .
+aiba show secure-workspace
+aiba add secure-workspace --solution --root .
+aiba status secure-workspace --root .
 ```
 
 The last two commands prepare exactly one constituent capability and print its
@@ -56,8 +56,8 @@ step in the current project, add the required evidence, and preserve every
 invariant. Then run:
 
 ```bash
-aiba continue vehicle-management --root . --finalize --agent codex
-aiba continue vehicle-management --root .
+aiba continue secure-workspace --root . --finalize --agent codex
+aiba continue secure-workspace --root .
 ```
 
 Repeat the handoff and these two commands for each constituent. Use
@@ -70,7 +70,7 @@ After all constituents are finalized:
 ```bash
 aiba doctor --root .
 aiba verify --root .
-aiba compose vehicle-management --root .
+aiba compose secure-workspace --root .
 ```
 
 For runtime claims, use the separate signed `test`, `attest`, and

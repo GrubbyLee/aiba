@@ -22,7 +22,7 @@ implemented. Generated code remains project-owned.
    dependencies, invariants, evidence requirements, recipes, migrations, and
    adversarial test guidance. Packs are untrusted data; Core never executes
    commands supplied by a pack.
-3. **Industry Solutions** pin an exact, dependency-ordered composition of
+3. **Application Solutions** pin an exact, dependency-ordered composition of
    capabilities. Every constituent remains independently verified, and a
    Solution cannot weaken an invariant or hide a failed capability.
 
@@ -32,9 +32,9 @@ implemented. Generated code remains project-owned.
 | --- | --- | --- |
 | Application foundation | Cross-project application boundaries | `identity`, `authorization`, `users`, `notification`, `inbox`, `verification-challenge`, `data-dict`, `file-assets`, `i18n`, `scheduled-jobs`, `feature-flags`, `organization`, `search`, `review-access` |
 | Platform integration | Provider and external-system boundaries | `webhooks`, `wechat-miniprogram-auth` |
-| Business capability | Reusable business behavior | `comments-activity`, `form-engine`, `import-export`, `reporting`, `tags`, `workflow-approval`, `vehicle-records` |
+| Business capability | Reusable business behavior | `comments-activity`, `form-engine`, `import-export`, `reporting`, `tags`, `workflow-approval` |
 | Engineering governance | Operational, security, and risk controls | `audit` |
-| Industry solution | Exact compositions for a product domain | `vehicle-management` |
+| Application solution | Exact, reusable capability compositions | `secure-workspace` |
 
 Catalog placement supports discovery; it is not verification authority. The
 first four layers contain independently installable packs. The fifth contains
@@ -75,8 +75,8 @@ Finalization hashes project evidence and records provenance only after Core
 verification. `diff` and `upgrade` compare recorded ancestry with current code
 so project customization is not treated as disposable generated output.
 
-For a composition, use `aiba add vehicle-management --solution`, then
-`aiba status vehicle-management` and `aiba continue vehicle-management`. AIBA
+For a composition, use `aiba add secure-workspace --solution`, then
+`aiba status secure-workspace` and `aiba continue secure-workspace`. AIBA
 advances one capability at a time in dependency order.
 
 ## Selection And Composition

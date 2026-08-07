@@ -9,7 +9,7 @@ installation:
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/organization.yaml
-  planSha256: 80d090c31d780df610b4a552e4dfd113080ff55a7b7ae7b66329ecaaf2236ca2
+  planSha256: 27599309ab8cbadcbfa497e8d23511965bfc9cd433e3daaf55fb0668f3a42722
   ancestry: .aiba/ancestry/organization.json
   ancestrySha256: 05f405ca8b2d964d18f23d34a32945919afcbef06cc61dbb69baa78277deed44
 invariants:

@@ -1,14 +1,14 @@
 apiVersion: aiba.dev/v0alpha1
 kind: CapabilitySolution
 metadata:
-  id: vehicle-management
+  id: secure-workspace
   version: 0.1.0
-  title: Vehicle Management
+  title: Secure Workspace
   description: >-
-    A security-first vehicle administration composition with identity, users,
-    authorization, audit, notifications, private files,
-    import/export, and controlled vehicle records.
-  layer: industry-solution
+    A domain-neutral foundation for authenticated, authorized, auditable
+    applications with user lifecycle, notifications, private files, and
+    bounded data exchange.
+  layer: application-solution
 spec:
   capabilities:
     - id: audit
@@ -18,28 +18,24 @@ spec:
     - id: identity
       version: 0.1.0
       manifestSha256: 683b7789a650ca13493854fe552bf8120535491fea125d84f5ca172da38a362a
-      purpose: Authenticate operators and produce trusted principals.
+      purpose: Authenticate actors and produce trusted principals.
     - id: authorization
       version: 0.1.0
       manifestSha256: ab62dc64cff64a95f6cecde994fc8d1c8480d96db08d3c1aae9506bc21286b43
-      purpose: Enforce tenant-scoped permissions for every protected operation.
+      purpose: Enforce tenant-scoped permissions for protected operations.
     - id: users
       version: 0.1.0
       manifestSha256: e824c50cd80f86ba48116a4d09281a65386658d146859e89ad7c56f53e6b26fb
-      purpose: Manage operator lifecycle without weakening identity boundaries.
+      purpose: Manage actor lifecycle without weakening identity boundaries.
     - id: notification
       version: 0.2.0
       manifestSha256: 3f148b85199870ada652dc01f24b42f53969464d0d3180c3e4d32b25ab84e23b
-      purpose: Deliver controlled vehicle and account workflow messages.
+      purpose: Deliver controlled application and account workflow messages.
     - id: file-assets
       version: 0.1.0
       manifestSha256: 29176ec35d328b6e5fe03f9528926a035859305944dc7e5a511e6138b38d7565
-      purpose: Protect vehicle documents and imported or exported files.
+      purpose: Protect private application documents and generated files.
     - id: import-export
       version: 0.1.0
       manifestSha256: f6ffb522daa1e4805aec3c0ec2c47626c8b28eb3cf09b83686505e9076642f6e
-      purpose: Exchange bounded, policy-filtered vehicle data safely.
-    - id: vehicle-records
-      version: 0.1.0
-      manifestSha256: 752e5d3507fc028244ee5c15f14afdc50238fc0c2f77fc40797d63a0ec16e741
-      purpose: Manage tenant-scoped vehicle identity, status, mileage, and concurrency.
+      purpose: Exchange bounded, policy-filtered application data safely.

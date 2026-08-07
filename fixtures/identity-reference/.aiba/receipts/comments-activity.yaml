@@ -9,9 +9,9 @@ installation:
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/comments-activity.yaml
-  planSha256: 5ae2711fbc5f3a4552c82d3fd27ebb137f560ec00103d560bcd4e6bdb93867ca
+  planSha256: b1072448c9858d8451bc1e1be37e2d4339c2a36a7d1d14c159befaeba44f17a1
   ancestry: .aiba/ancestry/comments-activity.json
-  ancestrySha256: b635369b5258e3fdb59bfafd5ba9fc1a4c03cc4faac81d5efaf4bae286faaf31
+  ancestrySha256: 80749426d028a6c95594afd3ca4b7b9233f2d5d716a3a04b85db00fe29cd3bc8
 invariants:
   - id: authorship-and-scope-are-trusted
     evidence:
@@ -22,7 +22,7 @@ invariants:
       - type: test
         path: src/comments-activity.test.ts
         ownership: shared
-        sha256: e8ce04797b1cbfecaf1d0c53ea282d1c754580e692c2e11db81e1b6fb7d4e690
+        sha256: 4b35246c9caa68cb755a50c9f5211b37a842f977c2ceffdfbd0d75a334047d63
   - id: content-and-mentions-are-bounded
     evidence:
       - type: source
@@ -32,7 +32,7 @@ invariants:
       - type: test
         path: src/comments-activity.test.ts
         ownership: shared
-        sha256: e8ce04797b1cbfecaf1d0c53ea282d1c754580e692c2e11db81e1b6fb7d4e690
+        sha256: 4b35246c9caa68cb755a50c9f5211b37a842f977c2ceffdfbd0d75a334047d63
   - id: comment-mutations-are-safe
     evidence:
       - type: source
@@ -42,7 +42,7 @@ invariants:
       - type: test
         path: src/comments-activity.test.ts
         ownership: shared
-        sha256: e8ce04797b1cbfecaf1d0c53ea282d1c754580e692c2e11db81e1b6fb7d4e690
+        sha256: 4b35246c9caa68cb755a50c9f5211b37a842f977c2ceffdfbd0d75a334047d63
   - id: activity-is-append-only
     evidence:
       - type: source
@@ -52,7 +52,7 @@ invariants:
       - type: test
         path: src/comments-activity.test.ts
         ownership: shared
-        sha256: e8ce04797b1cbfecaf1d0c53ea282d1c754580e692c2e11db81e1b6fb7d4e690
+        sha256: 4b35246c9caa68cb755a50c9f5211b37a842f977c2ceffdfbd0d75a334047d63
   - id: activity-is-tenant-scoped
     evidence:
       - type: source
@@ -62,4 +62,4 @@ invariants:
       - type: test
         path: src/comments-activity.test.ts
         ownership: shared
-        sha256: e8ce04797b1cbfecaf1d0c53ea282d1c754580e692c2e11db81e1b6fb7d4e690
+        sha256: 4b35246c9caa68cb755a50c9f5211b37a842f977c2ceffdfbd0d75a334047d63

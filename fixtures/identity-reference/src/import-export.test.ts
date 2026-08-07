@@ -106,15 +106,15 @@ function createFixture(options: {
     contentType: "text/csv",
     sizeBytes: 128,
     rows: [
-      { vehicleId: "vehicle-1", mileage: 1200, active: true },
-      { vehicleId: "vehicle-2", mileage: 800, active: false },
+      { taskId: "task-1", mileage: 1200, active: true },
+      { taskId: "task-2", mileage: 800, active: false },
     ],
   };
   const exportRows: ExportRow[] = [
     {
       tenantId: "tenant-a",
       values: {
-        vehicleId: "vehicle-1",
+        taskId: "task-1",
         owner: "=HYPERLINK(\"https://attacker.example\")",
         internalSecret: "never-export",
       },
@@ -154,11 +154,11 @@ function createFixture(options: {
         maxSourceBytes: 1024,
         maxRows: 2,
         fields: [
-          { name: "vehicleId", type: "string", required: true, maxLength: 32 },
+          { name: "taskId", type: "string", required: true, maxLength: 32 },
           { name: "mileage", type: "integer", required: true },
           { name: "active", type: "boolean", required: true },
         ],
-        uniqueKey: "vehicleId",
+        uniqueKey: "taskId",
       }),
       loadExport: async (_tenantId, profileId) => ({
         id: profileId,
@@ -167,7 +167,7 @@ function createFixture(options: {
         maxRows: 2,
         maxCellLength: 100,
         fields: [
-          { name: "vehicleId", heading: "Vehicle ID" },
+          { name: "taskId", heading: "Task ID" },
           { name: "owner", heading: "Owner" },
         ],
       }),
@@ -190,12 +190,12 @@ function createFixture(options: {
   const principal: Principal = { type: "user", subject: "user-42", tenantId: "tenant-a" };
   const context = { principal, correlationId: "request-exchange-0001" };
   const importCommand: DataImportCommand = {
-    profileId: "vehicle-import",
+    profileId: "task-import",
     sourceAssetId: source.assetId,
     idempotencyKey: "import-request-0001",
   };
   const exportCommand: DataExportCommand = {
-    profileId: "vehicle-export",
+    profileId: "task-export",
     idempotencyKey: "export-request-0001",
   };
   return {
@@ -234,7 +234,7 @@ describe("import export reference boundary", () => {
       tenantId: "tenant-a",
     });
     const provenance = JSON.stringify({ result, events: fixture.auditStore.events });
-    expect(provenance).not.toContain("vehicle-1");
+    expect(provenance).not.toContain("task-1");
     expect(provenance).not.toContain("mileage");
   });
 
@@ -293,7 +293,7 @@ describe("import export reference boundary", () => {
       .rejects.toMatchObject({ code: "limit-exceeded" });
 
     const tooMany = createFixture();
-    tooMany.source.rows.push({ vehicleId: "vehicle-3", mileage: 1, active: true });
+    tooMany.source.rows.push({ taskId: "task-3", mileage: 1, active: true });
     await expect(tooMany.service.runImport(tooMany.context, tooMany.importCommand))
       .rejects.toMatchObject({ code: "limit-exceeded" });
 
@@ -303,12 +303,12 @@ describe("import export reference boundary", () => {
       .rejects.toMatchObject({ code: "validation-failed" });
 
     const wrongType = createFixture();
-    wrongType.source.rows[0] = { vehicleId: "vehicle-1", mileage: "1200", active: true };
+    wrongType.source.rows[0] = { taskId: "task-1", mileage: "1200", active: true };
     await expect(wrongType.service.runImport(wrongType.context, wrongType.importCommand))
       .rejects.toMatchObject({ code: "validation-failed" });
 
     const duplicate = createFixture();
-    duplicate.source.rows[1] = { vehicleId: "vehicle-1", mileage: 800, active: false };
+    duplicate.source.rows[1] = { taskId: "task-1", mileage: 800, active: false };
     await expect(duplicate.service.runImport(duplicate.context, duplicate.importCommand))
       .rejects.toMatchObject({ code: "validation-failed" });
     expect([
@@ -354,8 +354,8 @@ describe("import export reference boundary", () => {
     const output = new TextDecoder().decode(
       fixture.exportResults.outputs.get("asset-export-00001"),
     );
-    expect(output).toContain('"Vehicle ID","Owner"');
-    expect(output).toContain('"vehicle-1","\'=HYPERLINK(""https://attacker.example"")"');
+    expect(output).toContain('"Task ID","Owner"');
+    expect(output).toContain('"task-1","\'=HYPERLINK(""https://attacker.example"")"');
     expect(output).not.toContain("never-export");
     const provenance = JSON.stringify({ result, events: fixture.auditStore.events });
     expect(provenance).not.toContain("HYPERLINK");
@@ -366,7 +366,7 @@ describe("import export reference boundary", () => {
     const crossTenant = createFixture();
     crossTenant.exportRows[0] = {
       tenantId: "tenant-b",
-      values: { vehicleId: "vehicle-1", owner: "Other" },
+      values: { taskId: "task-1", owner: "Other" },
     };
     await expect(crossTenant.service.runExport(crossTenant.context, crossTenant.exportCommand))
       .rejects.toMatchObject({ code: "operation-failed" });
@@ -374,8 +374,8 @@ describe("import export reference boundary", () => {
 
     const oversized = createFixture();
     oversized.exportRows.push(
-      { tenantId: "tenant-a", values: { vehicleId: "vehicle-2", owner: "Owner 2" } },
-      { tenantId: "tenant-a", values: { vehicleId: "vehicle-3", owner: "Owner 3" } },
+      { tenantId: "tenant-a", values: { taskId: "task-2", owner: "Owner 2" } },
+      { tenantId: "tenant-a", values: { taskId: "task-3", owner: "Owner 3" } },
     );
     await expect(oversized.service.runExport(oversized.context, oversized.exportCommand))
       .rejects.toMatchObject({ code: "limit-exceeded" });

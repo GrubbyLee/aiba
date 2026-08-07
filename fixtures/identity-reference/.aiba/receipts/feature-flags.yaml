@@ -9,9 +9,9 @@ installation:
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/feature-flags.yaml
-  planSha256: 95bfe81db519b46eccef4e8595db75e85f09810e04e0200b17f96c90429a5d71
+  planSha256: a5adcbde95472ac547568a68de430bc221b27c33ede11fde012e9edfd66c67bd
   ancestry: .aiba/ancestry/feature-flags.json
-  ancestrySha256: 56da331133a5561d1da94dc757ded40317a74790282bb5b7745ba05d67cbc275
+  ancestrySha256: a7b99702cbd18db3d0a1aa719c46e55495691612b597acc672a61e35cfe6c222
 invariants:
   - id: context-is-trusted
     evidence:
@@ -22,7 +22,7 @@ invariants:
       - type: test
         path: src/feature-flags.test.ts
         ownership: shared
-        sha256: bae3377d240fad5483e45a924c3a18c8ccbe4c46aa3c6661752f55d414e00a7a
+        sha256: 75ee737b32865ec8144afe1a3727638e3c63738244400c6a88092ef3ff00198e
   - id: policy-is-revisioned
     evidence:
       - type: source
@@ -32,7 +32,7 @@ invariants:
       - type: test
         path: src/feature-flags.test.ts
         ownership: shared
-        sha256: bae3377d240fad5483e45a924c3a18c8ccbe4c46aa3c6661752f55d414e00a7a
+        sha256: 75ee737b32865ec8144afe1a3727638e3c63738244400c6a88092ef3ff00198e
   - id: rollout-is-deterministic
     evidence:
       - type: source
@@ -42,7 +42,7 @@ invariants:
       - type: test
         path: src/feature-flags.test.ts
         ownership: shared
-        sha256: bae3377d240fad5483e45a924c3a18c8ccbe4c46aa3c6661752f55d414e00a7a
+        sha256: 75ee737b32865ec8144afe1a3727638e3c63738244400c6a88092ef3ff00198e
   - id: allocation-is-bounded
     evidence:
       - type: source
@@ -52,7 +52,7 @@ invariants:
       - type: test
         path: src/feature-flags.test.ts
         ownership: shared
-        sha256: bae3377d240fad5483e45a924c3a18c8ccbe4c46aa3c6661752f55d414e00a7a
+        sha256: 75ee737b32865ec8144afe1a3727638e3c63738244400c6a88092ef3ff00198e
   - id: evaluation-is-minimized
     evidence:
       - type: source
@@ -62,4 +62,4 @@ invariants:
       - type: test
         path: src/feature-flags.test.ts
         ownership: shared
-        sha256: bae3377d240fad5483e45a924c3a18c8ccbe4c46aa3c6661752f55d414e00a7a
+        sha256: 75ee737b32865ec8144afe1a3727638e3c63738244400c6a88092ef3ff00198e

@@ -8,8 +8,8 @@ const enBundle: I18nLocaleBundle = {
       messages: { "cancel": "Cancel", "save": "Save" },
       plurals: {},
     },
-    vehicle: {
-      messages: { "title": "Vehicles", "greeting": "Hello, {{name}}!" },
+    task: {
+      messages: { "title": "Tasks", "greeting": "Hello, {{name}}!" },
       plurals: {
         "car-count": { one: "{{count}} car", other: "{{count}} cars" },
       },
@@ -21,8 +21,8 @@ const zhBundle: I18nLocaleBundle = {
   locale: "zh",
   namespaces: {
     common: { messages: { "cancel": "取消", "save": "保存" }, plurals: {} },
-    vehicle: {
-      messages: { "title": "车辆管理" },
+    task: {
+      messages: { "title": "工作管理" },
       plurals: {
         "car-count": { other: "{{count}} 辆车" },
       },
@@ -60,9 +60,9 @@ describe("i18n reference boundary", () => {
   it("translates namespace keys with exact match", async () => {
     const svc = makeService();
     const ctx = { tenantId: "t1", preferredLocale: "en", tenantDefaultLocale: "en", sourceLocale: "en" };
-    const result = await svc.translate(ctx, { keys: [{ key: "vehicle:title" }] });
+    const result = await svc.translate(ctx, { keys: [{ key: "task:title" }] });
     expect(result.locale).toBe("en");
-    expect(result.translations[0]).toMatchObject({ key: "vehicle:title", value: "Vehicles", source: "exact" });
+    expect(result.translations[0]).toMatchObject({ key: "task:title", value: "Tasks", source: "exact" });
   });
 
   it("falls back to common namespace then source locale then default", async () => {
@@ -70,8 +70,8 @@ describe("i18n reference boundary", () => {
     const ctx = { tenantId: "t1", preferredLocale: "zh", tenantDefaultLocale: "en", sourceLocale: "en" };
     const result = await svc.translate(ctx, {
       keys: [
-        { key: "vehicle:cancel" },
-        { key: "vehicle:greeting", params: { name: "World" } },
+        { key: "task:cancel" },
+        { key: "task:greeting", params: { name: "World" } },
         { key: "nonexistent:key", fallback: "Fallback" },
       ],
     });
@@ -87,9 +87,9 @@ describe("i18n reference boundary", () => {
     const svc = makeService();
     const enCtx = { tenantId: "t1", preferredLocale: "en", tenantDefaultLocale: "en", sourceLocale: "en" };
     const zhCtx = { tenantId: "t1", preferredLocale: "zh", tenantDefaultLocale: "en", sourceLocale: "en" };
-    const en1 = await svc.translate(enCtx, { keys: [{ key: "vehicle:car-count", count: 1 }] });
-    const enN = await svc.translate(enCtx, { keys: [{ key: "vehicle:car-count", count: 5 }] });
-    const zhN = await svc.translate(zhCtx, { keys: [{ key: "vehicle:car-count", count: 3 }] });
+    const en1 = await svc.translate(enCtx, { keys: [{ key: "task:car-count", count: 1 }] });
+    const enN = await svc.translate(enCtx, { keys: [{ key: "task:car-count", count: 5 }] });
+    const zhN = await svc.translate(zhCtx, { keys: [{ key: "task:car-count", count: 3 }] });
     expect(en1.translations[0]!.value).toBe("1 car");
     expect(en1.translations[0]!.pluralForm).toBe("one");
     expect(enN.translations[0]!.value).toBe("5 cars");
@@ -102,7 +102,7 @@ describe("i18n reference boundary", () => {
     const svc = makeService();
     const ctx = { tenantId: "t1", preferredLocale: "en", tenantDefaultLocale: "en", sourceLocale: "en" };
     const result = await svc.translate(ctx, {
-      keys: [{ key: "vehicle:greeting", params: { name: "<script>alert(1)</script>" } }],
+      keys: [{ key: "task:greeting", params: { name: "<script>alert(1)</script>" } }],
     });
     expect(result.translations[0]!.value).not.toContain("<script>");
     expect(result.translations[0]!.value).toContain("&lt;script&gt;");

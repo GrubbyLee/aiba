@@ -13,7 +13,7 @@
   "files": [
     {
       "path": "src/workflow-approval.test.ts",
-      "installedSha256": "ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f",
+      "installedSha256": "2397b8464ac091682bcc9debd7e3a152d630ec79049ba89c310dd18085286f28",
       "ownership": "shared",
       "evidenceTypes": [
         "test"

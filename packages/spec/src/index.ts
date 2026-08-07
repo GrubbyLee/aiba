@@ -10,6 +10,7 @@ export type CapabilityLayer =
   | "platform-integration"
   | "business-capability"
   | "engineering-governance"
+  | "application-solution"
   | "industry-solution";
 
 export type PrincipalType = "user" | "service" | "reviewer" | "anonymous";
@@ -615,38 +616,6 @@ export interface ImportExportJobRecord {
   completedAt: string;
 }
 
-export interface VehicleCreateCommand {
-  fleetNumber: string;
-  plateNumber: string;
-  vin?: string;
-  make: string;
-  model: string;
-  year: number;
-  idempotencyKey: string;
-}
-
-export interface VehicleUpdateCommand {
-  vehicleId: string;
-  expectedRevision: number;
-  status?: "active" | "inactive" | "retired";
-  mileageKm?: number;
-}
-
-export interface VehicleRecord {
-  vehicleId: string;
-  fleetNumber: string;
-  plateNumber: string;
-  vin?: string;
-  make: string;
-  model: string;
-  year: number;
-  status: "active" | "inactive" | "retired";
-  mileageKm: number;
-  revision: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface WechatMiniProgramLoginCommand {
   code: string;
 }
@@ -708,7 +677,7 @@ export interface CapabilitySolution {
     version: string;
     title: string;
     description: string;
-    layer: "industry-solution";
+    layer: "application-solution" | "industry-solution";
   };
   spec: {
     capabilities: Array<{
@@ -1338,9 +1307,6 @@ export type InterfaceSchemaName =
   | "tag-record.schema.json"
   | "webhook-delivery-command.schema.json"
   | "webhook-delivery-record.schema.json"
-  | "vehicle-create-command.schema.json"
-  | "vehicle-record.schema.json"
-  | "vehicle-update-command.schema.json"
   | "verification-challenge-issue-command.schema.json"
   | "verification-challenge-record.schema.json"
   | "verification-challenge-verify-command.schema.json"

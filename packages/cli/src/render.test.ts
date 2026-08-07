@@ -23,41 +23,41 @@ describe("catalog rendering", () => {
       }],
       solutions: [{
         kind: "solution",
-        id: "vehicle-management",
+        id: "secure-workspace",
         version: "0.1.0",
-        title: "Vehicle Management",
-        description: "Vehicle administration.",
-        layer: "industry-solution",
-        capabilities: ["audit@0.1.0", "vehicle-records@0.1.0"],
+        title: "Secure Workspace",
+        description: "Secure application workspace.",
+        layer: "application-solution",
+        capabilities: ["audit@0.1.0", "authorization@0.1.0"],
       }],
     });
     expect(output).toContain("platform-integration:");
     expect(output).toContain("9 invariants; requires identity@^0.1.0, audit@^0.1.0");
-    expect(output).toContain("vehicle-management@0.1.0");
+    expect(output).toContain("secure-workspace@0.1.0");
   });
 
   it("renders actionable capability details", () => {
     const output = renderCatalogItem({
       kind: "capability",
-      id: "vehicle-records",
+      id: "import-export",
       version: "0.1.0",
-      title: "Vehicle Records",
-      description: "Vehicle lifecycle records.",
+      title: "Import And Export",
+      description: "Bounded data exchange.",
       layer: "business-capability",
       dependencies: ["authorization@^0.1.0"],
       invariants: 1,
-      interfaces: ["vehicle-records.record"],
+      interfaces: ["import-export.job-record"],
       dependencyDetails: [{ id: "authorization", version: "^0.1.0", optional: false }],
       invariantDetails: [{
-        id: "updates-use-optimistic-concurrency",
-        title: "Updates use optimistic concurrency",
-        description: "Reject stale writes.",
+        id: "profiles-are-server-owned",
+        title: "Profiles are server owned",
+        description: "Reject caller-selected execution profiles.",
         severity: "critical",
       }],
     });
-    expect(output).toContain("Interfaces: vehicle-records.record");
+    expect(output).toContain("Interfaces: import-export.job-record");
     expect(output).toContain("authorization@^0.1.0");
-    expect(output).toContain("[critical] updates-use-optimistic-concurrency");
+    expect(output).toContain("[critical] profiles-are-server-owned");
   });
 });
 
@@ -117,28 +117,28 @@ describe("renderSolutionCheck", () => {
     const output = renderSolutionCheck({
       ok: false,
       scope: "evidence-and-provenance",
-      solution: { id: "vehicle-management", version: "0.1.0", title: "Vehicle Management" },
+      solution: { id: "secure-workspace", version: "0.1.0", title: "Secure Workspace" },
       projectRoot: "/project",
-      installationOrder: ["audit", "vehicle-records"],
-      missingCapabilities: ["vehicle-records"],
+      installationOrder: ["audit", "authorization"],
+      missingCapabilities: ["authorization"],
       capabilities: [{
-        id: "vehicle-records",
+        id: "authorization",
         version: "0.1.0",
-        purpose: "Manage vehicle records",
+        purpose: "Enforce access decisions",
         installed: false,
         verified: false,
         issues: [{
           level: "error",
           code: "SOLUTION_CAPABILITY_NOT_INSTALLED",
-          message: "Project does not install vehicle-records@0.1.0",
-          capability: "vehicle-records",
+          message: "Project does not install authorization@0.1.0",
+          capability: "authorization",
         }],
       }],
     });
     expect(output).toContain("Solution evidence and provenance verification failed.");
-    expect(output).toContain("audit -> vehicle-records");
-    expect(output).toContain("Missing capabilities: vehicle-records");
-    expect(output).toContain("FAIL vehicle-records@0.1.0");
+    expect(output).toContain("audit -> authorization");
+    expect(output).toContain("Missing capabilities: authorization");
+    expect(output).toContain("FAIL authorization@0.1.0");
   });
 });
 
@@ -146,7 +146,7 @@ describe("renderSolutionInstall", () => {
   it("renders the current step and an actionable finalization command", () => {
     const output = renderSolutionInstall({
       status: "prepared",
-      solution: { id: "vehicle-management", version: "0.1.0", title: "Vehicle Management" },
+      solution: { id: "secure-workspace", version: "0.1.0", title: "Secure Workspace" },
       projectRoot: "/project",
       packsDirectory: "/catalog/capabilities",
       solutionsDirectory: "/catalog/solutions",
@@ -159,7 +159,7 @@ describe("renderSolutionInstall", () => {
     expect(output).toContain("Progress: 2/8");
     expect(output).toContain("Prepared 3/8: authorization@0.1.0");
     expect(output).toContain(
-      "aiba add vehicle-management --solution --root /project"
+      "aiba add secure-workspace --solution --root /project"
       + " --packs-dir /catalog/capabilities --solutions-dir /catalog/solutions --finalize",
     );
   });
@@ -167,7 +167,7 @@ describe("renderSolutionInstall", () => {
   it("renders the next preparation command after one constituent is finalized", () => {
     const output = renderSolutionInstall({
       status: "finalized",
-      solution: { id: "vehicle-management", version: "0.1.0", title: "Vehicle Management" },
+      solution: { id: "secure-workspace", version: "0.1.0", title: "Secure Workspace" },
       projectRoot: "/project",
       packsDirectory: "/catalog/capabilities",
       solutionsDirectory: "/catalog/solutions",
@@ -184,7 +184,7 @@ describe("renderSolutionInstall", () => {
     });
     expect(output).toContain("Installed 1/8: audit@0.1.0");
     expect(output).toContain(
-      "Next: aiba add vehicle-management --solution --root /project"
+      "Next: aiba add secure-workspace --solution --root /project"
       + " --packs-dir /catalog/capabilities --solutions-dir /catalog/solutions",
     );
   });
@@ -192,7 +192,7 @@ describe("renderSolutionInstall", () => {
   it("quotes paths in generated commands", () => {
     const output = renderSolutionInstall({
       status: "awaiting-finalization",
-      solution: { id: "vehicle-management", version: "0.1.0", title: "Vehicle Management" },
+      solution: { id: "secure-workspace", version: "0.1.0", title: "Secure Workspace" },
       projectRoot: "/project with space/team's app",
       packsDirectory: "/catalog/capabilities",
       solutionsDirectory: "/catalog/solutions",

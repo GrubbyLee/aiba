@@ -9,7 +9,7 @@ installation:
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/verification-challenge.yaml
-  planSha256: 5f8ba3dc14092c3ff51d0c516377b0697f4ec220f564a4d3fc75d8dd09c53fcb
+  planSha256: 5b447839cbeefa1350d5f9e80ccfc5976522aa7bbcd40c0a9d1fc268825c54ee
   ancestry: .aiba/ancestry/verification-challenge.json
   ancestrySha256: d6954b03bc4cb2da9182f5b36e9608bf49d8e573d7fbbf86cd25ea55dc240b5a
 invariants:

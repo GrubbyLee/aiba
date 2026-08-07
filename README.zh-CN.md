@@ -23,16 +23,15 @@
 AIBA 是一套面向 AI Agent 的应用构建基础设施。它帮助 Agent 为项目添加、验证、
 追踪和升级完整的软件能力，同时不把项目锁定在固定的应用框架、服务商或视觉体系中。
 
-官方目录现有 24 项能力，覆盖身份、访问、验证、文件、通知、站内信、任务、功能开关、
-国际化、数据字典、动态表单、标签、组织、Webhook、评论、搜索、导入导出、报表、审批和
-领域记录。能力按五层组织：应用基础能力、
-平台集成能力、业务通用能力、工程治理能力和行业组合方案。AIBA
+官方目录现有 23 项能力，覆盖身份、访问、验证、文件、通知、站内信、任务、功能开关、
+国际化、数据字典、动态表单、标签、组织、Webhook、评论、搜索、导入导出、报表和审批。
+能力按五层组织：应用基础能力、平台集成能力、业务通用能力、工程治理能力和应用组合方案。AIBA
 目前支持 Agent 辅助安装、确定性的证据与来源验证、漂移检查、感知定制的升级、签名能力包、
 私有 Registry 认证下载、验证缓存和防回滚解析。可选的项目治理机制还能为安装和
 升级的最终确认增加带签名、绑定证据的团队审批。
 
-[在线观看车辆管理后台演示](https://grubbylee.github.io/aiba/video/)，了解 AIBA 和 Codex 如何从空目录
-开始，完成一个可操作、可独立验证的管理后台。
+[在线观看外部车辆管理示例](https://grubbylee.github.io/aiba/video/)，了解 AIBA 和 Codex 如何从空目录
+开始，完成一个可操作、可独立验证的管理后台。示例业务领域并未内置到 AIBA 中。
 
 [从十分钟快速上手开始](docs/QUICKSTART.zh-CN.md)，在全新项目中验证 npm CLI，并把
 第一个有边界的计划交给 Agent。
@@ -77,11 +76,11 @@ node packages/cli/dist/index.js upgrade review-access --finalize \
 node packages/cli/dist/index.js verify review-access \
   --root fixtures/review-access-reference \
   --packs-dir capabilities
-node packages/cli/dist/index.js compose vehicle-management \
+node packages/cli/dist/index.js compose secure-workspace \
   --root fixtures/identity-reference --packs-dir capabilities
-node packages/cli/dist/index.js add vehicle-management --solution \
+node packages/cli/dist/index.js add secure-workspace --solution \
   --root /path/to/project
-node packages/cli/dist/index.js add vehicle-management --solution --finalize \
+node packages/cli/dist/index.js add secure-workspace --solution --finalize \
   --agent codex --root /path/to/project
 node packages/cli/dist/index.js add wechat-miniprogram-auth \
   --root /path/to/project
@@ -124,12 +123,12 @@ npm install --global @grubbylee/aiba
 aiba list
 aiba show identity
 aiba init
-aiba add vehicle-management --solution
+aiba add secure-workspace --solution
 aiba inspect
-aiba compose vehicle-management
+aiba compose secure-workspace
 ```
 
-作用域包同样会安装 `aiba` 可执行命令。npm 发行包包含官方能力包和行业组合方案。作为库使用时，
+作用域包同样会安装 `aiba` 可执行命令。npm 发行包包含官方能力包和应用组合方案。作为库使用时，
 也可以分别安装 `aiba-core`、`aiba-spec` 或 `aiba-registry-server`。
 
 ## 工作方式
@@ -139,11 +138,11 @@ aiba compose vehicle-management
 ```bash
 aiba init
 aiba list
-aiba show vehicle-management
-aiba add vehicle-management --solution
+aiba show secure-workspace
+aiba add secure-workspace --solution
 aiba inspect
 aiba verify
-aiba compose vehicle-management
+aiba compose secure-workspace
 ```
 
 完整的 M3 安全基座需要依次安装并适配 `identity`、`audit`、`authorization`、

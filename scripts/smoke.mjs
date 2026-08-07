@@ -53,7 +53,6 @@ for (const shell of ["bash", "zsh", "fish"]) {
   }
 }
 run("list verified catalog", ["list", "--json"], 0);
-run("show verified capability", ["show", "vehicle-records", "--json"], 0);
 for (const capability of [
   "verification-challenge", "scheduled-jobs", "webhooks", "feature-flags",
   "organization", "comments-activity", "search", "reporting", "workflow-approval",
@@ -61,7 +60,7 @@ for (const capability of [
 ]) {
   run(`show ${capability} capability`, ["show", capability, "--json"], 0);
 }
-run("show verified solution", ["show", "vehicle-management", "--json"], 0);
+run("show verified solution", ["show", "secure-workspace", "--json"], 0);
 
 const authoringFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-authoring-"));
 run("create capability scaffold", [
@@ -89,7 +88,7 @@ const bundleFixture = mkdtempSync(join(tmpdir(), "aiba-smoke-bundle-"));
 const keyDirectory = join(bundleFixture, "keys");
 const bundleDirectory = join(bundleFixture, "identity-bundle");
 const trustPolicyPath = join(bundleFixture, "trust-policy.json");
-const solutionEnvelopePath = join(bundleFixture, "vehicle-management.signed.json");
+const solutionEnvelopePath = join(bundleFixture, "secure-workspace.signed.json");
 const solutionTrustPath = join(bundleFixture, "solution-trust.json");
 const solutionStatePath = join(bundleFixture, "solution-state.json");
 const registryDirectory = join(bundleFixture, "registry");
@@ -112,7 +111,7 @@ run("publisher keygen", [
 const solutionExpiry = new Date(Date.now() + 60 * 60 * 1000).toISOString();
 run("sign exact Solution", [
   "solution-sign",
-  join(workspace, "solutions", "vehicle-management"),
+  join(workspace, "solutions", "secure-workspace"),
   "--publisher", "aiba-official",
   "--key-id", "root-1",
   "--private-key", join(keyDirectory, "private.pem"),
@@ -130,12 +129,12 @@ writeFileSync(solutionTrustPath, `${JSON.stringify({
     keyId: "root-1",
     algorithm: "Ed25519",
     publicKey: readFileSync(join(keyDirectory, "public.pem"), "utf8"),
-    solutions: ["vehicle-management"],
+    solutions: ["secure-workspace"],
   }],
 }, null, 2)}\n`);
 run("verify signed Solution", [
   "solution-verify",
-  join(workspace, "solutions", "vehicle-management"),
+  join(workspace, "solutions", "secure-workspace"),
   "--envelope", solutionEnvelopePath,
   "--trust", solutionTrustPath,
   "--state", solutionStatePath,
@@ -368,7 +367,7 @@ run("solution doctor", [
 ], 0);
 run("solution status ready", [
   "status",
-  "vehicle-management",
+  "secure-workspace",
   "--root",
   solutionFixture,
   "--packs-dir",
@@ -378,7 +377,7 @@ run("solution status ready", [
   "--json",
 ], 0);
 const solutionArguments = [
-  "vehicle-management",
+  "secure-workspace",
   "--solution",
   "--root",
   solutionFixture,
@@ -390,7 +389,7 @@ const solutionArguments = [
 ];
 run("solution prepare first constituent", [
   "continue",
-  "vehicle-management",
+  "secure-workspace",
   "--root",
   solutionFixture,
   "--packs-dir",
@@ -401,7 +400,7 @@ run("solution prepare first constituent", [
 ], 0);
 run("solution status awaiting Agent", [
   "status",
-  "vehicle-management",
+  "secure-workspace",
   "--root",
   solutionFixture,
   "--packs-dir",
@@ -422,7 +421,7 @@ for (const invariant of solutionPlan.evidence) {
 writeFileSync(solutionPlanPath, stringify(solutionPlan));
 run("solution finalize first constituent", [
   "continue",
-  "vehicle-management",
+  "secure-workspace",
   "--root",
   solutionFixture,
   "--packs-dir",
@@ -656,9 +655,9 @@ run("verify core capabilities fixture", [
   "--packs-dir",
   "capabilities",
 ], 0);
-run("verify vehicle management solution", [
+run("verify secure workspace solution", [
   "compose",
-  "vehicle-management",
+  "secure-workspace",
   "--root",
   "fixtures/identity-reference",
   "--packs-dir",

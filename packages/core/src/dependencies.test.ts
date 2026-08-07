@@ -95,22 +95,6 @@ describe("core capability dependencies", () => {
     ]), importExport)).not.toThrow();
   });
 
-  it("requires authorization and audit before vehicle records", async () => {
-    const vehicleRecords = await loadCapabilityManifest(
-      join(workspace, "capabilities"),
-      "vehicle-records",
-    );
-    expect(() => assertDependenciesInstalled(project([
-      { id: "authorization", version: "0.1.0" },
-    ]), vehicleRecords)).toThrowError(expect.objectContaining({
-      code: "CAPABILITY_DEPENDENCY_UNSATISFIED",
-    }));
-    expect(() => assertDependenciesInstalled(project([
-      { id: "audit", version: "0.1.0" },
-      { id: "authorization", version: "0.1.0" },
-    ]), vehicleRecords)).not.toThrow();
-  });
-
   it("classifies every official capability in the five-layer catalog", async () => {
     const expected = new Map([
       ["audit", "engineering-governance"],
@@ -132,7 +116,6 @@ describe("core capability dependencies", () => {
       ["search", "application-foundation"],
       ["tags", "business-capability"],
       ["users", "application-foundation"],
-      ["vehicle-records", "business-capability"],
       ["verification-challenge", "application-foundation"],
       ["webhooks", "platform-integration"],
       ["wechat-miniprogram-auth", "platform-integration"],

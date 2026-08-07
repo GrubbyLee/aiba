@@ -9,9 +9,9 @@ installation:
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/tags.yaml
-  planSha256: bdd699fec79aff023e35fbbdce13bb186eb37e170657814885c52f43d35847f0
+  planSha256: 5b1caf054b841c292242a300a669dd87668f891aace961dfb2815820f5c93d08
   ancestry: .aiba/ancestry/tags.json
-  ancestrySha256: e106d8c0dbf1cc28517bb1652b27e39aa1a5a52a7e562056bd8b1461c0f24f83
+  ancestrySha256: af08b9ef9ad640ca187fd94fb6ce7583b554cef6d5b02307aa0f7c1ed84a3779
 invariants:
   - id: tag-scope-is-context-derived
     evidence:
@@ -22,7 +22,7 @@ invariants:
       - type: test
         path: src/tags.test.ts
         ownership: shared
-        sha256: bc1c4baea571a51f4681ae22e9077f09093e396aceadf34188fc193ecb90c507
+        sha256: bd590e78a9d513b5123fa27901b848c2db14322c404e25d16c9f525013f512fb
   - id: tag-operations-are-authorized
     evidence:
       - type: source
@@ -32,7 +32,7 @@ invariants:
       - type: test
         path: src/tags.test.ts
         ownership: shared
-        sha256: bc1c4baea571a51f4681ae22e9077f09093e396aceadf34188fc193ecb90c507
+        sha256: bd590e78a9d513b5123fa27901b848c2db14322c404e25d16c9f525013f512fb
   - id: names-are-normalized-and-unique
     evidence:
       - type: source
@@ -42,7 +42,7 @@ invariants:
       - type: test
         path: src/tags.test.ts
         ownership: shared
-        sha256: bc1c4baea571a51f4681ae22e9077f09093e396aceadf34188fc193ecb90c507
+        sha256: bd590e78a9d513b5123fa27901b848c2db14322c404e25d16c9f525013f512fb
   - id: assignments-are-scoped-and-atomic
     evidence:
       - type: source
@@ -52,7 +52,7 @@ invariants:
       - type: test
         path: src/tags.test.ts
         ownership: shared
-        sha256: bc1c4baea571a51f4681ae22e9077f09093e396aceadf34188fc193ecb90c507
+        sha256: bd590e78a9d513b5123fa27901b848c2db14322c404e25d16c9f525013f512fb
   - id: mutations-are-revisioned-and-idempotent
     evidence:
       - type: source
@@ -62,7 +62,7 @@ invariants:
       - type: test
         path: src/tags.test.ts
         ownership: shared
-        sha256: bc1c4baea571a51f4681ae22e9077f09093e396aceadf34188fc193ecb90c507
+        sha256: bd590e78a9d513b5123fa27901b848c2db14322c404e25d16c9f525013f512fb
   - id: archival-is-safe
     evidence:
       - type: source
@@ -72,7 +72,7 @@ invariants:
       - type: test
         path: src/tags.test.ts
         ownership: shared
-        sha256: bc1c4baea571a51f4681ae22e9077f09093e396aceadf34188fc193ecb90c507
+        sha256: bd590e78a9d513b5123fa27901b848c2db14322c404e25d16c9f525013f512fb
   - id: tag-output-is-bounded-and-minimized
     evidence:
       - type: source
@@ -82,4 +82,4 @@ invariants:
       - type: test
         path: src/tags.test.ts
         ownership: shared
-        sha256: bc1c4baea571a51f4681ae22e9077f09093e396aceadf34188fc193ecb90c507
+        sha256: bd590e78a9d513b5123fa27901b848c2db14322c404e25d16c9f525013f512fb

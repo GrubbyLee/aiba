@@ -57,11 +57,11 @@ software semantics, not a required framework, database, provider, or UI:
    subscriptions, approvals, import/export, content, and inventory.
 4. `engineering-governance`: operational and risk controls such as audit,
    observability, rate limits, data retention, redaction, backup, and compliance.
-5. `industry-solution`: versioned compositions for products such as vehicle
-   management, appointment systems, education administration, and commerce.
+5. `application-solution`: versioned, dependency-ordered capability
+   compositions without built-in business entities.
 
 The first four layers are independently verifiable capability packs. An
-industry solution composes those packs with domain-specific contracts and must
+application solution composes those packs without redefining contracts and must
 not weaken or bypass any constituent invariant.
 
 A feature belongs in the AIBA catalog when it is repeatedly implemented across

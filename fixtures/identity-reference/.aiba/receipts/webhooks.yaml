@@ -9,9 +9,9 @@ installation:
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/webhooks.yaml
-  planSha256: d20ab100c43ce5cca1adac68283da1013fbec42225fffcba471d55e8b5dad709
+  planSha256: 7f17177302da4a9f8b935d9fa7208eb9f11994b29cb4a0aaae7e832ed90dc289
   ancestry: .aiba/ancestry/webhooks.json
-  ancestrySha256: e63140081ebb7fa901c2b0f422c1a96dfce68ea85226c2cc30fdb50b24818d92
+  ancestrySha256: 2e83b5143a8b4c15689182aa04972c6cc9ada7e5de87992c3028685aab1afa31
 invariants:
   - id: destinations-and-secrets-are-trusted
     evidence:
@@ -22,7 +22,7 @@ invariants:
       - type: test
         path: src/webhooks.test.ts
         ownership: shared
-        sha256: a9a9500c4da7fda4b785c635573ea47d702369efeed8a0886accf946bd058d2c
+        sha256: ad50458cdb1f8e5309292c851db24a4ec8188d7af7c3902a76841e8e810407cd
   - id: event-projections-are-server-owned
     evidence:
       - type: source
@@ -32,7 +32,7 @@ invariants:
       - type: test
         path: src/webhooks.test.ts
         ownership: shared
-        sha256: a9a9500c4da7fda4b785c635573ea47d702369efeed8a0886accf946bd058d2c
+        sha256: ad50458cdb1f8e5309292c851db24a4ec8188d7af7c3902a76841e8e810407cd
   - id: deliveries-are-signed-and-fresh
     evidence:
       - type: source
@@ -42,7 +42,7 @@ invariants:
       - type: test
         path: src/webhooks.test.ts
         ownership: shared
-        sha256: a9a9500c4da7fda4b785c635573ea47d702369efeed8a0886accf946bd058d2c
+        sha256: ad50458cdb1f8e5309292c851db24a4ec8188d7af7c3902a76841e8e810407cd
   - id: delivery-is-authorized-and-idempotent
     evidence:
       - type: source
@@ -52,7 +52,7 @@ invariants:
       - type: test
         path: src/webhooks.test.ts
         ownership: shared
-        sha256: a9a9500c4da7fda4b785c635573ea47d702369efeed8a0886accf946bd058d2c
+        sha256: ad50458cdb1f8e5309292c851db24a4ec8188d7af7c3902a76841e8e810407cd
   - id: retries-and-records-are-bounded
     evidence:
       - type: source
@@ -62,4 +62,4 @@ invariants:
       - type: test
         path: src/webhooks.test.ts
         ownership: shared
-        sha256: a9a9500c4da7fda4b785c635573ea47d702369efeed8a0886accf946bd058d2c
+        sha256: ad50458cdb1f8e5309292c851db24a4ec8188d7af7c3902a76841e8e810407cd

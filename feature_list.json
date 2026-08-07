@@ -1,6 +1,6 @@
 {
   "project": "AIBA Agent-Native Low-Code Foundation",
-  "description": "M19: expand general-purpose low-code capabilities with i18n, data-dict, form-engine, inbox, and tags.",
+  "description": "M20: compile domain-neutral application blueprints into deterministic capability and Agent task plans.",
   "features": [
     {
       "id": "m16-common-query",
@@ -238,6 +238,96 @@
       "passes": true,
       "evidence": "24-capability catalog + 23-capability verified fixture provenance + Agent Skill + source smoke + four clean npm tarballs + bilingual docs + pnpm check + GitHub CI/Pages/Gitee success",
       "commit": "9fe66cf"
+    },
+    {
+      "id": "m20-domain-neutral-boundary",
+      "category": "architecture",
+      "priority": 20,
+      "description": "Remove vehicle-specific protocols, official packs, Solutions, and executable fixtures from AIBA's product surface while retaining the historical video as documentation media.",
+      "file": "capabilities/catalog.yaml",
+      "steps": [
+        "Remove vehicle-specific public schemas and TypeScript bindings.",
+        "Remove the official vehicle capability and Solution.",
+        "Remove vehicle-specific executable fixtures and smoke assertions.",
+        "Add a regression check that official product surfaces remain domain-neutral."
+      ],
+      "passes": true,
+      "verification": "No vehicle identifiers remain in Spec, official catalogs, Solutions, executable fixtures, source tests, or release artifacts; documentation video media may remain; pnpm check passes."
+    },
+    {
+      "id": "m20-blueprint-protocol",
+      "category": "protocol",
+      "priority": 21,
+      "description": "Define a framework-neutral ApplicationBlueprint contract for resources, fields, relationships, states, operations, authorization intent, events, UI intent, and acceptance evidence.",
+      "file": "packages/spec/schema/application-blueprint.schema.json",
+      "steps": [
+        "Define a strict JSON Schema and TypeScript binding.",
+        "Define versioned, stable identifiers and bounded values.",
+        "Add positive and malformed-document tests.",
+        "Document that blueprints express intent rather than executable code."
+      ],
+      "passes": false,
+      "verification": "Schema and binding accept complete domain-neutral blueprints and reject unknown fields, dangling references, unsafe paths, unbounded values, and executable commands."
+    },
+    {
+      "id": "m20-blueprint-planner",
+      "category": "core",
+      "priority": 22,
+      "description": "Compile a Blueprint deterministically into a dependency-ordered capability plan and non-executable Agent task graph.",
+      "file": "packages/core/src/application-blueprint.ts",
+      "steps": [
+        "Load and semantically validate Blueprint references.",
+        "Resolve required capabilities and transitive dependencies deterministically.",
+        "Produce bounded Agent tasks with write scopes, invariants, and evidence requirements.",
+        "Reject cycles, missing capabilities, ambiguous triggers, invariant weakening, and command injection."
+      ],
+      "passes": false,
+      "verification": "Planner output is stable across runs and rejects dependency, reference, authorization, trigger, path, and executable-command attacks without executing pack content."
+    },
+    {
+      "id": "m20-blueprint-cli",
+      "category": "developer-experience",
+      "priority": 23,
+      "description": "Expose Application Blueprint authoring and planning through short Agent-friendly CLI commands.",
+      "file": "packages/cli/src/index.ts",
+      "steps": [
+        "Add aiba create app <id>.",
+        "Add aiba plan <blueprint>.",
+        "Provide stable human and JSON output.",
+        "Advertise commands through Agent protocol, completion, and npm distribution tests."
+      ],
+      "passes": false,
+      "verification": "Compiled CLI creates a safe scaffold, plans it deterministically, returns structured errors, and advertises both commands to Agents and shell completion."
+    },
+    {
+      "id": "m20-blueprint-upgrade",
+      "category": "upgrade",
+      "priority": 24,
+      "description": "Plan Blueprint revisions without overwriting project-owned customization or silently changing security intent.",
+      "file": "packages/core/src/application-blueprint-upgrade.ts",
+      "steps": [
+        "Bind plans to exact Blueprint source hashes.",
+        "Classify additive, breaking, security-sensitive, and conflicting changes.",
+        "Preserve project-owned task resolutions across compatible revisions.",
+        "Reject stale plans and unresolved breaking or security-sensitive changes."
+      ],
+      "passes": false,
+      "verification": "v1-to-v2 tests preserve project-owned resolutions, surface security changes, reject stale source and unresolved conflicts, and never modify application code."
+    },
+    {
+      "id": "m20-blueprint-integration",
+      "category": "integration",
+      "priority": 25,
+      "description": "Verify the composition layer with a domain-neutral work collaboration application and bilingual guidance.",
+      "file": "fixtures/application-blueprint/work-hub.yaml",
+      "steps": [
+        "Add a domain-neutral golden Blueprint fixture.",
+        "Exercise forms, dictionaries, files, tags, approvals, notifications, inbox, comments, search, reporting, and audit composition.",
+        "Add positive and adversarial end-to-end verification.",
+        "Update roadmap, architecture, quick start, Agent Skill, and release artifact checks."
+      ],
+      "passes": false,
+      "verification": "Domain-neutral fixture plans and upgrades end to end; bilingual docs and installed npm tarballs expose the workflow; pnpm check and hosted workflows pass."
     }
   ]
 }

@@ -13,7 +13,7 @@
   "files": [
     {
       "path": "src/reporting.test.ts",
-      "installedSha256": "2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2",
+      "installedSha256": "23455520a4fbf931fd649b8297ffd970ed6e5edff375993c7c56ab289e62b308",
       "ownership": "shared",
       "evidenceTypes": [
         "test"

@@ -7,7 +7,7 @@ function fixture(options: { authorized?: boolean; resourceExists?: boolean } = {
   const audits: unknown[] = [];
   const service = createTagsService({
     authorize: async () => options.authorized !== false,
-    resourceExists: async (context, resource) => options.resourceExists !== false && context.tenantId === "tenant-a" && resource.type === "vehicle" && resource.id === "vehicle-1",
+    resourceExists: async (context, resource) => options.resourceExists !== false && context.tenantId === "tenant-a" && resource.type === "task" && resource.id === "task-1",
     audit: (event) => audits.push(event),
     sanitizeText: (value) => value.replace(/</g, "&lt;").replace(/>/g, "&gt;"),
     cursorSecret: "tags-test-secret-with-at-least-32-bytes",
@@ -58,25 +58,25 @@ describe("tags reference boundary", () => {
     const f = fixture();
     const one = await f.create("Urgent", "create-one");
     const two = await f.create("Inspection", "create-two");
-    const result = await f.service.assign(f.context, { action: "attach", resourceType: "vehicle", resourceId: "vehicle-1", tagIds: [one.tagId, two.tagId], expectedRevision: 0, idempotencyKey: "attach-tags-1" });
+    const result = await f.service.assign(f.context, { action: "attach", resourceType: "task", resourceId: "task-1", tagIds: [one.tagId, two.tagId], expectedRevision: 0, idempotencyKey: "attach-tags-1" });
     expect(result).toMatchObject({ changedCount: 2, revision: 1 });
     expect(result.tagIds).toEqual([one.tagId, two.tagId]);
   });
 
   it("rejects the complete assignment for missing resources, tags, or stale revisions", async () => {
     const missingResource = fixture({ resourceExists: false });
-    await expect(missingResource.service.assign(missingResource.context, { action: "attach", resourceType: "vehicle", resourceId: "vehicle-1", tagIds: ["tag-1"], expectedRevision: 0, idempotencyKey: "attach-missing" })).rejects.toThrow("resource-unavailable");
+    await expect(missingResource.service.assign(missingResource.context, { action: "attach", resourceType: "task", resourceId: "task-1", tagIds: ["tag-1"], expectedRevision: 0, idempotencyKey: "attach-missing" })).rejects.toThrow("resource-unavailable");
     const f = fixture();
     const tag = await f.create("Urgent", "create-urgent");
-    await expect(f.service.assign(f.context, { action: "attach", resourceType: "vehicle", resourceId: "vehicle-1", tagIds: [tag.tagId, "unknown"], expectedRevision: 0, idempotencyKey: "attach-unknown" })).rejects.toThrow("tag-assignment-conflict");
-    const page = await f.service.query(f.context, { mode: "resource", resourceType: "vehicle", resourceId: "vehicle-1", pageSize: 10 });
+    await expect(f.service.assign(f.context, { action: "attach", resourceType: "task", resourceId: "task-1", tagIds: [tag.tagId, "unknown"], expectedRevision: 0, idempotencyKey: "attach-unknown" })).rejects.toThrow("tag-assignment-conflict");
+    const page = await f.service.query(f.context, { mode: "resource", resourceType: "task", resourceId: "task-1", pageSize: 10 });
     expect(page.tags).toHaveLength(0);
   });
 
   it("binds assignment idempotency to exact sorted tag IDs and revision", async () => {
     const f = fixture();
     const tag = await f.create("Urgent", "create-urgent");
-    const command = { action: "attach" as const, resourceType: "vehicle", resourceId: "vehicle-1", tagIds: [tag.tagId], expectedRevision: 0, idempotencyKey: "attach-urgent" };
+    const command = { action: "attach" as const, resourceType: "task", resourceId: "task-1", tagIds: [tag.tagId], expectedRevision: 0, idempotencyKey: "attach-urgent" };
     const first = await f.service.assign(f.context, command);
     expect(await f.service.assign(f.context, command)).toEqual(first);
     await expect(f.service.assign(f.context, { ...command, action: "detach" })).rejects.toThrow("idempotency-conflict");
@@ -85,11 +85,11 @@ describe("tags reference boundary", () => {
   it("keeps archived history, blocks new attach, and permits detach cleanup", async () => {
     const f = fixture();
     const tag = await f.create("Legacy", "create-legacy");
-    await f.service.assign(f.context, { action: "attach", resourceType: "vehicle", resourceId: "vehicle-1", tagIds: [tag.tagId], expectedRevision: 0, idempotencyKey: "attach-legacy" });
+    await f.service.assign(f.context, { action: "attach", resourceType: "task", resourceId: "task-1", tagIds: [tag.tagId], expectedRevision: 0, idempotencyKey: "attach-legacy" });
     const archived = await f.service.mutate(f.context, { action: "archive", tagId: tag.tagId, expectedRevision: 1, idempotencyKey: "archive-legacy" });
     expect(archived.status).toBe("archived");
-    await expect(f.service.assign(f.context, { action: "attach", resourceType: "vehicle", resourceId: "vehicle-1", tagIds: [tag.tagId], expectedRevision: 1, idempotencyKey: "reattach-legacy" })).rejects.toThrow("tag-assignment-conflict");
-    await expect(f.service.assign(f.context, { action: "detach", resourceType: "vehicle", resourceId: "vehicle-1", tagIds: [tag.tagId], expectedRevision: 1, idempotencyKey: "detach-legacy" })).resolves.toMatchObject({ changedCount: 1, revision: 2 });
+    await expect(f.service.assign(f.context, { action: "attach", resourceType: "task", resourceId: "task-1", tagIds: [tag.tagId], expectedRevision: 1, idempotencyKey: "reattach-legacy" })).rejects.toThrow("tag-assignment-conflict");
+    await expect(f.service.assign(f.context, { action: "detach", resourceType: "task", resourceId: "task-1", tagIds: [tag.tagId], expectedRevision: 1, idempotencyKey: "detach-legacy" })).resolves.toMatchObject({ changedCount: 1, revision: 2 });
     await expect(f.service.mutate(f.context, { action: "update", tagId: tag.tagId, name: "Restored", expectedRevision: 2, idempotencyKey: "restore-legacy" })).rejects.toThrow("tag-mutation-conflict");
   });
 

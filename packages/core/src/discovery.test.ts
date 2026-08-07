@@ -19,7 +19,7 @@ describe("verified catalog discovery", () => {
       layer: "platform-integration",
       dependencies: ["identity@^0.1.0", "audit@^0.1.0"],
     }));
-    expect(result.capabilities).toHaveLength(24);
+    expect(result.capabilities).toHaveLength(23);
     expect(result.capabilities).toContainEqual(expect.objectContaining({
       id: "form-engine",
       layer: "business-capability",
@@ -40,9 +40,9 @@ describe("verified catalog discovery", () => {
       dependencies: expect.arrayContaining(["scheduled-jobs@^0.1.0", "file-assets@^0.1.0"]),
     }));
     expect(result.solutions).toContainEqual(expect.objectContaining({
-      id: "vehicle-management",
-      layer: "industry-solution",
-      capabilities: expect.arrayContaining(["vehicle-records@0.1.0"]),
+      id: "secure-workspace",
+      layer: "application-solution",
+      capabilities: expect.arrayContaining(["authorization@0.1.0", "file-assets@0.1.0"]),
     }));
   });
 
@@ -51,20 +51,20 @@ describe("verified catalog discovery", () => {
       packsDirectory: join(workspace, "capabilities"),
       solutionsDirectory: join(workspace, "solutions"),
     };
-    const capability = await describeCatalogItem({ ...options, id: "vehicle-records" });
+    const capability = await describeCatalogItem({ ...options, id: "import-export" });
     expect(capability.kind).toBe("capability");
     if (capability.kind !== "capability") throw new Error("Expected capability details");
-    expect(capability.interfaces).toContain("vehicle-records.record");
+    expect(capability.interfaces).toContain("import-export.job-record");
     expect(capability.invariantDetails).toContainEqual(expect.objectContaining({
-      id: "updates-use-optimistic-concurrency",
+      id: "profiles-are-server-owned",
       severity: "critical",
     }));
 
-    const solution = await describeCatalogItem({ ...options, id: "vehicle-management" });
+    const solution = await describeCatalogItem({ ...options, id: "secure-workspace" });
     expect(solution.kind).toBe("solution");
     if (solution.kind !== "solution") throw new Error("Expected Solution details");
     expect(solution.capabilityDetails).toContainEqual(expect.objectContaining({
-      id: "vehicle-records",
+      id: "file-assets",
       manifestSha256: expect.stringMatching(/^[a-f0-9]{64}$/),
     }));
   });

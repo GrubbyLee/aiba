@@ -599,3 +599,28 @@ Verification:
 Commit: 9fe66cf
 Progress: 19/19
 Next: M19 is complete; no npm release was performed
+
+----------------------------------------
+Session #28 - m20-domain-neutral-boundary
+----------------------------------------
+Date: 2026-08-07
+
+Completed:
+  [x] Removed the demo-specific entity from public schemas, bindings, validators,
+      official capability catalog, Solution catalog, and executable fixtures.
+  [x] Replaced the official composition with the domain-neutral secure-workspace
+      Solution and evolved new Solution classification to application-solution.
+  [x] Kept legacy industry-solution documents readable for compatibility while
+      making application-solution the authoring and discovery default.
+  [x] Added an automated regression scan for domain leakage into official surfaces.
+  [x] Regenerated 22 exact reference fixture receipts through normal Core workflows.
+
+Verification:
+  - pnpm check: passed
+  - Spec: 90 tests; Core: 139 tests; reference fixture: 164 tests
+  - Registry Server: 8 tests; CLI: 10 tests
+  - Smoke, signed Solution, deterministic tarballs, and clean npm consumer passed
+  - Product-source scan contains no demo-specific entity identifiers
+
+Progress: 20/25
+Next: m20-blueprint-protocol

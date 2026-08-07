@@ -26,7 +26,7 @@ export interface SolutionSummary {
   version: string;
   title: string;
   description: string;
-  layer: "industry-solution";
+  layer: "application-solution" | "industry-solution";
   capabilities: string[];
 }
 
@@ -126,7 +126,7 @@ export async function discoverCatalog(
       version: solution.metadata.version,
       title: solution.metadata.title,
       description: solution.metadata.description,
-      layer: "industry-solution",
+      layer: solution.metadata.layer,
       capabilities: resolvedCapabilities.map(({ entry }) => `${entry.id}@${entry.version}`),
     });
   }

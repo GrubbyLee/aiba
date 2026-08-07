@@ -2,7 +2,7 @@ apiVersion: aiba.dev/v0alpha1
 kind: OperationPlan
 metadata:
   id: wechat-miniprogram-auth-install
-  createdAt: 2026-07-26T00:45:00.000Z
+  createdAt: 2026-07-26T00:43:00.000Z
 capability:
   id: wechat-miniprogram-auth
   version: 0.1.0
@@ -16,7 +16,6 @@ project:
   stack:
     languages:
       - TypeScript
-      - JavaScript
     frameworks: []
 writeScope:
   allowedPatterns:

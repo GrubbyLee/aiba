@@ -9,9 +9,9 @@ installation:
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/import-export.yaml
-  planSha256: 40a24bf33bc052b329b0255a1816e995fc4b4e62dc9e34b944c7f7285c4d56c7
+  planSha256: c88bdad96795bc7dd726c3dbe47fcabcb8378fe94042149ab9996e271913901b
   ancestry: .aiba/ancestry/import-export.json
-  ancestrySha256: 2159a3dfa2b0b6a0342d13c7ad1c1c1046763db46ccdcf6d475c792ce0320655
+  ancestrySha256: dd08af39e2c2694149a04eda46acfcc27bccc73a9977099938b9eab43360b2ee
 invariants:
   - id: exchange-operations-are-authorized
     evidence:
@@ -22,7 +22,7 @@ invariants:
       - type: test
         path: src/import-export.test.ts
         ownership: shared
-        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+        sha256: 9f0679f7c0fc1e47f7db56454aecf57fdad5c2109b956fbd7c61b12a077335e2
   - id: tenant-comes-from-trusted-context
     evidence:
       - type: source
@@ -32,7 +32,7 @@ invariants:
       - type: test
         path: src/import-export.test.ts
         ownership: shared
-        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+        sha256: 9f0679f7c0fc1e47f7db56454aecf57fdad5c2109b956fbd7c61b12a077335e2
   - id: profiles-are-server-owned
     evidence:
       - type: source
@@ -42,7 +42,7 @@ invariants:
       - type: test
         path: src/import-export.test.ts
         ownership: shared
-        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+        sha256: 9f0679f7c0fc1e47f7db56454aecf57fdad5c2109b956fbd7c61b12a077335e2
   - id: import-sources-are-private-assets
     evidence:
       - type: source
@@ -52,7 +52,7 @@ invariants:
       - type: test
         path: src/import-export.test.ts
         ownership: shared
-        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+        sha256: 9f0679f7c0fc1e47f7db56454aecf57fdad5c2109b956fbd7c61b12a077335e2
   - id: import-processing-is-bounded
     evidence:
       - type: source
@@ -62,7 +62,7 @@ invariants:
       - type: test
         path: src/import-export.test.ts
         ownership: shared
-        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+        sha256: 9f0679f7c0fc1e47f7db56454aecf57fdad5c2109b956fbd7c61b12a077335e2
   - id: imported-rows-are-schema-validated
     evidence:
       - type: source
@@ -72,7 +72,7 @@ invariants:
       - type: test
         path: src/import-export.test.ts
         ownership: shared
-        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+        sha256: 9f0679f7c0fc1e47f7db56454aecf57fdad5c2109b956fbd7c61b12a077335e2
   - id: import-commit-is-atomic
     evidence:
       - type: source
@@ -82,7 +82,7 @@ invariants:
       - type: test
         path: src/import-export.test.ts
         ownership: shared
-        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+        sha256: 9f0679f7c0fc1e47f7db56454aecf57fdad5c2109b956fbd7c61b12a077335e2
   - id: exports-apply-trusted-data-policy
     evidence:
       - type: source
@@ -92,7 +92,7 @@ invariants:
       - type: test
         path: src/import-export.test.ts
         ownership: shared
-        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+        sha256: 9f0679f7c0fc1e47f7db56454aecf57fdad5c2109b956fbd7c61b12a077335e2
   - id: spreadsheet-formulas-are-neutralized
     evidence:
       - type: source
@@ -102,7 +102,7 @@ invariants:
       - type: test
         path: src/import-export.test.ts
         ownership: shared
-        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+        sha256: 9f0679f7c0fc1e47f7db56454aecf57fdad5c2109b956fbd7c61b12a077335e2
   - id: exchange-jobs-are-idempotent
     evidence:
       - type: source
@@ -112,7 +112,7 @@ invariants:
       - type: test
         path: src/import-export.test.ts
         ownership: shared
-        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+        sha256: 9f0679f7c0fc1e47f7db56454aecf57fdad5c2109b956fbd7c61b12a077335e2
   - id: exchange-results-are-private-assets
     evidence:
       - type: source
@@ -122,7 +122,7 @@ invariants:
       - type: test
         path: src/import-export.test.ts
         ownership: shared
-        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+        sha256: 9f0679f7c0fc1e47f7db56454aecf57fdad5c2109b956fbd7c61b12a077335e2
   - id: jobs-errors-and-audit-are-minimized
     evidence:
       - type: source
@@ -132,4 +132,4 @@ invariants:
       - type: test
         path: src/import-export.test.ts
         ownership: shared
-        sha256: 6139819a63844a0b21b0fb4dee0f3f668e9cd50685d671c9bdfd9045badd27fd
+        sha256: 9f0679f7c0fc1e47f7db56454aecf57fdad5c2109b956fbd7c61b12a077335e2

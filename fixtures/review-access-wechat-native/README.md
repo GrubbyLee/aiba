@@ -1,9 +1,9 @@
 # Native WeChat Mini Program Surface
 
 This fixture validates AIBA semantics in an ordinary native WeChat Mini Program
-without CloudBase or a web SDK. It includes the original review-access flow plus
-a vehicle list that exchanges a one-time `wx.login` code, keeps the application
-session inside the service layer, and sends no tenant or authorization claims.
+without CloudBase or a web SDK. It exercises the review-access flow and a
+one-time `wx.login` exchange, keeps the application session inside the service
+layer, and sends no tenant or authorization claims.
 
 `project.config.json` intentionally uses `touristappid`; this repository does not
 upload or publish the fixture. Run:

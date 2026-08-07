@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "check:miniprogram": "node --check miniprogram/app.js && node --check miniprogram/pages/review/index.js && node --check miniprogram/pages/vehicles/index.js && node --check miniprogram/services/review-api.js && node --check miniprogram/services/wechat-auth.js && node --check miniprogram/services/vehicle-api.js",
+    "check:miniprogram": "node --check miniprogram/app.js && node --check miniprogram/pages/review/index.js && node --check miniprogram/services/review-api.js && node --check miniprogram/services/wechat-auth.js",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run && pnpm check:miniprogram"
   },

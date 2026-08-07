@@ -30,9 +30,6 @@ import {
   validateScheduledJobRecord,
   validateSearchPage,
   validateSearchQuery,
-  validateVehicleCreateCommand,
-  validateVehicleRecord,
-  validateVehicleUpdateCommand,
   validateVerificationChallengeIssueCommand,
   validateVerificationChallengeRecord,
   validateVerificationChallengeVerifyCommand,
@@ -215,14 +212,14 @@ describe("core portable interfaces", () => {
   it("validates webhook selectors without accepting destinations or secrets", () => {
     expect(validateWebhookDeliveryCommand({
       subscriptionId: "subscription_0001",
-      eventType: "vehicle.updated",
-      resourceId: "vehicle-1",
+      eventType: "task.updated",
+      resourceId: "task-1",
       idempotencyKey: "webhook-0001",
-    }).eventType).toBe("vehicle.updated");
+    }).eventType).toBe("task.updated");
     expect(validateWebhookDeliveryRecord({
       deliveryId: "delivery_0001",
       subscriptionId: "subscription_0001",
-      eventType: "vehicle.updated",
+      eventType: "task.updated",
       status: "pending",
       attempt: 0,
       maximumAttempts: 3,
@@ -230,8 +227,8 @@ describe("core portable interfaces", () => {
     }).status).toBe("pending");
     expect(() => validateWebhookDeliveryCommand({
       subscriptionId: "subscription_0001",
-      eventType: "vehicle.updated",
-      resourceId: "vehicle-1",
+      eventType: "task.updated",
+      resourceId: "task-1",
       idempotencyKey: "webhook-0001",
       url: "http://169.254.169.254/latest/meta-data",
       secret: "caller-secret",
@@ -239,9 +236,9 @@ describe("core portable interfaces", () => {
   });
 
   it("validates feature flag selectors without caller-owned targeting context", () => {
-    expect(validateFeatureFlagEvaluationCommand({ flagKey: "vehicle.beta", expectedRevision: 3 }).expectedRevision).toBe(3);
+    expect(validateFeatureFlagEvaluationCommand({ flagKey: "task.beta", expectedRevision: 3 }).expectedRevision).toBe(3);
     expect(validateFeatureFlagEvaluationResult({
-      flagKey: "vehicle.beta",
+      flagKey: "task.beta",
       enabled: true,
       variant: "compact",
       reason: "rollout",
@@ -249,7 +246,7 @@ describe("core portable interfaces", () => {
       evaluatedAt: "2026-08-05T01:00:00Z",
     }).variant).toBe("compact");
     expect(() => validateFeatureFlagEvaluationCommand({
-      flagKey: "vehicle.beta",
+      flagKey: "task.beta",
       attributes: { plan: "enterprise" },
       subjectId: "chosen-subject",
     })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
@@ -263,17 +260,17 @@ describe("core portable interfaces", () => {
   });
 
   it("validates bounded comments and attributable activity", () => {
-    expect(validateCommentCommand({ action: "create", resourceType: "vehicle", resourceId: "vehicle-1", body: "Ready for review", mentionUserIds: ["user-2"], idempotencyKey: "comment-create-1" }).body).toBe("Ready for review");
-    expect(validateCommentRecord({ commentId: "comment_0001", resourceType: "vehicle", resourceId: "vehicle-1", authorId: "user-1", status: "deleted", mentionUserIds: [], revision: 2, createdAt: "2026-08-05T01:00:00Z", updatedAt: "2026-08-05T01:01:00Z" }).status).toBe("deleted");
-    expect(validateActivityRecord({ activityId: "activity_001", resourceType: "vehicle", resourceId: "vehicle-1", actorId: "user-1", action: "comment-created", occurredAt: "2026-08-05T01:00:00Z", correlationId: "request-1" }).action).toBe("comment-created");
-    expect(() => validateCommentCommand({ action: "create", resourceType: "vehicle", resourceId: "vehicle-1", body: "hello", idempotencyKey: "comment-create-1", authorId: "admin", tenantId: "tenant-b" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+    expect(validateCommentCommand({ action: "create", resourceType: "task", resourceId: "task-1", body: "Ready for review", mentionUserIds: ["user-2"], idempotencyKey: "comment-create-1" }).body).toBe("Ready for review");
+    expect(validateCommentRecord({ commentId: "comment_0001", resourceType: "task", resourceId: "task-1", authorId: "user-1", status: "deleted", mentionUserIds: [], revision: 2, createdAt: "2026-08-05T01:00:00Z", updatedAt: "2026-08-05T01:01:00Z" }).status).toBe("deleted");
+    expect(validateActivityRecord({ activityId: "activity_001", resourceType: "task", resourceId: "task-1", actorId: "user-1", action: "comment-created", occurredAt: "2026-08-05T01:00:00Z", correlationId: "request-1" }).action).toBe("comment-created");
+    expect(() => validateCommentCommand({ action: "create", resourceType: "task", resourceId: "task-1", body: "hello", idempotencyKey: "comment-create-1", authorId: "admin", tenantId: "tenant-b" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 
   it("validates bounded search without accepting tenant or raw query language", () => {
-    expect(validateSearchQuery({ term: "electric", resourceTypes: ["vehicle"], pageSize: 20 }).pageSize).toBe(20);
-    expect(validateSearchPage({ items: [{ resourceType: "vehicle", resourceId: "vehicle-1", title: "EV 01", snippet: "Electric fleet" }], hasMore: false }).hasMore).toBe(false);
-    expect(() => validateSearchQuery({ term: "*", resourceTypes: ["vehicle"], pageSize: 20, tenantId: "tenant-b", rawQuery: "*:*" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
-    expect(() => validateSearchQuery({ term: "x", resourceTypes: ["vehicle"], pageSize: 200 })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+    expect(validateSearchQuery({ term: "electric", resourceTypes: ["task"], pageSize: 20 }).pageSize).toBe(20);
+    expect(validateSearchPage({ items: [{ resourceType: "task", resourceId: "task-1", title: "EV 01", snippet: "Electric fleet" }], hasMore: false }).hasMore).toBe(false);
+    expect(() => validateSearchQuery({ term: "*", resourceTypes: ["task"], pageSize: 20, tenantId: "tenant-b", rawQuery: "*:*" })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
+    expect(() => validateSearchQuery({ term: "x", resourceTypes: ["task"], pageSize: 200 })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 
   it("validates report selectors without accepting SQL or output paths", () => {
@@ -283,9 +280,9 @@ describe("core portable interfaces", () => {
   });
 
   it("validates explicit approval transitions without caller-owned actors", () => {
-    expect(validateApprovalRequestCommand({ definitionId: "vehicle-publish", resourceType: "vehicle", resourceId: "vehicle-1", idempotencyKey: "approval-request-1" }).definitionId).toBe("vehicle-publish");
+    expect(validateApprovalRequestCommand({ definitionId: "task-publish", resourceType: "task", resourceId: "task-1", idempotencyKey: "approval-request-1" }).definitionId).toBe("task-publish");
     expect(validateApprovalDecisionCommand({ workflowId: "workflow_001", decision: "approve", expectedRevision: 1, idempotencyKey: "approval-decision-1" }).decision).toBe("approve");
-    expect(validateApprovalWorkflowRecord({ workflowId: "workflow_001", definitionId: "vehicle-publish", resourceType: "vehicle", resourceId: "vehicle-1", requesterId: "user-1", status: "pending", requiredApprovals: 2, revision: 1, decisions: [], createdAt: "2026-08-05T01:00:00Z", updatedAt: "2026-08-05T01:00:00Z" }).status).toBe("pending");
+    expect(validateApprovalWorkflowRecord({ workflowId: "workflow_001", definitionId: "task-publish", resourceType: "task", resourceId: "task-1", requesterId: "user-1", status: "pending", requiredApprovals: 2, revision: 1, decisions: [], createdAt: "2026-08-05T01:00:00Z", updatedAt: "2026-08-05T01:00:00Z" }).status).toBe("pending");
     expect(() => validateApprovalDecisionCommand({ workflowId: "workflow_001", decision: "approve", expectedRevision: 1, idempotencyKey: "approval-decision-1", actorId: "admin", force: true })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 
@@ -348,14 +345,14 @@ describe("core portable interfaces", () => {
 
   it("validates profile-bound import/export commands and minimized jobs", () => {
     expect(validateDataImportCommand({
-      profileId: "vehicle-import",
+      profileId: "task-import",
       sourceAssetId: "asset-00000000001",
       idempotencyKey: "import-request-0001",
-    }).profileId).toBe("vehicle-import");
+    }).profileId).toBe("task-import");
     expect(validateDataExportCommand({
-      profileId: "vehicle-export",
+      profileId: "task-export",
       idempotencyKey: "export-request-0001",
-    }).profileId).toBe("vehicle-export");
+    }).profileId).toBe("task-export");
     expect(validateImportExportJobRecord({
       jobId: "job-import-000001",
       operation: "import",
@@ -366,61 +363,17 @@ describe("core portable interfaces", () => {
       completedAt: "2026-08-03T00:00:01Z",
     }).processedRows).toBe(12);
     expect(() => validateDataImportCommand({
-      profileId: "vehicle-import",
+      profileId: "task-import",
       sourceAssetId: "asset-00000000001",
       idempotencyKey: "import-request-0001",
       tenantId: "tenant-b",
       table: "internal_users",
     })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
     expect(() => validateDataExportCommand({
-      profileId: "vehicle-export",
+      profileId: "task-export",
       idempotencyKey: "export-request-0001",
       query: "select * from secrets",
       callbackUrl: "https://attacker.example/collect",
-    })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
-  });
-
-  it("validates bounded vehicle commands and portable records", () => {
-    expect(validateVehicleCreateCommand({
-      fleetNumber: "FLEET-001",
-      plateNumber: "AB1234",
-      vin: "1HGCM82633A004352",
-      make: "Example Motors",
-      model: "Cargo One",
-      year: 2025,
-      idempotencyKey: "vehicle-create-0001",
-    }).fleetNumber).toBe("FLEET-001");
-    expect(validateVehicleUpdateCommand({
-      vehicleId: "vehicle-000000000001",
-      expectedRevision: 3,
-      mileageKm: 1200,
-    }).expectedRevision).toBe(3);
-    expect(validateVehicleRecord({
-      vehicleId: "vehicle-000000000001",
-      fleetNumber: "FLEET-001",
-      plateNumber: "AB1234",
-      make: "Example Motors",
-      model: "Cargo One",
-      year: 2025,
-      status: "active",
-      mileageKm: 1200,
-      revision: 3,
-      createdAt: "2026-08-03T00:00:00Z",
-      updatedAt: "2026-08-03T00:01:00Z",
-    }).status).toBe("active");
-    expect(() => validateVehicleCreateCommand({
-      fleetNumber: "FLEET-001",
-      plateNumber: "AB1234",
-      make: "Example Motors",
-      model: "Cargo One",
-      year: 2025,
-      idempotencyKey: "vehicle-create-0001",
-      tenantId: "tenant-b",
-      vehicleId: "attacker-selected-id",
-    })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
-    expect(() => validateVehicleUpdateCommand({
-      vehicleId: "vehicle-000000000001",
-      expectedRevision: 3,
     })).toThrowError(expect.objectContaining({ code: "PROTOCOL_VALIDATION_FAILED" }));
   });
 

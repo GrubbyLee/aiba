@@ -4,7 +4,7 @@ import { createWebhookService, createWebhookVerifier } from "./webhooks.js";
 function fixture(options: { authorized?: boolean; failures?: number } = {}) {
   let failures = options.failures ?? 0;
   const sent: Array<{ url: string; body: string; headers: Record<string, string> }> = [];
-  const subscription = { id: "subscription_0001", tenantId: "tenant-a", enabled: true, url: "https://hooks.example.test/a", secret: "trusted-secret", allowedEvents: ["vehicle.updated"], maximumAttempts: 2 };
+  const subscription = { id: "subscription_0001", tenantId: "tenant-a", enabled: true, url: "https://hooks.example.test/a", secret: "trusted-secret", allowedEvents: ["task.updated"], maximumAttempts: 2 };
   const service = createWebhookService({
     loadSubscription: async (id) => id === subscription.id ? subscription : undefined,
     authorize: async () => options.authorized !== false,
@@ -14,7 +14,7 @@ function fixture(options: { authorized?: boolean; failures?: number } = {}) {
     now: () => new Date("2026-08-05T01:00:00Z"),
     deliveryId: () => "delivery_0001",
   });
-  return { service, sent, subscription, context: { tenantId: "tenant-a", principalId: "user-1", correlationId: "request-1" }, command: { subscriptionId: subscription.id, eventType: "vehicle.updated", resourceId: "vehicle-1", idempotencyKey: "webhook-0001" } };
+  return { service, sent, subscription, context: { tenantId: "tenant-a", principalId: "user-1", correlationId: "request-1" }, command: { subscriptionId: subscription.id, eventType: "task.updated", resourceId: "task-1", idempotencyKey: "webhook-0001" } };
 }
 
 describe("webhook reference boundary", () => {
@@ -41,7 +41,7 @@ describe("webhook reference boundary", () => {
   it("deduplicates exact commands and rejects changed reuse", async () => {
     const f = fixture();
     expect(await f.service.enqueue(f.context, f.command)).toEqual(await f.service.enqueue(f.context, f.command));
-    await expect(f.service.enqueue(f.context, { ...f.command, resourceId: "vehicle-2" })).rejects.toThrow("idempotency-conflict");
+    await expect(f.service.enqueue(f.context, { ...f.command, resourceId: "task-2" })).rejects.toThrow("idempotency-conflict");
   });
 
   it("bounds retries and minimizes provider failures", async () => {

@@ -12,8 +12,8 @@ from npm package versioning; inspect each document's `apiVersion` before use.
 `CapabilityCatalog` classifies exact capability versions without requiring
 metadata changes to immutable legacy manifests. `CapabilitySolution` composes
 exact manifest hashes in dependency order without an invariant-override field.
-Portable interfaces now cover files, import/export, vehicle records, and a
-secret-free WeChat Mini Program login command/result boundary.
+Portable interfaces now cover files, import/export, application workflows, and
+a secret-free WeChat Mini Program login command/result boundary.
 
 Requires Node.js 22 or newer. Licensed under Apache-2.0 to support independent
 implementations and ecosystem interoperability.

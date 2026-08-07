@@ -16,7 +16,6 @@ project:
   stack:
     languages:
       - TypeScript
-      - JavaScript
     frameworks: []
 writeScope:
   allowedPatterns:

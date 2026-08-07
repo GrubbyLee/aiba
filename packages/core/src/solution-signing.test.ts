@@ -15,12 +15,12 @@ const verified = new Date("2026-08-05T00:05:00.000Z");
 async function fixture(sequence = 1) {
   const root = await mkdtemp(join(tmpdir(), "aiba-solution-sign-test-"));
   roots.push(root);
-  const solutionDirectory = join(root, "vehicle-management");
-  await cp(join(workspace, "solutions", "vehicle-management"), solutionDirectory, { recursive: true });
+  const solutionDirectory = join(root, "secure-workspace");
+  await cp(join(workspace, "solutions", "secure-workspace"), solutionDirectory, { recursive: true });
   const keys = await generatePublisherKeyPair({ publisherId: "solution-publisher", keyId: "release-1", outputDirectory: join(root, "keys") });
   const envelopePath = join(root, `solution-${sequence}.signed.json`);
   await signSolution({ solutionDirectory, outputPath: envelopePath, publisherId: "solution-publisher", keyId: "release-1", privateKeyPath: keys.privateKeyPath, sequence, expiresAt: "2026-08-06T00:00:00.000Z", now: () => created });
-  const trust: SolutionPublisherTrustPolicy = { apiVersion: "aiba.dev/v0alpha1", kind: "SolutionPublisherTrustPolicy", metadata: { id: "solution-publishers" }, publishers: [{ publisher: "solution-publisher", keyId: "release-1", algorithm: "Ed25519", publicKey: keys.publicKey, solutions: ["vehicle-management"] }] };
+  const trust: SolutionPublisherTrustPolicy = { apiVersion: "aiba.dev/v0alpha1", kind: "SolutionPublisherTrustPolicy", metadata: { id: "solution-publishers" }, publishers: [{ publisher: "solution-publisher", keyId: "release-1", algorithm: "Ed25519", publicKey: keys.publicKey, solutions: ["secure-workspace"] }] };
   const trustPath = join(root, "trust.json");
   await writeFile(trustPath, `${JSON.stringify(trust, null, 2)}\n`);
   return { root, solutionDirectory, keys, envelopePath, trust, trustPath, statePath: join(root, "state.json") };
@@ -32,7 +32,7 @@ describe("signed Solution distribution", () => {
   it("verifies exact content and records monotonic state", async () => {
     const value = await fixture();
     const result = await verifySignedSolution({ solutionDirectory: value.solutionDirectory, envelopePath: value.envelopePath, trustPolicyPath: value.trustPath, statePath: value.statePath, now: () => verified });
-    expect(result).toMatchObject({ ok: true, solution: "vehicle-management", sequence: 1, publisher: "solution-publisher" });
+    expect(result).toMatchObject({ ok: true, solution: "secure-workspace", sequence: 1, publisher: "solution-publisher" });
     const state = JSON.parse(await readFile(value.statePath, "utf8")) as { solution: { sequence: number } };
     expect(state.solution.sequence).toBe(1);
   });
@@ -55,7 +55,7 @@ describe("signed Solution distribution", () => {
     value.trust.publishers[0]!.solutions = ["another-solution"];
     await writeFile(value.trustPath, `${JSON.stringify(value.trust, null, 2)}\n`);
     await expect(verifySignedSolution({ solutionDirectory: value.solutionDirectory, envelopePath: value.envelopePath, trustPolicyPath: value.trustPath, now: () => verified })).rejects.toMatchObject({ code: "SOLUTION_PUBLISHER_UNTRUSTED" });
-    value.trust.publishers[0]!.solutions = ["vehicle-management"];
+    value.trust.publishers[0]!.solutions = ["secure-workspace"];
     value.trust.publishers[0]!.revokedAt = "2026-08-04T23:59:59.000Z";
     await writeFile(value.trustPath, `${JSON.stringify(value.trust, null, 2)}\n`);
     await expect(verifySignedSolution({ solutionDirectory: value.solutionDirectory, envelopePath: value.envelopePath, trustPolicyPath: value.trustPath, now: () => verified })).rejects.toMatchObject({ code: "SOLUTION_SIGNING_KEY_REVOKED" });

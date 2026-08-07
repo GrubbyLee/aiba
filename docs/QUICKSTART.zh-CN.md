@@ -39,9 +39,9 @@ aiba doctor --root .
 
 ```bash
 aiba list
-aiba show vehicle-management
-aiba add vehicle-management --solution --root .
-aiba status vehicle-management --root .
+aiba show secure-workspace
+aiba add secure-workspace --solution --root .
+aiba status secure-workspace --root .
 ```
 
 最后两条命令只会准备一个组成能力，并输出计划文件路径。AIBA 此时没有执行能力包代码，
@@ -53,8 +53,8 @@ aiba status vehicle-management --root .
 并保留所有不变量。然后执行：
 
 ```bash
-aiba continue vehicle-management --root . --finalize --agent codex
-aiba continue vehicle-management --root .
+aiba continue secure-workspace --root . --finalize --agent codex
+aiba continue secure-workspace --root .
 ```
 
 为每个组成能力重复交接和这两条命令。使用 Claude Code 时可把 Agent 标识改为
@@ -67,7 +67,7 @@ aiba continue vehicle-management --root .
 ```bash
 aiba doctor --root .
 aiba verify --root .
-aiba compose vehicle-management --root .
+aiba compose secure-workspace --root .
 ```
 
 运行时行为声明使用独立的签名 `test`、`attest`、`verify-behavior` 流程；AIBA Core

@@ -9,7 +9,7 @@
     "id": "typescript-reference",
     "version": "0.1.0"
   },
-  "createdAt": "2026-07-26T00:46:00.000Z",
+  "createdAt": "2026-07-26T00:44:00.000Z",
   "files": [
     {
       "path": "src/wechat-miniprogram-auth.test.ts",

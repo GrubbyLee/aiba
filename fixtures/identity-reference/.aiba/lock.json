@@ -1,7 +1,7 @@
 {
   "apiVersion": "aiba.dev/v0alpha1",
   "kind": "Lock",
-  "generatedAt": "2026-07-26T00:46:00.000Z",
+  "generatedAt": "2026-07-26T00:44:00.000Z",
   "capabilities": [
     {
       "id": "audit",
@@ -190,15 +190,6 @@
       "recipe": {
         "id": "typescript-reference",
         "sha256": "ab057d146eb27c8d869b5459658862bb2e449dc56c76dbfedd55d2cb588c8212"
-      }
-    },
-    {
-      "id": "vehicle-records",
-      "version": "0.1.0",
-      "manifestSha256": "752e5d3507fc028244ee5c15f14afdc50238fc0c2f77fc40797d63a0ec16e741",
-      "recipe": {
-        "id": "typescript-reference",
-        "sha256": "8c4ae0064814253a2644db84e9167253a7d85b03ad84d485891de48cb22a1ad8"
       }
     },
     {

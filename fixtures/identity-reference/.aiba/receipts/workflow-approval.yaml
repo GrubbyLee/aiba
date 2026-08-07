@@ -9,9 +9,9 @@ installation:
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/workflow-approval.yaml
-  planSha256: 500309bb038fc063d7e47e299a006699b9a7326abcc05af7fa988386e5fb9454
+  planSha256: 492ca957811b2112168f2488412c5502704e8c24bc69ff0373bc06aaf02d6a8d
   ancestry: .aiba/ancestry/workflow-approval.json
-  ancestrySha256: 6d1f863b9b2866b78b3521e960baed276464cf44a76dba9f2a6ef10c1e04195d
+  ancestrySha256: 8702c66c3dc1092280b18dcf3e24534473bd635421207b81c87b68cf52489ad9
 invariants:
   - id: definitions-and-actors-are-trusted
     evidence:
@@ -22,7 +22,7 @@ invariants:
       - type: test
         path: src/workflow-approval.test.ts
         ownership: shared
-        sha256: ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f
+        sha256: 2397b8464ac091682bcc9debd7e3a152d630ec79049ba89c310dd18085286f28
   - id: transitions-are-explicit-and-authorized
     evidence:
       - type: source
@@ -32,7 +32,7 @@ invariants:
       - type: test
         path: src/workflow-approval.test.ts
         ownership: shared
-        sha256: ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f
+        sha256: 2397b8464ac091682bcc9debd7e3a152d630ec79049ba89c310dd18085286f28
   - id: duties-are-separated
     evidence:
       - type: source
@@ -42,7 +42,7 @@ invariants:
       - type: test
         path: src/workflow-approval.test.ts
         ownership: shared
-        sha256: ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f
+        sha256: 2397b8464ac091682bcc9debd7e3a152d630ec79049ba89c310dd18085286f28
   - id: decisions-are-immutable
     evidence:
       - type: source
@@ -52,7 +52,7 @@ invariants:
       - type: test
         path: src/workflow-approval.test.ts
         ownership: shared
-        sha256: ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f
+        sha256: 2397b8464ac091682bcc9debd7e3a152d630ec79049ba89c310dd18085286f28
   - id: transitions-are-revisioned-and-idempotent
     evidence:
       - type: source
@@ -62,7 +62,7 @@ invariants:
       - type: test
         path: src/workflow-approval.test.ts
         ownership: shared
-        sha256: ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f
+        sha256: 2397b8464ac091682bcc9debd7e3a152d630ec79049ba89c310dd18085286f28
   - id: terminal-state-is-final
     evidence:
       - type: source
@@ -72,4 +72,4 @@ invariants:
       - type: test
         path: src/workflow-approval.test.ts
         ownership: shared
-        sha256: ed99f4f7c20bb6be442c94d1d49cf199118f31ce0ff4a543d4c798a29822534f
+        sha256: 2397b8464ac091682bcc9debd7e3a152d630ec79049ba89c310dd18085286f28

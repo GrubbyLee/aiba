@@ -227,22 +227,22 @@ GitHub Release approval plus npm publisher authentication.
 - [x] Include `file-assets` in fixture provenance, CLI distribution, Agent Skill,
   package verification, and smoke coverage.
 - [x] Add the `import-export` business capability and its conformance corpus.
-- [x] Add the `vehicle-records` domain capability, portable interfaces, recipe,
-  reference boundary, and adversarial tests.
+- [x] Validate a project-specific domain against portable capability interfaces,
+  a reference boundary, and adversarial tests.
 - [x] Add `wechat-miniprogram-auth` as the first platform integration with
   server-only code exchange, identity binding, replay defense, and secret-redaction tests.
 - [x] Define a hash-bound solution-composition protocol and dependency graph rules.
-- [x] Add a passing `vehicle-management` composition fixture and read-only CLI check.
+- [x] Add a passing application composition fixture and read-only CLI check.
 - [x] Add standalone publisher signatures and trust policy before enabling
   third-party, private Registry, mirror, or marketplace Solution distribution.
   npm provenance remains sufficient for the current official-only channel.
-- [x] Validate vehicle-record semantics across a TypeScript HTTP API, functional
-  web admin client, and native WeChat Mini Program client.
+- [x] Validate capability semantics across TypeScript and native WeChat Mini
+  Program boundaries.
 
 ## M7 Exit Criteria
 
 M7 is complete when the catalog spans the first four capability layers with
-independently verified packs, an authenticated official industry solution
+independently verified packs, an authenticated official application Solution
 composes those packs without weakening their invariants, and the same capability
 semantics have been adapted to three materially different application surfaces. Every completed
 pack must retain deterministic evidence/provenance verification, untrusted-pack safety,

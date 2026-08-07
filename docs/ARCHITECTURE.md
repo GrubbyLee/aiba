@@ -34,8 +34,8 @@ M3 interface schemas define `Principal`, `AuthorizationDecision`, `AuditEvent`,
 targets rather than mandatory public API DTOs. In particular, principals do not
 carry roles or permissions; policy produces a separate explicit decision.
 
-M7 adds portable file-asset upload/record, import/export command/job, vehicle
-record, WeChat Mini Program login, and capability-solution schemas.
+M7 adds portable file-asset upload/record, import/export command/job, WeChat Mini
+Program login, and capability-solution schemas.
 These interfaces deliberately carry opaque identifiers and bounded metadata,
 not provider URLs, storage keys, table names, queries, mappings, callbacks, raw
 rows, or credentials. Trusted project adapters map them to local storage,

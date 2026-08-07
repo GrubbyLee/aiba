@@ -60,9 +60,6 @@ import {
   type SolutionVerificationState,
   type TeamGovernancePolicy,
   type UpgradePlan,
-  type VehicleCreateCommand,
-  type VehicleRecord,
-  type VehicleUpdateCommand,
   type VerificationChallengeIssueCommand,
   type VerificationChallengeRecord,
   type VerificationChallengeVerifyCommand,
@@ -152,15 +149,6 @@ const dataExportCommandValidator = ajv.compile<DataExportCommand>(
 );
 const importExportJobRecordValidator = ajv.compile<ImportExportJobRecord>(
   loadInterfaceSchema("import-export-job-record.schema.json"),
-);
-const vehicleCreateCommandValidator = ajv.compile<VehicleCreateCommand>(
-  loadInterfaceSchema("vehicle-create-command.schema.json"),
-);
-const vehicleUpdateCommandValidator = ajv.compile<VehicleUpdateCommand>(
-  loadInterfaceSchema("vehicle-update-command.schema.json"),
-);
-const vehicleRecordValidator = ajv.compile<VehicleRecord>(
-  loadInterfaceSchema("vehicle-record.schema.json"),
 );
 const verificationChallengeIssueCommandValidator = ajv.compile<VerificationChallengeIssueCommand>(
   loadInterfaceSchema("verification-challenge-issue-command.schema.json"),
@@ -532,21 +520,6 @@ export function validateDataExportCommand(value: unknown): DataExportCommand {
 export function validateImportExportJobRecord(value: unknown): ImportExportJobRecord {
   assertValid(importExportJobRecordValidator, value, "import export job record interface");
   return value as ImportExportJobRecord;
-}
-
-export function validateVehicleCreateCommand(value: unknown): VehicleCreateCommand {
-  assertValid(vehicleCreateCommandValidator, value, "vehicle create command interface");
-  return value as VehicleCreateCommand;
-}
-
-export function validateVehicleUpdateCommand(value: unknown): VehicleUpdateCommand {
-  assertValid(vehicleUpdateCommandValidator, value, "vehicle update command interface");
-  return value as VehicleUpdateCommand;
-}
-
-export function validateVehicleRecord(value: unknown): VehicleRecord {
-  assertValid(vehicleRecordValidator, value, "vehicle record interface");
-  return value as VehicleRecord;
 }
 
 export function validateVerificationChallengeIssueCommand(

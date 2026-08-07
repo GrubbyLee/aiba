@@ -35,7 +35,7 @@ describe("bilingual capability model documentation", () => {
       for (const id of ids) {
         expect(document, `${documentUrl.pathname} omits ${id}`).toContain(`\`${id}\``);
       }
-      expect(document).toContain("`vehicle-management`");
+      expect(document).toContain("`secure-workspace`");
       expect(document).toContain("CAPABILITY_MODEL.md");
       expect(document).toContain("CAPABILITY_MODEL.zh-CN.md");
     }

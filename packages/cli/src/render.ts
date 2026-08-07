@@ -30,7 +30,7 @@ export function renderCatalog(catalog: CatalogDiscovery): string {
     }
   }
   if (catalog.solutions.length > 0) {
-    lines.push("", "industry-solution:");
+    lines.push("", "application-solution:");
     for (const solution of catalog.solutions) {
       lines.push(
         `  ${solution.id}@${solution.version} - ${solution.title}`,

@@ -36,7 +36,6 @@ const capabilities = [
   "import-export",
   "reporting",
   "workflow-approval",
-  "vehicle-records",
   "wechat-miniprogram-auth",
 ];
 

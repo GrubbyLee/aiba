@@ -5,7 +5,6 @@ project:
   stack:
     languages:
       - TypeScript
-      - JavaScript
     frameworks: []
 capabilities:
   - id: audit
@@ -71,9 +70,6 @@ capabilities:
   - id: workflow-approval
     version: 0.1.0
     receipt: .aiba/receipts/workflow-approval.yaml
-  - id: vehicle-records
-    version: 0.1.0
-    receipt: .aiba/receipts/vehicle-records.yaml
   - id: wechat-miniprogram-auth
     version: 0.1.0
     receipt: .aiba/receipts/wechat-miniprogram-auth.yaml

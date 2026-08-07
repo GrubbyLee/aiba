@@ -67,9 +67,6 @@ capabilities:
   - id: review-access
     version: 0.1.0
     layer: application-foundation
-  - id: vehicle-records
-    version: 0.1.0
-    layer: business-capability
   - id: wechat-miniprogram-auth
     version: 0.1.0
     layer: platform-integration

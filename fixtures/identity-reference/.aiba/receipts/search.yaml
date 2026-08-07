@@ -9,9 +9,9 @@ installation:
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/search.yaml
-  planSha256: 89db209ac79a47e53795037c1b625456a34d7deab14ede0908c53f85b2f5197e
+  planSha256: 93a1b58f416a42bd1d041d90e9273b05d6f0ab39fab62e95010faf04c0c98946
   ancestry: .aiba/ancestry/search.json
-  ancestrySha256: bb8f24ec9f4f6dbb825bc95e98ab17877c5a7e67ef7b94ccb1dc198eeb7c3308
+  ancestrySha256: 8be18d62ac1291f8edb3378a84ca247692f1411fc9988e9221f1289ac3bd1e9a
 invariants:
   - id: search-scope-is-trusted
     evidence:
@@ -22,7 +22,7 @@ invariants:
       - type: test
         path: src/search.test.ts
         ownership: shared
-        sha256: fcab72dbeb4279341f9fe3c898ccb9b81b35a0a974f74011c9a95315b6937335
+        sha256: 980d98b932a8f7e9c99d43a3aa4dd82dd01ed07fed96e74f091d57d85e5a80aa
   - id: authorization-precedes-ranking
     evidence:
       - type: source
@@ -32,7 +32,7 @@ invariants:
       - type: test
         path: src/search.test.ts
         ownership: shared
-        sha256: fcab72dbeb4279341f9fe3c898ccb9b81b35a0a974f74011c9a95315b6937335
+        sha256: 980d98b932a8f7e9c99d43a3aa4dd82dd01ed07fed96e74f091d57d85e5a80aa
   - id: query-and-output-are-bounded
     evidence:
       - type: source
@@ -42,7 +42,7 @@ invariants:
       - type: test
         path: src/search.test.ts
         ownership: shared
-        sha256: fcab72dbeb4279341f9fe3c898ccb9b81b35a0a974f74011c9a95315b6937335
+        sha256: 980d98b932a8f7e9c99d43a3aa4dd82dd01ed07fed96e74f091d57d85e5a80aa
   - id: cursors-are-opaque-and-bound
     evidence:
       - type: source
@@ -52,7 +52,7 @@ invariants:
       - type: test
         path: src/search.test.ts
         ownership: shared
-        sha256: fcab72dbeb4279341f9fe3c898ccb9b81b35a0a974f74011c9a95315b6937335
+        sha256: 980d98b932a8f7e9c99d43a3aa4dd82dd01ed07fed96e74f091d57d85e5a80aa
   - id: search-projections-are-safe
     evidence:
       - type: source
@@ -62,4 +62,4 @@ invariants:
       - type: test
         path: src/search.test.ts
         ownership: shared
-        sha256: fcab72dbeb4279341f9fe3c898ccb9b81b35a0a974f74011c9a95315b6937335
+        sha256: 980d98b932a8f7e9c99d43a3aa4dd82dd01ed07fed96e74f091d57d85e5a80aa

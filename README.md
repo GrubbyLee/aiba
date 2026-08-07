@@ -24,22 +24,22 @@ AIBA is application-building infrastructure for AI agents. It helps agents add,
 verify, trace, and upgrade complete software capabilities without forcing
 projects into a fixed application framework, provider, or visual system.
 
-The official catalog now contains 24 capabilities covering identity, access,
+The official catalog now contains 23 capabilities covering identity, access,
 verification, files, notifications, inbox, jobs, flags, internationalization,
 data dictionaries, forms, tags, organizations, webhooks, comments, search,
-import/export, reporting, approvals, and domain records. They
+import/export, reporting, and approvals. They
 are organized across five layers: application foundations, platform
 integrations, reusable business capabilities, engineering governance, and
-composed industry solutions.
+composed application solutions.
 AIBA currently supports Agent-assisted install, deterministic evidence and provenance verification,
 drift inspection, customization-aware upgrade, signed capability bundles,
 authenticated private registry fetch, verified caching, and anti-rollback
 resolution. Optional project governance adds signed, evidence-bound team
 approvals to install and upgrade finalization.
 
-[Watch the vehicle-management walkthrough](https://grubbylee.github.io/aiba/video/) to see AIBA and
-Codex move from an empty directory to a working, independently verified admin
-application.
+[Watch an external vehicle-management example](https://grubbylee.github.io/aiba/video/) to see
+AIBA and Codex move from an empty directory to a working, independently
+verified admin application. The example domain is not built into AIBA.
 
 [Start with the ten-minute Quick Start](docs/QUICKSTART.md) to verify the npm
 CLI in a clean project and hand the first bounded plan to an Agent.
@@ -85,11 +85,11 @@ node packages/cli/dist/index.js upgrade review-access --finalize \
 node packages/cli/dist/index.js verify review-access \
   --root fixtures/review-access-reference \
   --packs-dir capabilities
-node packages/cli/dist/index.js compose vehicle-management \
+node packages/cli/dist/index.js compose secure-workspace \
   --root fixtures/identity-reference --packs-dir capabilities
-node packages/cli/dist/index.js add vehicle-management --solution \
+node packages/cli/dist/index.js add secure-workspace --solution \
   --root /path/to/project
-node packages/cli/dist/index.js add vehicle-management --solution --finalize \
+node packages/cli/dist/index.js add secure-workspace --solution --finalize \
   --agent codex --root /path/to/project
 node packages/cli/dist/index.js add wechat-miniprogram-auth \
   --root /path/to/project
@@ -132,13 +132,13 @@ npm install --global @grubbylee/aiba
 aiba list
 aiba show identity
 aiba init
-aiba add vehicle-management --solution
-aiba status vehicle-management
-aiba continue vehicle-management
-aiba continue vehicle-management --finalize --agent codex
+aiba add secure-workspace --solution
+aiba status secure-workspace
+aiba continue secure-workspace
+aiba continue secure-workspace --finalize --agent codex
 aiba doctor
 aiba inspect
-aiba compose vehicle-management
+aiba compose secure-workspace
 aiba test identity --runner ci-runner --key-id runner-1 \
   --test-id identity-contract --command "pnpm test -- identity"
 aiba attest .aiba/behavior/challenges/<id>.json \
@@ -152,7 +152,7 @@ aiba completion bash
 ```
 
 The scoped package still installs the `aiba` executable. The npm distribution
-includes the official capability packs and industry solutions. Library consumers
+includes the official capability packs and application solutions. Library consumers
 can install `aiba-core`, `aiba-spec`, or `aiba-registry-server` independently.
 
 The concise product workflow remains:
@@ -163,18 +163,18 @@ aiba agent-protocol --json
 aiba create capability appointment-booking
 aiba lint capabilities/appointment-booking
 aiba test-pack capabilities/appointment-booking
-aiba solution-sign solutions/vehicle-management \
+aiba solution-sign solutions/secure-workspace \
   --publisher aiba-official --key-id root-1 --private-key /secure/private.pem \
-  --sequence 1 --expires-at <date-time> --out vehicle-management.signed.json
-aiba solution-verify solutions/vehicle-management \
-  --envelope vehicle-management.signed.json --trust solution-trust.json \
+  --sequence 1 --expires-at <date-time> --out secure-workspace.signed.json
+aiba solution-verify solutions/secure-workspace \
+  --envelope secure-workspace.signed.json --trust solution-trust.json \
   --state solution-state.json
 aiba list
-aiba show vehicle-management
-aiba add vehicle-management --solution
+aiba show secure-workspace
+aiba add secure-workspace --solution
 aiba inspect
 aiba verify
-aiba compose vehicle-management
+aiba compose secure-workspace
 ```
 
 For the complete M3 security base, install and adapt `identity`, `audit`,

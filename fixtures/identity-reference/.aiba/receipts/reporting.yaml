@@ -9,9 +9,9 @@ installation:
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/reporting.yaml
-  planSha256: 4dfed7713f0faf73c65ce1aa6f12fc4beeea23beea01b299d67299651f08200e
+  planSha256: dc4617219d15df64b62f5270ab3527ae258ae744d7034707b58730d8f0d28d34
   ancestry: .aiba/ancestry/reporting.json
-  ancestrySha256: ace3ee1b0a65a63d6f4d830fb7f6055b85175ae4c0d5d9b855af46eabbcad2e2
+  ancestrySha256: 96529d31648946093d4ede1b4bcb21695f6d67e0c5875b0e6e41aa2804e2ece1
 invariants:
   - id: definitions-and-scope-are-trusted
     evidence:
@@ -22,7 +22,7 @@ invariants:
       - type: test
         path: src/reporting.test.ts
         ownership: shared
-        sha256: 2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2
+        sha256: 23455520a4fbf931fd649b8297ffd970ed6e5edff375993c7c56ab289e62b308
   - id: report-execution-is-authorized
     evidence:
       - type: source
@@ -32,7 +32,7 @@ invariants:
       - type: test
         path: src/reporting.test.ts
         ownership: shared
-        sha256: 2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2
+        sha256: 23455520a4fbf931fd649b8297ffd970ed6e5edff375993c7c56ab289e62b308
   - id: report-execution-is-bounded
     evidence:
       - type: source
@@ -42,7 +42,7 @@ invariants:
       - type: test
         path: src/reporting.test.ts
         ownership: shared
-        sha256: 2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2
+        sha256: 23455520a4fbf931fd649b8297ffd970ed6e5edff375993c7c56ab289e62b308
   - id: report-requests-are-idempotent
     evidence:
       - type: source
@@ -52,7 +52,7 @@ invariants:
       - type: test
         path: src/reporting.test.ts
         ownership: shared
-        sha256: 2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2
+        sha256: 23455520a4fbf931fd649b8297ffd970ed6e5edff375993c7c56ab289e62b308
   - id: outputs-are-private-and-projected
     evidence:
       - type: source
@@ -62,7 +62,7 @@ invariants:
       - type: test
         path: src/reporting.test.ts
         ownership: shared
-        sha256: 2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2
+        sha256: 23455520a4fbf931fd649b8297ffd970ed6e5edff375993c7c56ab289e62b308
   - id: report-records-are-minimized
     evidence:
       - type: source
@@ -72,4 +72,4 @@ invariants:
       - type: test
         path: src/reporting.test.ts
         ownership: shared
-        sha256: 2d990e8f976f2135f3a1ee49ad015cb3e0e9d53cc154887b442d6db2756ac2d2
+        sha256: 23455520a4fbf931fd649b8297ffd970ed6e5edff375993c7c56ab289e62b308

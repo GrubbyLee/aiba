@@ -32,7 +32,7 @@ async function createFixture(): Promise<Fixture> {
     { id: "audit", dependencies: [] },
     { id: "identity", dependencies: [] },
     {
-      id: "vehicles",
+      id: "tasks",
       dependencies: [{ id: "identity", version: "^0.1.0", optional: false }],
     },
   ];
@@ -224,7 +224,7 @@ describe("guided Solution installation", () => {
       status: "prepared",
       progress: { completed: 0, total: 3 },
       currentCapability: { id: "audit", version: "0.1.0", index: 1 },
-      remainingCapabilities: ["audit", "identity", "vehicles"],
+      remainingCapabilities: ["audit", "identity", "tasks"],
       planPath: ".aiba/plans/audit.yaml",
     });
     await expect(readFile(join(fixture.root, ".aiba", "plans", "identity.yaml"), "utf8"))
@@ -258,7 +258,7 @@ describe("guided Solution installation", () => {
       status: "finalized",
       progress: { completed: 1, total: 3 },
       currentCapability: { id: "audit", index: 1 },
-      remainingCapabilities: ["identity", "vehicles"],
+      remainingCapabilities: ["identity", "tasks"],
       finalization: { capability: "audit", version: "0.1.0" },
     });
     await expect(readFile(join(fixture.root, ".aiba", "plans", "identity.yaml"), "utf8"))
@@ -292,12 +292,12 @@ describe("guided Solution installation", () => {
     const fixture = await createFixture();
     await installCurrent(fixture, "audit");
     await installCurrent(fixture, "identity");
-    const complete = await installCurrent(fixture, "vehicles");
+    const complete = await installCurrent(fixture, "tasks");
     expect(complete).toMatchObject({
       status: "evidence-verified",
       progress: { completed: 3, total: 3 },
       remainingCapabilities: [],
-      finalization: { capability: "vehicles" },
+      finalization: { capability: "tasks" },
       verification: { ok: true },
     });
 
@@ -315,21 +315,21 @@ describe("guided Solution installation", () => {
       status: "prepared",
       progress: { completed: 1, total: 3 },
       currentCapability: { id: "audit", index: 1 },
-      remainingCapabilities: ["audit", "vehicles"],
+      remainingCapabilities: ["audit", "tasks"],
     });
     await addEvidence(fixture.root, "audit");
     const finalized = await advanceSolutionInstallation(options(fixture, "finalize"));
     expect(finalized).toMatchObject({
       status: "finalized",
       progress: { completed: 2, total: 3 },
-      remainingCapabilities: ["vehicles"],
+      remainingCapabilities: ["tasks"],
     });
   });
 
   it("verifies immediately when finalizing the only missing constituent", async () => {
     const fixture = await createFixture();
     await installStandalone(fixture, "identity");
-    await installStandalone(fixture, "vehicles");
+    await installStandalone(fixture, "tasks");
     await advanceSolutionInstallation(options(fixture));
     await addEvidence(fixture.root, "audit");
 

@@ -1,6 +1,6 @@
 ---
 name: aiba-capabilities
-description: Install, adapt, compose, finalize, fetch, and verify AIBA software capabilities through the provider-independent AIBA CLI. Use when a user asks Codex or Claude Code to add identity, authorization, audit, users, notifications, inbox, verification, files, jobs, flags, internationalization, data dictionaries, forms, tags, webhooks, organizations, comments, activity, search, import/export, reporting, approvals, review access, business records, or Mini Program authentication; inspect an industry solution or `.aiba` state; or fetch a verified capability pack.
+description: Install, adapt, compose, finalize, fetch, and verify AIBA software capabilities through the provider-independent AIBA CLI. Use when a user asks Codex or Claude Code to add identity, authorization, audit, users, notifications, inbox, verification, files, jobs, flags, internationalization, data dictionaries, forms, tags, webhooks, organizations, comments, activity, search, import/export, reporting, approvals, review access, business records, or Mini Program authentication; inspect an application Solution or `.aiba` state; or fetch a verified capability pack.
 ---
 
 # AIBA Capabilities
@@ -85,12 +85,12 @@ Do not claim one file type as another to satisfy the contract.
 Treat `capabilities/catalog.yaml` and `metadata.layer` as discovery information,
 not permission to assume an implementation. Reject catalog entries that conflict
 with an embedded manifest layer or exact version. Platform integrations must
-preserve provider-independent contracts. Industry solutions must verify every
+preserve provider-independent contracts. Application Solutions must verify every
 constituent capability and may not weaken or replace their invariants.
 
 ## Install A Solution
 
-Before adapting an industry solution, inspect its exact requirements. Use
+Before adapting an application Solution, inspect its exact requirements. Use
 `compose` when the user requested only a read-only check:
 
 ```bash

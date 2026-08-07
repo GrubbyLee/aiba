@@ -82,10 +82,10 @@ initial identity and security foundation.
 - [x] Deliver `file-assets` as the first non-identity application capability.
 - [x] Add secure reference behavior and adversarial conformance tests for files.
 - [x] Deliver `import-export` as the first reusable business capability.
-- [x] Deliver `vehicle-records` as the first industry-domain capability.
+- [x] Validate project-specific domains against shared capability contracts.
 - [x] Deliver `wechat-miniprogram-auth` as the first platform integration.
 - [x] Define hash-bound solution composition without allowing invariant weakening.
-- [x] Compose and verify a `vehicle-management` industry solution.
+- [x] Compose and verify an exact dependency-ordered application Solution.
 - [x] Add standalone publisher signatures before enabling third-party or
   non-npm Solution distribution; this does not block the current official channel.
 - [x] Validate selected capabilities in TypeScript API, web admin, and native
@@ -93,7 +93,7 @@ initial identity and security foundation.
 
 M7 is complete when at least one capability from each of the first four layers
 has passed the full install, verify, provenance, distribution, and upgrade
-lifecycle, and one industry solution composes them without bypassing individual
+lifecycle, and one application Solution composes them without bypassing individual
 verification.
 
 ## M8: Beta Adoption

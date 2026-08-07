@@ -9,7 +9,7 @@ installation:
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/scheduled-jobs.yaml
-  planSha256: 37e5c1eb99a1de0a59d535dab8c6456344d9d38822bd8a50a7760ec58542a98a
+  planSha256: 757ee3f5e47470bb7c6cd0073fb8b6e317949c0e92dc718d9c89b67b1f7da276
   ancestry: .aiba/ancestry/scheduled-jobs.json
   ancestrySha256: a785891f3a16c0c88c228ce054cba9908dcb4164ac46ec20c33df8031eaa5f3a
 invariants:

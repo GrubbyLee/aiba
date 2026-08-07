@@ -2,10 +2,10 @@ import { describe, expect, it } from "vitest";
 import { createFormEngineService, type FormSchemaDefinition } from "./form-engine.js";
 
 const baseSchema: FormSchemaDefinition = {
-  formCode: "vehicle-intake",
+  formCode: "task-intake",
   revision: 3,
-  title: "Vehicle <Intake>",
-  description: "Register a vehicle",
+  title: "Task <Intake>",
+  description: "Register a task",
   enabled: true,
   fields: [
     { name: "plate", type: "string", label: "Plate", required: true, minLength: 5, maxLength: 12, pattern: "^[A-Z0-9-]+$" },
@@ -25,22 +25,22 @@ function fixture(options: { schema?: FormSchemaDefinition; authorized?: boolean;
       && (revision === undefined || revision === definition.revision) ? definition : undefined,
     authorize: async () => options.authorized !== false,
     verifyFileReference: async ({ tenantId, formCode, assetId }) => options.validAsset !== false
-      && tenantId === "tenant-a" && formCode === "vehicle-intake" && assetId === "asset-1",
+      && tenantId === "tenant-a" && formCode === "task-intake" && assetId === "asset-1",
     storeSubmission: async (input) => { stored.push(input); return "submission_001"; },
     sanitizeText: (value) => value.replace(/</g, "&lt;").replace(/>/g, "&gt;"),
     now: () => new Date("2026-08-07T00:00:00Z"),
   });
   const context = { tenantId: "tenant-a", principalId: "user-1" };
-  const command = { formCode: "vehicle-intake", expectedRevision: 3, data: { plate: "ABC-123", kind: "car" }, idempotencyKey: "form-submit-0001" };
+  const command = { formCode: "task-intake", expectedRevision: 3, data: { plate: "ABC-123", kind: "car" }, idempotencyKey: "form-submit-0001" };
   return { service, context, command, stored };
 }
 
 describe("form-engine reference boundary", () => {
   it("loads a sanitized, revisioned portable schema", async () => {
     const f = fixture();
-    await expect(f.service.schema(f.context, { formCode: "vehicle-intake" })).resolves.toMatchObject({
+    await expect(f.service.schema(f.context, { formCode: "task-intake" })).resolves.toMatchObject({
       revision: 3,
-      title: "Vehicle &lt;Intake&gt;",
+      title: "Task &lt;Intake&gt;",
       loadedAt: "2026-08-07T00:00:00.000Z",
     });
   });
@@ -55,9 +55,9 @@ describe("form-engine reference boundary", () => {
   it("rejects stale revisions and unauthorized or cross-tenant access", async () => {
     const f = fixture();
     await expect(f.service.submit(f.context, { ...f.command, expectedRevision: 2 })).rejects.toThrow("form-unavailable");
-    await expect(f.service.schema({ ...f.context, tenantId: "tenant-b" }, { formCode: "vehicle-intake" })).rejects.toThrow("form-unavailable");
+    await expect(f.service.schema({ ...f.context, tenantId: "tenant-b" }, { formCode: "task-intake" })).rejects.toThrow("form-unavailable");
     const denied = fixture({ authorized: false });
-    await expect(denied.service.schema(denied.context, { formCode: "vehicle-intake" })).rejects.toThrow("form-unavailable");
+    await expect(denied.service.schema(denied.context, { formCode: "task-intake" })).rejects.toThrow("form-unavailable");
   });
 
   it("rejects missing, unknown, hidden, and readonly fields on the server", async () => {
@@ -97,9 +97,9 @@ describe("form-engine reference boundary", () => {
       { name: "a", type: "string", label: "A", dependsOn: ["b"] },
       { name: "b", type: "string", label: "B", dependsOn: ["a"] },
     ] } });
-    await expect(cyclic.service.schema(cyclic.context, { formCode: "vehicle-intake" })).rejects.toThrow("field-dependency-cycle");
+    await expect(cyclic.service.schema(cyclic.context, { formCode: "task-intake" })).rejects.toThrow("field-dependency-cycle");
     const unsafe = fixture({ schema: { ...baseSchema, fields: [{ name: "value", type: "string", label: "Value", pattern: "(a+)+$" }] } });
-    await expect(unsafe.service.schema(unsafe.context, { formCode: "vehicle-intake" })).rejects.toThrow("unsafe-field-pattern");
+    await expect(unsafe.service.schema(unsafe.context, { formCode: "task-intake" })).rejects.toThrow("unsafe-field-pattern");
   });
 
   it("bounds total payload size even when runtime input bypasses static types", async () => {

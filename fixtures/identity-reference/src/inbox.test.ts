@@ -7,12 +7,12 @@ function fixture(options: { authorized?: boolean } = {}) {
   const audits: unknown[] = [];
   const service = createInboxService({
     authorize: async () => options.authorized !== false,
-    renderTemplate: async (event) => event.templateId === "vehicle-ready" && event.templateVersion === 1 ? {
+    renderTemplate: async (event) => event.templateId === "task-ready" && event.templateVersion === 1 ? {
       category: "fleet.update",
-      title: `Vehicle <${event.parameters.plate}> ready`,
+      title: `Task <${event.parameters.plate}> ready`,
       body: "Open the fleet record.",
-      resourceType: "vehicle",
-      resourceId: event.parameters.vehicleId!,
+      resourceType: "task",
+      resourceId: event.parameters.taskId!,
     } : undefined,
     audit: (event) => audits.push(event),
     sanitizeText: (value) => value.replace(/</g, "&lt;").replace(/>/g, "&gt;"),
@@ -26,9 +26,9 @@ function fixture(options: { authorized?: boolean } = {}) {
       tenantId: "tenant-a",
       recipientId,
       sourceEventId,
-      templateId: "vehicle-ready",
+      templateId: "task-ready",
       templateVersion: 1,
-      parameters: { plate: "A123", vehicleId: "vehicle-1" },
+      parameters: { plate: "A123", taskId: "task-1" },
     });
   }
   return { service, context, ingest, audits };
@@ -38,7 +38,7 @@ describe("inbox reference boundary", () => {
   it("creates sanitized messages only from trusted versioned templates", async () => {
     const f = fixture();
     const message = await f.ingest();
-    expect(message).toMatchObject({ status: "unread", title: "Vehicle &lt;A123&gt; ready", revision: 1 });
+    expect(message).toMatchObject({ status: "unread", title: "Task &lt;A123&gt; ready", revision: 1 });
     expect(JSON.stringify(message)).not.toContain("recipientId");
     await expect(f.service.ingestTrustedEvent({ tenantId: "tenant-a", recipientId: "user-1", sourceEventId: "bad", templateId: "unknown", templateVersion: 1, parameters: {} })).rejects.toThrow("inbox-template-unavailable");
   });
@@ -46,7 +46,7 @@ describe("inbox reference boundary", () => {
   it("deduplicates an exact source event and rejects changed reuse", async () => {
     const f = fixture();
     expect(await f.ingest("user-1", "event-same")).toEqual(await f.ingest("user-1", "event-same"));
-    await expect(f.service.ingestTrustedEvent({ tenantId: "tenant-a", recipientId: "user-2", sourceEventId: "event-same", templateId: "vehicle-ready", templateVersion: 1, parameters: { plate: "A123", vehicleId: "vehicle-1" } })).rejects.toThrow("source-event-conflict");
+    await expect(f.service.ingestTrustedEvent({ tenantId: "tenant-a", recipientId: "user-2", sourceEventId: "event-same", templateId: "task-ready", templateVersion: 1, parameters: { plate: "A123", taskId: "task-1" } })).rejects.toThrow("source-event-conflict");
   });
 
   it("derives tenant and recipient scope from authenticated context", async () => {
@@ -122,6 +122,6 @@ describe("inbox reference boundary", () => {
     const message = await f.ingest();
     await f.service.transition(f.context, { action: "mark-read", targets: [{ messageId: message.messageId, expectedRevision: 1 }], idempotencyKey: "audit-message-1" });
     expect(f.audits).toEqual([{ action: "inbox:transition", outcome: "succeeded", count: 1, correlationId: "correlation-1" }]);
-    expect(JSON.stringify(f.audits)).not.toContain("Vehicle");
+    expect(JSON.stringify(f.audits)).not.toContain("Task");
   });
 });

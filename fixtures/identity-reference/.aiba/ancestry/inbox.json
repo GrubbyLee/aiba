@@ -13,7 +13,7 @@
   "files": [
     {
       "path": "src/inbox.test.ts",
-      "installedSha256": "540c6f2b0ca6c769fafb8e89af0d270f46f374256735fc1531b8774ff99fdb02",
+      "installedSha256": "6981de5b497fe247d37d90f254af3a5c4d25eff04821126b534ed1b347e93222",
       "ownership": "shared",
       "evidenceTypes": [
         "test"
