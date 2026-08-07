@@ -194,14 +194,16 @@ try {
   mkdirSync(authored);
   runCli(["create", "app", "operations-hub", "--out", authored, "--json"]);
   const authoredPlanPath = join(authored, "operations-hub.plan.json");
-  const authoredPlan = runCli(["plan", join(authored, "operations-hub", "app.yaml"), "--packs-dir", join(workspace, "capabilities"), "--out", authoredPlanPath, "--json"]);
+  const authoredPlanOutput = join("authored", "operations-hub.plan.json");
+  const authoredPlan = runCli(["plan", join(authored, "operations-hub", "app.yaml"), "--packs-dir", join(workspace, "capabilities"), "--out", authoredPlanOutput, "--json"]);
   if (readFileSync(authoredPlanPath, "utf8") !== authoredPlan) {
     throw new Error("Persisted application plan does not match JSON output");
   }
   const blueprintDiffPath = join(consumer, "work-hub.diff.json");
+  const blueprintDiffOutput = "work-hub.diff.json";
   const previousBlueprint = join(workspace, "fixtures", "application-blueprint", "work-hub.yaml");
   const nextBlueprint = join(workspace, "fixtures", "application-blueprint", "work-hub-v2.yaml");
-  const blueprintDiff = runCli(["app-diff", previousBlueprint, nextBlueprint, "--packs-dir", join(workspace, "capabilities"), "--out", blueprintDiffPath, "--json"]);
+  const blueprintDiff = runCli(["app-diff", previousBlueprint, nextBlueprint, "--packs-dir", join(workspace, "capabilities"), "--out", blueprintDiffOutput, "--json"]);
   if (!readFileSync(blueprintDiffPath, "utf8").includes('"kind": "ApplicationBlueprintUpgradePlan"')) {
     throw new Error("Application Blueprint diff was not persisted");
   }
@@ -209,7 +211,8 @@ try {
     throw new Error("Application Blueprint diff output is missing required fields");
   }
   const upgradeAcceptancePath = join(consumer, "work-hub.accepted.json");
-  runCli(["app-upgrade", previousBlueprint, nextBlueprint, "--packs-dir", join(workspace, "capabilities"), "--plan", blueprintDiffPath, "--accept", "--out", upgradeAcceptancePath, "--json"]);
+  const upgradeAcceptanceOutput = "work-hub.accepted.json";
+  runCli(["app-upgrade", previousBlueprint, nextBlueprint, "--packs-dir", join(workspace, "capabilities"), "--plan", blueprintDiffOutput, "--accept", "--out", upgradeAcceptanceOutput, "--json"]);
   if (!readFileSync(upgradeAcceptancePath, "utf8").includes('"ok": true')) {
     throw new Error("Application Blueprint upgrade was not accepted");
   }
