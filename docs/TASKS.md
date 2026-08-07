@@ -373,7 +373,7 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Finish bilingual documentation and pass the complete local check.
 - [x] Confirm Linux Node 22/24, macOS, Windows, Pages, and Gitee sync after push.
 
-## In Progress: M21 Blueprint Lifecycle
+## Completed: M21 Blueprint Lifecycle
 
 - [x] Persist source-bound plans with safe output and stale-source checks.
 - [x] Add deterministic Blueprint diff output and security classifications.
