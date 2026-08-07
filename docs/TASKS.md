@@ -373,7 +373,7 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Finish bilingual documentation and pass the complete local check.
 - [x] Confirm Linux Node 22/24, macOS, Windows, Pages, and Gitee sync after push.
 
-## In Progress: M20 Domain-Neutral Application Blueprints
+## Completed: M20 Domain-Neutral Application Blueprints
 
 - [x] Enforce a regression boundary against project-specific business models in
   official product surfaces.
@@ -384,4 +384,4 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Update bilingual product, architecture, Quick Start, and Agent Skill guidance.
 - [x] Assert all Blueprint protocols and workflows in npm release artifacts.
 - [x] Pass the complete local check.
-- [ ] Confirm Linux Node 22/24, macOS, Windows, Pages, and Gitee sync after push.
+- [x] Confirm Linux Node 22/24, macOS, Windows, Pages, and Gitee sync after push.

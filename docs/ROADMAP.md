@@ -247,7 +247,7 @@ turning any example business domain into product infrastructure.
 - [x] Preserve compatible project-owned customization and require explicit
   decisions for breaking, security-sensitive, and conflicting upgrades.
 - [x] Exercise a domain-neutral collaboration application and adversarial cases.
-- [ ] Confirm the complete hosted portability and mirror workflows after push.
+- [x] Confirm the complete hosted portability and mirror workflows after push.
 
 M20 is complete when all three schemas ship in `aiba-spec`, the installed CLI
 can scaffold and plan a Blueprint, v1-to-v2 upgrades preserve project-owned

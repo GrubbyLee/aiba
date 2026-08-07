@@ -327,8 +327,9 @@
         "Add positive and adversarial end-to-end verification.",
         "Update roadmap, architecture, quick start, Agent Skill, and release artifact checks."
       ],
-      "passes": false,
-      "verification": "Domain-neutral fixture plans and upgrades end to end; bilingual docs and installed npm tarballs expose the workflow; pnpm check and hosted workflows pass."
+      "passes": true,
+      "verification": "Domain-neutral v1/v2 fixtures plan and upgrade end to end; bilingual docs, Agent Skill, smoke, and installed npm tarballs expose the workflow; pnpm check, GitHub CI/Pages, and Gitee sync pass.",
+      "commit": "ae71def"
     }
   ]
 }
