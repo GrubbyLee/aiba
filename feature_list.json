@@ -221,9 +221,9 @@
     {
       "id": "m19-inbox",
       "name": "站内消息 / 通知中心",
-      "passes": false,
-      "evidence": "",
-      "commit": ""
+      "passes": true,
+      "evidence": "pack quality 100 + spec schemas (5) + core dependency/discovery validation + identity-reference scoped inbox service (10 tests) + strict typecheck",
+      "commit": "2420904"
     },
     {
       "id": "m19-tags",

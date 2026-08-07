@@ -535,3 +535,23 @@ Verification:
 Commit: 724f3c5
 Progress: 16/19
 Next: m19-inbox
+
+----------------------------------------
+Session #25 - m19-inbox
+----------------------------------------
+Date: 2026-08-07
+
+Completed:
+  [x] Added a principal-scoped message inbox distinct from provider delivery.
+  [x] Added trusted template ingestion, signed cursors, unread counts, and minimized records.
+  [x] Added atomic revisioned batch transitions and scoped exact idempotency.
+  [x] Added five public schemas and ten positive and adversarial reference tests.
+
+Verification:
+  - Spec: 86 tests; Core: 141 tests; reference fixture: 169 tests
+  - Strict Spec and fixture typechecks passed
+  - Pack lint and test-pack: score 100
+
+Commit: 2420904
+Progress: 17/19
+Next: m19-tags
