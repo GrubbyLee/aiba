@@ -20,19 +20,40 @@
 
 **Agent Infrastructure for Building Applications。**
 
-AIBA 是一套面向 AI Agent 的应用构建基础设施。它帮助 Agent 为项目添加、验证、
-追踪和升级完整的软件能力，同时不把项目锁定在固定的应用框架、服务商或视觉体系中。
+AIBA 是面向 AI Agent 的低代码基础设施。它不是管理后台模板、可视化页面搭建器、
+固定的全栈框架，也不是提示词集合。
+
+它向 AI Agent 提供稳定、带版本的软件行为定义；Agent 按项目已有的技术栈和设计语言完成
+适配；确定性的 Core 命令负责检查、验证、追踪和升级结果。生成代码归项目所有。
+
+## 能力层级
+
+AIBA 现有 23 项可复用能力，按下面顺序组织，便于发现和理解：
+
+| 层级 | 当前目录 |
+| --- | --- |
+| 应用基础能力 | `identity`、`authorization`、`users`、`notification`、`inbox`、`verification-challenge`、`data-dict`、`file-assets`、`i18n`、`scheduled-jobs`、`feature-flags`、`organization`、`search`、`review-access` |
+| 平台集成能力 | `webhooks`、`wechat-miniprogram-auth` |
+| 业务通用能力 | `comments-activity`、`form-engine`、`import-export`、`reporting`、`tags`、`workflow-approval` |
+| 工程治理能力 | `audit` |
+| 应用组合方案 | `secure-workspace` |
+
+前四层是可独立安装的能力包。最后一层是可复用的组合方案，不计入 23 项能力包。
+
+AIBA 目前支持 Agent 辅助安装、确定性的证据与来源验证、漂移检查、感知定制的升级、签名
+能力包、私有 Registry 认证下载、验证缓存和防回滚解析。可选的项目治理机制还能为安装和
+升级的最终确认增加带签名、绑定证据的团队审批。
+
+典型结果：
+
+- 不用固定模板，也能快速交付管理后台和内部工具；
+- 让 Agent 基于有边界的 Blueprint 工作，而不是靠散乱提示词碰运气；
+- 复用登录、权限、文件、通知、表单、报表、审批、集成等经过验证的能力块；
+- 把来源、升级和治理规则显式化，而不是藏在隐式约定里。
 
 用户可以用 Application Blueprint 描述自己项目的资源、工作流、授权意图、事件、界面意图和
 验收证据。AIBA 负责验证这些意图，并确定性地解析出通用能力和有边界、不可执行的 Agent
 任务图。具体业务名词只属于用户项目，绝不会成为 AIBA 内置的产品模型。
-
-官方目录现有 23 项能力，覆盖身份、访问、验证、文件、通知、站内信、任务、功能开关、
-国际化、数据字典、动态表单、标签、组织、Webhook、评论、搜索、导入导出、报表和审批。
-能力按五层组织：应用基础能力、平台集成能力、业务通用能力、工程治理能力和应用组合方案。AIBA
-目前支持 Agent 辅助安装、确定性的证据与来源验证、漂移检查、感知定制的升级、签名能力包、
-私有 Registry 认证下载、验证缓存和防回滚解析。可选的项目治理机制还能为安装和
-升级的最终确认增加带签名、绑定证据的团队审批。
 
 [历史外部演示](https://grubbylee.github.io/aiba/video/)展示了 AIBA 和 Codex 如何从空目录
 完成一个真实项目。演示中的具体业务只属于文档，不属于 AIBA 协议或官方能力目录。

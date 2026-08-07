@@ -4,7 +4,8 @@
 
 这条路径会验证已安装的 CLI、创建一个全新项目、编写 Application Blueprint，并把有边界的
 任务图交给 AI Agent。环境准备和首次交接约需十分钟；完整应用的实现时间取决于项目，AIBA
-不会把这部分时间隐藏在“十分钟”承诺中。
+不会把这部分时间隐藏在“十分钟”承诺中。首次上手时，只需要先完成第 1 到第 5 步。
+升级和 Solution 安装属于可选后续流程。
 
 ## 准备条件
 
@@ -46,9 +47,7 @@ aiba plan applications/work-hub/app.yaml --json
 规划前先编辑 `applications/work-hub/app.yaml`，用自己的资源、字段、状态、操作、授权动作、
 事件、界面意图、验收证据和 Agent 写入范围替换脚手架内容。这些名称只属于项目，不是 AIBA
 产品模型。规划会验证文档、解析精确能力依赖，并输出不可执行的 Agent 任务图。
-如果想保留计划，可加 `--out .aiba/plans/work-hub.plan.json`。比较两个 Blueprint 时使用
-`aiba app-diff old.yaml new.yaml`；接受已保存的升级计划时使用
-`aiba app-upgrade old.yaml new.yaml --plan <plan.json> --accept`。
+如果想保留计划，可加 `--out .aiba/plans/work-hub.plan.json`。
 
 ## 4. 把计划交给 Agent
 
@@ -104,3 +103,12 @@ aiba completion fish | source
 
 Agent 或 CI 集成应为稳定工作流命令添加 `--json`。失败时，stderr 只返回一个
 `AibaErrorEnvelope`，进程退出码为非零。
+
+## 可选：Blueprint 升级
+
+先把第一轮跑通，再看这些命令：
+
+```bash
+aiba app-diff old.yaml new.yaml
+aiba app-upgrade old.yaml new.yaml --plan <plan.json> --accept
+```

@@ -20,28 +20,48 @@
 
 **Agent Infrastructure for Building Applications.**
 
-AIBA is application-building infrastructure for AI agents. It helps agents add,
-verify, trace, and upgrade complete software capabilities without forcing
-projects into a fixed application framework, provider, or visual system.
+AIBA is agent-native low-code infrastructure. It is not an admin template,
+visual page builder, fixed full-stack framework, or prompt library.
+
+It gives AI Agents stable, versioned definitions of application behavior. The
+Agent adapts that behavior to the project's existing stack and design language;
+deterministic Core commands inspect, verify, trace, and upgrade the result.
+Generated code remains project-owned.
+
+## Capability Layers
+
+AIBA ships 23 reusable capabilities, organized for discovery in this order:
+
+| Layer | Current catalog |
+| --- | --- |
+| Application foundation | `identity`, `authorization`, `users`, `notification`, `inbox`, `verification-challenge`, `data-dict`, `file-assets`, `i18n`, `scheduled-jobs`, `feature-flags`, `organization`, `search`, `review-access` |
+| Platform integration | `webhooks`, `wechat-miniprogram-auth` |
+| Business capability | `comments-activity`, `form-engine`, `import-export`, `reporting`, `tags`, `workflow-approval` |
+| Engineering governance | `audit` |
+| Application solution | `secure-workspace` |
+
+The first four layers are installable packs. The solution layer is a reusable
+composition, not one of the 23 capability packs.
+
+AIBA currently supports Agent-assisted install, deterministic evidence and
+provenance verification, drift inspection, customization-aware upgrade, signed
+capability bundles, authenticated private registry fetch, verified caching, and
+anti-rollback resolution. Optional project governance adds signed, evidence-bound
+team approvals to install and upgrade finalization.
+
+Typical outcomes:
+
+- ship admin back offices and internal tools without freezing on one template;
+- let Agents build from a bounded Blueprint instead of ad hoc prompts;
+- reuse verified building blocks for login, permissions, files, notifications,
+  forms, reports, approvals, and integrations;
+- keep provenance, upgrades, and governance explicit instead of implicit.
 
 Describe project-specific resources, workflows, authorization intent, events,
 UI intent, and acceptance evidence in an Application Blueprint. AIBA validates
 that intent and deterministically resolves reusable capabilities plus a bounded,
 non-executable Agent task graph. Business nouns remain in the user's project;
 they never become built-in AIBA product models.
-
-The official catalog now contains 23 capabilities covering identity, access,
-verification, files, notifications, inbox, jobs, flags, internationalization,
-data dictionaries, forms, tags, organizations, webhooks, comments, search,
-import/export, reporting, and approvals. They
-are organized across five layers: application foundations, platform
-integrations, reusable business capabilities, engineering governance, and
-composed application solutions.
-AIBA currently supports Agent-assisted install, deterministic evidence and provenance verification,
-drift inspection, customization-aware upgrade, signed capability bundles,
-authenticated private registry fetch, verified caching, and anti-rollback
-resolution. Optional project governance adds signed, evidence-bound team
-approvals to install and upgrade finalization.
 
 A [historical external demonstration](https://grubbylee.github.io/aiba/video/)
 shows AIBA and Codex building one project from an empty directory. Its example

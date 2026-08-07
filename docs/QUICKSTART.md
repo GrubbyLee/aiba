@@ -4,8 +4,8 @@
 
 This path verifies the installed CLI, creates a clean project, authors an
 Application Blueprint, and hands its bounded task graph to an AI Agent. Setup
-and handoff take about ten minutes. Implementing the full application depends on
-the project and is intentionally not hidden behind that estimate.
+and handoff take about ten minutes. On a first pass, follow only steps 1 to 5.
+The upgrade and solution flows are intentionally optional.
 
 ## Prerequisites
 
@@ -49,10 +49,7 @@ your resources, fields, states, operations, authorization actions, events, UI
 intent, acceptance evidence, and allowed Agent write scopes. The names are
 project data, not AIBA product models. Planning validates the document, resolves
 exact capability dependencies, and prints a non-executable Agent task graph.
-Add `--out .aiba/plans/work-hub.plan.json` if you want to keep the plan. Use
-`aiba app-diff old.yaml new.yaml` to compare Blueprint revisions, and
-`aiba app-upgrade old.yaml new.yaml --plan <plan.json> --accept` to accept a
-saved upgrade plan explicitly.
+Add `--out .aiba/plans/work-hub.plan.json` if you want to keep the plan.
 
 ## 4. Hand The Plan To Your Agent
 
@@ -110,3 +107,12 @@ aiba completion fish | source
 
 Use `--json` on every stable workflow command when integrating an Agent or CI.
 Failures return one `AibaErrorEnvelope` on stderr and a nonzero exit code.
+
+## Optional: Blueprint Revisions
+
+Use these only after the first plan works:
+
+```bash
+aiba app-diff old.yaml new.yaml
+aiba app-upgrade old.yaml new.yaml --plan <plan.json> --accept
+```
