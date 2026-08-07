@@ -44,6 +44,43 @@ function fail(message: string, code: string): never {
   throw new AibaError(message, code);
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === "string");
+}
+
+export function parseApplicationTaskCustomization(
+  value: unknown,
+  context = "Blueprint customization",
+): ApplicationTaskCustomization {
+  if (!isRecord(value)) fail(`${context} must be an object`, "JSON_DOCUMENT_INVALID");
+  const { taskId, ownership, note, evidencePaths } = value;
+  if (typeof taskId !== "string"
+    || ownership !== "project"
+    || typeof note !== "string"
+    || !isStringArray(evidencePaths)) {
+    fail(`${context} must include taskId, ownership, note, and evidencePaths`, "JSON_DOCUMENT_INVALID");
+  }
+  return { taskId, ownership, note, evidencePaths };
+}
+
+export function parseApplicationBlueprintUpgradeResolution(
+  value: unknown,
+  context = "Blueprint upgrade resolution",
+): ApplicationBlueprintUpgradeResolution {
+  if (!isRecord(value)) fail(`${context} must be an object`, "JSON_DOCUMENT_INVALID");
+  const { changeId, decision, note } = value;
+  if (typeof changeId !== "string"
+    || (decision !== "accept" && decision !== "adapt")
+    || typeof note !== "string") {
+    fail(`${context} must include changeId, decision, and note`, "JSON_DOCUMENT_INVALID");
+  }
+  return { changeId, decision, note };
+}
+
 function hashPlan(plan: ApplicationPlan): string {
   return sha256Text(canonicalDocument(validateApplicationPlan(plan)));
 }
@@ -264,7 +301,8 @@ export function planApplicationBlueprintUpgrade(
     || nextPlan.metadata.blueprint.sha256 !== options.nextBlueprintSha256) {
     fail("Blueprint plan does not match exact source hash", "BLUEPRINT_UPGRADE_STALE_PLAN");
   }
-  const customizations = options.customizations ?? [];
+  const customizations = (options.customizations ?? []).map((item, index) =>
+    parseApplicationTaskCustomization(item, `Blueprint customization[${index + 1}]`));
   const taskIds = customizations.map((item) => item.taskId);
   if (new Set(taskIds).size !== taskIds.length) fail("Blueprint customizations contain duplicate task IDs", "BLUEPRINT_CUSTOMIZATION_INVALID");
 
@@ -340,9 +378,11 @@ export function acceptApplicationBlueprintUpgrade(options: {
     || plan.metadata.to.planSha256 !== hashPlan(options.currentNextPlan)) {
     fail("Blueprint upgrade plan is stale", "BLUEPRINT_UPGRADE_STALE_PLAN");
   }
-  const resolutionIds = options.resolutions.map((item) => item.changeId);
+  const resolutions = options.resolutions.map((item, index) =>
+    parseApplicationBlueprintUpgradeResolution(item, `Blueprint upgrade resolution[${index + 1}]`));
+  const resolutionIds = resolutions.map((item) => item.changeId);
   if (new Set(resolutionIds).size !== resolutionIds.length
-    || options.resolutions.some((item) => item.note.length === 0 || item.note.length > 1000)) {
+    || resolutions.some((item) => item.note.length === 0 || item.note.length > 1000)) {
     fail("Blueprint upgrade resolutions are invalid", "BLUEPRINT_UPGRADE_RESOLUTION_INVALID");
   }
   const supplied = new Set(resolutionIds);
@@ -359,6 +399,6 @@ export function acceptApplicationBlueprintUpgrade(options: {
     blueprintId: plan.metadata.blueprintId,
     version: plan.metadata.to.version,
     preservedCustomizations: plan.preservedCustomizations,
-    resolutions: options.resolutions,
+    resolutions,
   };
 }

@@ -15,6 +15,14 @@ describe("Agent protocol negotiation", () => {
       mutatesProject: false,
       resumable: true,
     });
+    expect(descriptor.commands.find((item) => item.name === "plan")).toMatchObject({
+      mutatesProject: false,
+      resumable: false,
+    });
+    expect(descriptor.commands.find((item) => item.name === "app-upgrade")).toMatchObject({
+      mutatesProject: false,
+      resumable: false,
+    });
     expect(descriptor.commands.find((item) => item.name === "continue")).toMatchObject({
       mutatesProject: true,
       resumable: true,

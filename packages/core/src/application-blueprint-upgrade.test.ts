@@ -187,4 +187,34 @@ describe("Application Blueprint customization-aware upgrades", () => {
       }],
     })).toThrowError(expect.objectContaining({ code: "BLUEPRINT_CUSTOMIZATION_INVALID" }));
   });
+
+  it("rejects malformed customization and resolution items before property access", async () => {
+    const pair = await versionPair((next) => {
+      next.spec.resources[1]!.fields.push({
+        id: "priority",
+        type: "integer",
+        required: false,
+        sensitive: false,
+      });
+    });
+    expect(() => planApplicationBlueprintUpgrade({
+      ...pair,
+      previousBlueprintSha256: previousSha,
+      nextBlueprintSha256: nextSha,
+      customizations: ["bad" as unknown as ApplicationTaskCustomization],
+    })).toThrowError(expect.objectContaining({ code: "JSON_DOCUMENT_INVALID" }));
+
+    const plan = planApplicationBlueprintUpgrade({
+      ...pair,
+      previousBlueprintSha256: previousSha,
+      nextBlueprintSha256: nextSha,
+    });
+    expect(() => acceptApplicationBlueprintUpgrade({
+      plan,
+      currentPreviousBlueprintSha256: previousSha,
+      currentNextBlueprintSha256: nextSha,
+      currentNextPlan: pair.nextPlan,
+      resolutions: ["bad" as never],
+    })).toThrowError(expect.objectContaining({ code: "JSON_DOCUMENT_INVALID" }));
+  });
 });

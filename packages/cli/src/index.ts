@@ -45,6 +45,8 @@ import {
   planRegistryRetention,
   evaluateGovernance,
   fetchRegistryCapability,
+  parseApplicationBlueprintUpgradeResolution,
+  parseApplicationTaskCustomization,
   resolveRegistryCapability,
   restoreRegistry,
   solutionStatus,
@@ -55,12 +57,10 @@ import {
   verifySignedSolution,
   validateApplicationBlueprintUpgradePlan,
 } from "aiba-core";
-import type { ApplicationBlueprintUpgradeResolution } from "aiba-core";
 import {
   AIBA_API_VERSION,
   type AibaErrorEnvelope,
   type ApplicationBlueprintUpgradePlan,
-  type ApplicationTaskCustomization,
 } from "aiba-spec";
 import { createRegistryServer } from "aiba-registry-server";
 import {
@@ -144,10 +144,10 @@ async function persistJsonArtifact(path: string, value: unknown): Promise<string
   return target;
 }
 
-function jsonArray<T>(path: string, label: string): T[] {
+function jsonArray<T>(path: string, label: string, parseItem: (value: unknown, index: number) => T): T[] {
   const value = readJsonFile(path);
   if (!Array.isArray(value)) throw new AibaError(`${label} must be a JSON array`, "JSON_DOCUMENT_INVALID");
-  return value as T[];
+  return value.map((item, index) => parseItem(item, index));
 }
 
 program
@@ -359,7 +359,8 @@ program
       packsDirectory: options.packsDir,
     });
     const customizations = options.customizations
-      ? jsonArray<ApplicationTaskCustomization>(options.customizations, "Customizations")
+      ? jsonArray(options.customizations, "Customizations", (item, index) =>
+        parseApplicationTaskCustomization(item, `Blueprint customization[${index + 1}]`))
       : undefined;
     const generatedPlan = await planApplicationBlueprintUpgrade({
       ...pair,
@@ -374,7 +375,8 @@ program
       return;
     }
     const resolutions = options.resolutions
-      ? jsonArray<ApplicationBlueprintUpgradeResolution>(options.resolutions, "Resolutions")
+      ? jsonArray(options.resolutions, "Resolutions", (item, index) =>
+        parseApplicationBlueprintUpgradeResolution(item, `Blueprint upgrade resolution[${index + 1}]`))
       : [];
     const accepted = acceptCompiledApplicationBlueprintUpgrade({ pair, plan, resolutions });
     if (options.out) await persistJsonArtifact(options.out, accepted);
