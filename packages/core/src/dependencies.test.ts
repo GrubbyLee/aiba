@@ -119,6 +119,7 @@ describe("core capability dependencies", () => {
       ["feature-flags", "application-foundation"],
       ["file-assets", "application-foundation"],
       ["data-dict", "application-foundation"],
+      ["form-engine", "business-capability"],
       ["i18n", "application-foundation"],
       ["identity", "application-foundation"],
       ["import-export", "business-capability"],

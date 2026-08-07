@@ -1,0 +1,37 @@
+apiVersion: aiba.dev/v0alpha1
+kind: Capability
+metadata:
+  id: form-engine
+  version: 0.1.0
+  title: Form Engine
+  layer: business-capability
+  description: Schema-defined dynamic forms with server-side validation, field dependency rules, and submission receipts without prescribing a UI framework or renderer.
+spec:
+  interfaces: [form-engine.schema-command, form-engine.schema-result, form-engine.submit-command, form-engine.submit-result]
+  dependencies: []
+  invariants:
+    - id: validation-is-server-side
+      title: Validation is always server-side
+      description: Every submission is validated against the schema on the trusted server; client-side validation is purely advisory.
+      severity: critical
+      evidence: &evidence { acceptedTypes: [source, test, config, document], requiredTypes: [source, test], minimum: 2, requireHash: true }
+    - id: schema-is-revisioned
+      title: Form schemas are revisioned
+      description: Every submission records the exact schema revision it was validated against, and schema changes produce a new revision.
+      severity: critical
+      evidence: *evidence
+    - id: fields-are-bounded
+      title: Field count and value size are bounded
+      description: Form schemas and submissions enforce maximum field count, string length, collection size, nesting depth, and total payload size to prevent resource exhaustion.
+      severity: critical
+      evidence: *evidence
+    - id: dependencies-are-acyclic
+      title: Field dependency rules are acyclic
+      description: Show/hide and computed field dependencies form a DAG; cycles are rejected at schema definition time.
+      severity: error
+      evidence: *evidence
+    - id: uploads-are-scoped
+      title: File uploads in forms are scoped and bounded
+      description: File-type form fields reference file-assets by ID and are bound to the form submission; they cannot reference arbitrary files.
+      severity: error
+      evidence: *evidence

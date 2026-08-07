@@ -34,6 +34,9 @@ capabilities:
   - id: data-dict
     version: 0.1.0
     layer: application-foundation
+  - id: form-engine
+    version: 0.1.0
+    layer: business-capability
   - id: organization
     version: 0.1.0
     layer: application-foundation

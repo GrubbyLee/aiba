@@ -26,7 +26,7 @@ Agent 按项目已有的技术栈和设计语言完成适配；确定性的 Core
 | --- | --- | --- |
 | 应用基础能力 | 跨项目复用的应用边界 | `identity`、`authorization`、`users`、`notification`、`verification-challenge`、`data-dict`、`file-assets`、`i18n`、`scheduled-jobs`、`feature-flags`、`organization`、`search`、`review-access` |
 | 平台集成能力 | 服务商和外部系统边界 | `webhooks`、`wechat-miniprogram-auth` |
-| 业务通用能力 | 可跨行业复用的业务行为 | `comments-activity`、`import-export`、`reporting`、`workflow-approval`、`vehicle-records` |
+| 业务通用能力 | 可跨行业复用的业务行为 | `comments-activity`、`form-engine`、`import-export`、`reporting`、`workflow-approval`、`vehicle-records` |
 | 工程治理能力 | 运行、安全和风险控制 | `audit` |
 | 行业解决方案 | 面向具体产品领域的精确组合 | `vehicle-management` |
 

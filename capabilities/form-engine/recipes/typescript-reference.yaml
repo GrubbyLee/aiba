@@ -1,0 +1,35 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Form Engine Boundary
+  description: Framework-neutral guidance for revisioned server-validated forms.
+spec:
+  capability: { id: form-engine, version: 0.1.0 }
+  compatibility: { languages: [TypeScript], frameworks: [] }
+  writeScope: { allowedPatterns: [src/**, server/**, test/**, tests/**] }
+  operations:
+    - id: load-trusted-schema
+      intent: Load and validate one tenant-scoped immutable form schema revision.
+      requiredInterfaces: [form-engine.schema-command, form-engine.schema-result]
+      invariants: [schema-is-revisioned, fields-are-bounded, dependencies-are-acyclic]
+      guidance:
+        - Derive tenant scope from authenticated context and reject duplicate fields, unsafe patterns, invalid limits, and dependency cycles.
+        - Return a revisioned portable definition; rendering remains an application-owned adapter concern.
+    - id: validate-and-submit
+      intent: Authorize, validate, deduplicate, and record one submission on the trusted server.
+      requiredInterfaces: [form-engine.submit-command, form-engine.submit-result]
+      invariants: [validation-is-server-side, schema-is-revisioned, fields-are-bounded, uploads-are-scoped]
+      guidance:
+        - Reject unknown, hidden, readonly, oversized, or mistyped values and require the exact schema revision.
+        - Verify every file asset against tenant and form scope before storing; bind idempotency to the normalized payload.
+  evidence:
+    - invariant: validation-is-server-side
+      suggestions: &suggestions
+        - { type: source, pathPattern: "src/**/*.ts", description: "Trusted form schema and submission validation boundary." }
+        - { type: test, pathPattern: "src/**/*.test.ts", description: "Malformed input, bounds, revision, dependency, file scope, and idempotency tests." }
+    - { invariant: schema-is-revisioned, suggestions: *suggestions }
+    - { invariant: fields-are-bounded, suggestions: *suggestions }
+    - { invariant: dependencies-are-acyclic, suggestions: *suggestions }
+    - { invariant: uploads-are-scoped, suggestions: *suggestions }

@@ -111,7 +111,7 @@ export function createDataDictService(deps: DataDictDependencies) {
     const sanitized: DataDictItemRecord[] = paged.map((item) => ({
       itemId: item.itemId,
       dictCode: item.dictCode,
-      parentId: item.parentId,
+      ...(item.parentId === undefined ? {} : { parentId: item.parentId }),
       value: item.value,
       valueType: item.valueType,
       label: deps.sanitizeLabel(item.label),

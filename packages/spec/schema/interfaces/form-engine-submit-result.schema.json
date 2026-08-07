@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/interfaces/v0alpha1/form-engine-submit-result.schema.json",
+  "title": "AIBA Form Engine Submit Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["formCode", "revision", "valid", "errors", "submittedAt"],
+  "properties": {
+    "formCode": { "type": "string", "pattern": "^[a-z][a-z0-9.-]{2,62}$" },
+    "revision": { "type": "integer", "minimum": 1, "maximum": 2147483647 },
+    "submissionId": { "type": "string", "pattern": "^[a-z][a-z0-9_-]{2,62}$" },
+    "valid": { "type": "boolean" },
+    "errors": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "code", "message"],
+        "properties": {
+          "field": { "type": "string", "maxLength": 200 },
+          "code": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,63}$" },
+          "message": { "type": "string", "maxLength": 500 }
+        }
+      }
+    },
+    "data": {
+      "type": "object",
+      "maxProperties": 100,
+      "additionalProperties": { "$ref": "#/$defs/value" }
+    },
+    "submittedAt": { "type": "string", "format": "date-time" }
+  },
+  "$defs": {
+    "scalar": { "type": ["string", "number", "boolean", "null"] },
+    "value": {
+      "oneOf": [
+        { "$ref": "#/$defs/scalar" },
+        { "type": "array", "maxItems": 200, "items": { "$ref": "#/$defs/scalar" } }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "valid": { "const": true } }, "required": ["valid"] },
+      "then": { "required": ["submissionId", "data"], "properties": { "errors": { "maxItems": 0 } } }
+    },
+    {
+      "if": { "properties": { "valid": { "const": false } }, "required": ["valid"] },
+      "then": { "properties": { "errors": { "minItems": 1 } } }
+    }
+  ]
+}

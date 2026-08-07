@@ -212,6 +212,85 @@ export interface DataDictQueryResult {
   queriedAt: string;
 }
 
+export type FormFieldType =
+  | "string"
+  | "number"
+  | "boolean"
+  | "date"
+  | "select"
+  | "multiselect"
+  | "textarea"
+  | "file";
+
+export type FormScalar = string | number | boolean | null;
+export type FormValue = FormScalar | FormScalar[];
+
+export interface FormFieldOption {
+  value: string | number | boolean;
+  label: string;
+  disabled?: boolean;
+}
+
+export interface FormVisibilityCondition {
+  field: string;
+  equals: FormScalar;
+}
+
+export interface FormFieldDefinition {
+  name: string;
+  type: FormFieldType;
+  label: string;
+  placeholder?: string;
+  required?: boolean;
+  readonly?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  minimum?: number;
+  maximum?: number;
+  pattern?: string;
+  maximumSelections?: number;
+  options?: FormFieldOption[];
+  dependsOn?: string[];
+  visibleWhen?: FormVisibilityCondition;
+}
+
+export interface FormSchemaCommand {
+  formCode: string;
+  revision?: number;
+}
+
+export interface FormSchemaResult {
+  formCode: string;
+  revision: number;
+  title: string;
+  description?: string;
+  fields: FormFieldDefinition[];
+  loadedAt: string;
+}
+
+export interface FormSubmitCommand {
+  formCode: string;
+  expectedRevision: number;
+  data: Record<string, FormValue>;
+  idempotencyKey: string;
+}
+
+export interface FormValidationError {
+  field: string;
+  code: string;
+  message: string;
+}
+
+export interface FormSubmitResult {
+  formCode: string;
+  revision: number;
+  submissionId?: string;
+  valid: boolean;
+  errors: FormValidationError[];
+  data?: Record<string, FormValue>;
+  submittedAt: string;
+}
+
 export interface FeatureFlagEvaluationCommand {
   flagKey: string;
   expectedRevision?: number;
@@ -1107,6 +1186,10 @@ export type InterfaceSchemaName =
   | "file-asset-upload-command.schema.json"
   | "feature-flag-evaluation-command.schema.json"
   | "feature-flag-evaluation-result.schema.json"
+  | "form-engine-schema-command.schema.json"
+  | "form-engine-schema-result.schema.json"
+  | "form-engine-submit-command.schema.json"
+  | "form-engine-submit-result.schema.json"
   | "i18n-catalog-command.schema.json"
   | "i18n-catalog-result.schema.json"
   | "i18n-translate-command.schema.json"
