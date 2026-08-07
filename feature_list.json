@@ -391,8 +391,9 @@
         "Assert schemas and Core exports in clean npm consumers.",
         "Update roadmap, Quick Start, Skill, and architecture guidance."
       ],
-      "passes": false,
-      "verification": "Source smoke, installed CLI, npm tarballs, pnpm check, and hosted portability workflows exercise the complete domain-neutral Blueprint lifecycle; hosted CI, Pages, and Gitee sync still need confirmation after push."
+      "passes": true,
+      "verification": "Source smoke, installed CLI, npm tarballs, pnpm check, and hosted portability workflows exercise the complete domain-neutral Blueprint lifecycle; GitHub CI, Pages, and Gitee sync all passed after push.",
+      "commit": "3a4fc81"
     }
   ]
 }
