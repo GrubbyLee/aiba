@@ -1,0 +1,125 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: form-engine-install
+  createdAt: 2026-07-26T00:25:00.000Z
+capability:
+  id: form-engine
+  version: 0.1.0
+  manifestSha256: 73cfab823c31e5d82444a843b0239d528dc098ea0ffaab669c41501f6de74627
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: 336a69d8a035ecb957f5011d6d1c168fe5d5fcf02249f48a65dd567e149cea07
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+operations:
+  - id: load-trusted-schema
+    intent: Load and validate one tenant-scoped immutable form schema revision.
+    requiredInterfaces:
+      - form-engine.schema-command
+      - form-engine.schema-result
+    invariants:
+      - schema-is-revisioned
+      - fields-are-bounded
+      - dependencies-are-acyclic
+    guidance:
+      - Derive tenant scope from authenticated context and reject duplicate
+        fields, unsafe patterns, invalid limits, and dependency cycles.
+      - Return a revisioned portable definition; rendering remains an
+        application-owned adapter concern.
+  - id: validate-and-submit
+    intent: Authorize, validate, deduplicate, and record one submission on the
+      trusted server.
+    requiredInterfaces:
+      - form-engine.submit-command
+      - form-engine.submit-result
+    invariants:
+      - validation-is-server-side
+      - schema-is-revisioned
+      - fields-are-bounded
+      - uploads-are-scoped
+    guidance:
+      - Reject unknown, hidden, readonly, oversized, or mistyped values and
+        require the exact schema revision.
+      - Verify every file asset against tenant and form scope before storing;
+        bind idempotency to the normalized payload.
+evidence:
+  - invariant: validation-is-server-side
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Trusted form schema and submission validation boundary.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Malformed input, bounds, revision, dependency, file scope, and
+          idempotency tests.
+    items:
+      - type: source
+        path: src/form-engine.ts
+        ownership: shared
+      - type: test
+        path: src/form-engine.test.ts
+        ownership: shared
+  - invariant: schema-is-revisioned
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/form-engine.ts
+        ownership: shared
+      - type: test
+        path: src/form-engine.test.ts
+        ownership: shared
+  - invariant: fields-are-bounded
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/form-engine.ts
+        ownership: shared
+      - type: test
+        path: src/form-engine.test.ts
+        ownership: shared
+  - invariant: dependencies-are-acyclic
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/form-engine.ts
+        ownership: shared
+      - type: test
+        path: src/form-engine.test.ts
+        ownership: shared
+  - invariant: uploads-are-scoped
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/form-engine.ts
+        ownership: shared
+      - type: test
+        path: src/form-engine.test.ts
+        ownership: shared

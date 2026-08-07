@@ -60,6 +60,7 @@ try {
   for (const capability of [
     "verification-challenge", "scheduled-jobs", "webhooks", "feature-flags",
     "organization", "comments-activity", "search", "reporting", "workflow-approval",
+    "i18n", "data-dict", "form-engine", "inbox", "tags",
   ]) {
     if (!cliFiles.includes(`package/capabilities/${capability}/capability.yaml`)) {
       throw new Error(`@grubbylee/aiba does not contain the ${capability} capability`);
@@ -91,6 +92,8 @@ try {
     "webhook-delivery-record.schema.json", "feature-flag-evaluation-result.schema.json",
     "organization-membership-record.schema.json", "activity-record.schema.json",
     "search-page.schema.json", "report-run-record.schema.json", "approval-workflow-record.schema.json",
+    "i18n-translate-result.schema.json", "data-dict-query-result.schema.json",
+    "form-engine-submit-result.schema.json", "inbox-page.schema.json", "tag-page.schema.json",
   ]) {
     if (!specFiles.includes(`package/schema/interfaces/${schema}`)) {
       throw new Error(`aiba-spec does not contain ${schema}`);
@@ -175,7 +178,7 @@ try {
   runCli(["init", app, "--json"]);
   runCli(["list", "--json"]);
   runCli(["show", "vehicle-management", "--json"]);
-  for (const capability of ["verification-challenge", "scheduled-jobs", "webhooks", "feature-flags", "organization", "comments-activity", "search", "reporting", "workflow-approval"]) {
+  for (const capability of ["verification-challenge", "scheduled-jobs", "webhooks", "feature-flags", "organization", "comments-activity", "search", "reporting", "workflow-approval", "i18n", "data-dict", "form-engine", "inbox", "tags"]) {
     runCli(["show", capability, "--json"]);
   }
   runCli(["inspect", app, "--json"]);

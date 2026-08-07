@@ -2,7 +2,7 @@ apiVersion: aiba.dev/v0alpha1
 kind: OperationPlan
 metadata:
   id: workflow-approval-install
-  createdAt: 2026-07-26T00:31:00.000Z
+  createdAt: 2026-07-26T00:41:00.000Z
 capability:
   id: workflow-approval
   version: 0.1.0

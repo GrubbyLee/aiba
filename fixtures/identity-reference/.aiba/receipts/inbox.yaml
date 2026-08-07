@@ -1,0 +1,75 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: inbox
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:12:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/inbox.yaml
+  planSha256: e16369c4254913c0571f544d87614f88a53942d2df901339941a477a0d6b5133
+  ancestry: .aiba/ancestry/inbox.json
+  ancestrySha256: 2a25c97c32ed981aa892fa546d2ba1342b4873b9157477a25790ee68af59794d
+invariants:
+  - id: inbox-scope-is-context-derived
+    evidence:
+      - type: source
+        path: src/inbox.ts
+        ownership: shared
+        sha256: 6ee228d7422df9a986e39c782842f502d7d536aedbb8aab66a33245a388dc359
+      - type: test
+        path: src/inbox.test.ts
+        ownership: shared
+        sha256: 540c6f2b0ca6c769fafb8e89af0d270f46f374256735fc1531b8774ff99fdb02
+  - id: message-content-is-trusted
+    evidence:
+      - type: source
+        path: src/inbox.ts
+        ownership: shared
+        sha256: 6ee228d7422df9a986e39c782842f502d7d536aedbb8aab66a33245a388dc359
+      - type: test
+        path: src/inbox.test.ts
+        ownership: shared
+        sha256: 540c6f2b0ca6c769fafb8e89af0d270f46f374256735fc1531b8774ff99fdb02
+  - id: inbox-operations-are-authorized
+    evidence:
+      - type: source
+        path: src/inbox.ts
+        ownership: shared
+        sha256: 6ee228d7422df9a986e39c782842f502d7d536aedbb8aab66a33245a388dc359
+      - type: test
+        path: src/inbox.test.ts
+        ownership: shared
+        sha256: 540c6f2b0ca6c769fafb8e89af0d270f46f374256735fc1531b8774ff99fdb02
+  - id: pagination-is-bounded-and-scoped
+    evidence:
+      - type: source
+        path: src/inbox.ts
+        ownership: shared
+        sha256: 6ee228d7422df9a986e39c782842f502d7d536aedbb8aab66a33245a388dc359
+      - type: test
+        path: src/inbox.test.ts
+        ownership: shared
+        sha256: 540c6f2b0ca6c769fafb8e89af0d270f46f374256735fc1531b8774ff99fdb02
+  - id: transitions-are-revisioned-and-idempotent
+    evidence:
+      - type: source
+        path: src/inbox.ts
+        ownership: shared
+        sha256: 6ee228d7422df9a986e39c782842f502d7d536aedbb8aab66a33245a388dc359
+      - type: test
+        path: src/inbox.test.ts
+        ownership: shared
+        sha256: 540c6f2b0ca6c769fafb8e89af0d270f46f374256735fc1531b8774ff99fdb02
+  - id: records-and-audit-are-minimized
+    evidence:
+      - type: source
+        path: src/inbox.ts
+        ownership: shared
+        sha256: 6ee228d7422df9a986e39c782842f502d7d536aedbb8aab66a33245a388dc359
+      - type: test
+        path: src/inbox.test.ts
+        ownership: shared
+        sha256: 540c6f2b0ca6c769fafb8e89af0d270f46f374256735fc1531b8774ff99fdb02

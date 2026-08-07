@@ -1,0 +1,55 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "i18n",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:22:00.000Z",
+  "files": [
+    {
+      "path": "src/i18n.test.ts",
+      "installedSha256": "fd8738c67cebc28948cb87e3efc41018d3c9de4ab2cdc2ace15b9f34bbbbf4a3",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "locale-is-trusted",
+        "keys-are-namespaced",
+        "interpolation-is-sanitized",
+        "catalog-is-revisioned",
+        "fallback-is-deterministic",
+        "plural-rules-are-validated"
+      ],
+      "operations": [
+        "translate-trusted-locale",
+        "load-revisioned-catalog"
+      ]
+    },
+    {
+      "path": "src/i18n.ts",
+      "installedSha256": "0950e3fbd1a2bd2a466f0142629b07db9bf40d89434a0ea09a264b08bf3a0c7d",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "locale-is-trusted",
+        "keys-are-namespaced",
+        "interpolation-is-sanitized",
+        "catalog-is-revisioned",
+        "fallback-is-deterministic",
+        "plural-rules-are-validated"
+      ],
+      "operations": [
+        "translate-trusted-locale",
+        "load-revisioned-catalog"
+      ]
+    }
+  ]
+}

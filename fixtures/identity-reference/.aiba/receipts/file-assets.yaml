@@ -5,13 +5,13 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-26T00:14:00.000Z
+  createdAt: 2026-07-26T00:16:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/file-assets.yaml
-  planSha256: 803072354e6c88e563743fb68bc315e13b6e92e985e53e5a2d9bd914c5f7cb6d
+  planSha256: fe36697b50818419a145b08394447326b51741c3c0c5762e3894b4ef5718bf93
   ancestry: .aiba/ancestry/file-assets.json
-  ancestrySha256: 5a94cac35604d100073254f1a9cdf87780025474dd95b949d0426409d1ea340b
+  ancestrySha256: bb6e916e57745b25dfa3fac6dd9ad8ec7b8d7c3a84c4ea12d78aa5caf83b7319
 invariants:
   - id: asset-operations-are-authorized
     evidence:

@@ -2,7 +2,7 @@ apiVersion: aiba.dev/v0alpha1
 kind: OperationPlan
 metadata:
   id: feature-flags-install
-  createdAt: 2026-07-26T00:17:00.000Z
+  createdAt: 2026-07-26T00:19:00.000Z
 capability:
   id: feature-flags
   version: 0.1.0

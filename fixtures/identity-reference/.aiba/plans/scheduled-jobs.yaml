@@ -2,7 +2,7 @@ apiVersion: aiba.dev/v0alpha1
 kind: OperationPlan
 metadata:
   id: scheduled-jobs-install
-  createdAt: 2026-07-26T00:15:00.000Z
+  createdAt: 2026-07-26T00:17:00.000Z
 capability:
   id: scheduled-jobs
   version: 0.1.0

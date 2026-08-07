@@ -1,0 +1,57 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "inbox",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:12:00.000Z",
+  "files": [
+    {
+      "path": "src/inbox.test.ts",
+      "installedSha256": "540c6f2b0ca6c769fafb8e89af0d270f46f374256735fc1531b8774ff99fdb02",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "inbox-scope-is-context-derived",
+        "message-content-is-trusted",
+        "inbox-operations-are-authorized",
+        "pagination-is-bounded-and-scoped",
+        "transitions-are-revisioned-and-idempotent",
+        "records-and-audit-are-minimized"
+      ],
+      "operations": [
+        "list-principal-inbox",
+        "transition-message-state",
+        "ingest-trusted-message"
+      ]
+    },
+    {
+      "path": "src/inbox.ts",
+      "installedSha256": "6ee228d7422df9a986e39c782842f502d7d536aedbb8aab66a33245a388dc359",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "inbox-scope-is-context-derived",
+        "message-content-is-trusted",
+        "inbox-operations-are-authorized",
+        "pagination-is-bounded-and-scoped",
+        "transitions-are-revisioned-and-idempotent",
+        "records-and-audit-are-minimized"
+      ],
+      "operations": [
+        "list-principal-inbox",
+        "transition-message-state",
+        "ingest-trusted-message"
+      ]
+    }
+  ]
+}

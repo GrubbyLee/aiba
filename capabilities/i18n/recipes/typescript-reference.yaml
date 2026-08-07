@@ -1,0 +1,36 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Internationalization Boundary
+  description: Framework-neutral guidance for trusted revisioned translation catalogs.
+spec:
+  capability: { id: i18n, version: 0.1.0 }
+  compatibility: { languages: [TypeScript], frameworks: [] }
+  writeScope: { allowedPatterns: [src/**, server/**, test/**, tests/**] }
+  operations:
+    - id: load-revisioned-catalog
+      intent: Load and verify one immutable locale catalog revision from trusted storage.
+      requiredInterfaces: [i18n.catalog-command, i18n.catalog-result]
+      invariants: [catalog-is-revisioned, keys-are-namespaced, plural-rules-are-validated]
+      guidance:
+        - Verify the content-derived revision before exposing any namespace.
+        - Reject malformed key names and plural categories outside the fixed locale rules.
+    - id: translate-trusted-locale
+      intent: Resolve trusted locale context and translate a bounded set of keys deterministically.
+      requiredInterfaces: [i18n.translate-command, i18n.translate-result]
+      invariants: [locale-is-trusted, keys-are-namespaced, interpolation-is-sanitized, fallback-is-deterministic, plural-rules-are-validated]
+      guidance:
+        - Resolve locale from authenticated preference, tenant default, and bounded language negotiation.
+        - Sanitize interpolation values and cap the fallback chain before returning minimized results.
+  evidence:
+    - invariant: locale-is-trusted
+      suggestions: &suggestions
+        - { type: source, pathPattern: "src/**/*.ts", description: "Trusted locale, catalog revision, lookup, fallback, plural, and interpolation boundary." }
+        - { type: test, pathPattern: "src/**/*.test.ts", description: "Forged locale, malformed key, injection, revision, fallback, and plural tests." }
+    - { invariant: keys-are-namespaced, suggestions: *suggestions }
+    - { invariant: interpolation-is-sanitized, suggestions: *suggestions }
+    - { invariant: catalog-is-revisioned, suggestions: *suggestions }
+    - { invariant: fallback-is-deterministic, suggestions: *suggestions }
+    - { invariant: plural-rules-are-validated, suggestions: *suggestions }

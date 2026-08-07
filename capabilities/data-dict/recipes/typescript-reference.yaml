@@ -1,0 +1,35 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityRecipe
+metadata:
+  id: typescript-reference
+  version: 0.1.0
+  title: TypeScript Data Dictionary Boundary
+  description: Framework-neutral guidance for typed tenant-scoped dictionaries.
+spec:
+  capability: { id: data-dict, version: 0.1.0 }
+  compatibility: { languages: [TypeScript], frameworks: [] }
+  writeScope: { allowedPatterns: [src/**, server/**, test/**, tests/**] }
+  operations:
+    - id: query-scoped-dictionary
+      intent: Load, validate, filter, and page one trusted tenant dictionary revision.
+      requiredInterfaces: [data-dict.query-command, data-dict.query-result, data-dict.item-record]
+      invariants: [values-are-bound, tenant-isolation, revisions-are-immutable, disabled-items-excluded, labels-are-sanitized]
+      guidance:
+        - Derive tenant scope from authentication and compare the requested revision before returning values.
+        - Validate stored value types, exclude disabled items by default, bound pages, and sanitize labels.
+    - id: validate-dictionary-value
+      intent: Validate one application mutation value against an enabled dictionary item and exact revision.
+      requiredInterfaces: [data-dict.item-record]
+      invariants: [values-are-bound, tenant-isolation, revisions-are-immutable, disabled-items-excluded]
+      guidance:
+        - Resolve dictionary and item in the trusted tenant before accepting the application mutation.
+        - Reject disabled, missing, mistyped, stale, or cyclic hierarchy data without coercion.
+  evidence:
+    - invariant: values-are-bound
+      suggestions: &suggestions
+        - { type: source, pathPattern: "src/**/*.ts", description: "Typed scoped dictionary query and mutation validation boundary." }
+        - { type: test, pathPattern: "src/**/*.test.ts", description: "Tenant, type, disabled item, revision, hierarchy, bounds, and sanitization tests." }
+    - { invariant: tenant-isolation, suggestions: *suggestions }
+    - { invariant: revisions-are-immutable, suggestions: *suggestions }
+    - { invariant: disabled-items-excluded, suggestions: *suggestions }
+    - { invariant: labels-are-sanitized, suggestions: *suggestions }

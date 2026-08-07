@@ -5,13 +5,13 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-26T00:34:00.000Z
+  createdAt: 2026-07-26T00:44:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/vehicle-records.yaml
-  planSha256: bb7c09bea7b5db62ad18dbcdb58ed7a0f77cdb5d8ba5bc96c7be4f6fd264fa6e
+  planSha256: be4c62f72aefb534a85e06223d5c94915081ae92373abe545bd27d4afaccaf4f
   ancestry: .aiba/ancestry/vehicle-records.json
-  ancestrySha256: 840a5202d59d7ee05f8bb7f779429b87cb5a8577adb7f7315ece2799669a49ae
+  ancestrySha256: 2b6c60a9187a1f5e17e8008102597d0f26f0d707b97df1b4e4bc71ece3ad1165
 invariants:
   - id: vehicle-operations-are-authorized
     evidence:

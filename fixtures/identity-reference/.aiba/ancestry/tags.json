@@ -1,0 +1,59 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "tags",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:28:00.000Z",
+  "files": [
+    {
+      "path": "src/tags.test.ts",
+      "installedSha256": "bc1c4baea571a51f4681ae22e9077f09093e396aceadf34188fc193ecb90c507",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "tag-scope-is-context-derived",
+        "tag-operations-are-authorized",
+        "names-are-normalized-and-unique",
+        "assignments-are-scoped-and-atomic",
+        "mutations-are-revisioned-and-idempotent",
+        "archival-is-safe",
+        "tag-output-is-bounded-and-minimized"
+      ],
+      "operations": [
+        "mutate-tag-catalog",
+        "assign-resource-tags",
+        "query-tags"
+      ]
+    },
+    {
+      "path": "src/tags.ts",
+      "installedSha256": "240e7b79ee0dbc52bef4c43ba55aba77fe05968cedd0333fe8b1bef53ce4771a",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "tag-scope-is-context-derived",
+        "tag-operations-are-authorized",
+        "names-are-normalized-and-unique",
+        "assignments-are-scoped-and-atomic",
+        "mutations-are-revisioned-and-idempotent",
+        "archival-is-safe",
+        "tag-output-is-bounded-and-minimized"
+      ],
+      "operations": [
+        "mutate-tag-catalog",
+        "assign-resource-tags",
+        "query-tags"
+      ]
+    }
+  ]
+}

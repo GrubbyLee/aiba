@@ -1,0 +1,65 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: data-dict
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:24:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/data-dict.yaml
+  planSha256: 88b00ad02ed4f78593110ce4bebf43f379ec80c2527e6533100b65ce8acfeb2a
+  ancestry: .aiba/ancestry/data-dict.json
+  ancestrySha256: c6adbd7b480b2597c0d4c3163bfbef3586565850119f2651fa8fea29f5bd0348
+invariants:
+  - id: values-are-bound
+    evidence:
+      - type: source
+        path: src/data-dict.ts
+        ownership: shared
+        sha256: 9da50d3cd40e1dbabdf6ef29a90cde355672eb40d3aef4a5069083a246877613
+      - type: test
+        path: src/data-dict.test.ts
+        ownership: shared
+        sha256: a74b6de53a8683701d7ceb1ede3a0f577a7ff5755570b9ae1e3850c4367ceeb6
+  - id: tenant-isolation
+    evidence:
+      - type: source
+        path: src/data-dict.ts
+        ownership: shared
+        sha256: 9da50d3cd40e1dbabdf6ef29a90cde355672eb40d3aef4a5069083a246877613
+      - type: test
+        path: src/data-dict.test.ts
+        ownership: shared
+        sha256: a74b6de53a8683701d7ceb1ede3a0f577a7ff5755570b9ae1e3850c4367ceeb6
+  - id: revisions-are-immutable
+    evidence:
+      - type: source
+        path: src/data-dict.ts
+        ownership: shared
+        sha256: 9da50d3cd40e1dbabdf6ef29a90cde355672eb40d3aef4a5069083a246877613
+      - type: test
+        path: src/data-dict.test.ts
+        ownership: shared
+        sha256: a74b6de53a8683701d7ceb1ede3a0f577a7ff5755570b9ae1e3850c4367ceeb6
+  - id: disabled-items-excluded
+    evidence:
+      - type: source
+        path: src/data-dict.ts
+        ownership: shared
+        sha256: 9da50d3cd40e1dbabdf6ef29a90cde355672eb40d3aef4a5069083a246877613
+      - type: test
+        path: src/data-dict.test.ts
+        ownership: shared
+        sha256: a74b6de53a8683701d7ceb1ede3a0f577a7ff5755570b9ae1e3850c4367ceeb6
+  - id: labels-are-sanitized
+    evidence:
+      - type: source
+        path: src/data-dict.ts
+        ownership: shared
+        sha256: 9da50d3cd40e1dbabdf6ef29a90cde355672eb40d3aef4a5069083a246877613
+      - type: test
+        path: src/data-dict.test.ts
+        ownership: shared
+        sha256: a74b6de53a8683701d7ceb1ede3a0f577a7ff5755570b9ae1e3850c4367ceeb6

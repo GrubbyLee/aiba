@@ -23,6 +23,9 @@ capabilities:
   - id: notification
     version: 0.2.0
     receipt: .aiba/receipts/notification.yaml
+  - id: inbox
+    version: 0.1.0
+    receipt: .aiba/receipts/inbox.yaml
   - id: verification-challenge
     version: 0.1.0
     receipt: .aiba/receipts/verification-challenge.yaml
@@ -35,6 +38,18 @@ capabilities:
   - id: feature-flags
     version: 0.1.0
     receipt: .aiba/receipts/feature-flags.yaml
+  - id: i18n
+    version: 0.1.0
+    receipt: .aiba/receipts/i18n.yaml
+  - id: data-dict
+    version: 0.1.0
+    receipt: .aiba/receipts/data-dict.yaml
+  - id: form-engine
+    version: 0.1.0
+    receipt: .aiba/receipts/form-engine.yaml
+  - id: tags
+    version: 0.1.0
+    receipt: .aiba/receipts/tags.yaml
   - id: organization
     version: 0.1.0
     receipt: .aiba/receipts/organization.yaml

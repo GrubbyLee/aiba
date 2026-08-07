@@ -5,13 +5,13 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-26T00:32:00.000Z
+  createdAt: 2026-07-26T00:42:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/workflow-approval.yaml
-  planSha256: 105b42fcc7c99fd653d1126b2069263aef28015ae03c73530b589927ea22add0
+  planSha256: 500309bb038fc063d7e47e299a006699b9a7326abcc05af7fa988386e5fb9454
   ancestry: .aiba/ancestry/workflow-approval.json
-  ancestrySha256: 83eb37de7162f19e8e98642803fb6ac23768b7e6d1c9a8fd601a85f881a1cc88
+  ancestrySha256: 6d1f863b9b2866b78b3521e960baed276464cf44a76dba9f2a6ef10c1e04195d
 invariants:
   - id: definitions-and-actors-are-trusted
     evidence:

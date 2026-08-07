@@ -2,7 +2,7 @@ apiVersion: aiba.dev/v0alpha1
 kind: OperationPlan
 metadata:
   id: file-assets-install
-  createdAt: 2026-07-26T00:13:00.000Z
+  createdAt: 2026-07-26T00:15:00.000Z
 capability:
   id: file-assets
   version: 0.1.0

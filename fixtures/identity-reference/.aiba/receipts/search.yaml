@@ -5,13 +5,13 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-26T00:22:00.000Z
+  createdAt: 2026-07-26T00:32:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/search.yaml
-  planSha256: 8807ceab758ca2b340d475f3d11e99b27e2f9d6be9a3cbab3f74943af05e7fc3
+  planSha256: 89db209ac79a47e53795037c1b625456a34d7deab14ede0908c53f85b2f5197e
   ancestry: .aiba/ancestry/search.json
-  ancestrySha256: fb8eed0be2c8278b725f43cbe5abd99672da7c7b2dec252308f2667c31359e06
+  ancestrySha256: bb8f24ec9f4f6dbb825bc95e98ab17877c5a7e67ef7b94ccb1dc198eeb7c3308
 invariants:
   - id: search-scope-is-trusted
     evidence:

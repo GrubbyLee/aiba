@@ -1,0 +1,75 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: i18n
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:22:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/i18n.yaml
+  planSha256: dad1f524016924a862c74f3ea3f872aa568e5d3be4226ec781f0d3dd1a5dfe33
+  ancestry: .aiba/ancestry/i18n.json
+  ancestrySha256: 373e7295853ad420756de96895235628cbe27e11668cef8611785107d1579ea1
+invariants:
+  - id: locale-is-trusted
+    evidence:
+      - type: source
+        path: src/i18n.ts
+        ownership: shared
+        sha256: 0950e3fbd1a2bd2a466f0142629b07db9bf40d89434a0ea09a264b08bf3a0c7d
+      - type: test
+        path: src/i18n.test.ts
+        ownership: shared
+        sha256: fd8738c67cebc28948cb87e3efc41018d3c9de4ab2cdc2ace15b9f34bbbbf4a3
+  - id: keys-are-namespaced
+    evidence:
+      - type: source
+        path: src/i18n.ts
+        ownership: shared
+        sha256: 0950e3fbd1a2bd2a466f0142629b07db9bf40d89434a0ea09a264b08bf3a0c7d
+      - type: test
+        path: src/i18n.test.ts
+        ownership: shared
+        sha256: fd8738c67cebc28948cb87e3efc41018d3c9de4ab2cdc2ace15b9f34bbbbf4a3
+  - id: interpolation-is-sanitized
+    evidence:
+      - type: source
+        path: src/i18n.ts
+        ownership: shared
+        sha256: 0950e3fbd1a2bd2a466f0142629b07db9bf40d89434a0ea09a264b08bf3a0c7d
+      - type: test
+        path: src/i18n.test.ts
+        ownership: shared
+        sha256: fd8738c67cebc28948cb87e3efc41018d3c9de4ab2cdc2ace15b9f34bbbbf4a3
+  - id: catalog-is-revisioned
+    evidence:
+      - type: source
+        path: src/i18n.ts
+        ownership: shared
+        sha256: 0950e3fbd1a2bd2a466f0142629b07db9bf40d89434a0ea09a264b08bf3a0c7d
+      - type: test
+        path: src/i18n.test.ts
+        ownership: shared
+        sha256: fd8738c67cebc28948cb87e3efc41018d3c9de4ab2cdc2ace15b9f34bbbbf4a3
+  - id: fallback-is-deterministic
+    evidence:
+      - type: source
+        path: src/i18n.ts
+        ownership: shared
+        sha256: 0950e3fbd1a2bd2a466f0142629b07db9bf40d89434a0ea09a264b08bf3a0c7d
+      - type: test
+        path: src/i18n.test.ts
+        ownership: shared
+        sha256: fd8738c67cebc28948cb87e3efc41018d3c9de4ab2cdc2ace15b9f34bbbbf4a3
+  - id: plural-rules-are-validated
+    evidence:
+      - type: source
+        path: src/i18n.ts
+        ownership: shared
+        sha256: 0950e3fbd1a2bd2a466f0142629b07db9bf40d89434a0ea09a264b08bf3a0c7d
+      - type: test
+        path: src/i18n.test.ts
+        ownership: shared
+        sha256: fd8738c67cebc28948cb87e3efc41018d3c9de4ab2cdc2ace15b9f34bbbbf4a3

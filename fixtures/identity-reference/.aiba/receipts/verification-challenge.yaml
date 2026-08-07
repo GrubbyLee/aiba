@@ -5,13 +5,13 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-26T00:12:00.000Z
+  createdAt: 2026-07-26T00:14:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/verification-challenge.yaml
-  planSha256: 39a57cba1db2d7731d55bf3f27d21b9118f4f9504b76da3c31410a3182ddf496
+  planSha256: 5f8ba3dc14092c3ff51d0c516377b0697f4ec220f564a4d3fc75d8dd09c53fcb
   ancestry: .aiba/ancestry/verification-challenge.json
-  ancestrySha256: 834c43a47b3da98a7255eeb577359374a9ded1338e1f6107f97a6d1d030d7280
+  ancestrySha256: d6954b03bc4cb2da9182f5b36e9608bf49d8e573d7fbbf86cd25ea55dc240b5a
 invariants:
   - id: challenge-identifiers-do-not-enumerate-accounts
     evidence:

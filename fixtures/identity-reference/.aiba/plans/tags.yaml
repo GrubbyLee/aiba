@@ -1,0 +1,170 @@
+apiVersion: aiba.dev/v0alpha1
+kind: OperationPlan
+metadata:
+  id: tags-install
+  createdAt: 2026-07-26T00:27:00.000Z
+capability:
+  id: tags
+  version: 0.1.0
+  manifestSha256: 3d540a0f95c7306d8439e79e91b40e3c7d30d811777ba996f4c48e6b1233ecda
+recipe:
+  id: typescript-reference
+  version: 0.1.0
+  sha256: 04fcfd10f0f459cd4d084591da44ec55d9783b63433882bd89324ea84bc45fb0
+project:
+  name: "@aiba/fixture-identity-reference"
+  stack:
+    languages:
+      - TypeScript
+      - JavaScript
+    frameworks: []
+writeScope:
+  allowedPatterns:
+    - src/**
+    - server/**
+    - test/**
+    - tests/**
+operations:
+  - id: mutate-tag-catalog
+    intent: Authorize and create, update, or archive one tenant-scoped tag.
+    requiredInterfaces:
+      - tags.mutation-command
+      - tags.record
+      - authorization.decision
+      - audit.event
+    invariants:
+      - tag-scope-is-context-derived
+      - tag-operations-are-authorized
+      - names-are-normalized-and-unique
+      - mutations-are-revisioned-and-idempotent
+      - archival-is-safe
+      - tag-output-is-bounded-and-minimized
+    guidance:
+      - Normalize names on the server, enforce tenant uniqueness
+        transactionally, and derive stable slugs without accepting HTML or
+        executable metadata.
+      - Compare revisions and bind scoped idempotency before publishing a
+        minimized record.
+  - id: assign-resource-tags
+    intent: Atomically attach or detach a bounded set of tags from one authorized
+      resource.
+    requiredInterfaces:
+      - tags.assignment-command
+      - tags.assignment-result
+      - authorization.decision
+      - audit.event
+    invariants:
+      - tag-scope-is-context-derived
+      - tag-operations-are-authorized
+      - assignments-are-scoped-and-atomic
+      - mutations-are-revisioned-and-idempotent
+      - archival-is-safe
+    guidance:
+      - Resolve resource and tags in the context tenant before comparing the
+        assignment revision.
+      - Reject the whole batch on any invalid tag; permit archived tags only for
+        detach cleanup.
+  - id: query-tags
+    intent: List authorized catalog or resource tags using stable signed pagination.
+    requiredInterfaces:
+      - tags.query-command
+      - tags.page
+      - authorization.decision
+    invariants:
+      - tag-scope-is-context-derived
+      - tag-operations-are-authorized
+      - assignments-are-scoped-and-atomic
+      - tag-output-is-bounded-and-minimized
+    guidance:
+      - Filter by context scope and authorization before ordering and pagination.
+      - Bind opaque cursor integrity to principal, query mode, resource,
+        filters, and page size.
+evidence:
+  - invariant: tag-scope-is-context-derived
+    requirements: &a1
+      acceptedTypes:
+        - source
+        - test
+        - config
+        - document
+      requiredTypes:
+        - source
+        - test
+      minimum: 2
+      requireHash: true
+    suggestions: &a2
+      - type: source
+        pathPattern: src/**/*.ts
+        description: Tag normalization, lifecycle, assignment transaction, and signed
+          query boundary.
+      - type: test
+        pathPattern: src/**/*.test.ts
+        description: Scope, authorization, uniqueness, metadata, revision, idempotency,
+          archive, assignment, cursor, and minimization tests.
+    items:
+      - type: source
+        path: src/tags.ts
+        ownership: shared
+      - type: test
+        path: src/tags.test.ts
+        ownership: shared
+  - invariant: tag-operations-are-authorized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/tags.ts
+        ownership: shared
+      - type: test
+        path: src/tags.test.ts
+        ownership: shared
+  - invariant: names-are-normalized-and-unique
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/tags.ts
+        ownership: shared
+      - type: test
+        path: src/tags.test.ts
+        ownership: shared
+  - invariant: assignments-are-scoped-and-atomic
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/tags.ts
+        ownership: shared
+      - type: test
+        path: src/tags.test.ts
+        ownership: shared
+  - invariant: mutations-are-revisioned-and-idempotent
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/tags.ts
+        ownership: shared
+      - type: test
+        path: src/tags.test.ts
+        ownership: shared
+  - invariant: archival-is-safe
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/tags.ts
+        ownership: shared
+      - type: test
+        path: src/tags.test.ts
+        ownership: shared
+  - invariant: tag-output-is-bounded-and-minimized
+    requirements: *a1
+    suggestions: *a2
+    items:
+      - type: source
+        path: src/tags.ts
+        ownership: shared
+      - type: test
+        path: src/tags.test.ts
+        ownership: shared

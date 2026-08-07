@@ -5,13 +5,13 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-26T00:24:00.000Z
+  createdAt: 2026-07-26T00:34:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/webhooks.yaml
-  planSha256: b9609277957b6636b76d0689853016f407461119a2672a272cd702bf978bedc3
+  planSha256: d20ab100c43ce5cca1adac68283da1013fbec42225fffcba471d55e8b5dad709
   ancestry: .aiba/ancestry/webhooks.json
-  ancestrySha256: 866e76bb5379c158c8c8159141107add196584e45245be221abbeeb34b6f2533
+  ancestrySha256: e63140081ebb7fa901c2b0f422c1a96dfce68ea85226c2cc30fdb50b24818d92
 invariants:
   - id: destinations-and-secrets-are-trusted
     evidence:

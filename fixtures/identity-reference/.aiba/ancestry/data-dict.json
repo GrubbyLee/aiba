@@ -1,0 +1,53 @@
+{
+  "apiVersion": "aiba.dev/v0alpha1",
+  "kind": "CapabilityAncestry",
+  "capability": {
+    "id": "data-dict",
+    "version": "0.1.0"
+  },
+  "recipe": {
+    "id": "typescript-reference",
+    "version": "0.1.0"
+  },
+  "createdAt": "2026-07-26T00:24:00.000Z",
+  "files": [
+    {
+      "path": "src/data-dict.test.ts",
+      "installedSha256": "a74b6de53a8683701d7ceb1ede3a0f577a7ff5755570b9ae1e3850c4367ceeb6",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "test"
+      ],
+      "invariants": [
+        "values-are-bound",
+        "tenant-isolation",
+        "revisions-are-immutable",
+        "disabled-items-excluded",
+        "labels-are-sanitized"
+      ],
+      "operations": [
+        "query-scoped-dictionary",
+        "validate-dictionary-value"
+      ]
+    },
+    {
+      "path": "src/data-dict.ts",
+      "installedSha256": "9da50d3cd40e1dbabdf6ef29a90cde355672eb40d3aef4a5069083a246877613",
+      "ownership": "shared",
+      "evidenceTypes": [
+        "source"
+      ],
+      "invariants": [
+        "values-are-bound",
+        "tenant-isolation",
+        "revisions-are-immutable",
+        "disabled-items-excluded",
+        "labels-are-sanitized"
+      ],
+      "operations": [
+        "query-scoped-dictionary",
+        "validate-dictionary-value"
+      ]
+    }
+  ]
+}

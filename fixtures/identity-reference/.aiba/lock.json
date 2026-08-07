@@ -1,7 +1,7 @@
 {
   "apiVersion": "aiba.dev/v0alpha1",
   "kind": "Lock",
-  "generatedAt": "2026-07-26T00:36:00.000Z",
+  "generatedAt": "2026-07-26T00:46:00.000Z",
   "capabilities": [
     {
       "id": "audit",
@@ -49,6 +49,15 @@
       }
     },
     {
+      "id": "inbox",
+      "version": "0.1.0",
+      "manifestSha256": "5b0b32eb2b050525fc04ce9a13f1783999f7bdfabda32864514421b74e5633c6",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "409ae1ae61538ac5b5cbbb6061c785e696a1b54305b45942a16b03a34ce8d1ec"
+      }
+    },
+    {
       "id": "verification-challenge",
       "version": "0.1.0",
       "manifestSha256": "22b64fd91600a6db70546159c50130ac150aaf30a4fdcb011d05b0a083971235",
@@ -82,6 +91,42 @@
       "recipe": {
         "id": "typescript-reference",
         "sha256": "fc9b04f3ec54f7e2251451d24ed226801df3fbaf0a243e54c1e3743387a052ed"
+      }
+    },
+    {
+      "id": "i18n",
+      "version": "0.1.0",
+      "manifestSha256": "0c9bebb83d0796604da7bfe229b25e9cd7c272f9fdbe61fc2a68225f191b489c",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "c11d0e82210ed4926155fd1feb533a7ac0d2d7470ae5fb8c72fbceefddd9ccd6"
+      }
+    },
+    {
+      "id": "data-dict",
+      "version": "0.1.0",
+      "manifestSha256": "ae61def0c7e27397503aa454e4c363f4e43bb37c05c24e20839e15d6b6bb532d",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "adcd472607e7a25c892a60cca4fbc15ee1cadd52e6dc0f52e1dd5bb17c2736fc"
+      }
+    },
+    {
+      "id": "form-engine",
+      "version": "0.1.0",
+      "manifestSha256": "73cfab823c31e5d82444a843b0239d528dc098ea0ffaab669c41501f6de74627",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "336a69d8a035ecb957f5011d6d1c168fe5d5fcf02249f48a65dd567e149cea07"
+      }
+    },
+    {
+      "id": "tags",
+      "version": "0.1.0",
+      "manifestSha256": "3d540a0f95c7306d8439e79e91b40e3c7d30d811777ba996f4c48e6b1233ecda",
+      "recipe": {
+        "id": "typescript-reference",
+        "sha256": "04fcfd10f0f459cd4d084591da44ec55d9783b63433882bd89324ea84bc45fb0"
       }
     },
     {

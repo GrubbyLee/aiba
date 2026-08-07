@@ -5,13 +5,13 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-26T00:16:00.000Z
+  createdAt: 2026-07-26T00:18:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/scheduled-jobs.yaml
-  planSha256: 1e0c88871a4a726638bd7930486e4f0dc0b5908b75517fa271f45bddad98fbde
+  planSha256: 37e5c1eb99a1de0a59d535dab8c6456344d9d38822bd8a50a7760ec58542a98a
   ancestry: .aiba/ancestry/scheduled-jobs.json
-  ancestrySha256: 06624f69d48789015329536a403485ad70a4246aef3776920b7cb2f71ab2e469
+  ancestrySha256: a785891f3a16c0c88c228ce054cba9908dcb4164ac46ec20c33df8031eaa5f3a
 invariants:
   - id: definitions-are-server-owned
     evidence:

@@ -204,3 +204,29 @@ M16-M18 are complete when every public interface is schema validated, each
 capability has a framework-neutral recipe and executable positive and adversarial
 reference tests, all packs are discoverable from the installed CLI, and `pnpm
 check` plus the Linux/macOS/Windows CI matrix pass.
+
+## M19: Composition-Ready Application Primitives
+
+Goal: cover recurring product semantics that ordinary Agent-built applications
+need beyond authentication and CRUD, while keeping rendering, storage, and
+provider choices project-owned.
+
+- [x] Deliver `i18n` with revisioned catalogs, trusted locale resolution,
+  fallback, pluralization, and sanitized interpolation.
+- [x] Deliver `data-dict` with typed tenant dictionaries, hierarchy, status,
+  revision, and server-side value validation.
+- [x] Deliver `form-engine` with portable definitions, exact schema revisions,
+  trusted validation, dependency checks, file scoping, and idempotent submission.
+- [x] Deliver `inbox` with trusted message creation, principal-scoped listing,
+  signed cursors, unread counts, and revisioned state transitions.
+- [x] Deliver `tags` with normalized tenant-unique names, safe archival, and
+  authorized atomic resource assignments.
+- [x] Integrate all five packs into fixture provenance, Agent guidance, source
+  smoke, deterministic npm tarball checks, and bilingual documentation.
+- [x] Pass the complete local check.
+- [ ] Confirm the remote portability workflows after push.
+
+M19 is complete when all 24 official capabilities are dependency ordered and
+discoverable, the 23-capability reference fixture verifies exact source and test
+evidence, all five M19 packs score 100 in authoring checks, and the complete
+local and hosted CI gates pass.

@@ -2,7 +2,7 @@ apiVersion: aiba.dev/v0alpha1
 kind: OperationPlan
 metadata:
   id: search-install
-  createdAt: 2026-07-26T00:21:00.000Z
+  createdAt: 2026-07-26T00:31:00.000Z
 capability:
   id: search
   version: 0.1.0

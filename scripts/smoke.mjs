@@ -57,6 +57,7 @@ run("show verified capability", ["show", "vehicle-records", "--json"], 0);
 for (const capability of [
   "verification-challenge", "scheduled-jobs", "webhooks", "feature-flags",
   "organization", "comments-activity", "search", "reporting", "workflow-approval",
+  "i18n", "data-dict", "form-engine", "inbox", "tags",
 ]) {
   run(`show ${capability} capability`, ["show", capability, "--json"], 0);
 }

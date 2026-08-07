@@ -5,13 +5,13 @@ capability:
   version: 0.1.0
 installation:
   method: agent
-  createdAt: 2026-07-26T00:26:00.000Z
+  createdAt: 2026-07-26T00:36:00.000Z
   agent: fixture-generator
   recipe: typescript-reference
   plan: .aiba/plans/comments-activity.yaml
-  planSha256: f57589fe029e92a278ba2bfaa944504d9adbd267021d772aab22b6c2a8c85c63
+  planSha256: 5ae2711fbc5f3a4552c82d3fd27ebb137f560ec00103d560bcd4e6bdb93867ca
   ancestry: .aiba/ancestry/comments-activity.json
-  ancestrySha256: 1b1c975013189344320a25211f0720cd9cd3defeda2d2b5ec33c50eb1f4eb40e
+  ancestrySha256: b635369b5258e3fdb59bfafd5ba9fc1a4c03cc4faac81d5efaf4bae286faaf31
 invariants:
   - id: authorship-and-scope-are-trusted
     evidence:

@@ -5,7 +5,7 @@ metadata:
   version: 0.1.0
   title: Internationalization (i18n)
   layer: application-foundation
-  description: Namespaced, revisioned translation catalogs with deterministic locale resolution, fallback chains, and parameter interpolation — without prescribing storage, UI, or message format.
+  description: Namespaced, revisioned translation catalogs with deterministic locale resolution, fallback chains, and parameter interpolation without prescribing storage, UI, or message format.
 spec:
   interfaces: [i18n.translate-command, i18n.translate-result, i18n.catalog-command, i18n.catalog-result]
   dependencies: []

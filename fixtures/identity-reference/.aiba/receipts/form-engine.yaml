@@ -1,0 +1,65 @@
+apiVersion: aiba.dev/v0alpha1
+kind: CapabilityReceipt
+capability:
+  id: form-engine
+  version: 0.1.0
+installation:
+  method: agent
+  createdAt: 2026-07-26T00:26:00.000Z
+  agent: fixture-generator
+  recipe: typescript-reference
+  plan: .aiba/plans/form-engine.yaml
+  planSha256: 5b75e3c4fb28ada3c77deed217cc12f0cf884c28973b1747e6290e84a59e26fe
+  ancestry: .aiba/ancestry/form-engine.json
+  ancestrySha256: 6d21e9451f40b1c041d6da9cf4042cb118bda7a574ca83e54972b659de9819cc
+invariants:
+  - id: validation-is-server-side
+    evidence:
+      - type: source
+        path: src/form-engine.ts
+        ownership: shared
+        sha256: fd67d993ca4e497c440d568fe9f91151bb1a45892033b2313fb3c345c03a40fb
+      - type: test
+        path: src/form-engine.test.ts
+        ownership: shared
+        sha256: 5f62b95fc95205b5f3c13ff27de0d0a42ab66c0350e00a539cf4df9824fcd29a
+  - id: schema-is-revisioned
+    evidence:
+      - type: source
+        path: src/form-engine.ts
+        ownership: shared
+        sha256: fd67d993ca4e497c440d568fe9f91151bb1a45892033b2313fb3c345c03a40fb
+      - type: test
+        path: src/form-engine.test.ts
+        ownership: shared
+        sha256: 5f62b95fc95205b5f3c13ff27de0d0a42ab66c0350e00a539cf4df9824fcd29a
+  - id: fields-are-bounded
+    evidence:
+      - type: source
+        path: src/form-engine.ts
+        ownership: shared
+        sha256: fd67d993ca4e497c440d568fe9f91151bb1a45892033b2313fb3c345c03a40fb
+      - type: test
+        path: src/form-engine.test.ts
+        ownership: shared
+        sha256: 5f62b95fc95205b5f3c13ff27de0d0a42ab66c0350e00a539cf4df9824fcd29a
+  - id: dependencies-are-acyclic
+    evidence:
+      - type: source
+        path: src/form-engine.ts
+        ownership: shared
+        sha256: fd67d993ca4e497c440d568fe9f91151bb1a45892033b2313fb3c345c03a40fb
+      - type: test
+        path: src/form-engine.test.ts
+        ownership: shared
+        sha256: 5f62b95fc95205b5f3c13ff27de0d0a42ab66c0350e00a539cf4df9824fcd29a
+  - id: uploads-are-scoped
+    evidence:
+      - type: source
+        path: src/form-engine.ts
+        ownership: shared
+        sha256: fd67d993ca4e497c440d568fe9f91151bb1a45892033b2313fb3c345c03a40fb
+      - type: test
+        path: src/form-engine.test.ts
+        ownership: shared
+        sha256: 5f62b95fc95205b5f3c13ff27de0d0a42ab66c0350e00a539cf4df9824fcd29a

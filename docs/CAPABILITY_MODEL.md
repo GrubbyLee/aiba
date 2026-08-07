@@ -87,6 +87,11 @@ depend on common protocols or foundation capabilities rather than duplicating
 them. Provider-specific details stay in platform integrations. Product-specific
 rules stay in project code until they meet the catalog admission criteria.
 
+For example, an Agent can compose `form-engine`, `data-dict`, `file-assets`,
+`tags`, `inbox`, and `i18n` into a project-specific workflow without importing a
+shared page layout. Each capability keeps its own contract and verification;
+the Agent builds the actual API, persistence, and interface in the host stack.
+
 Use a Solution only when the exact combination itself has durable domain
 meaning. A large bundle of unrelated features is not a Solution.
 

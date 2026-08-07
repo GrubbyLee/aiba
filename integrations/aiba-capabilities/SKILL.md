@@ -1,6 +1,6 @@
 ---
 name: aiba-capabilities
-description: Install, adapt, compose, finalize, fetch, and verify AIBA software capabilities through the provider-independent AIBA CLI. Use when a user asks Codex or Claude Code to add identity, authorization, audit, users, notifications, verification, files, jobs, webhooks, flags, organizations, comments, activity, search, import/export, reporting, approvals, review access, business records, or Mini Program authentication; inspect an industry solution or `.aiba` state; or fetch a verified capability pack.
+description: Install, adapt, compose, finalize, fetch, and verify AIBA software capabilities through the provider-independent AIBA CLI. Use when a user asks Codex or Claude Code to add identity, authorization, audit, users, notifications, inbox, verification, files, jobs, flags, internationalization, data dictionaries, forms, tags, webhooks, organizations, comments, activity, search, import/export, reporting, approvals, review access, business records, or Mini Program authentication; inspect an industry solution or `.aiba` state; or fetch a verified capability pack.
 ---
 
 # AIBA Capabilities
@@ -44,10 +44,10 @@ aiba inspect --json
 ```
 
 Prefer shared foundations (`verification-challenge`, `scheduled-jobs`,
-`feature-flags`, `organization`, `search`) for cross-domain behavior;
+`feature-flags`, `i18n`, `data-dict`, `inbox`, `organization`, `search`) for cross-domain behavior;
 platform integrations (`webhooks`, `wechat-miniprogram-auth`) for external
-boundaries; and business capabilities (`comments-activity`, `reporting`,
-`workflow-approval`, `import-export`) for higher-level workflows. Inspect the
+boundaries; and business capabilities (`comments-activity`, `form-engine`, `tags`,
+`reporting`, `workflow-approval`, `import-export`) for higher-level workflows. Inspect the
 selected manifest because these labels do not replace its interfaces,
 dependencies, or invariants.
 
