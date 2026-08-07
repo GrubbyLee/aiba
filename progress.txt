@@ -649,3 +649,29 @@ Verification:
 Commit: 0e51185
 Progress: 21/25
 Next: m20-blueprint-planner
+
+----------------------------------------
+Session #30 - m20-blueprint-planner
+----------------------------------------
+Date: 2026-08-07
+
+Completed:
+  [x] Added the public ApplicationPlan protocol and strict validator.
+  [x] Added deterministic capability inference for authorization, dictionaries,
+      files, tags, forms, search, and event-triggered capabilities.
+  [x] Added transitive dependency resolution with exact manifest hashes,
+      SemVer checks, topological order, and cycle rejection.
+  [x] Added non-executable capability, resource, and acceptance Agent tasks with
+      bounded write scopes, intents, invariants, and evidence requirements.
+  [x] Added the domain-neutral work-hub Blueprint fixture and adversarial tests.
+
+Verification:
+  - pnpm check: passed
+  - Spec: 92 tests; Core: 147 tests; reference fixture: 164 tests
+  - Registry Server: 8 tests; CLI: 10 tests
+  - Deterministic repeat plan, missing capability, incompatible version,
+    dependency cycle, malformed hash, task order, and no-command assertions passed
+  - Four deterministic npm tarballs and clean external consumer passed
+
+Progress: 22/25
+Next: m20-blueprint-cli

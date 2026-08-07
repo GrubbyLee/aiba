@@ -728,6 +728,44 @@ export interface ApplicationBlueprint {
   };
 }
 
+export interface ApplicationPlanCapability {
+  id: string;
+  version: string;
+  manifestSha256: string;
+  dependencies: string[];
+  reasons: string[];
+  inferred: boolean;
+}
+
+export interface ApplicationPlanTask {
+  id: string;
+  kind: "capability-adaptation" | "resource-implementation" | "acceptance-verification";
+  title: string;
+  target?: string;
+  dependsOn: string[];
+  writeScopes: string[];
+  requiredCapabilities: string[];
+  intents: string[];
+  invariants: string[];
+  evidence: Array<{
+    invariant: string;
+    requiredTypes: EvidenceType[];
+    minimum: number;
+    pathPatterns: string[];
+  }>;
+}
+
+export interface ApplicationPlan {
+  apiVersion: typeof AIBA_API_VERSION;
+  kind: "ApplicationPlan";
+  metadata: {
+    id: string;
+    blueprint: { id: string; version: string; sha256: string };
+  };
+  capabilities: ApplicationPlanCapability[];
+  tasks: ApplicationPlanTask[];
+}
+
 export interface CapabilityInvariant {
   id: string;
   title: string;
@@ -1330,6 +1368,7 @@ export type ProtocolSchemaName =
   | "ancestry.schema.json"
   | "agent-protocol.schema.json"
   | "application-blueprint.schema.json"
+  | "application-plan.schema.json"
   | "error-envelope.schema.json"
   | "signed-solution.schema.json"
   | "solution-trust-policy.schema.json"

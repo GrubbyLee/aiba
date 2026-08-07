@@ -281,7 +281,7 @@
         "Produce bounded Agent tasks with write scopes, invariants, and evidence requirements.",
         "Reject cycles, missing capabilities, ambiguous triggers, invariant weakening, and command injection."
       ],
-      "passes": false,
+      "passes": true,
       "verification": "Planner output is stable across runs and rejects dependency, reference, authorization, trigger, path, and executable-command attacks without executing pack content."
     },
     {

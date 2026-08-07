@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiba.dev/schema/v0alpha1/application-plan.schema.json",
+  "title": "AIBA Application Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["apiVersion", "kind", "metadata", "capabilities", "tasks"],
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,95}$" },
+    "version": { "type": "string", "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?$" },
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "safePath": { "type": "string", "minLength": 1, "maxLength": 500, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\u0000-\\u001f]+$" },
+    "evidenceType": { "enum": ["source", "test", "config", "document"] }
+  },
+  "properties": {
+    "apiVersion": { "const": "aiba.dev/v0alpha1" },
+    "kind": { "const": "ApplicationPlan" },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "blueprint"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "blueprint": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "version", "sha256"],
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "version": { "$ref": "#/$defs/version" },
+            "sha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "uniqueItems": true,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "version", "manifestSha256", "dependencies", "reasons", "inferred"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "version": { "$ref": "#/$defs/version" },
+          "manifestSha256": { "$ref": "#/$defs/sha256" },
+          "dependencies": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+          "reasons": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 500 } },
+          "inferred": { "type": "boolean" }
+        }
+      }
+    },
+    "tasks": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 500,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "title", "dependsOn", "writeScopes", "requiredCapabilities", "intents", "invariants", "evidence"],
+        "properties": {
+          "id": { "$ref": "#/$defs/id" },
+          "kind": { "enum": ["capability-adaptation", "resource-implementation", "acceptance-verification"] },
+          "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+          "target": { "$ref": "#/$defs/id" },
+          "dependsOn": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+          "writeScopes": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/safePath" } },
+          "requiredCapabilities": { "type": "array", "uniqueItems": true, "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,62}@[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$" } },
+          "intents": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string", "minLength": 1, "maxLength": 500 } },
+          "invariants": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/id" } },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["invariant", "requiredTypes", "minimum", "pathPatterns"],
+              "properties": {
+                "invariant": { "$ref": "#/$defs/id" },
+                "requiredTypes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/evidenceType" } },
+                "minimum": { "type": "integer", "minimum": 1, "maximum": 20 },
+                "pathPatterns": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/safePath" } }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
