@@ -575,3 +575,27 @@ Verification:
 Commit: b3f3c80
 Progress: 18/19
 Next: m19-documentation
+
+----------------------------------------
+Session #27 - m19-documentation
+----------------------------------------
+Date: 2026-08-07
+
+Completed:
+  [x] Published a dependency-ordered 24-capability catalog and bilingual model.
+  [x] Regenerated and verified 23 exact reference fixture receipts.
+  [x] Added all M19 packs to the Agent Skill, source smoke, and npm package checks.
+  [x] Added missing installable recipes for i18n and data-dict; every M19 pack scores 100.
+  [x] Exercised four deterministic tarballs in a clean external npm consumer.
+
+Verification:
+  - pnpm check: passed
+  - Spec: 92 tests; Core: 141 tests; reference fixture: 179 tests
+  - Registry Server: 8 tests; CLI: 10 tests
+  - GitHub CI 31181784019: Linux Node 22/24, macOS, and Windows passed
+  - GitHub Pages 31181781655: passed
+  - Gitee sync 31181785604: passed
+
+Commit: 9fe66cf
+Progress: 19/19
+Next: M19 is complete; no npm release was performed

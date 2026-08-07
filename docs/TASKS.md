@@ -361,7 +361,7 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Pass `pnpm check` locally.
 - [x] Confirm the full remote portability matrix after push.
 
-## Active: M19 Composition-Ready Application Primitives
+## Completed: M19 Composition-Ready Application Primitives
 
 - [x] Add `i18n` schemas, recipe, secure reference boundary, and attack tests.
 - [x] Add `data-dict` schemas, recipe, secure reference boundary, and attack tests.
@@ -371,4 +371,4 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Regenerate the reference fixture with exact M19 evidence and provenance.
 - [x] Exercise all M19 packs through source smoke and clean npm tarballs.
 - [x] Finish bilingual documentation and pass the complete local check.
-- [ ] Confirm Linux Node 22/24, macOS, Windows, Pages, and Gitee sync after push.
+- [x] Confirm Linux Node 22/24, macOS, Windows, Pages, and Gitee sync after push.

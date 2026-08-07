@@ -235,9 +235,9 @@
     {
       "id": "m19-documentation",
       "name": "M19 文档与目录同步",
-      "passes": false,
-      "evidence": "",
-      "commit": ""
+      "passes": true,
+      "evidence": "24-capability catalog + 23-capability verified fixture provenance + Agent Skill + source smoke + four clean npm tarballs + bilingual docs + pnpm check + GitHub CI/Pages/Gitee success",
+      "commit": "9fe66cf"
     }
   ]
 }

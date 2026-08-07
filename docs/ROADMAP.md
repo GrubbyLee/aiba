@@ -224,7 +224,7 @@ provider choices project-owned.
 - [x] Integrate all five packs into fixture provenance, Agent guidance, source
   smoke, deterministic npm tarball checks, and bilingual documentation.
 - [x] Pass the complete local check.
-- [ ] Confirm the remote portability workflows after push.
+- [x] Confirm the remote portability workflows after push.
 
 M19 is complete when all 24 official capabilities are dependency ordered and
 discoverable, the 23-capability reference fixture verifies exact source and test
