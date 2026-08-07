@@ -253,3 +253,19 @@ M20 is complete when all three schemas ship in `aiba-spec`, the installed CLI
 can scaffold and plan a Blueprint, v1-to-v2 upgrades preserve project-owned
 customization, unsafe intent is rejected, `pnpm check` passes, and hosted CI
 confirms the same result. Business nouns remain project data at every boundary.
+
+## M21: Blueprint Lifecycle
+
+Goal: turn Blueprint planning into a durable local workflow without turning
+plans into generated application code or silently applying upgrades.
+
+- [x] Persist source-bound Application Plans with explicit safe output paths.
+- [x] Add deterministic `aiba app-diff <old.yaml> <new.yaml>` with security-aware classifications.
+- [x] Add `aiba app-upgrade <old.yaml> <new.yaml>` with persisted plans and explicit resolutions.
+- [x] Advertise the workflow through Agent negotiation and shell completion.
+- [x] Exercise the complete lifecycle with domain-neutral fixtures, npm consumers,
+  and adversarial stale/path/resolution cases.
+
+M21 is complete when plans round-trip through Core validation, diffs are stable,
+upgrades require explicit non-additive decisions, no application code is mutated,
+and local plus hosted verification passes.

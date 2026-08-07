@@ -766,3 +766,25 @@ Verification:
 
 Progress: 25/25
 Next: M20 is complete; define the next product milestone before adding scope
+
+----------------------------------------
+Session #35 - m21-blueprint-lifecycle (local)
+----------------------------------------
+Date: 2026-08-08
+
+Completed:
+  [x] Added durable Application Plan persistence with safe output paths.
+  [x] Added deterministic Blueprint diff and explicit Blueprint upgrade CLI.
+  [x] Added Agent protocol, shell completion, Skill guidance, smoke tests,
+      and clean npm consumer coverage for the Blueprint lifecycle.
+  [x] Verified stale-source, path traversal, overwrite, and resolution cases.
+
+Verification:
+  - pnpm check: passed
+  - Core: 155 tests passed
+  - CLI: 12 tests passed
+  - Source smoke: Blueprint diff/upgrade, stale plan, and unsafe path cases passed
+  - Installed npm consumer: tarballs installed and exercised successfully
+
+Commit: 083d26e
+Next: push the M21 work, then confirm GitHub CI, Pages, and Gitee sync before marking M21 complete

@@ -373,6 +373,14 @@ negative tests, packaged distribution, and user documentation agree.
 - [x] Finish bilingual documentation and pass the complete local check.
 - [x] Confirm Linux Node 22/24, macOS, Windows, Pages, and Gitee sync after push.
 
+## In Progress: M21 Blueprint Lifecycle
+
+- [x] Persist source-bound plans with safe output and stale-source checks.
+- [x] Add deterministic Blueprint diff output and security classifications.
+- [x] Add explicit Blueprint upgrade planning and resolution acceptance CLI.
+- [x] Integrate Agent protocol, shell completion, Skill guidance, smoke, and npm checks.
+- [ ] Pass local and hosted verification before marking M21 complete.
+
 ## Completed: M20 Domain-Neutral Application Blueprints
 
 - [x] Enforce a regression boundary against project-specific business models in

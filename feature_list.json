@@ -330,6 +330,69 @@
       "passes": true,
       "verification": "Domain-neutral v1/v2 fixtures plan and upgrade end to end; bilingual docs, Agent Skill, smoke, and installed npm tarballs expose the workflow; pnpm check, GitHub CI/Pages, and Gitee sync pass.",
       "commit": "ae71def"
+    },
+    {
+      "id": "m21-blueprint-persistence",
+      "category": "developer-experience",
+      "priority": 26,
+      "description": "Persist deterministic Application Plans without allowing path traversal, accidental overwrite, or stale source claims.",
+      "file": "packages/cli/src/index.ts",
+      "steps": [
+        "Add an explicit plan output path with safe-root and overwrite checks.",
+        "Bind persisted JSON/YAML plans to the exact Blueprint hash and pack manifests.",
+        "Reject unsafe output paths and malformed persisted plans.",
+        "Add positive and negative CLI tests."
+      ],
+      "passes": true,
+      "verification": "A persisted plan round-trips through Core validation, binds the source hash, and rejects traversal, overwrite, and stale-source cases; pnpm check passes.",
+      "commit": "083d26e"
+    },
+    {
+      "id": "m21-blueprint-diff",
+      "category": "developer-experience",
+      "priority": 27,
+      "description": "Show deterministic, security-aware differences between two project-owned Application Blueprints.",
+      "file": "packages/core/src/application-blueprint-diff.ts",
+      "steps": [
+        "Compare resources, fields, relationships, operations, events, UI intent, acceptance, and write scopes.",
+        "Classify additive, breaking, security-sensitive, and conflict changes.",
+        "Expose stable human and JSON CLI output with no source mutation.",
+        "Add malformed, stale, and ordering tests."
+      ],
+      "passes": true,
+      "verification": "The same Blueprint pair produces byte-stable diff output and security-sensitive changes cannot be hidden by ordering or presentation; pnpm check passes.",
+      "commit": "083d26e"
+    },
+    {
+      "id": "m21-blueprint-upgrade-cli",
+      "category": "upgrade",
+      "priority": 28,
+      "description": "Expose Blueprint upgrade planning and explicit resolution acceptance without modifying application code.",
+      "file": "packages/cli/src/index.ts",
+      "steps": [
+        "Compile exact source-bound old and new plans.",
+        "Persist upgrade plans with customization and evidence bindings.",
+        "Require a separate resolution document for non-additive changes.",
+        "Reject stale plans, unknown resolutions, and unsafe customization evidence."
+      ],
+      "passes": true,
+      "verification": "The CLI generates and accepts a valid v1-to-v2 upgrade only with explicit resolutions, while stale and unsafe inputs fail closed; pnpm check passes.",
+      "commit": "083d26e"
+    },
+    {
+      "id": "m21-blueprint-workflow",
+      "category": "integration",
+      "priority": 29,
+      "description": "Integrate Blueprint persistence, diff, and upgrade into Agent negotiation, completion, bilingual docs, smoke tests, and release artifacts.",
+      "file": "scripts/smoke.mjs",
+      "steps": [
+        "Advertise the new commands and mutation metadata to Agents.",
+        "Exercise the complete work-hub workflow from clean CLI output.",
+        "Assert schemas and Core exports in clean npm consumers.",
+        "Update roadmap, Quick Start, Skill, and architecture guidance."
+      ],
+      "passes": false,
+      "verification": "Source smoke, installed CLI, npm tarballs, pnpm check, and hosted portability workflows exercise the complete domain-neutral Blueprint lifecycle; hosted CI, Pages, and Gitee sync still need confirmation after push."
     }
   ]
 }
