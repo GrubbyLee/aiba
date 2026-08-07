@@ -482,3 +482,56 @@ Verification:
 
 Progress: 13/13
 Next: M16-M18 are complete; define the next product milestone before adding scope
+
+----------------------------------------
+Session #22 - m19-i18n
+----------------------------------------
+Date: 2026-08-06
+
+Completed:
+  [x] Added revisioned locale catalogs, fallback resolution, plural forms, and sanitized interpolation.
+  [x] Added four public schemas, TypeScript bindings, and ten reference tests.
+
+Verification:
+  - Spec: 77 tests; Core: 141 tests; reference fixture: 139 tests
+  - Pack lint and test-pack: score 100
+
+Commit: 54e5e31
+Progress: 14/19
+Next: m19-data-dict
+
+----------------------------------------
+Session #23 - m19-data-dict
+----------------------------------------
+Date: 2026-08-06
+
+Completed:
+  [x] Added typed, revisioned, tenant-scoped dictionaries and hierarchy validation.
+  [x] Added three public schemas and ten positive and adversarial reference tests.
+
+Verification:
+  - Spec: 77 tests; Core: 141 tests; reference fixture: 149 tests
+  - Pack lint and test-pack: score 100
+
+Commit: b61d3cc
+Progress: 15/19
+Next: m19-form-engine
+
+----------------------------------------
+Session #24 - m19-form-engine
+----------------------------------------
+Date: 2026-08-07
+
+Completed:
+  [x] Added headless revisioned form definitions and strict public submission interfaces.
+  [x] Added trusted server validation, field rules, dependency-cycle rejection, file scoping, and idempotency.
+  [x] Added ten positive and adversarial reference tests and catalog integration.
+
+Verification:
+  - Spec: 81 tests; Core: 141 tests; reference fixture: 159 tests
+  - Strict Spec and fixture typechecks passed
+  - Pack lint and test-pack: score 100
+
+Commit: 724f3c5
+Progress: 16/19
+Next: m19-inbox

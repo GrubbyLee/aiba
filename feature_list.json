@@ -207,16 +207,16 @@
     {
       "id": "m19-data-dict",
       "name": "数据字典 / 系统枚举管理",
-      "passes": false,
-      "evidence": "",
-      "commit": ""
+      "passes": true,
+      "evidence": "spec schemas (3) + core catalog validation + identity-reference data-dict service test (10 tests) + bilingual docs",
+      "commit": "b61d3cc"
     },
     {
       "id": "m19-form-engine",
       "name": "动态表单引擎",
-      "passes": false,
-      "evidence": "",
-      "commit": ""
+      "passes": true,
+      "evidence": "pack quality 100 + spec schemas (4) + core catalog validation + identity-reference server-side form service (10 tests) + strict typecheck",
+      "commit": "724f3c5"
     },
     {
       "id": "m19-inbox",
