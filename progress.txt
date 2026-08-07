@@ -555,3 +555,23 @@ Verification:
 Commit: 2420904
 Progress: 17/19
 Next: m19-tags
+
+----------------------------------------
+Session #26 - m19-tags
+----------------------------------------
+Date: 2026-08-07
+
+Completed:
+  [x] Added tenant-scoped tag lifecycle with normalized unique names and stable slugs.
+  [x] Added authorized atomic resource attach and detach with revision and idempotency controls.
+  [x] Added safe archival, bounded signed-cursor queries, sanitized metadata, and minimized audit.
+  [x] Added six public schemas and ten positive and adversarial reference tests.
+
+Verification:
+  - Spec: 92 tests; Core: 141 tests; reference fixture: 179 tests
+  - Strict Spec and fixture typechecks passed
+  - Pack lint and test-pack: score 100
+
+Commit: b3f3c80
+Progress: 18/19
+Next: m19-documentation
