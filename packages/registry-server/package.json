@@ -1,6 +1,6 @@
 {
   "name": "aiba-registry-server",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Authenticated read-only reference registry server for AIBA",
   "type": "module",
   "license": "AGPL-3.0-only",

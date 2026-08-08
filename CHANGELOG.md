@@ -5,6 +5,20 @@ Changelog, and package versions follow Semantic Versioning.
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-08-08
+
+### Added
+
+- Tighten the quick-start path and homepage positioning so first-time readers
+  reach the core Blueprint workflow faster.
+
+### Fixed
+
+- Reject malformed Blueprint upgrade customizations and resolutions before they
+  can trigger runtime type errors.
+- Correct agent protocol metadata for read-only `plan` and `app-upgrade`
+  commands.
+
 ## [0.2.0] - 2026-08-06
 
 ### Added
@@ -108,7 +122,8 @@ Changelog, and package versions follow Semantic Versioning.
   malformed manifests, tampered signatures, registry rollback, redirects,
   oversized responses, untrusted keys, and insecure non-loopback listeners.
 
-[Unreleased]: https://github.com/GrubbyLee/aiba/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/GrubbyLee/aiba/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/GrubbyLee/aiba/compare/v0.2.0...v0.2.1
 [0.1.2]: https://github.com/GrubbyLee/aiba/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/GrubbyLee/aiba/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/GrubbyLee/aiba/releases/tag/v0.1.0
