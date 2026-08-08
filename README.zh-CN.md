@@ -30,11 +30,11 @@ AI 写代码很快，但每个项目依然在重复造轮子：登录、权限�
 - **管不住**：没有一套系统记录 Agent 改了什么、为什么改、证据还在不在、
   是谁批的、出问题怎么回滚。
 
-AIBA 就是为了解决这三道墙而存在的基础设施层。
+AIBA 就是为应对这三道墙而存在的基础设施层。
 
 ## 切入方式
 
-AIBA 是**面向 AI Agent 的低代码基础设施**。它不是管理后台模板，
+AIBA 是**面向 AI Agent 的能力基础设施**。它不是管理后台模板，
 不是可视化页面搭建器，不是固定全栈框架，也不是提示词集合。
 
 它不强制你用某一套技术栈，而是给 AI Agent 一套稳定、带版本的软件行为定义：
@@ -45,7 +45,7 @@ Agent 按你项目现有的技术栈和设计语言去适配实现，确定性�
 
 ## 第一天就能拿到的产出
 
-- **几天上线一个可信任的管理后台或内部工具**，而不是被某套模板锁死。
+- **用你自己的技术栈和设计体系，搭出可信任的管理后台或内部工具**，而不是被某套模板锁死。
 - **23 个可验证的能力模块**：身份、权限、用户、通知、站内信、验证码、
   数据字典、文件、国际化、定时任务、功能开关、组织、搜索、审核入口、
   Webhook、微信小程序认证、评论活动、动态表单、导入导出、报表、标签、
@@ -87,27 +87,23 @@ AIBA 目前支持 Agent 辅助安装、确定性的证据与来源验证、漂�
 
 ## 三种最快看到价值的方式
 
-1. **10 分钟出 Blueprint 计划。** 描述一次你的应用，立刻得到确定性的
+1. **几分钟出 Blueprint 计划。** 描述一次你的应用，立刻得到确定性的
    能力依赖图和有边界的 Agent 任务列表——不需要再做 prompt 工程。
-2. **1 小时内完成第一个可验证的能力。** 选一个能力模块，让 Agent 适配实现，
+2. **第一个可验证能力很快就能上线。** 选一个能力模块，让 Agent 适配实现，
    再用 Core 验证证据与来源，验证通过再上线。
 3. **升级不会打断你的定制。** 当能力发布新版本时，AIBA 会区分新增、破坏性、
-   安全敏感和定制冲突，你只需要适配真正需要改的部分。
+   安全敏感和定制冲突——你只需要适配真正需要改的部分。
 
 [历史外部演示](https://grubbylee.github.io/aiba/video/)展示了 AIBA 和 Codex
 如何从空目录完成一个真实项目。演示中的具体业务只属于文档，不属于 AIBA
 协议或官方能力目录。
 
-## 开始使用
+## 从这里开始
 
-- **最佳实践**：[五步生产级上线法](docs/BEST_PRACTICE.zh-CN.md)
-  —— 在真实项目中落地 AIBA 的推荐路径。
-- **快速上手**：[十分钟入门](docs/QUICKSTART.zh-CN.md)
-  —— 在全新项目中验证 npm CLI，并把第一个有边界的计划交给 Agent。
-- **深入理解**：[能力模型](docs/CAPABILITY_MODEL.zh-CN.md)
-  —— 完整目录、组合规则、Agent 工作流和信任边界。
-- **团队版**：[企业与治理路径](docs/BEST_PRACTICE.zh-CN.md#企业路径)
-  —— 签名审批、私有 Registry、可审计的来源追踪。
+- **快速上手试试：** [十分钟快速入门](docs/QUICKSTART.zh-CN.md)
+- **用在真实项目里：** [五步生产级最佳实践](docs/BEST_PRACTICE.zh-CN.md)
+- **理解整套模型：** [能力模型](docs/CAPABILITY_MODEL.zh-CN.md)
+- **安装与运行：** [安装](#安装)
 
 ## 原则
 
@@ -164,6 +160,38 @@ aiba verify .
   从[能力模型](docs/CAPABILITY_MODEL.zh-CN.md)和
   [自托管指南](docs/SELF_HOSTING.md)开始。
 
+
+## 工作方式
+
+最核心的闭环：描述、规划、适配、验证、升级。
+
+```bash
+aiba init
+aiba create app my-app
+aiba plan applications/my-app/app.yaml
+aiba add identity
+aiba add identity --finalize --agent codex
+aiba verify .
+```
+
+`add` 和 `upgrade` 只准备有边界的操作计划——不会静默生成代码，
+也不会执行能力包里的内容。Agent 按项目的技术栈和设计体系去适配实现；
+Core 在验证通过后才计算证据哈希并记录来源。能力包是不可信数据，
+Core 永远不会执行能力包提供的命令。
+
+`compose` 是只读的证据与来源验证。Solution 把每个组成能力绑定到精确版本和
+Manifest 哈希，要求完整依赖闭包和正确安装顺序，并对每个能力重新执行其自身的
+项目验证。Solution 永远不能削弱不变量，也不能掩盖失败的组成能力。
+
+存在治理策略时，审批默认失败关闭。每份审批都绑定到准确的计划、策略、
+能力版本和证据文件哈希；最终收据保留策略与审批哈希，供后续验证。
+
+运行时行为声明走独立的签名 `test`、`attest`、`verify-behavior` 流程。
+Core 永远不执行测试，但它可以验证可信执行者是否针对正确的源码快照运行了测试。
+
+更多细节：[能力模型](docs/CAPABILITY_MODEL.zh-CN.md)、
+[自托管指南](docs/SELF_HOSTING.md)、[路线图](docs/ROADMAP.md)。
+
 ## 开发
 
 给在本仓库内做贡献的开发者：
@@ -181,64 +209,6 @@ pnpm aiba -- inspect .
 Registry 操作、签名、治理、行为证明等流程都在 `docs/` 下的专门文档里，
 这里不再重复。
 
-## 工作方式
-
-最简产品流程是：
-
-```bash
-aiba init
-aiba agent-protocol --json
-aiba create app work-hub
-aiba plan applications/work-hub/app.yaml
-aiba list
-aiba show secure-workspace
-aiba add secure-workspace --solution
-aiba inspect
-aiba verify
-aiba compose secure-workspace
-```
-
-完整的 M3 安全基座需要依次安装并适配 `identity`、`audit`、`authorization`、
-`users` 和 `notification`；依赖检查会拒绝错误顺序。每次 `add` 先生成 Agent
-计划，项目测试通过后再由 `--finalize` 记录 Core 计算出的来源信息。
-
-`add` 和 `upgrade` 默认只准备有边界的操作计划。Agent 负责适配项目并提交证据或
-冲突处理结果；Core 在 `--finalize` 阶段计算哈希并验证。能力包始终作为数据处理，
-不能向 Core 提供待执行命令。
-
-`compose` 是只读的证据与来源检查。方案把每个组成能力绑定到精确版本和 Manifest
-哈希，要求完整依赖闭包和正确安装顺序，并对每个能力执行原有项目验证。方案不能把
-必需依赖改成可选，也不能忽略任何组成能力的不变量。
-
-`add <solution> --solution` 是分步安装入口。每次调用只准备或完成一个组成能力。
-Agent 实现返回的计划并填写证据后，先运行 `--finalize --agent <name>`，再请求下一步。
-Core 在前进前会重新验证所有已安装组成能力，最后一个能力完成后还会自动执行整套
-Solution 证据与来源验证。
-
-AIBA 返回 `ok` 不代表项目测试已经运行，也不等于运行时行为得到证明。它表示声明的
-证据、来源哈希、回执、血缘、依赖和治理记录有效且没有变化。需要证明运行时行为时，
-使用独立的 `test`、`attest`、`verify-behavior` 签名证明流程；Core 不执行测试命令。
-
-`registry-index` 会先验证所有发布者能力包，再创建不可变的签名快照。`resolve`
-会验证最新 Registry 快照、有效期、本地防回滚状态和所选能力包，之后才返回路径；
-它不会安装代码、执行命令或发起网络请求。`fetch` 在此基础上增加带认证的 HTTPS
-传输和验证缓存，并拒绝重定向、超大响应、过期索引和未经验证的缓存内容。默认的
-`.aiba/registry-cache/` 是派生产物，不应提交；请把
-`.aiba/registry-state.json` 保存在可信的持久存储中。
-
-`registry-add` 只导入经过发布者完整验证的能力包，且不会覆盖冲突版本。
-`registry-serve` 会在监听端口前验证最新签名索引及全部能力包，之后只暴露带认证的
-`GET`/`HEAD` 路由，不提供远程修改或签名 API。完整流程见
-[自托管指南](docs/SELF_HOSTING.md)。
-
-当 `.aiba/governance-policy.json` 存在时，`add --finalize` 和
-`upgrade --finalize` 会采用失败关闭策略：只有满足阈值的有效审批才能继续。每份审批
-都绑定准确的计划、策略、能力版本和当前证据文件哈希；最终收据会保留策略与审批哈希，
-供后续验证。
-
-当前实现状态见 [路线图](docs/ROADMAP.md) 和 [任务清单](docs/TASKS.md)。兼容性与
-发行规则见 [版本策略](docs/VERSIONING.md) 和 [发行指南](docs/RELEASING.md)，跨表面
-适配证据见 [可移植性说明](docs/PORTABILITY.md)。
 
 ## 许可证
 

@@ -32,11 +32,11 @@ Teams quickly hit three walls:
 - **Governance**: there is no system of record for what the agent changed, why
   it changed it, whether the evidence still holds, or who approved it.
 
-AIBA is the infrastructure layer that fixes all three.
+AIBA is the infrastructure layer that addresses all three.
 
 ## What AIBA does
 
-AIBA is **agent-native low-code infrastructure**. It is not an admin template,
+AIBA is **agent-native capability infrastructure**. It is not an admin template,
 visual page builder, fixed full-stack framework, or prompt library.
 
 Instead of forcing one stack, AIBA gives every AI Agent stable, versioned
@@ -50,8 +50,8 @@ upgradable production software.**
 
 ## What you get on day one
 
-- **A trustworthy admin or internal tool** in days, not months — without
-  locking into one template.
+- **A trustworthy admin or internal tool**, built with your stack and your
+  design system, without locking into one template.
 - **23 verified building blocks** for identity, access, files, notifications,
   forms, reports, approvals, i18n, data dictionaries, inboxes, tags, workflows,
   webhooks, audit, and WeChat mini-program review mode.
@@ -101,29 +101,25 @@ team approvals to install and upgrade finalization.
 
 ## Three ways AIBA shows value fast
 
-1. **Blueprint plan in under 10 minutes.** Describe your app once, get a
-   deterministic capability graph and a bounded agent task list — no prompt
+1. **Get a Blueprint plan in minutes.** Describe your app once and get a
+   deterministic capability graph plus a bounded agent task list — no prompt
    engineering required.
-2. **First verified capability in under an hour.** Pick a building block, let
-   the agent adapt it, then verify evidence and provenance before you ship.
+2. **Ship your first verified capability fast.** Pick one building block,
+   let the agent adapt it, then verify evidence and provenance before you ship.
 3. **Upgrades that don't break your custom code.** When a new version of a
    capability ships, AIBA classifies additive, breaking, security-sensitive,
-   and conflicting changes so you only adapt what's necessary.
+   and conflicting changes — so you only adapt what's necessary.
 
 A [historical external demonstration](https://grubbylee.github.io/aiba/video/)
 shows AIBA and Codex building one project from an empty directory. Its example
 domain is documentation only and is not part of AIBA's protocol or catalog.
 
-## Get started
+## Start here
 
-- **Best practice**: [Five-step production path](docs/BEST_PRACTICE.md) — the
-  recommended way to adopt AIBA for real projects.
-- **Quick start**: [Ten-minute setup](docs/QUICKSTART.md) — verify the npm CLI
-  in a clean project and hand the first bounded plan to an agent.
-- **Deep dive**: [Capability Model](docs/CAPABILITY_MODEL.md) — complete
-  catalog, composition rules, agent workflow, and trust boundaries.
-- **For teams**: [Enterprise & governance path](docs/BEST_PRACTICE.md#enterprise-path) —
-  signed approvals, private registry, and audit-ready provenance.
+- **Try it in minutes:** [Ten-minute Quick Start](docs/QUICKSTART.md)
+- **Use it for real:** [Five-step best practice playbook](docs/BEST_PRACTICE.md)
+- **Understand the model:** [Capability Model](docs/CAPABILITY_MODEL.md)
+- **Run it yourself:** [Install](#install)
 
 ## Principles
 
@@ -184,80 +180,40 @@ More entry points:
 
 ## How it works
 
-The shortest product loop:
+The shortest loop: describe, plan, adapt, verify, upgrade.
 
 ```bash
 aiba init
-aiba agent-protocol --json
 aiba create app my-app
 aiba plan applications/my-app/app.yaml
-aiba list
-aiba show secure-workspace
-aiba add secure-workspace --solution
-aiba inspect
-aiba verify
-aiba compose secure-workspace
+aiba add identity
+aiba add identity --finalize --agent codex
+aiba verify .
 ```
 
-The full secure foundation installs `identity`, `audit`, `authorization`,
-`users`, and `notification` in dependency order; the dependency checker
-refuses wrong order. Every `add` first produces a bounded agent plan. Core
-records the computed provenance only after project tests pass and
-`--finalize` is called.
+`add` and `upgrade` prepare bounded operation plans — they do not silently
+generate code or execute pack content. The agent adapts the capability to the
+project's stack and design system; Core hashes evidence and records provenance
+only after verification passes. Capability packs are untrusted data; Core never
+executes commands from a pack.
 
-`add` and `upgrade` prepare bounded operation plans by default. The agent
-adapts the project and submits evidence or conflict resolutions; Core hashes
-and verifies during `--finalize`. Capability packs are always treated as data
-and can never supply commands for Core to execute.
+`compose` is read-only evidence and provenance verification. A Solution pins
+each constituent to an exact version and manifest hash, requires a full
+dependency closure and correct install order, and re-runs every capability's
+own verification. A Solution can never weaken an invariant or hide a failed
+constituent.
 
-`compose` is a read-only evidence and provenance check. A Solution binds each
-constituent to an exact version and manifest hash, requires a full dependency
-closure and correct install order, and re-runs each capability's own project
-verification. A Solution cannot turn required dependencies optional, and it
-cannot bypass any constituent invariant.
+Approvals are fail-closed by default when a governance policy is present.
+Every approval is bound to the exact plan, policy, capability version, and
+evidence-file hashes; the final receipt preserves policy and approval hashes
+for later verification.
 
-`add <solution> --solution` is the stepwise install entry point. Each call
-prepares or finalizes only one constituent. After the agent implements the
-returned plan and records evidence, run `--finalize --agent <name>`, then
-ask for the next step. Core re-verifies all installed constituents before
-advancing, and automatically runs the full Solution evidence and provenance
-check after the last one finalizes.
+For runtime behavior claims, use the separate signed `test`, `attest`, and
+`verify-behavior` flow. Core never executes tests, but it can verify that a
+trusted runner ran them against the right source snapshot.
 
-AIBA returning `ok` does not mean project tests have been run or runtime
-behavior has been proven. It means the declared evidence, provenance hashes,
-receipts, ancestry, dependencies, and governance records are valid and
-unchanged. To prove runtime behavior, use the separate signed `test`,
-`attest`, and `verify-behavior` flow; Core never executes the test
-command itself.
-
-`registry-index` validates every publisher capability bundle before creating
-an immutable signed snapshot. `resolve` verifies the latest registry snapshot,
-expiry, local anti-rollback state, and the selected capability bundle before
-returning a path; it never installs code, executes commands, or makes network
-requests. `fetch` adds authenticated HTTPS transport and verified caching on
-top, and rejects redirects, oversized responses, stale indexes, and unverified
-cache contents. The default `.aiba/registry-cache/` is generated output and
-should not be committed; keep `.aiba/registry-state.json` in trusted durable
-storage.
-
-`registry-add` only imports fully verified publisher bundles and never
-overwrites conflicting versions. `registry-serve` validates the latest signed
-index and all bundles before listening, then exposes only authenticated
-`GET`/`HEAD` routes — no remote modification or signing APIs. See the
-[Self-Hosting Guide](docs/SELF_HOSTING.md) for the full flow.
-
-When `.aiba/governance-policy.json` exists, `add --finalize` and
-`upgrade --finalize` are fail-closed: only valid approvals meeting the
-threshold can proceed. Each approval is bound to the exact plan, policy,
-capability version, and current evidence file hashes; the final receipt
-preserves policy and approval hashes for later verification.
-
-Current implementation status: [Roadmap](docs/ROADMAP.md) and
-[Task List](docs/TASKS.md). Compatibility and release rules:
-[Versioning](docs/VERSIONING.md) and [Releasing](docs/RELEASING.md).
-Cross-surface adaptation evidence: [Portability](docs/PORTABILITY.md).
-
-
+More detail: [Capability Model](docs/CAPABILITY_MODEL.md),
+[Self-Hosting](docs/SELF_HOSTING.md), [Roadmap](docs/ROADMAP.md).
 ## Development
 
 For contributors working inside this monorepo:
