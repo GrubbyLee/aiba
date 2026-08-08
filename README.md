@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <strong>Infrastructure for agent-built software.</strong>
+  <strong>The control plane for software built by AI agents.</strong>
 </p>
 
 <p align="center">
@@ -18,17 +18,67 @@
 
 # AIBA
 
-**Agent Infrastructure for Building Applications.**
+## The problem
 
-AIBA is agent-native low-code infrastructure. It is not an admin template,
+Agents write code fast. Every project still rewrites identity, permissions,
+audit, files, notifications, review access, approvals, forms, reporting, and
+ten other cross-cutting capabilities.
+
+Teams quickly hit three walls:
+
+- **Trust**: you can't prove the AI-built code is safe, compliant, or upgradable.
+- **Speed**: each project starts from a template that must be re-customized
+  until it's unrecognizable — and then you can no longer upgrade it.
+- **Governance**: there is no system of record for what the agent changed, why
+  it changed it, whether the evidence still holds, or who approved it.
+
+AIBA is the infrastructure layer that fixes all three.
+
+## What AIBA does
+
+AIBA is **agent-native low-code infrastructure**. It is not an admin template,
 visual page builder, fixed full-stack framework, or prompt library.
 
-It gives AI Agents stable, versioned definitions of application behavior. The
-Agent adapts that behavior to the project's existing stack and design language;
-deterministic Core commands inspect, verify, trace, and upgrade the result.
-Generated code remains project-owned.
+Instead of forcing one stack, AIBA gives every AI Agent stable, versioned
+definitions of application behavior. The Agent adapts that behavior to the
+project's existing stack and design language; deterministic Core commands
+inspect, verify, trace, and upgrade the result. Generated code stays owned by
+the project.
 
-## Capability Layers
+In one sentence: **AIBA turns AI-generated code into governed, traceable,
+upgradable production software.**
+
+## What you get on day one
+
+- **A trustworthy admin or internal tool** in days, not months — without
+  locking into one template.
+- **23 verified building blocks** for identity, access, files, notifications,
+  forms, reports, approvals, i18n, data dictionaries, inboxes, tags, workflows,
+  webhooks, audit, and WeChat mini-program review mode.
+- **Deterministic evidence & provenance**: every capability installation is
+  hashed, traced, and reproducible.
+- **Customization-aware upgrades**: you can change the code, and AIBA still
+  upgrades the capability on top of your changes.
+- **Signed team governance**: approvals are bound to exact plans and evidence
+  hashes; tampered plans fail.
+- **A registry and private distribution path** for teams that need to control
+  every capability they install.
+
+## For whom
+
+- **Independent developers & small teams** who use Codex, Claude Code, or other
+  agents and want to ship faster without accumulating unmaintainable AI code.
+- **Product teams** who need to build multiple internal tools or back offices
+  with shared security, compliance, and upgrade guarantees.
+- **Platform & security teams** who need a governance layer for AI-generated
+  application code — what changed, who approved it, whether it still verifies,
+  and how to upgrade it safely.
+
+AIBA starts with the agent-first developer workflow and scales up to the
+enterprise control plane. The same Core, contracts, and verification engine
+work from a solo side project to a regulated team.
+
+## Capability layers
 
 AIBA ships 23 reusable capabilities, organized for discovery in this order:
 
@@ -43,34 +93,37 @@ AIBA ships 23 reusable capabilities, organized for discovery in this order:
 The first four layers are installable packs. The solution layer is a reusable
 composition, not one of the 23 capability packs.
 
-AIBA currently supports Agent-assisted install, deterministic evidence and
+AIBA currently supports agent-assisted install, deterministic evidence and
 provenance verification, drift inspection, customization-aware upgrade, signed
 capability bundles, authenticated private registry fetch, verified caching, and
 anti-rollback resolution. Optional project governance adds signed, evidence-bound
 team approvals to install and upgrade finalization.
 
-Typical outcomes:
+## Three ways AIBA shows value fast
 
-- ship admin back offices and internal tools without freezing on one template;
-- let Agents build from a bounded Blueprint instead of ad hoc prompts;
-- reuse verified building blocks for login, permissions, files, notifications,
-  forms, reports, approvals, and integrations;
-- keep provenance, upgrades, and governance explicit instead of implicit.
-
-Describe project-specific resources, workflows, authorization intent, events,
-UI intent, and acceptance evidence in an Application Blueprint. AIBA validates
-that intent and deterministically resolves reusable capabilities plus a bounded,
-non-executable Agent task graph. Business nouns remain in the user's project;
-they never become built-in AIBA product models.
+1. **Blueprint plan in under 10 minutes.** Describe your app once, get a
+   deterministic capability graph and a bounded agent task list — no prompt
+   engineering required.
+2. **First verified capability in under an hour.** Pick a building block, let
+   the agent adapt it, then verify evidence and provenance before you ship.
+3. **Upgrades that don't break your custom code.** When a new version of a
+   capability ships, AIBA classifies additive, breaking, security-sensitive,
+   and conflicting changes so you only adapt what's necessary.
 
 A [historical external demonstration](https://grubbylee.github.io/aiba/video/)
 shows AIBA and Codex building one project from an empty directory. Its example
 domain is documentation only and is not part of AIBA's protocol or catalog.
 
-[Start with the ten-minute Quick Start](docs/QUICKSTART.md) to verify the npm
-CLI in a clean project and hand the first bounded plan to an Agent.
-Read the [Capability Model](docs/CAPABILITY_MODEL.md) for the complete catalog,
-composition rules, Agent workflow, and trust boundaries.
+## Get started
+
+- **Best practice**: [Five-step production path](docs/BEST_PRACTICE.md) — the
+  recommended way to adopt AIBA for real projects.
+- **Quick start**: [Ten-minute setup](docs/QUICKSTART.md) — verify the npm CLI
+  in a clean project and hand the first bounded plan to an agent.
+- **Deep dive**: [Capability Model](docs/CAPABILITY_MODEL.md) — complete
+  catalog, composition rules, agent workflow, and trust boundaries.
+- **For teams**: [Enterprise & governance path](docs/BEST_PRACTICE.md#enterprise-path) —
+  signed approvals, private registry, and audit-ready provenance.
 
 ## Principles
 
@@ -94,109 +147,50 @@ composition rules, Agent workflow, and trust boundaries.
   including a native WeChat Mini Program and an integrated core-capabilities
   security corpus.
 
-## Development
-
-```bash
-pnpm install
-pnpm check
-node packages/cli/dist/index.js init /path/to/project
-node packages/cli/dist/index.js inspect .
-node packages/cli/dist/index.js add review-access --root /path/to/project
-node packages/cli/dist/index.js add review-access --finalize --root /path/to/project
-node packages/cli/dist/index.js diff review-access --root /path/to/project
-node packages/cli/dist/index.js upgrade review-access \
-  --root /path/to/project --packs-dir /path/to/target-packs
-node packages/cli/dist/index.js upgrade review-access --finalize \
-  --root /path/to/project --packs-dir /path/to/target-packs
-node packages/cli/dist/index.js verify review-access \
-  --root fixtures/review-access-reference \
-  --packs-dir capabilities
-node packages/cli/dist/index.js compose secure-workspace \
-  --root fixtures/identity-reference --packs-dir capabilities
-node packages/cli/dist/index.js add secure-workspace --solution \
-  --root /path/to/project
-node packages/cli/dist/index.js add secure-workspace --solution --finalize \
-  --agent codex --root /path/to/project
-node packages/cli/dist/index.js add wechat-miniprogram-auth \
-  --root /path/to/project
-aiba keygen aiba-official --out ../aiba-publisher-keys
-aiba pack identity --publisher aiba-official --key-id root-1 \
-  --private-key ../aiba-publisher-keys/private.pem --out identity.aiba
-aiba verify-bundle identity.aiba --trust trust-policy.json
-aiba registry-add identity.aiba --registry ./registry \
-  --publisher-trust publisher-trust.json
-aiba registry-index ./registry --id local-registry \
-  --publisher registry-operator --key-id root-1 \
-  --private-key ../registry-keys/private.pem \
-  --publisher-trust publisher-trust.json --sequence 1 \
-  --expires-at 2026-07-27T00:00:00Z
-aiba resolve identity --registry ./registry \
-  --registry-trust registry-trust.json \
-  --publisher-trust publisher-trust.json
-AIBA_REGISTRY_TOKEN=... aiba registry-serve ./registry \
-  --registry-trust registry-trust.json \
-  --publisher-trust publisher-trust.json \
-  --tls-cert fullchain.pem --tls-key private.pem
-AIBA_REGISTRY_TOKEN=... aiba fetch identity \
-  --registry-url https://registry.example.com \
-  --registry-trust registry-trust.json \
-  --publisher-trust publisher-trust.json
-aiba policy-init --id product-team --approver release-manager \
-  --key-id root-1 --public-key ../approver-keys/public.pem \
-  --capability identity review-access
-aiba approve identity --approver release-manager --key-id root-1 \
-  --private-key ../approver-keys/private.pem
-aiba policy-check identity --agent codex
-```
-
 ## Install
 
 Requires Node.js 22 or newer:
 
 ```bash
 npm install --global @grubbylee/aiba
-aiba list
-aiba show identity
-aiba init
-aiba add secure-workspace --solution
-aiba status secure-workspace
-aiba continue secure-workspace
-aiba continue secure-workspace --finalize --agent codex
-aiba doctor
-aiba inspect
-aiba compose secure-workspace
-aiba test identity --runner ci-runner --key-id runner-1 \
-  --test-id identity-contract --command "pnpm test -- identity"
-aiba attest .aiba/behavior/challenges/<id>.json \
-  --private-key /secure/runner-private.pem \
-  --started-at <date-time> --completed-at <date-time> \
-  --exit-code 0 --summary test-results/identity.json
-aiba verify-behavior .aiba/behavior/proofs/<id>.json \
-  --trust runner-trust.json --command "pnpm test -- identity" \
-  --summary test-results/identity.json
-aiba completion bash
+aiba --version
 ```
 
-The scoped package still installs the `aiba` executable. The npm distribution
-includes the official capability packs and application solutions. Library consumers
-can install `aiba-core`, `aiba-spec`, or `aiba-registry-server` independently.
+The scoped package installs the `aiba` executable and ships the official
+capability packs and application solutions. Library users can install
+`aiba-core`, `aiba-spec`, or `aiba-registry-server` separately.
 
-The concise product workflow remains:
+Try the shortest path:
+
+```bash
+aiba init
+aiba create app my-app
+aiba plan applications/my-app/app.yaml
+aiba add identity
+aiba add identity --finalize --agent codex
+aiba verify .
+```
+
+More entry points:
+
+- Build a full secure foundation: `aiba add secure-workspace --solution`
+- Browse the catalog: `aiba list`, `aiba show <id>`
+- Follow the five-step production path:
+  [Best Practice](docs/BEST_PRACTICE.md)
+- For teams: signed governance, private registry, behavior proofs, and
+  self-hosting — start with the
+  [Capability Model](docs/CAPABILITY_MODEL.md) and
+  [Self-Hosting](docs/SELF_HOSTING.md) guides.
+
+## How it works
+
+The shortest product loop:
 
 ```bash
 aiba init
 aiba agent-protocol --json
-aiba create app work-hub
-aiba plan applications/work-hub/app.yaml
-aiba create capability appointment-booking
-aiba lint capabilities/appointment-booking
-aiba test-pack capabilities/appointment-booking
-aiba solution-sign solutions/secure-workspace \
-  --publisher aiba-official --key-id root-1 --private-key /secure/private.pem \
-  --sequence 1 --expires-at <date-time> --out secure-workspace.signed.json
-aiba solution-verify solutions/secure-workspace \
-  --envelope secure-workspace.signed.json --trust solution-trust.json \
-  --state solution-state.json
+aiba create app my-app
+aiba plan applications/my-app/app.yaml
 aiba list
 aiba show secure-workspace
 aiba add secure-workspace --solution
@@ -205,60 +199,81 @@ aiba verify
 aiba compose secure-workspace
 ```
 
-For the complete M3 security base, install and adapt `identity`, `audit`,
-`authorization`, `users`, then `notification`; dependency checks prevent an
-invalid order. Each `add` prepares an Agent plan and each `--finalize` records
-Core-computed provenance after project tests pass.
+The full secure foundation installs `identity`, `audit`, `authorization`,
+`users`, and `notification` in dependency order; the dependency checker
+refuses wrong order. Every `add` first produces a bounded agent plan. Core
+records the computed provenance only after project tests pass and
+`--finalize` is called.
 
-`add` and `upgrade` prepare a bounded plan by default. An Agent adapts the
-project and supplies evidence or conflict resolutions; Core then hashes and
-verifies the result during `--finalize`. Capability packs are treated as data
-and cannot provide commands for Core to execute.
+`add` and `upgrade` prepare bounded operation plans by default. The agent
+adapts the project and submits evidence or conflict resolutions; Core hashes
+and verifies during `--finalize`. Capability packs are always treated as data
+and can never supply commands for Core to execute.
 
-`compose` is a read-only evidence and provenance check. A solution pins every constituent to
-an exact version and manifest hash, requires a complete dependency closure in
-installation order, and runs normal project verification for every capability.
-It cannot mark a required dependency optional or ignore a constituent invariant.
+`compose` is a read-only evidence and provenance check. A Solution binds each
+constituent to an exact version and manifest hash, requires a full dependency
+closure and correct install order, and re-runs each capability's own project
+verification. A Solution cannot turn required dependencies optional, and it
+cannot bypass any constituent invariant.
 
-`add <solution> --solution` is the guided installation path. It prepares or
-finalizes exactly one constituent per invocation. The Agent implements the
-returned plan and adds evidence, then runs `--finalize --agent <name>` before
-requesting the next step. Core re-verifies installed constituents before it
-advances and runs full Solution evidence and provenance verification after the last capability.
+`add <solution> --solution` is the stepwise install entry point. Each call
+prepares or finalizes only one constituent. After the agent implements the
+returned plan and records evidence, run `--finalize --agent <name>`, then
+ask for the next step. Core re-verifies all installed constituents before
+advancing, and automatically runs the full Solution evidence and provenance
+check after the last one finalizes.
 
-An evidence `ok` result means declared evidence, source hashes, receipts,
-ancestry, dependencies, and governance provenance are valid and unchanged; it
-does not claim project tests ran. Trusted runtime claims use the separate
-challenge-based `test` / `attest` / `verify-behavior` protocol. Core never
-executes the bound command. See [RFC 0017](docs/rfcs/0017-trusted-behavior-proofs.md).
+AIBA returning `ok` does not mean project tests have been run or runtime
+behavior has been proven. It means the declared evidence, provenance hashes,
+receipts, ancestry, dependencies, and governance records are valid and
+unchanged. To prove runtime behavior, use the separate signed `test`,
+`attest`, and `verify-behavior` flow; Core never executes the test
+command itself.
 
-`registry-index` creates an immutable signed snapshot after verifying every
-listed publisher bundle. `resolve` verifies the latest registry snapshot, its
-expiry, local anti-rollback state, and the selected bundle before returning its
-paths. Registry resolution performs no install, code execution, or network
-request. `fetch` adds authenticated HTTPS transport and a verified local cache;
-the bearer token comes only from a named environment variable, and redirects,
-oversized responses, stale indexes, and unverified cache content are rejected.
-The default `.aiba/registry-cache/` contains derived artifacts and should not be
-committed; keep `.aiba/registry-state.json` in trusted persistent storage.
+`registry-index` validates every publisher capability bundle before creating
+an immutable signed snapshot. `resolve` verifies the latest registry snapshot,
+expiry, local anti-rollback state, and the selected capability bundle before
+returning a path; it never installs code, executes commands, or makes network
+requests. `fetch` adds authenticated HTTPS transport and verified caching on
+top, and rejects redirects, oversized responses, stale indexes, and unverified
+cache contents. The default `.aiba/registry-cache/` is generated output and
+should not be committed; keep `.aiba/registry-state.json` in trusted durable
+storage.
 
-`registry-add` imports only fully publisher-verified bundles and never replaces
-conflicting versions. `registry-serve` verifies the latest signed index and all
-indexed bundles before listening, then exposes only authenticated `GET`/`HEAD`
-routes. It has no remote mutation or signing API. See
-[docs/SELF_HOSTING.md](docs/SELF_HOSTING.md) for the operating workflow.
+`registry-add` only imports fully verified publisher bundles and never
+overwrites conflicting versions. `registry-serve` validates the latest signed
+index and all bundles before listening, then exposes only authenticated
+`GET`/`HEAD` routes — no remote modification or signing APIs. See the
+[Self-Hosting Guide](docs/SELF_HOSTING.md) for the full flow.
 
 When `.aiba/governance-policy.json` exists, `add --finalize` and
-`upgrade --finalize` fail closed until valid approvals satisfy the configured
-threshold. Each approval signs the exact plan, policy, capability versions, and
-current evidence-file hashes. Final receipts retain policy and approval hashes
-for later verification.
+`upgrade --finalize` are fail-closed: only valid approvals meeting the
+threshold can proceed. Each approval is bound to the exact plan, policy,
+capability version, and current evidence file hashes; the final receipt
+preserves policy and approval hashes for later verification.
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) and [docs/TASKS.md](docs/TASKS.md) for
-the current implementation status. Compatibility and release details live in
-[docs/VERSIONING.md](docs/VERSIONING.md) and
-[docs/RELEASING.md](docs/RELEASING.md). M7 cross-surface evidence is summarized
-in [docs/PORTABILITY.md](docs/PORTABILITY.md).
+Current implementation status: [Roadmap](docs/ROADMAP.md) and
+[Task List](docs/TASKS.md). Compatibility and release rules:
+[Versioning](docs/VERSIONING.md) and [Releasing](docs/RELEASING.md).
+Cross-surface adaptation evidence: [Portability](docs/PORTABILITY.md).
+
+
+## Development
+
+For contributors working inside this monorepo:
+
+```bash
+pnpm install
+pnpm check
+pnpm aiba -- inspect .
+```
+
+`pnpm check` runs typecheck, tests, build, smoke, release-metadata validation,
+workflow validation, and a clean-tarball consumer test.
+
+Use `pnpm aiba -- <command>` to run the locally built CLI against any path.
+Registry operations, signing, governance, and behavior-proof workflows are
+covered by the dedicated guides under `docs/`.
 
 ## License
 

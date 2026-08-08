@@ -62,6 +62,6 @@ is trusted as publisher-authenticated data, not as safe executable code.
 ## Registry Boundary
 
 Registries index and transport these bundles. Registry authentication,
-commercial access control, caching, and governance cannot weaken local bundle
+hosted access control, caching, and governance cannot weaken local bundle
 verification. Signed registry indexes and anti-rollback state are separate M4.2
 protocol work.

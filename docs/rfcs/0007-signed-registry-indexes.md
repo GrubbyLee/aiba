@@ -56,5 +56,5 @@ from pinning clients before resolution completes.
 
 Resolution returns the verified bundle and pack paths. It does not copy project
 code, execute files, install dependencies, or weaken `aiba verify-bundle`.
-Network transport and commercial registry authentication sit outside this local
+Network transport and hosted registry authentication sit outside this local
 cryptographic boundary.

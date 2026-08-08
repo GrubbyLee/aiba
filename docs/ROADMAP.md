@@ -41,13 +41,13 @@ Goal: upgrade a deeply customized capability from v1 to v2 safely.
 - [x] Notification contract and reference adapter.
 - [x] Shared security interface schemas and cross-capability attack tests.
 
-## M4: Ecosystem And Commercial Layer
+## M4: Ecosystem And Control Layer
 
 - [x] Signed capability bundles, publisher keys, and local trust policy.
 - [x] Signed registry indexes, local resolution, expiry, and anti-rollback state.
 - [x] Authenticated private registry transport and verified local caching.
 - [x] Team policy, signed approvals, separation of duties, and upgrade governance.
-- [x] Define the open Core and commercial hosted-control boundary.
+- [x] Define the open Core and hosted-control boundary.
 - [ ] Build hosted key custody, signed review workflows, and enterprise integrations.
 
 ## M5: Self-Hosted Registry MVP
@@ -269,3 +269,17 @@ plans into generated application code or silently applying upgrades.
 M21 is complete when plans round-trip through Core validation, diffs are stable,
 upgrades require explicit non-additive decisions, no application code is mutated,
 and local plus hosted verification passes.
+
+## M22: Team and Enterprise Readiness
+
+Goal: make AIBA ready for multi-project teams and self-hosted enterprise deployments, with stronger governance, registry operations, and auditable behavior evidence.
+
+- [ ] Publish a five-step best-practice playbook that walks teams from first Blueprint to production-grade verification and upgrades.
+- [ ] Add a reference governance workflow with policy scaffolding, key-rotation guidance, and approval audit reporting commands.
+- [ ] Add a private registry onboarding path for multi-repo organizations, including publisher onboarding, index promotion, and anti-rollback state backup procedures.
+- [ ] Ship a behavior-proof reference runner integration so teams can bind runtime test results to exact source snapshots and produce audit-ready evidence.
+- [ ] Add a Solution packaging guide for internal platforms, so teams can publish their own verified internal foundations the same way AIBA ships `secure-workspace`.
+- [ ] Strengthen inspection and verification reports with stable JSON summaries, diff reports, and machine-readable compliance evidence.
+- [ ] Provide hardened self-hosted reference deployment for registry and governance components.
+
+M22 is complete when a team can adopt AIBA across multiple projects, run their own private registry, enforce signed governance policies, produce auditable evidence, and package internal platforms as verified Solutions.

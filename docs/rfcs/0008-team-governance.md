@@ -45,5 +45,5 @@ present and byte-identical to finalization time.
 
 Approver private keys never enter project state. Agent adapters must not request
 or handle them during normal implementation. Hosted SSO, organizational key
-custody, and remote approval workflow are commercial/control-plane extensions
+custody, and remote approval workflow are hosted-control extensions
 that cannot weaken local verification.

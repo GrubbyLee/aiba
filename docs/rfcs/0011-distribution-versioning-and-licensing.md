@@ -17,7 +17,7 @@ becoming a wire-protocol or capability-contract version.
 ## License Boundary
 
 Core, CLI, Registry Server, capability contracts, recipes, and migrations are
-AGPL-3.0-only and remain eligible for a separate commercial license from their
+AGPL-3.0-only and remain eligible for a separate license from their
 copyright holders. The protocol package is Apache-2.0 so independent tools can
 interoperate without copying Core.
 

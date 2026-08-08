@@ -1,4 +1,4 @@
-# RFC 0009: Private Registry Transport And Commercial Boundary
+# RFC 0009: Private Registry Transport And Hosted Control Boundary
 
 Status: Accepted for M4.4 implementation
 
@@ -6,7 +6,7 @@ Status: Accepted for M4.4 implementation
 
 Fetch capability packs from authenticated private registries without making the
 registry server, transport, or cache a new trust root. Preserve a complete local
-verification path in AGPL AIBA Core while defining a commercial hosted control
+verification path in AGPL AIBA Core while defining a hosted control
 plane that adds operational value rather than weaker verification.
 
 ## Transport Protocol
@@ -45,7 +45,7 @@ registry and verify every artifact without buying or contacting an AIBA-hosted
 service. Hosted responses cannot declare an artifact valid or bypass
 `aiba verify-bundle`, `aiba policy-check`, or `aiba verify`.
 
-## Commercial Control Plane
+## Hosted Control Plane
 
 The paid product may provide multi-tenant private registry hosting, SSO and
 SCIM, HSM-backed publisher and approver key custody, protected publishing
@@ -56,7 +56,7 @@ offline. Hosted identity and attestation may strengthen who performed an action,
 but cannot weaken local signatures, thresholds, evidence hashes, or rollback
 checks.
 
-Commercial distribution uses a separate license for customers that do not want
+Hosted distribution uses a separate license for customers that do not want
 AGPL obligations. Protocol interoperability and generated project ownership
 must remain available independently of the hosted service.
 

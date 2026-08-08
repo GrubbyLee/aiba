@@ -138,7 +138,7 @@ before pack download, and fetches only signed paths at exact declared sizes.
 Core publishes a cache entry atomically only after full local verification, then
 reuses normal local resolution to advance anti-rollback state.
 
-The hosted commercial layer provides operations: tenant isolation, SSO/SCIM,
+The hosted control layer provides operations: tenant isolation, SSO/SCIM,
 key custody, publishing and approval workflow, audit retention, integrations,
 SLA, and support. It is not a verification authority. The AGPL Core remains a
 complete offline verifier, and hosted output must reduce to signed artifacts and

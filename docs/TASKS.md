@@ -110,7 +110,7 @@ Exit criteria met on 2026-07-26.
 - [x] Bind approvals to plan, policy, versions, conflicts, and evidence-file hashes.
 - [x] Enforce approval thresholds and optional separation of duties in finalization.
 - [x] Record policy and approval hashes in receipts for later verification.
-- [x] Add commercial-boundary architecture for private registries and hosted controls.
+- [x] Add hosted-control boundary architecture for private registries and controls.
 
 ## M4.2 Exit Criteria
 
@@ -144,7 +144,7 @@ verified cache entry, and advances anti-rollback state only after cached
 resolution succeeds. Missing credentials, redirects, oversized or interrupted
 responses, tampered indexes, envelopes, and files, stale sequences, and cache
 conflicts must fail closed without persisting secrets or false trusted state.
-The AGPL Core and commercial hosted-control boundary must be explicit.
+The AGPL Core and hosted-control boundary must be explicit.
 
 Exit criteria met on 2026-07-26.
 
