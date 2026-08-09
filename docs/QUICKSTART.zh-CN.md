@@ -1,4 +1,4 @@
-# AIBA 十分钟快速上手
+# AIBA 快速上手
 
 [English](QUICKSTART.md) | **中文**
 

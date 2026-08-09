@@ -80,18 +80,20 @@ work from a solo side project to a regulated team.
 
 ## Capability layers
 
-AIBA ships 23 reusable capabilities, organized for discovery in this order:
+AIBA ships **23 capability packs** (installable behavior contracts) and one
+**application solution** (a reusable, dependency-ordered composition of packs).
+A pack defines what must be true; a solution defines a verified combination.
+Packs are organized in five layers:
 
-| Layer | Current catalog |
+| Layer | Highlights |
 | --- | --- |
-| Application foundation | `identity`, `authorization`, `users`, `notification`, `inbox`, `verification-challenge`, `data-dict`, `file-assets`, `i18n`, `scheduled-jobs`, `feature-flags`, `organization`, `search`, `review-access` |
+| Application foundation | `identity`, `authorization`, `users`, `audit`, `file-assets`, `notification`, plus data-dict, i18n, feature-flags, inbox, verification-challenge, scheduled-jobs, organization, search, review-access |
 | Platform integration | `webhooks`, `wechat-miniprogram-auth` |
-| Business capability | `comments-activity`, `form-engine`, `import-export`, `reporting`, `tags`, `workflow-approval` |
-| Engineering governance | `audit` |
-| Application solution | `secure-workspace` |
+| Business capability | `form-engine`, `import-export`, `reporting`, `workflow-approval`, tags, comments-activity |
+| Engineering governance | `audit` (also listed under foundation when used as a base layer) |
+| Application solution | `secure-workspace` — the six foundational packs composed in verified order |
 
-The first four layers are installable packs. The solution layer is a reusable
-composition, not one of the 23 capability packs.
+Browse the full catalog with `aiba list`. Inspect any pack with `aiba show <id>`.
 
 AIBA currently supports agent-assisted install, deterministic evidence and
 provenance verification, drift inspection, customization-aware upgrade, signed
@@ -101,12 +103,13 @@ team approvals to install and upgrade finalization.
 
 ## Three ways AIBA shows value fast
 
-1. **Get a Blueprint plan in minutes.** Describe your app once and get a
-   deterministic capability graph plus a bounded agent task list — no prompt
-   engineering required.
-2. **Ship your first verified capability fast.** Pick one building block,
-   let the agent adapt it, then verify evidence and provenance before you ship.
-3. **Upgrades that don't break your custom code.** When a new version of a
+1. **A Blueprint plan in one CLI pass.** Describe your app once in a YAML file
+   and get a deterministic capability dependency graph plus a bounded agent
+   task list — no prompt engineering required.
+2. **Your first verified capability in the first session.** Pick one building
+   block, let the agent adapt it to your stack, then verify evidence and
+   provenance before you ship.
+3. **Upgrades that respect your custom code.** When a new version of a
    capability ships, AIBA classifies additive, breaking, security-sensitive,
    and conflicting changes — so you only adapt what's necessary.
 
@@ -116,10 +119,31 @@ domain is documentation only and is not part of AIBA's protocol or catalog.
 
 ## Start here
 
-- **Try it in minutes:** [Ten-minute Quick Start](docs/QUICKSTART.md)
-- **Use it for real:** [Five-step best practice playbook](docs/BEST_PRACTICE.md)
-- **Understand the model:** [Capability Model](docs/CAPABILITY_MODEL.md)
-- **Run it yourself:** [Install](#install)
+Install (requires Node.js 22+):
+
+```bash
+npm install --global @grubbylee/aiba
+aiba --version
+```
+
+Then try the shortest loop:
+
+```bash
+aiba init
+aiba create app my-app
+aiba plan applications/my-app/app.yaml
+aiba add identity
+aiba add identity --finalize --agent codex
+aiba verify .
+```
+
+More paths:
+
+- **Step-by-step guide:** [Quick Start](docs/QUICKSTART.md)
+- **Production playbook:** [Five-step best practice](docs/BEST_PRACTICE.md)
+- **How it works under the hood:** [Capability Model](docs/CAPABILITY_MODEL.md)
+- **For teams:** private registry, governance, behavior proofs — start with
+  [Self-Hosting](docs/SELF_HOSTING.md)
 
 ## Principles
 
@@ -142,41 +166,6 @@ domain is documentation only and is not part of AIBA's protocol or catalog.
 - `fixtures/`: reference projects used for conformance and attack testing,
   including a native WeChat Mini Program and an integrated core-capabilities
   security corpus.
-
-## Install
-
-Requires Node.js 22 or newer:
-
-```bash
-npm install --global @grubbylee/aiba
-aiba --version
-```
-
-The scoped package installs the `aiba` executable and ships the official
-capability packs and application solutions. Library users can install
-`aiba-core`, `aiba-spec`, or `aiba-registry-server` separately.
-
-Try the shortest path:
-
-```bash
-aiba init
-aiba create app my-app
-aiba plan applications/my-app/app.yaml
-aiba add identity
-aiba add identity --finalize --agent codex
-aiba verify .
-```
-
-More entry points:
-
-- Build a full secure foundation: `aiba add secure-workspace --solution`
-- Browse the catalog: `aiba list`, `aiba show <id>`
-- Follow the five-step production path:
-  [Best Practice](docs/BEST_PRACTICE.md)
-- For teams: signed governance, private registry, behavior proofs, and
-  self-hosting — start with the
-  [Capability Model](docs/CAPABILITY_MODEL.md) and
-  [Self-Hosting](docs/SELF_HOSTING.md) guides.
 
 ## How it works
 

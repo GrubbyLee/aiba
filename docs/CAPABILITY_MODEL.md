@@ -4,14 +4,29 @@
 
 ## What AIBA Is
 
-AIBA is agent-native low-code infrastructure. It is not an admin template,
+AIBA is **agent-native capability infrastructure**. It is not an admin template,
 visual page builder, fixed full-stack framework, or prompt library. AIBA gives
 an AI Agent stable, versioned definitions of application behavior; the Agent
 adapts that behavior to the project's existing stack and design; deterministic
 Core commands inspect, verify, trace, and upgrade the result.
 
+**In one sentence:** the Agent writes the code; AIBA defines the contract,
+hashes the evidence, records the receipt, and keeps it upgradeable.
+
 This separates what an application must guarantee from how its code and UI are
 implemented. Generated code remains project-owned.
+
+### What "evidence and provenance verification" actually checks
+
+When AIBA says a capability "verifies," it means it has confirmed:
+- every file the capability claims to touch exists at the expected path;
+- every declared file's content hash matches what was recorded at finalize time;
+- the installation receipt, ancestry chain, and dependency graph are intact;
+- no required invariant has an evidence file that was removed or tampered with.
+
+AIBA does **not** execute application tests or prove runtime behavior by itself.
+Runtime behavior claims use the separate signed `test`, `attest`, and
+`verify-behavior` flow with a trusted runner.
 
 ## The Four Building Blocks
 

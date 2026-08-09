@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <strong>AI 时代的软件治理与交付控制面。</strong>
+  <strong>AI 构建软件的控制面。</strong>
 </p>
 
 <p align="center">
@@ -69,17 +69,21 @@ AIBA 从 Agent 开发者工作流切入，但架构天然能向上扩展到企�
 
 ## 能力层级
 
-AIBA 现有 23 项可复用能力，按下面顺序组织，便于发现和理解：
+AIBA 内置 **23 个能力包**（可安装的行为契约），以及 **1 个应用组合方案**
+（一组经过验证、按依赖顺序排列的能力包集合）。能力包定义"必须满足什么"，
+组合方案定义"经过验证的搭配是什么"。
 
-| 层级 | 当前目录 |
+能力包按五层组织：
+
+| 层级 | 核心能力 |
 | --- | --- |
-| 应用基础能力 | `identity`、`authorization`、`users`、`notification`、`inbox`、`verification-challenge`、`data-dict`、`file-assets`、`i18n`、`scheduled-jobs`、`feature-flags`、`organization`、`search`、`review-access` |
+| 应用基础能力 | `identity`、`authorization`、`users`、`audit`、`file-assets`、`notification`，以及 data-dict、i18n、feature-flags、inbox、verification-challenge、scheduled-jobs、organization、search、review-access |
 | 平台集成能力 | `webhooks`、`wechat-miniprogram-auth` |
-| 业务通用能力 | `comments-activity`、`form-engine`、`import-export`、`reporting`、`tags`、`workflow-approval` |
-| 工程治理能力 | `audit` |
-| 应用组合方案 | `secure-workspace` |
+| 业务通用能力 | `form-engine`、`import-export`、`reporting`、`workflow-approval`，以及 tags、comments-activity |
+| 工程治理能力 | `audit`（同时作为基础能力层使用时归入基础层） |
+| 应用组合方案 | `secure-workspace` — 将六个基础能力按依赖顺序组合的方案 |
 
-前四层是可独立安装的能力包。最后一层是可复用的组合方案，不计入 23 项能力包。
+用 `aiba list` 浏览完整目录，用 `aiba show <id>` 查看任意能力详情。
 
 AIBA 目前支持 Agent 辅助安装、确定性的证据与来源验证、漂移检查、感知定制的升级、
 签名能力包、私有 Registry 认证下载、验证缓存和防回滚解析。可选的项目治理机制
@@ -87,11 +91,11 @@ AIBA 目前支持 Agent 辅助安装、确定性的证据与来源验证、漂�
 
 ## 三种最快看到价值的方式
 
-1. **几分钟出 Blueprint 计划。** 描述一次你的应用，立刻得到确定性的
-   能力依赖图和有边界的 Agent 任务列表——不需要再做 prompt 工程。
-2. **第一个可验证能力很快就能上线。** 选一个能力模块，让 Agent 适配实现，
+1. **一次 CLI 命令得到 Blueprint 计划。** 在 YAML 里描述一次你的应用，
+   立刻得到确定性的能力依赖图和有边界的 Agent 任务列表——不需要做 prompt 工程。
+2. **第一次上手就能落地一个可验证能力。** 选一个能力模块，让 Agent 适配到你的技术栈，
    再用 Core 验证证据与来源，验证通过再上线。
-3. **升级不会打断你的定制。** 当能力发布新版本时，AIBA 会区分新增、破坏性、
+3. **升级不覆盖你的定制。** 当能力发布新版本时，AIBA 会区分新增、破坏性、
    安全敏感和定制冲突——你只需要适配真正需要改的部分。
 
 [历史外部演示](https://grubbylee.github.io/aiba/video/)展示了 AIBA 和 Codex
@@ -100,10 +104,31 @@ AIBA 目前支持 Agent 辅助安装、确定性的证据与来源验证、漂�
 
 ## 从这里开始
 
-- **快速上手试试：** [十分钟快速入门](docs/QUICKSTART.zh-CN.md)
-- **用在真实项目里：** [五步生产级最佳实践](docs/BEST_PRACTICE.zh-CN.md)
-- **理解整套模型：** [能力模型](docs/CAPABILITY_MODEL.zh-CN.md)
-- **安装与运行：** [安装](#安装)
+安装（需要 Node.js 22+）：
+
+```bash
+npm install --global @grubbylee/aiba
+aiba --version
+```
+
+然后试试最短闭环：
+
+```bash
+aiba init
+aiba create app my-app
+aiba plan applications/my-app/app.yaml
+aiba add identity
+aiba add identity --finalize --agent codex
+aiba verify .
+```
+
+更多路径：
+
+- **一步步引导：** [快速上手](docs/QUICKSTART.zh-CN.md)
+- **生产级方案：** [五步最佳实践](docs/BEST_PRACTICE.zh-CN.md)
+- **了解底层机制：** [能力模型](docs/CAPABILITY_MODEL.zh-CN.md)
+- **团队使用：** 私有 Registry、治理、行为证明——从
+  [自托管指南](docs/SELF_HOSTING.md)开始
 
 ## 原则
 
@@ -125,40 +150,6 @@ AIBA 目前支持 Agent 辅助安装、确定性的证据与来源验证、漂�
 - `integrations/`：Agent 专用适配器。
 - `fixtures/`：一致性与攻击测试参考项目，包括原生微信小程序和集成核心能力的
   安全测试语料。
-
-## 安装
-
-需要 Node.js 22 或更高版本：
-
-```bash
-npm install --global @grubbylee/aiba
-aiba --version
-```
-
-作用域包同样会安装 `aiba` 可执行命令，官方能力包和应用组合方案都在发行包里。
-作为库使用时，也可以分别安装 `aiba-core`、`aiba-spec` 或
-`aiba-registry-server`。
-
-最短上手路径：
-
-```bash
-aiba init
-aiba create app my-app
-aiba plan applications/my-app/app.yaml
-aiba add identity
-aiba add identity --finalize --agent codex
-aiba verify .
-```
-
-更多入口：
-
-- 搭建完整安全基座：`aiba add secure-workspace --solution`
-- 浏览能力目录：`aiba list`、`aiba show <id>`
-- 按五步生产级路径落地：
-  [最佳实践](docs/BEST_PRACTICE.zh-CN.md)
-- 团队使用：签名治理、私有 Registry、行为证明、自托管——
-  从[能力模型](docs/CAPABILITY_MODEL.zh-CN.md)和
-  [自托管指南](docs/SELF_HOSTING.md)开始。
 
 
 ## 工作方式

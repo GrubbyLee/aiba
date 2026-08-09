@@ -1,11 +1,12 @@
-# AIBA Ten-Minute Quick Start
+# AIBA Quick Start
 
 **English** | [中文](QUICKSTART.zh-CN.md)
 
 This path verifies the installed CLI, creates a clean project, authors an
-Application Blueprint, and hands its bounded task graph to an AI Agent. Setup
-and handoff take about ten minutes. On a first pass, follow only steps 1 to 5.
-The upgrade and solution flows are intentionally optional.
+Application Blueprint, and hands its bounded task graph to an AI Agent.
+The CLI-side commands take only a few minutes; the agent-side implementation
+time depends on your project and stack. On a first pass, follow only steps 1
+to 5. The sections in the Appendix are optional.
 
 ## Prerequisites
 
@@ -86,7 +87,7 @@ To install the maintained `secure-workspace` composition instead of authoring a
 Blueprint, use `aiba add secure-workspace --solution --root .`, then advance one
 constituent at a time with `aiba continue secure-workspace --root .`.
 
-## Standalone CLI Check
+## Appendix A: Standalone CLI Check
 
 This path needs no Agent and verifies authoring from the npm package:
 
@@ -108,7 +109,7 @@ aiba completion fish | source
 Use `--json` on every stable workflow command when integrating an Agent or CI.
 Failures return one `AibaErrorEnvelope` on stderr and a nonzero exit code.
 
-## Optional: Blueprint Revisions
+## Appendix B: Blueprint Revisions
 
 Use these only after the first plan works:
 

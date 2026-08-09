@@ -11,7 +11,7 @@ verifiable artifact — so you never spend a week without seeing progress.
 
 ---
 
-## Step 1: Blueprint the app in 30 minutes
+## Step 1: Blueprint the app
 
 Goal: turn your product idea into a deterministic capability and task plan.
 
@@ -47,7 +47,7 @@ task on the list.
 
 ---
 
-## Step 2: Install the first capability in under an hour
+## Step 2: Install your first capability
 
 Goal: prove the loop works — install → adapt → verify → finalize — on one
 small, high-value capability.
